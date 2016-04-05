@@ -1,12 +1,12 @@
-*.class
+# mvn / build artifacts
+/target
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# IntelliJ IDEA artifacts
+.DS_Store
+/.idea
+*.iml
 
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+# eclipse artifacts
+/.classpath
+/.project
+/.settings
