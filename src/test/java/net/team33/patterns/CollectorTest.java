@@ -71,6 +71,14 @@ public class CollectorTest {
         Assert.assertEquals(Collections.emptyList(), subject);
     }
 
+    @Test
+    public final void clear() {
+        final List<Integer> subject = Collector.collect(new ArrayList<>(INTEGERS)).addAll(INTEGERS)
+                .clear()
+                .getSubject();
+        Assert.assertEquals(Collections.emptyList(), subject);
+    }
+
     private static class Integers implements Iterable<Integer> {
         private final Collection<Integer> core;
 

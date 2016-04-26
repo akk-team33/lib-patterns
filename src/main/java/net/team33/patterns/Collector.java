@@ -30,10 +30,6 @@ public class Collector<E, C extends Collection<E>> {
         return add(element1).add(element2);
     }
 
-    public final Collector<E, C> add(final E element1, final E element2, final E element3) {
-        return add(element1).add(element2).add(element3);
-    }
-
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final Collector<E, C> add(final E... elements) {
@@ -64,10 +60,6 @@ public class Collector<E, C extends Collection<E>> {
 
     public final Collector<E, C> remove(final E element1, final E element2) {
         return remove(element1).remove(element2);
-    }
-
-    public final Collector<E, C> remove(final E element1, final E element2, final E element3) {
-        return remove(element1).remove(element2).remove(element3);
     }
 
     @SuppressWarnings("OverloadedVarargsMethod")
@@ -109,5 +101,10 @@ public class Collector<E, C extends Collection<E>> {
 
     public final Collector<E, C> retainAll(final Iterator<? extends E> elements) {
         return removeAll(collect(new HashSet<E>(subject)).removeAll(elements).subject);
+    }
+
+    public final Collector<E, C> clear() {
+        subject.clear();
+        return this;
     }
 }
