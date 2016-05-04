@@ -1,9 +1,10 @@
 package net.team33.patterns;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import static java.util.Arrays.asList;
 
 public class Collector<E, C extends Collection<E>> {
 
@@ -33,7 +34,7 @@ public class Collector<E, C extends Collection<E>> {
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final Collector<E, C> add(final E... elements) {
-        return addAll(Arrays.asList(elements));
+        return addAll(asList(elements));
     }
 
     public final Collector<E, C> addAll(final Collection<? extends E> elements) {
@@ -53,8 +54,7 @@ public class Collector<E, C extends Collection<E>> {
     }
 
     public final Collector<E, C> remove(final E element) {
-        while (subject.remove(element)) {
-        }
+        Collecting.remove(subject, element);
         return this;
     }
 
@@ -65,11 +65,11 @@ public class Collector<E, C extends Collection<E>> {
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final Collector<E, C> remove(final E... elements) {
-        return removeAll(Arrays.asList(elements));
+        return removeAll(asList(elements));
     }
 
     public final Collector<E, C> removeAll(final Collection<? extends E> elements) {
-        subject.removeAll(elements);
+        Collecting.removeAll(subject, elements);
         return this;
     }
 
@@ -78,6 +78,7 @@ public class Collector<E, C extends Collection<E>> {
     }
 
     public final Collector<E, C> removeAll(final Iterator<? extends E> elements) {
+        // TODO: Collecting.removeAll(subject, elements);
         while (elements.hasNext()) {
             remove(elements.next());
         }
@@ -87,11 +88,11 @@ public class Collector<E, C extends Collection<E>> {
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final Collector<E, C> retain(final E... elements) {
-        return retainAll(Arrays.asList(elements));
+        return retainAll(asList(elements));
     }
 
     public final Collector<E, C> retainAll(final Collection<? extends E> elements) {
-        subject.retainAll(elements);
+        Collecting.retainAll(subject, elements);
         return this;
     }
 
@@ -100,7 +101,7 @@ public class Collector<E, C extends Collection<E>> {
     }
 
     public final Collector<E, C> retainAll(final Iterator<? extends E> elements) {
-        return removeAll(collect(new HashSet<E>(subject)).removeAll(elements).subject);
+        return removeAll(collect(new HashSet<>(subject)).removeAll(elements).subject);
     }
 
     public final Collector<E, C> clear() {
