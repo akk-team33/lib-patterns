@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.team33.libs</groupId>
     <artifactId>team33-patterns</artifactId>
-    <version>7.0.2-SNAPSHOT</version>
-    <!--version>7.0.2</version-->
+    <version>8.1.1-SNAPSHOT</version>
+    <!--version>8.1.1</version-->
     <name>Team33 Patterns Library</name>
     <description>Team33 patterns library</description>
     <dependencies>
@@ -25,7 +25,7 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <t33.java.version>1.7</t33.java.version>
+        <t33.java.version>1.8</t33.java.version>
     </properties>
     <build>
         <plugins>
