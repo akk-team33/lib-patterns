@@ -9,12 +9,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 
 /**
  * {@linkplain Collections Additional} convenience methods to deal with Collections.
  */
+@SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
 public final class Collecting {
     private Collecting() {
     }
@@ -93,6 +95,30 @@ public final class Collecting {
      */
     public static <E, C extends Collection<? super E>> C addAll(final C subject, final Collection<E> elements) {
         subject.addAll(elements);
+        return subject;
+    }
+
+    /**
+     * Similar to {@link Collection#addAll(Collection)} for a given {@code subject}, but ...
+     *
+     * @return The {@code subject}.
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
+     * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
+     *                                       {@code subject}
+     *                                       (may occur only if used raw or forced in a mismatched class context).
+     * @throws NullPointerException          <ul>
+     *                                       <li>if {@code subject} or the {@link Stream} of {@code elements} is
+     *                                       {@code null}</li>
+     *                                       <li>if some {@code elements} are {@code null} and the {@code subject}
+     *                                       does not permit {@code null} elements.</li>
+     *                                       </ul>
+     * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being added
+     *                                       to the {@code subject}.
+     * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
+     *                                       {@code subject}'s insertion restrictions (if any).
+     */
+    public static <E, C extends Collection<? super E>> C addAll(final C subject, final Stream<E> elements) {
+        elements.forEach(subject::add);
         return subject;
     }
 
@@ -195,6 +221,24 @@ public final class Collecting {
     }
 
     /**
+     * Similar to {@link Collection#removeAll(Collection)} for a given {@code subject}.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@code elements}.
+     *
+     * @return The {@code subject}.
+     * @throws NullPointerException          if {@code subject} or the {@link Collection} of {@code elements}
+     *                                       is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
+     *                                       {@code subject}.
+     */
+    public static <C extends Collection<?>> C removeAll(final C subject, final Stream<?> elements) {
+        elements.forEach(element -> remove(subject, element));
+        return subject;
+    }
+
+    /**
      * Similar to {@link Collection#retainAll(Collection)} for a given {@code subject}.
      * Allows to retain a variable number of elements.
      * <p>
@@ -251,6 +295,7 @@ public final class Collecting {
      *
      * @throws NullPointerException if {@code subject} is {@code null}.
      */
+    @SuppressWarnings("OverloadedMethodsWithSameNumberOfParameters")
     public static boolean contains(final Collection<?> subject, final Object element) {
         try {
             return subject.contains(element);
@@ -279,14 +324,14 @@ public final class Collecting {
      * @throws NullPointerException if {@code subject} or the {@code array} of {@code elements} is {@code null}.
      * @see Collection#containsAll(Collection)
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
+    @SuppressWarnings({"OverloadedVarargsMethod", "OverloadedMethodsWithSameNumberOfParameters"})
     public static boolean contains(final Collection<?> subject, final Object... elements) {
         return containsAll(subject, asList(elements));
     }
 
     /**
      * Indicates if a given {@code subject} contains specific {@code elements}.
-     * <p/>
+     * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some of the requested
      * {@code elements}.
@@ -327,8 +372,9 @@ public final class Collecting {
      *                <li>{@link Collection#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings({"AnonymousInnerClassWithTooManyMethods", "AnonymousInnerClass"})
+    @SuppressWarnings("ReturnOfInnerClass")
     public static <E> Collection<E> proxy(final Collection<E> subject) {
+        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
         return new AbstractCollection<E>() {
             @Override
             public Iterator<E> iterator() {
@@ -360,8 +406,9 @@ public final class Collecting {
      *                <li>{@link List#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings({"AnonymousInnerClassWithTooManyMethods", "AnonymousInnerClass"})
+    @SuppressWarnings("ReturnOfInnerClass")
     public static <E> List<E> proxy(final List<E> subject) {
+        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
         return new AbstractList<E>() {
             @Override
             public E get(final int index) {
@@ -393,8 +440,9 @@ public final class Collecting {
      *                <li>{@link Set#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings({"AnonymousInnerClassWithTooManyMethods", "AnonymousInnerClass", "TypeMayBeWeakened"})
+    @SuppressWarnings({"TypeMayBeWeakened", "ReturnOfInnerClass"})
     public static <E> Set<E> proxy(final Set<E> subject) {
+        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
         return new AbstractSet<E>() {
             @Override
             public Iterator<E> iterator() {

@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +26,9 @@ public class CollectingTest {
     public static final String NULL_ELEMENT = null;
     public static final int NOT_A_STRING = 278;
 
+    @SuppressWarnings("MultipleVariablesInDeclaration")
     private String sample1, sample2, sample3;
+    @SuppressWarnings("MultipleVariablesInDeclaration")
     private List<String> samples, duplicated, samplesAndNull;
     private List<Object> samplesAndIncompatibleType;
 
@@ -38,28 +39,28 @@ public class CollectingTest {
         sample3 = UUID.randomUUID().toString();
         samples = unmodifiableList(asList(sample1, sample2, sample3));
         samplesAndNull = asList(sample1, NULL_ELEMENT, sample2, NULL_ELEMENT, sample3);
-        samplesAndIncompatibleType = Arrays.<Object>asList(sample1, sample2, NOT_A_STRING, sample3);
+        samplesAndIncompatibleType = asList(sample1, sample2, NOT_A_STRING, sample3);
         duplicated = unmodifiableList(asList(sample1, sample2, sample3, sample1, sample3, sample2));
     }
 
     @Test
     public final void addSingle() {
-        assertTrue(Collecting.add(new TreeSet<CharSequence>(), sample1).contains(sample1));
+        assertTrue(Collecting.add(new TreeSet<>(), sample1).contains(sample1));
     }
 
     @Test
     public final void addArray() {
-        assertTrue(Collecting.add(new TreeSet<CharSequence>(), sample1, sample2, sample3).containsAll(samples));
+        assertTrue(Collecting.add(new TreeSet<>(), sample1, sample2, sample3).containsAll(samples));
     }
 
     @Test
     public final void addAll() {
-        assertTrue(Collecting.addAll(new TreeSet<CharSequence>(), samples).containsAll(samples));
+        assertTrue(Collecting.addAll(new TreeSet<>(), samples).containsAll(samples));
     }
 
     @Test
     public final void clear() {
-        assertTrue(Collecting.clear(new ArrayList<CharSequence>(samples)).isEmpty());
+        assertTrue(Collecting.clear(new ArrayList<>(samples)).isEmpty());
     }
 
     @Test
@@ -87,6 +88,7 @@ public class CollectingTest {
     public final void removeIncompatibleType() {
         final TreeSet<String> subject = new TreeSet<>(samples);
         try {
+            //noinspection SuspiciousMethodCalls
             subject.remove(NOT_A_STRING);
             fail(STRAIGHT_NOT_FAILED);
         } catch (final ClassCastException ignored) {
@@ -205,6 +207,7 @@ public class CollectingTest {
             assertFalse(Collecting.contains(treeSet, NULL_ELEMENT));
         }
         try {
+            //noinspection SuspiciousMethodCalls
             treeSet.contains(NOT_A_STRING);
             fail(STRAIGHT_NOT_FAILED);
         } catch (final ClassCastException ignored) {
