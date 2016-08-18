@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.team33.libs</groupId>
     <artifactId>team33-patterns</artifactId>
-    <version>8.1.2-SNAPSHOT</version>
-    <!--version>8.1.2</version-->
+    <version>8.1.3-SNAPSHOT</version>
+    <!--version>8.1.3</version-->
     <name>Team33 Patterns Library</name>
     <description>Team33 patterns library</description>
     <dependencies>

@@ -9,7 +9,7 @@ public class SortedMapperTest {
     @Test(expected = UnsupportedOperationException.class)
     public final void unmodifiable() {
         SortedMapper
-                .map(new TreeMap<Integer, Integer>())
+                .wrap(new TreeMap<Integer, Integer>())
                 .put(0, 0)
                 .put(1, 1)
                 .put(2, 4)

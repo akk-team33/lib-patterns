@@ -31,7 +31,7 @@ public class MappingTest {
         sample1 = UUID.randomUUID().toString();
         sample2 = UUID.randomUUID().toString();
         sample3 = UUID.randomUUID().toString();
-        samples = Mapper.map(new HashMap<String, String>())
+        samples = Mapper.wrap(new HashMap<String, String>())
                 .put(sample1, sample2)
                 .put(sample2, sample3)
                 .put(sample3, sample1)

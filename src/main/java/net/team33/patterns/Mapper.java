@@ -12,7 +12,7 @@ public class Mapper<K, V, M extends Map<K, V>> {
         this.subject = subject;
     }
 
-    public static <K, V, M extends Map<K, V>> Mapper<K, V, M> map(final M subject) {
+    public static <K, V, M extends Map<K, V>> Mapper<K, V, M> wrap(final M subject) {
         return new Mapper<>(subject);
     }
 
@@ -36,7 +36,7 @@ public class Mapper<K, V, M extends Map<K, V>> {
         return this;
     }
 
-    public final M getSubject() {
+    public final M unwrap() {
         return subject;
     }
 

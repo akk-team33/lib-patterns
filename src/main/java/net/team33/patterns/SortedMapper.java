@@ -8,12 +8,12 @@ public class SortedMapper<K, V, M extends SortedMap<K, V>> extends Mapper<K, V, 
         super(subject);
     }
 
-    public static <K, V, M extends SortedMap<K, V>> SortedMapper<K, V, M> map(final M subject) {
+    public static <K, V, M extends SortedMap<K, V>> SortedMapper<K, V, M> wrap(final M subject) {
         return new SortedMapper<>(subject);
     }
 
     @Override
     public final SortedMap<K, V> unmodifiable() {
-        return Collections.unmodifiableSortedMap(getSubject());
+        return Collections.unmodifiableSortedMap(unwrap());
     }
 }

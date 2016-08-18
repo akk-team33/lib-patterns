@@ -13,12 +13,12 @@ public class MapperTest {
     @Test
     public final void put() {
         final Map<?, ?> subject = Mapper
-                .map(new HashMap<Integer, Integer>(0))
+                .wrap(new HashMap<Integer, Integer>(0))
                 .put(0, 0)
                 .put(1, 1)
                 .put(2, 4)
                 .put(3, 9)
-                .getSubject();
+                .unwrap();
         Assert.assertEquals(0, subject.get(0));
         Assert.assertEquals(1, subject.get(1));
         Assert.assertEquals(4, subject.get(2));
@@ -28,15 +28,15 @@ public class MapperTest {
     @Test
     public final void putAll() {
         final Map<?, ?> subject = Mapper
-                .map(new TreeMap<Integer, Integer>())
+                .wrap(new TreeMap<Integer, Integer>())
                 .putAll(Mapper
-                        .map(new HashMap<Integer, Integer>(0))
+                        .wrap(new HashMap<Integer, Integer>(0))
                         .put(0, 0)
                         .put(1, 1)
                         .put(2, 4)
                         .put(3, 9)
-                        .getSubject())
-                .getSubject();
+                        .unwrap())
+                .unwrap();
         Assert.assertEquals(0, subject.get(0));
         Assert.assertEquals(1, subject.get(1));
         Assert.assertEquals(4, subject.get(2));
@@ -46,16 +46,16 @@ public class MapperTest {
     @Test
     public final void remove() {
         final Map<?, ?> subject = Mapper
-                .map(new TreeMap<>(Mapper
-                        .map(new HashMap<Integer, Integer>(0))
+                .wrap(new TreeMap<>(Mapper
+                        .wrap(new HashMap<Integer, Integer>(0))
                         .put(0, 0)
                         .put(1, 1)
                         .put(2, 4)
                         .put(3, 9)
-                        .getSubject()))
+                        .unwrap()))
                 .remove(1)
                 .remove(3)
-                .getSubject();
+                .unwrap();
         Assert.assertEquals(0, subject.get(0));
         Assert.assertNull(subject.get(1));
         Assert.assertEquals(4, subject.get(2));
@@ -65,22 +65,22 @@ public class MapperTest {
     @Test
     public final void clear() {
         final Map<?, ?> subject = Mapper
-                .map(new TreeMap<>(Mapper
-                        .map(new HashMap<Integer, Integer>(0))
+                .wrap(new TreeMap<>(Mapper
+                        .wrap(new HashMap<Integer, Integer>(0))
                         .put(0, 0)
                         .put(1, 1)
                         .put(2, 4)
                         .put(3, 9)
-                        .getSubject()))
+                        .unwrap()))
                 .clear()
-                .getSubject();
+                .unwrap();
         Assert.assertEquals(Collections.emptyMap(), subject);
     }
 
     @Test(expected = UnsupportedOperationException.class)
     public final void unmodifiable() {
         Mapper
-                .map(new HashMap<Integer, Integer>(0))
+                .wrap(new HashMap<Integer, Integer>(0))
                 .put(0, 0)
                 .put(1, 1)
                 .put(2, 4)
