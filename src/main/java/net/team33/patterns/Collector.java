@@ -14,11 +14,11 @@ public class Collector<E, C extends Collection<E>> {
         this.subject = subject;
     }
 
-    public static <E, C extends Collection<E>> Collector<E, C> collect(final C subject) {
+    public static <E, C extends Collection<E>> Collector<E, C> wrap(final C subject) {
         return new Collector<>(subject);
     }
 
-    public final C getSubject() {
+    public final C unwrap() {
         return subject;
     }
 
@@ -101,7 +101,7 @@ public class Collector<E, C extends Collection<E>> {
     }
 
     public final Collector<E, C> retainAll(final Iterator<? extends E> elements) {
-        return removeAll(collect(new HashSet<>(subject)).removeAll(elements).subject);
+        return removeAll(wrap(new HashSet<>(subject)).removeAll(elements).subject);
     }
 
     public final Collector<E, C> clear() {
