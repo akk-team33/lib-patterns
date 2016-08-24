@@ -2,11 +2,12 @@ package net.team33.patterns.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.function.Predicate;
+
+import static java.util.Collections.unmodifiableMap;
 
 @SuppressWarnings({"InstanceMethodNamingConvention", "StaticMethodNamingConvention"})
 public final class Fields<T> {
@@ -19,21 +20,30 @@ public final class Fields<T> {
     private final Map<String, Field> backing;
 
     private Fields(final Class<T> subjectClass) {
-        this.backing = build(new TreeMap<>(), subjectClass.getDeclaredFields());
+        backing = build(subjectClass);
     }
 
-    private static Map<String, Field> build(final Map<String, Field> result, final Field[] fields) {
+    private static Map<String, Field> build(final Map<String, Field> result,
+                                            final Field[] fields,
+                                            final Class<?> superClass) {
+        if (null != superClass) {
+            build(result, superClass.getDeclaredFields(), superClass.getSuperclass());
+        }
         for (final Field field : fields) {
             if (FILTER.test(field)) {
                 field.setAccessible(true);
                 result.put(field.getName(), field);
             }
         }
-        return Collections.unmodifiableMap(result);
+        return unmodifiableMap(result);
     }
 
     public static <T> Fields<T> of(final Class<T> subjectClass) {
         return new Fields<>(subjectClass);
+    }
+
+    private Map<String, Field> build(final Class<T> subjectClass) {
+        return unmodifiableMap(build(new TreeMap<>(), subjectClass.getDeclaredFields(), subjectClass.getSuperclass()));
     }
 
     public final Mapping<T> map(final T subject) {

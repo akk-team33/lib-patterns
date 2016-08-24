@@ -8,13 +8,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-@SuppressWarnings("MultipleTopLevelClassesInFile")
+@SuppressWarnings({"MultipleTopLevelClassesInFile", "Convert2Diamond"})
 public class FieldsTest {
 
     private static final Map<String, Object> INITIAL_MAP = Mapper.wrap(new HashMap<String, Object>(3))
             .put("aPrivateField", "a private field")
             .put("aProtectedField", "a protected field")
             .put("aPublicField", "a public field")
+            .unmodifiable();
+    private static final Map<String, Object> INITIAL_SUB_MAP = Mapper.wrap(new TreeMap<String, Object>())
+            .put("aPrivateField", "a private field")
+            .put("aProtectedField", "a protected field in a subclass")
+            .put("aPublicField", "a public field in a subclass")
+            .put("anotherPrivateField", "another private field in a subclass")
+            .put("anotherPublicField", "another public field in a subclass")
             .unmodifiable();
     private static final Map<String, Object> MODIFIED_MAP = Mapper.wrap(new HashMap<String, Object>(3))
             .put("aPrivateField", "a modified private field")
@@ -39,6 +46,11 @@ public class FieldsTest {
     @Test
     public final void mapTo() {
         Assert.assertEquals(INITIAL_MAP, Fields.of(AnyClass.class).map(new AnyClass()).to(new TreeMap<>()));
+    }
+
+    @Test
+    public final void mapToAnySubClass() {
+        Assert.assertEquals(INITIAL_SUB_MAP, Fields.of(AnySubClass.class).map(new AnySubClass()).to(new TreeMap<>()));
     }
 
     @Test
