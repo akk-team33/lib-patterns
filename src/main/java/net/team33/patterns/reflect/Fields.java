@@ -23,6 +23,10 @@ public final class Fields<T> {
         backing = build(subjectClass);
     }
 
+    private static Map<String, Field> build(final Class<?> subjectClass) {
+        return unmodifiableMap(build(new TreeMap<>(), subjectClass.getDeclaredFields(), subjectClass.getSuperclass()));
+    }
+
     private static Map<String, Field> build(final Map<String, Field> result,
                                             final Field[] fields,
                                             final Class<?> superClass) {
@@ -40,10 +44,6 @@ public final class Fields<T> {
 
     public static <T> Fields<T> of(final Class<T> subjectClass) {
         return new Fields<>(subjectClass);
-    }
-
-    private Map<String, Field> build(final Class<T> subjectClass) {
-        return unmodifiableMap(build(new TreeMap<>(), subjectClass.getDeclaredFields(), subjectClass.getSuperclass()));
     }
 
     public final Mapping<T> map(final T subject) {

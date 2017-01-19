@@ -54,6 +54,17 @@ public class FieldsTest {
     }
 
     @Test
+    public final void mapToAnySubClassToString() {
+        Assert.assertEquals("{" +
+                "aPrivateField=a private field," +
+                " aProtectedField=a protected field in a subclass," +
+                " aPublicField=a public field in a subclass," +
+                " anotherPrivateField=another private field in a subclass," +
+                " anotherPublicField=another public field in a subclass" +
+                "}", Fields.of(AnySubClass.class).map(new AnySubClass()).to(new TreeMap<>()).toString());
+    }
+
+    @Test
     public final void mapToOneIsNull() {
         Assert.assertEquals(NULLED_MAP, Fields.of(AnyClass.class).map(new AnyClass()
                 .setAPrivateField(null)).to(new TreeMap<>()));
