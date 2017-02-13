@@ -11,6 +11,8 @@ import java.util.TreeMap;
 @SuppressWarnings({"MultipleTopLevelClassesInFile", "Convert2Diamond"})
 public class FieldsTest {
 
+    private static final Fields<AnyClass> ANY_CLASS_FIELDS = Fields.of(AnyClass.class);
+    private static final Fields<AnySubClass> ANY_SUB_CLASS_FIELDS = Fields.of(AnySubClass.class);
     private static final Map<String, Object> INITIAL_MAP = Mapper.wrap(new HashMap<String, Object>(3))
             .put("aPrivateField", "a private field")
             .put("aProtectedField", "a protected field")
@@ -44,13 +46,27 @@ public class FieldsTest {
             .unmodifiable();
 
     @Test
+    public final void copyTo() {
+        final AnyClass origin = ANY_CLASS_FIELDS.map(new AnyClass()).from(MODIFIED_MAP);
+        final AnyClass result = ANY_CLASS_FIELDS.copy(origin).to(new AnyClass());
+        Assert.assertEquals(MODIFIED_MAP, ANY_CLASS_FIELDS.map(result).to(new TreeMap<>()));
+    }
+
+    @Test
+    public final void copyFrom() {
+        final AnyClass origin = ANY_CLASS_FIELDS.map(new AnyClass()).from(MODIFIED_MAP);
+        final AnyClass result = ANY_CLASS_FIELDS.copy(new AnyClass()).from(origin);
+        Assert.assertEquals(MODIFIED_MAP, ANY_CLASS_FIELDS.map(result).to(new TreeMap<>()));
+    }
+
+    @Test
     public final void mapTo() {
-        Assert.assertEquals(INITIAL_MAP, Fields.of(AnyClass.class).map(new AnyClass()).to(new TreeMap<>()));
+        Assert.assertEquals(INITIAL_MAP, ANY_CLASS_FIELDS.map(new AnyClass()).to(new TreeMap<>()));
     }
 
     @Test
     public final void mapToAnySubClass() {
-        Assert.assertEquals(INITIAL_SUB_MAP, Fields.of(AnySubClass.class).map(new AnySubClass()).to(new TreeMap<>()));
+        Assert.assertEquals(INITIAL_SUB_MAP, ANY_SUB_CLASS_FIELDS.map(new AnySubClass()).to(new TreeMap<>()));
     }
 
     @Test
@@ -61,30 +77,30 @@ public class FieldsTest {
                 " aPublicField=a public field in a subclass," +
                 " anotherPrivateField=another private field in a subclass," +
                 " anotherPublicField=another public field in a subclass" +
-                "}", Fields.of(AnySubClass.class).map(new AnySubClass()).to(new TreeMap<>()).toString());
+                "}", ANY_SUB_CLASS_FIELDS.map(new AnySubClass()).to(new TreeMap<>()).toString());
     }
 
     @Test
     public final void mapToOneIsNull() {
-        Assert.assertEquals(NULLED_MAP, Fields.of(AnyClass.class).map(new AnyClass()
+        Assert.assertEquals(NULLED_MAP, ANY_CLASS_FIELDS.map(new AnyClass()
                 .setAPrivateField(null)).to(new TreeMap<>()));
     }
 
     @Test
     public final void mapFrom() {
-        final AnyClass result = Fields.of(AnyClass.class).map(new AnyClass()).from(MODIFIED_MAP);
-        Assert.assertEquals(MODIFIED_MAP, Fields.of(AnyClass.class).map(result).to(new TreeMap<>()));
+        final AnyClass result = ANY_CLASS_FIELDS.map(new AnyClass()).from(MODIFIED_MAP);
+        Assert.assertEquals(MODIFIED_MAP, ANY_CLASS_FIELDS.map(result).to(new TreeMap<>()));
     }
 
     @Test
     public final void mapFromOneIsNull() {
-        final AnyClass result = Fields.of(AnyClass.class).map(new AnyClass()).from(NULL_MODIFIED_MAP);
-        Assert.assertEquals(NULL_MODIFIED_MAP, Fields.of(AnyClass.class).map(result).to(new TreeMap<>()));
+        final AnyClass result = ANY_CLASS_FIELDS.map(new AnyClass()).from(NULL_MODIFIED_MAP);
+        Assert.assertEquals(NULL_MODIFIED_MAP, ANY_CLASS_FIELDS.map(result).to(new TreeMap<>()));
     }
 
     @Test
     public final void mapFromOneIsMissing() {
-        final AnyClass result = Fields.of(AnyClass.class).map(new AnyClass()).from(REDUCED_MODIFIED_MAP);
-        Assert.assertEquals(NULL_MODIFIED_MAP, Fields.of(AnyClass.class).map(result).to(new TreeMap<>()));
+        final AnyClass result = ANY_CLASS_FIELDS.map(new AnyClass()).from(REDUCED_MODIFIED_MAP);
+        Assert.assertEquals(NULL_MODIFIED_MAP, ANY_CLASS_FIELDS.map(result).to(new TreeMap<>()));
     }
 }

@@ -9,6 +9,7 @@ import java.util.Set;
 /**
  * {@linkplain Collections Additional} convenience methods to deal with Collections.
  */
+@SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
 public final class Mapping {
     private Mapping() {
     }
@@ -179,6 +180,7 @@ public final class Mapping {
      */
     @SuppressWarnings("AnonymousInnerClass")
     public static <K, V> Map<K, V> proxy(final Map<K, V> subject) {
+        //noinspection ReturnOfInnerClass
         return new AbstractMap<K, V>() {
             @Override
             public Set<Entry<K, V>> entrySet() {
@@ -186,5 +188,6 @@ public final class Mapping {
             }
         };
     }
+
 
 }

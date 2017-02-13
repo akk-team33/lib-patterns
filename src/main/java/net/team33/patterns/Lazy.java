@@ -28,7 +28,6 @@ public class Lazy<T> implements Supplier<T> {
         }
     }
 
-    @SuppressWarnings("NonStaticInnerClassInSecureContext")
     private class Initial implements Supplier<T> {
         private final Monitor monitor = new Monitor();
         private final Supplier<T> origin;
@@ -40,7 +39,6 @@ public class Lazy<T> implements Supplier<T> {
         @Override
         public final T get() {
             return monitor.get(() -> {
-                //noinspection ObjectEquality
                 if (backing == this) {
                     backing = new Final<>(origin.get());
                 }

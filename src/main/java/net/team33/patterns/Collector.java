@@ -6,7 +6,8 @@ import java.util.Iterator;
 
 import static java.util.Arrays.asList;
 
-public class Collector<E, C extends Collection<E>> {
+@SuppressWarnings({"OverloadedMethodsWithSameNumberOfParameters", "ReturnOfCollectionOrArrayField"})
+public final class Collector<E, C extends Collection<E>> {
 
     private final C subject;
 
@@ -78,7 +79,6 @@ public class Collector<E, C extends Collection<E>> {
     }
 
     public final Collector<E, C> removeAll(final Iterator<? extends E> elements) {
-        // TODO: Collecting.removeAll(subject, elements);
         while (elements.hasNext()) {
             remove(elements.next());
         }

@@ -34,4 +34,28 @@ public class Monitor {
                                                   final I1 input1, final I2 input2) {
         return function.apply(input1, input2);
     }
+
+    public final Runnable runnable(final Runnable original) {
+        return () -> run(original);
+    }
+
+    public final <I> Consumer<I> consumer(final Consumer<I> original) {
+        return input -> accept(original, input);
+    }
+
+    public final <I1, I2> BiConsumer<I1, I2> biConsumer(final BiConsumer<I1, I2> original) {
+        return (i1, i2) -> accept(original, i1, i2);
+    }
+
+    public final <O> Supplier<O> supplier(final Supplier<O> original) {
+        return () -> get(original);
+    }
+
+    public final <I, O> Function<I, O> function(final Function<I, O> original) {
+        return input -> apply(original, input);
+    }
+
+    public final <I1, I2, O> BiFunction<I1, I2, O> biFunction(final BiFunction<I1, I2, O> original) {
+        return (i1, i2) -> apply(original, i1, i2);
+    }
 }

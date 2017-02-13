@@ -1,7 +1,9 @@
 package net.team33.patterns;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class Mapper<K, V, M extends Map<K, V>> {
 
@@ -18,6 +20,15 @@ public class Mapper<K, V, M extends Map<K, V>> {
 
     public final Mapper<K, V, M> put(final K key, final V value) {
         subject.put(key, value);
+        return this;
+    }
+
+    public final Mapper<K, V, M> putAll(final Collection<? extends K> keys, final V value) {
+        return putAll(keys.stream(), value);
+    }
+
+    public final Mapper<K, V, M> putAll(final Stream<? extends K> keys, final V value) {
+        keys.forEach(key -> subject.put(key, value));
         return this;
     }
 

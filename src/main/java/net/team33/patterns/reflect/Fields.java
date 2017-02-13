@@ -39,7 +39,7 @@ public final class Fields<T> {
                 result.put(field.getName(), field);
             }
         }
-        return unmodifiableMap(result);
+        return result;
     }
 
     public static <T> Fields<T> of(final Class<T> subjectClass) {
@@ -48,6 +48,40 @@ public final class Fields<T> {
 
     public final Mapping<T> map(final T subject) {
         return new Mapping<>(this, subject);
+    }
+
+    public final Copying<T> copy(final T subject) {
+        return new Copying<>(this, subject);
+    }
+
+    public static final class Copying<T> {
+        private final Fields<T> fields;
+        private final T subject;
+
+        private Copying(final Fields<T> fields, final T subject) {
+            this.fields = fields;
+            this.subject = subject;
+        }
+
+        private T copy(final T origin, final T target) {
+            try {
+                for (final Field entry : fields.backing.values()) {
+                    entry.set(target, entry.get(origin));
+                }
+                return target;
+
+            } catch (final IllegalAccessException caught) {
+                throw new IllegalStateException(caught);
+            }
+        }
+
+        public T from(final T origin) {
+            return copy(origin, subject);
+        }
+
+        public T to(final T target) {
+            return copy(subject, target);
+        }
     }
 
     public static final class Mapping<T> {

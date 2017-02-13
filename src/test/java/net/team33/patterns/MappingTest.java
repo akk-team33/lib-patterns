@@ -31,18 +31,18 @@ public class MappingTest {
         sample1 = UUID.randomUUID().toString();
         sample2 = UUID.randomUUID().toString();
         sample3 = UUID.randomUUID().toString();
-        samples = Mapper.wrap(new HashMap<String, String>())
-                .put(sample1, sample2)
-                .put(sample2, sample3)
-                .put(sample3, sample1)
-                .unmodifiable();
+        samples = new HashMap<>(3);
+        samples.put(sample1, sample2);
+        samples.put(sample2, sample3);
+        samples.put(sample3, sample1);
+        samples = Collections.unmodifiableMap(samples);
     }
 
     @Test
     public final void put() {
         assertEquals(
                 Collections.singletonMap(sample1, sample2),
-                Mapping.put(new HashMap<CharSequence, Comparable<? extends CharSequence>>(), sample1, sample2)
+                Mapping.put(new HashMap<>(1), sample1, sample2)
         );
     }
 
@@ -50,7 +50,7 @@ public class MappingTest {
     public final void putAll() {
         assertEquals(
                 samples,
-                Mapping.putAll(new HashMap<CharSequence, Comparable<? extends CharSequence>>(), samples)
+                Mapping.putAll(new HashMap<>(3), samples)
         );
     }
 
