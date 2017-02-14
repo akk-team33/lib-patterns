@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.TreeMap;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableMap;
 
@@ -46,12 +48,48 @@ public final class Fields<T> {
         return new Fields<>(subjectClass);
     }
 
+    private static Object valueOf(final Field field, final Object subject) {
+        try {
+            return field.get(subject);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
+    private static void set(final Field field, final Object subject, final Object value) {
+        try {
+            field.set(subject, value);
+        } catch (final IllegalAccessException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+    }
+
     public final Mapping<T> map(final T subject) {
         return new Mapping<>(this, subject);
     }
 
     public final Copying<T> copy(final T subject) {
         return new Copying<>(this, subject);
+    }
+
+    public final int hashCode(final T subject) {
+        return backing.values().stream()
+                .map(field -> Objects.hashCode(valueOf(field, subject)))
+                .reduce(0, (a, b) -> (a >>> 7) ^ b);
+    }
+
+    public final boolean equals(final T subject, final T other) {
+        return backing.values().stream()
+                .allMatch(field -> Objects.equals(
+                        valueOf(field, subject),
+                        valueOf(field, other)
+                ));
+    }
+
+    public final String toString(final T subject) {
+        return backing.entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + valueOf(entry.getValue(), subject))
+                .collect(Collectors.joining(", ", "{", "}"));
     }
 
     public static final class Copying<T> {
@@ -64,15 +102,10 @@ public final class Fields<T> {
         }
 
         private T copy(final T origin, final T target) {
-            try {
-                for (final Field entry : fields.backing.values()) {
-                    entry.set(target, entry.get(origin));
-                }
-                return target;
-
-            } catch (final IllegalAccessException caught) {
-                throw new IllegalStateException(caught);
+            for (final Field field : fields.backing.values()) {
+                set(field, target, valueOf(field, origin));
             }
+            return target;
         }
 
         public T from(final T origin) {
@@ -94,27 +127,17 @@ public final class Fields<T> {
         }
 
         public <M extends Map<String, Object>> M to(final M target) {
-            try {
-                for (final Entry<String, Field> entry : fields.backing.entrySet()) {
-                    target.put(entry.getKey(), entry.getValue().get(subject));
-                }
-                return target;
-
-            } catch (final IllegalAccessException caught) {
-                throw new IllegalStateException(caught);
+            for (final Entry<String, Field> entry : fields.backing.entrySet()) {
+                target.put(entry.getKey(), valueOf(entry.getValue(), subject));
             }
+            return target;
         }
 
         public T from(final Map<String, ?> origin) {
-            try {
-                for (final Entry<String, Field> entry : fields.backing.entrySet()) {
-                    entry.getValue().set(subject, origin.get(entry.getKey()));
-                }
-                return subject;
-
-            } catch (final IllegalAccessException caught) {
-                throw new IllegalStateException(caught);
+            for (final Entry<String, Field> entry : fields.backing.entrySet()) {
+                set(entry.getValue(), subject, origin.get(entry.getKey()));
             }
+            return subject;
         }
     }
 }
