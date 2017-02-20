@@ -19,10 +19,12 @@ public final class Fields<T> {
         return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
     };
 
+    private final Class<T> subjectClass;
     private final Map<String, Field> backing;
 
     private Fields(final Class<T> subjectClass) {
-        backing = build(subjectClass);
+        this.subjectClass = subjectClass;
+        this.backing = build(subjectClass);
     }
 
     private static Map<String, Field> build(final Class<?> subjectClass) {
@@ -75,10 +77,17 @@ public final class Fields<T> {
     public final int hashCode(final T subject) {
         return backing.values().stream()
                 .map(field -> Objects.hashCode(valueOf(field, subject)))
-                .reduce(0, (a, b) -> (a >>> 7) ^ b);
+                .reduce(0, (x, y) -> (x >>> 7) ^ y);
     }
 
-    public final boolean equals(final T subject, final T other) {
+    public final boolean equals(final T subject, final Object other) {
+        //noinspection ObjectEquality
+        return (subject == other) || (
+                subjectClass.isInstance(other) && matches(subject, subjectClass.cast(other))
+        );
+    }
+
+    public final boolean matches(final T subject, final T other) {
         return backing.values().stream()
                 .allMatch(field -> Objects.equals(
                         valueOf(field, subject),
