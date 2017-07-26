@@ -3,7 +3,9 @@ package net.team33.patterns.reflections.alt.alt;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -16,9 +18,18 @@ public class Fields<T> {
         field.setAccessible(true);
         return field;
     };
+
+    private final Class<T> subject;
     private final List<Field> backing;
+    private final BiFunction<Class<?>, Field, String> toKey = (class0, field) -> {
+        final String prefix = Objects.equals(field.getDeclaringClass(), class0)
+                ? ""
+                : (field.getDeclaringClass().getSimpleName() + ".");
+        return prefix + field.getName();
+    };
 
     private Fields(final Class<T> subject, final Predicate<Field> filter) {
+        this.subject = subject;
         this.backing = stream(subject)
                 .filter(filter)
                 .map(ACCESSIBLE)
@@ -81,6 +92,10 @@ public class Fields<T> {
         return new Builder<>(subject);
     }
 
+    private String toKey(final Field field) {
+        return toKey.apply(subject, field);
+    }
+
     /**
      * Copies all relevant fields from an {@code original} to a {@code target}.
      *
@@ -107,6 +122,13 @@ public class Fields<T> {
         return backing.stream()
                 .map(field -> Objects.hashCode(get(field, subject)))
                 .reduce(0, (x, y) -> (x >>> 7) ^ y);
+    }
+
+    /**
+     * Retrieves a {@link Mapping} for a given {@code subject}.
+     */
+    public final Mapping<T> map(final T original) {
+        return new Mapping<>(this, original);
     }
 
     public enum Filter implements Predicate<Field> {
@@ -140,6 +162,47 @@ public class Fields<T> {
         }
     }
 
+    /**
+     * Represents a mapping for a specific {@code subject}.
+     */
+    public static final class Mapping<T> {
+
+        private final Fields<T> fields;
+        private final T subject;
+
+        private Mapping(final Fields<T> fields, final T subject) {
+            this.fields = fields;
+            this.subject = subject;
+        }
+
+        /**
+         * Maps all relevant fields from the {@code subject} to a {@code target}.
+         *
+         * @return The {@code target}
+         * @throws IllegalArgumentException When {@code subject} cannot be handled by the underlying Fields
+         */
+        public final Map<String, Object> to(final Map<String, Object> target) {
+            fields.backing.stream()
+                    .forEach(field -> target.put(fields.toKey(field), get(field, subject)));
+            return target;
+        }
+
+        /**
+         * Maps all relevant fields from an {@code original} to the {@code subject}.
+         *
+         * @return The {@code subject}
+         * @throws IllegalArgumentException When {@code subject} cannot be handled by the underlying Fields
+         */
+        public final T from(final Map<String, Object> original) {
+            fields.backing.stream()
+                    .forEach(field -> set(field, subject, original.get(fields.toKey(field))));
+            return subject;
+        }
+    }
+
+    /**
+     * Defines a Builder for {@link Fields}
+     */
     @SuppressWarnings("FieldHasSetterButNoGetter")
     public static class Builder<T> {
 

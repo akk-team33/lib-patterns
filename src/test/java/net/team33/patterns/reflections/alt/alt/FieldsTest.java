@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
@@ -73,13 +74,53 @@ public class FieldsTest {
         assertEquals(original, result);
     }
 
-//    @Test
-//    public final void mapAny() {
-//        final Any original = random.nextObject(Any.class);
-//        final Map<String, Object> map = Any.FIELDS.map(original).to(new TreeMap<>());
-//        final Any result = Any.FIELDS.copy(original, new Any());
-//        assertEquals(original, result);
-//    }
+    @Test
+    public final void mapAny() {
+        final Any original = random.nextObject(Any.class);
+        final Map<String, Object> map = Any.FIELDS.map(original).to(new TreeMap<>());
+        final Any result = Any.FIELDS.map(new Any()).from(map);
+        assertEquals(original, result);
+    }
+
+    @Test
+    public final void mapOther() {
+        final Other original = random.nextObject(Other.class);
+        final Map<String, Object> map = Other.FIELDS.map(original).to(new TreeMap<>());
+        final Other result = Other.FIELDS.map(new Other()).from(map);
+        assertEquals(original, result);
+    }
+
+    @Test
+    public final void equalsAny() {
+        final int[] count = {0, 0};
+        duplicated.forEach(left -> duplicated.forEach(right -> {
+            final int index = left.equals(right) ? 0 : 1;
+            count[index] += 1;
+            assertEquals(index, Any.FIELDS.equals(left, right) ? 0 : 1);
+        }));
+        assertEquals(32, count[0]);
+        assertEquals(224, count[1]);
+    }
+
+    @Test
+    public final void hashAny() {
+        final int[] count = {0, 0};
+        duplicated.forEach(left -> duplicated.forEach(right -> {
+            final boolean equalsLR = Any.FIELDS.equals(left, right);
+            final int leftHash = Any.FIELDS.hashCode(left);
+            final int rightHash = Any.FIELDS.hashCode(right);
+            if (equalsLR) {
+                assertEquals(leftHash, rightHash);
+                count[0] += 1;
+            }
+            if (leftHash != rightHash) {
+                assertFalse(equalsLR);
+                count[1] += 1;
+            }
+        }));
+        assertTrue("count[0] = " + count[0], 32 >= count[0]);
+        assertTrue("count[1] = " + count[1], 224 >= count[1]);
+    }
 
     @Test
     public final void equalsOther() {
