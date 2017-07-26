@@ -8,18 +8,17 @@
     <name>Team33 Patterns Library</name>
     <description>Team33 patterns library</description>
     <dependencies>
-        <!--dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>[16.0.1,16.1.0)</version>
-            <type>jar</type>
-            <scope>compile</scope>
-        </dependency-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>[4.11,5.0)</version>
             <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.benas</groupId>
+            <artifactId>random-beans</artifactId>
+            <version>3.6.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
