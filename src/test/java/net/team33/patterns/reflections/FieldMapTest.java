@@ -13,21 +13,20 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static net.team33.patterns.reflections.FieldUtil.ACCESSIBLE;
 import static net.team33.patterns.reflections.FieldUtil.SIGNIFICANT;
 
 public class FieldMapTest {
 
     private static final EnhancedRandomBuilder RANDOM_BUILDER = EnhancedRandomBuilder.aNewEnhancedRandomBuilder()
+            .overrideDefaultInitialization(true)
             .collectionSizeRange(1, 3)
             .stringLengthRange(4, 16);
 
     private final EnhancedRandom random = RANDOM_BUILDER.build();
     private final Map<String, Field> fields = Stream.of(Sample.class.getDeclaredFields())
             .filter(SIGNIFICANT)
-            .collect(Collectors.toMap(Field::getName, field -> {
-                field.setAccessible(true);
-                return field;
-            }, (l, r) -> r, TreeMap::new));
+            .collect(Collectors.toMap(Field::getName, ACCESSIBLE, (l, r) -> r, TreeMap::new));
     private final FieldMap<Sample> fieldMap = () -> fields.entrySet().stream();
 
     @Test

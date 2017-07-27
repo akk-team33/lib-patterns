@@ -2,6 +2,7 @@ package net.team33.patterns.reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public final class FieldUtil {
@@ -13,6 +14,14 @@ public final class FieldUtil {
     public static final Predicate<Field> SIGNIFICANT = field -> {
         final int modifiers = field.getModifiers();
         return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
+    };
+    /**
+     * Defines a {@link Function} to make (as a side-effect) a {@link Field}
+     * {@linkplain Field#setAccessible(boolean) accessible}.
+     */
+    public static final Function<Field, Field> ACCESSIBLE = field -> {
+        field.setAccessible(true);
+        return field;
     };
 
     private FieldUtil() {

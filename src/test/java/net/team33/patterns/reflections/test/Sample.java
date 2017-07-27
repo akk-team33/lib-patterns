@@ -11,17 +11,17 @@ public class Sample {
     public static final String aStaticFinalField = "aStaticFinalField";
     private static String aStaticField = "aStaticField";
 
-    private final String aPrivateFinalField = "Any.aPrivateFinalField";
-    protected final String aProtectedFinalField = "Any.aProtectedFinalField";
-    final String aPackageFinalField = "Any.aPackageFinalField";
-    public final String aPublicFinalField = "Any.aPublicFinalField";
-    public final transient String aPublicFinalTransientField = "Any.aPublicFinalTransientField";
+    private final String aPrivateFinalField = "Sample.aPrivateFinalField";
+    protected final String aProtectedFinalField = "Sample.aProtectedFinalField";
+    final String aPackageFinalField = "Sample.aPackageFinalField";
+    public final String aPublicFinalField = "Sample.aPublicFinalField";
+    public final transient String aPublicFinalTransientField = "Sample.aPublicFinalTransientField";
 
-    private String aPrivateField = "Any.aPrivateField";
-    protected String aProtectedField = "Any.aProtectedField";
-    String aPackageField = "Any.aPackageField";
-    public String aPublicField = "Any.aPublicField";
-    public transient String aPublicTransientField = "Any.aPublicTransientField";
+    private String aPrivateField = "Sample.aPrivateField";
+    protected String aProtectedField = "Sample.aProtectedField";
+    String aPackageField = "Sample.aPackageField";
+    public String aPublicField = "Sample.aPublicField";
+    public transient String aPublicTransientField = "Sample.aPublicTransientField";
 
     @SuppressWarnings("TypeMayBeWeakened")
     private static List<?> toList(final Sample subject) {
