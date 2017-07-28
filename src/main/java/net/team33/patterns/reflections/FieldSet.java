@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import static net.team33.patterns.reflections.FieldUtil.get;
 import static net.team33.patterns.reflections.FieldUtil.set;
 
+@FunctionalInterface
 public interface FieldSet<T> {
 
     /**

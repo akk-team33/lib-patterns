@@ -2,28 +2,40 @@ package net.team33.patterns.reflections;
 
 import java.lang.reflect.Field;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static net.team33.patterns.reflections.FieldUtil.get;
 import static net.team33.patterns.reflections.FieldUtil.set;
 
+@FunctionalInterface
 public interface FieldMap<T> {
 
     /**
-     * Supplies a {@link Stream} of {@link Entry Map.Entries} of provided {@link Field Fields}
+     * Supplies a {@link Stream} of {@link Entry Entries} over the provided {@link Field Fields}
      * associated with an appropriate name, that may differ from the original {@link Field#getName() Field.name}.
      *
      * The Fields must be {@linkplain Field#setAccessible(boolean) accessible}.
      */
-    Stream<Entry<String, Field>> entries();
+    Stream<Entry> entries();
 
     /**
      * Supplies a {@link Mapper} for a given {@code subject}.
      */
-    default Mapper<T> map(final T original) {
-        return new Mapper<>(this, original);
+    default Mapper<T> map(final T subject) {
+        return new Mapper<T>() {
+            @Override
+            public Map<String, Object> to(final Map<String, Object> target) {
+                entries().forEach(entry -> target.put(entry.name(), get(entry.field(), subject)));
+                return target;
+            }
+
+            @Override
+            public T from(final Map<String, Object> origin) {
+                entries().forEach(entry -> set(entry.field(), subject, origin.get(entry.name())));
+                return subject;
+            }
+        };
     }
 
     /**
@@ -31,43 +43,43 @@ public interface FieldMap<T> {
      */
     default String toString(final T subject) {
         return entries()
-                .map(entry -> entry.getKey() + "=" + get(entry.getValue(), subject))
+                .map(entry -> entry.name() + "=" + get(entry.field(), subject))
                 .collect(Collectors.joining(", ", "{", "}"));
+    }
+
+    /**
+     * Represents an Entry of the FieldMap.
+     */
+    interface Entry {
+
+        /**
+         * The represented {@link Field}.
+         */
+        Field field();
+
+        /**
+         * The associated name (may differ from {@link Field#getName()}).
+         */
+        String name();
     }
 
     /**
      * Represents a mapper to convert a given {@code subject} from or to a {@link Map}.
      */
-    class Mapper<T> {
-
-        private final FieldMap<T> fields;
-        private final T subject;
-
-        private Mapper(final FieldMap<T> fields, final T subject) {
-            this.fields = fields;
-            this.subject = subject;
-        }
+    interface Mapper<T> {
 
         /**
          * Maps all provided fields from the {@code subject} to a given {@link Map}.
          *
          * @return The {@code target}
          */
-        public final Map<String, Object> to(final Map<String, Object> target) {
-            fields.entries()
-                    .forEach(entry -> target.put(entry.getKey(), get(entry.getValue(), subject)));
-            return target;
-        }
+        Map<String, Object> to(final Map<String, Object> target);
 
         /**
          * Maps all provided fields from a given {@link Map} to the {@code subject}.
          *
          * @return The {@code subject}
          */
-        public final T from(final Map<String, Object> origin) {
-            fields.entries()
-                    .forEach(entry -> set(entry.getValue(), subject, origin.get(entry.getKey())));
-            return subject;
-        }
+        T from(final Map<String, Object> origin);
     }
 }
