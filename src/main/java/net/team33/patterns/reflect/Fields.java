@@ -66,7 +66,7 @@ public final class Fields<T> {
         }
     }
 
-    public final Mapping<T> map(final T subject) {
+    public final Mapper<T, Map<String, Object>> map(final T subject) {
         return new Mapping<>(this, subject);
     }
 
@@ -101,7 +101,14 @@ public final class Fields<T> {
                 .collect(Collectors.joining(", ", "{", "}"));
     }
 
-    public static final class Copying<T> {
+    public interface Mapper<X, Y> {
+
+        <Z extends Y> Z to(Z other);
+
+        X from(Y other);
+    }
+
+    public static final class Copying<T> implements Mapper<T, T> {
         private final Fields<T> fields;
         private final T subject;
 
@@ -110,23 +117,25 @@ public final class Fields<T> {
             this.subject = subject;
         }
 
-        private T copy(final T origin, final T target) {
+        private <U extends T> U copy(final T origin, final U target) {
             for (final Field field : fields.backing.values()) {
                 set(field, target, valueOf(field, origin));
             }
             return target;
         }
 
-        public T from(final T origin) {
-            return copy(origin, subject);
+        @Override
+        public T from(final T other) {
+            return copy(other, subject);
         }
 
-        public T to(final T target) {
-            return copy(subject, target);
+        @Override
+        public <U extends T> U to(final U other) {
+            return copy(subject, other);
         }
     }
 
-    public static final class Mapping<T> {
+    public static final class Mapping<T> implements Mapper<T, Map<String, Object>> {
         private final Fields<T> fields;
         private final T subject;
 
@@ -135,16 +144,18 @@ public final class Fields<T> {
             this.subject = subject;
         }
 
-        public <M extends Map<String, Object>> M to(final M target) {
+        @Override
+        public <M extends Map<String, Object>> M to(final M other) {
             for (final Entry<String, Field> entry : fields.backing.entrySet()) {
-                target.put(entry.getKey(), valueOf(entry.getValue(), subject));
+                other.put(entry.getKey(), valueOf(entry.getValue(), subject));
             }
-            return target;
+            return other;
         }
 
-        public T from(final Map<String, ?> origin) {
+        @Override
+        public T from(final Map<String, Object> other) {
             for (final Entry<String, Field> entry : fields.backing.entrySet()) {
-                set(entry.getValue(), subject, origin.get(entry.getKey()));
+                set(entry.getValue(), subject, other.get(entry.getKey()));
             }
             return subject;
         }

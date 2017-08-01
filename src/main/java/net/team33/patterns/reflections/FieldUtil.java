@@ -2,6 +2,7 @@ package net.team33.patterns.reflections;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -15,6 +16,10 @@ public final class FieldUtil {
         final int modifiers = field.getModifiers();
         return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
     };
+    /**
+     * Defines a {@link Consumer} to make a {@link Field} {@linkplain Field#setAccessible(boolean) accessible}.
+     */
+    public static final Consumer<Field> SET_ACCESSIBLE = field -> field.setAccessible(true);
     /**
      * Defines a {@link Function} to make (as a side-effect) a {@link Field}
      * {@linkplain Field#setAccessible(boolean) accessible}.
