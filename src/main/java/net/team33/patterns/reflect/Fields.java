@@ -36,7 +36,7 @@ public class Fields<T> {
     }
 
     /**
-     * Copies all provided fields from the {@code subject} to an {@code other} instance.
+     * Copies all provided fields from the associated {@code subject} to an {@code other} instance.
      *
      * @return The {@code other} instance.
      */
@@ -45,7 +45,7 @@ public class Fields<T> {
     }
 
     /**
-     * Copies all provided fields from an {@code other} instance of T to the {@code subject}.
+     * Copies all provided fields from an {@code other} instance of T to the associated {@code subject}.
      *
      * @return The {@code other} instance.
      */
@@ -59,7 +59,7 @@ public class Fields<T> {
     }
 
     /**
-     * Maps all provided fields from the {@code subject} to a given {@code target}.
+     * Maps all provided fields from the associated {@code subject} to a given {@code target}.
      *
      * @return The {@code target}
      */
@@ -69,7 +69,7 @@ public class Fields<T> {
     }
 
     /**
-     * Maps all provided fields from a given {@code origin} to the {@code subject}.
+     * Maps all provided fields from a given {@code origin} to the associated {@code subject}.
      *
      * @return The {@code subject}
      */
@@ -80,7 +80,8 @@ public class Fields<T> {
 
     /**
      * Determines if all values of the provided fields are equal
-     * between the {@code subject} and an {@code other} instance.
+     * between the associated {@code subject} and an {@code other} instance.
+     * It is intended to be used for an implementation of the equals()-method of the subjectClass.
      */
     public final boolean equalsTo(final T other) {
         return backing.values().stream()
@@ -88,7 +89,8 @@ public class Fields<T> {
     }
 
     /**
-     * Calculates a hash code from the provided fields for the {@code subject}.
+     * Calculates the hash code from the provided fields for the associated {@code subject}.
+     * It is intended to be used for an implementation of the hashCode()-method of the subjectClass.
      */
     public final int toHashCode() {
         return backing.values().stream()
@@ -97,8 +99,12 @@ public class Fields<T> {
     }
 
     /**
-     * Calculates a string representation for the {@code subject}.
+     * {@inheritDoc}
+     *
+     * This implementation calculates the string representation from the provided fields for the associated
+     * {@code subject}. It is intended to be used for an implementation of the toString()-method of the subjectClass.
      */
+    @Override
     public final String toString() {
         return backing.entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + get(entry.getValue(), subject))
