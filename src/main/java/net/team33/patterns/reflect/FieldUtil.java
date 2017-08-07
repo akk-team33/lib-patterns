@@ -1,4 +1,4 @@
-package net.team33.patterns.reflections;
+package net.team33.patterns.reflect;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -16,10 +16,12 @@ public final class FieldUtil {
         final int modifiers = field.getModifiers();
         return !(Modifier.isStatic(modifiers) || Modifier.isTransient(modifiers));
     };
+
     /**
      * Defines a {@link Consumer} to make a {@link Field} {@linkplain Field#setAccessible(boolean) accessible}.
      */
     public static final Consumer<Field> SET_ACCESSIBLE = field -> field.setAccessible(true);
+
     /**
      * Defines a {@link Function} to make (as a side-effect) a {@link Field}
      * {@linkplain Field#setAccessible(boolean) accessible}.
@@ -28,6 +30,11 @@ public final class FieldUtil {
         field.setAccessible(true);
         return field;
     };
+
+    /**
+     * Defines a {@link Function} to get the simple name of a {@link Field}.
+     */
+    public static final Function<Field, String> TO_SIMPLE_NAME = Field::getName;
 
     private FieldUtil() {
     }

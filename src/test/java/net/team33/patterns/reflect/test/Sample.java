@@ -1,4 +1,4 @@
-package net.team33.patterns.reflections.test;
+package net.team33.patterns.reflect.test;
 
 import java.util.Arrays;
 import java.util.List;
