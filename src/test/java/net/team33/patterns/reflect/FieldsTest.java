@@ -3,6 +3,7 @@ package net.team33.patterns.reflect;
 import io.github.benas.randombeans.EnhancedRandomBuilder;
 import io.github.benas.randombeans.api.EnhancedRandom;
 import net.team33.patterns.reflect.test.Sample;
+import net.team33.patterns.reflect.test.SampleEx;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +15,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
+import static net.team33.patterns.reflect.Fields.ToStream.HIERARCHICAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
@@ -26,6 +28,10 @@ public class FieldsTest {
 
     private final EnhancedRandom random = RANDOM_BUILDER.build();
     private final Function<Sample, Fields<Sample>> fields = Fields.of(Sample.class);
+    private final Function<SampleEx, Fields<SampleEx>> fieldsEx = Fields.builder(SampleEx.class)
+            .setToStream(HIERARCHICAL)
+            .setToName(field -> field.getDeclaringClass().getSimpleName() + "." + field.getName())
+            .build();
     private List<Sample> samples;
 
     @Before
@@ -56,6 +62,14 @@ public class FieldsTest {
         final Sample origin = random.nextObject(Sample.class);
         final Map<String, Object> map = fields.apply(origin).mapTo(new HashMap<>());
         final Sample result = fields.apply(new Sample()).mapFrom(map);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    public final void mapToFromEx() {
+        final SampleEx origin = random.nextObject(SampleEx.class);
+        final Map<String, Object> map = fieldsEx.apply(origin).mapTo(new HashMap<>());
+        final SampleEx result = fieldsEx.apply(new SampleEx()).mapFrom(map);
         assertEquals(origin, result);
     }
 

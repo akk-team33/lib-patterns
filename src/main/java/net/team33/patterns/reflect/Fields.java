@@ -111,15 +111,46 @@ public class Fields<T> {
                 .collect(Collectors.joining(", ", "{", "}"));
     }
 
+    public enum ToStream implements Function<Class<?>, Stream<Field>> {
+
+        /**
+         * Delivers all {@link Field}s straightly declared by a given {@link Class}
+         */
+        SIMPLE {
+            @Override
+            public Stream<Field> apply(final Class<?> subject) {
+                return Stream.of(subject.getDeclaredFields());
+            }
+        },
+
+        /**
+         * Delivers all {@link Field}s declared by a given {@link Class} or any of its ancestors.
+         */
+        HIERARCHICAL {
+            @Override
+            public Stream<Field> apply(final Class<?> subject) {
+                return (null == subject)
+                        ? Stream.empty()
+                        : Stream.concat(apply(subject.getSuperclass()), Stream.of(subject.getDeclaredFields()));
+            }
+        }
+    }
+
     @SuppressWarnings({"FieldHasSetterButNoGetter", "unused"})
     public static class Builder<T> {
 
         private final Class<T> subjectClass;
+        private Function<Class<?>, Stream<Field>> toStream = ToStream.SIMPLE;
         private Predicate<Field> filter = FieldUtil.SIGNIFICANT;
         private Function<Field, String> toName = FieldUtil.TO_SIMPLE_NAME;
 
         private Builder(final Class<T> subjectClass) {
             this.subjectClass = subjectClass;
+        }
+
+        public final Builder<T> setToStream(final Function<Class<?>, Stream<Field>> toStream) {
+            this.toStream = toStream;
+            return this;
         }
 
         public final Builder<T> setFilter(final Predicate<Field> filter) {
@@ -138,7 +169,7 @@ public class Fields<T> {
         }
 
         public final Function<T, Fields<T>> build() {
-            final Map<String, Field> backing = Stream.of(subjectClass.getDeclaredFields())
+            final Map<String, Field> backing = toStream.apply(subjectClass)
                     .filter(filter)
                     .peek(FieldUtil.SET_ACCESSIBLE)
                     .collect(Collectors.toMap(toName, field -> field));
