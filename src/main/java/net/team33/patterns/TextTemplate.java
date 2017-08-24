@@ -4,13 +4,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unused")
 public class TextTemplate {
 
     private static final Comparator<PlaceHolder> PLACE_HOLDER_SYMBOL_ORDER =
@@ -23,8 +19,6 @@ public class TextTemplate {
         final int result = Integer.compare(left.start, right.start);
         return (0 == result) ? PLACE_HOLDER_LIMIT_ORDER.compare(left, right) : result;
     };
-    private static final Supplier<Set<PlaceHolder>> NEW_PLACE_HOLDERS =
-            () -> new TreeSet<>(PLACE_HOLDER_ORDER);
 
     private final String template;
 
@@ -33,33 +27,36 @@ public class TextTemplate {
     }
 
     public final String resolve(final Map<String, ?> data) {
-        return fragments(data)
-                .map(fragment -> fragment.resolve(data))
-                .collect(Collectors.joining());
+        return new Resolver(data.keySet()).resolve(data);
     }
 
-    private Stream<Fragment> fragments(final Map<String, ?> data) {
-        return placeHolders(data)
-                .collect(Fragments::new, Fragments::add, Fragments::addAll)
-                .stream();
-    }
+    private class Resolver {
+        private final Fragments fragments;
 
-    private Stream<PlaceHolder> placeHolders(final Map<String, ?> data) {
-        return data.keySet().stream()
-                .map(this::symbolPlaceHolders)
-                .collect(NEW_PLACE_HOLDERS, Set::addAll, Set::addAll)
-                .stream();
-    }
-
-    private Collection<PlaceHolder> symbolPlaceHolders(final String symbol) {
-        final Collection<PlaceHolder> result = new LinkedList<>();
-        int start = template.indexOf(symbol);
-        while (0 <= start) {
-            final int limit = start + symbol.length();
-            result.add(new PlaceHolder(symbol, start, limit));
-            start = template.indexOf(symbol, limit);
+        private Resolver(final Collection<String> placeHolders) {
+            fragments = placeHolders.stream()
+                    .map(this::placeHolders)
+                    .reduce(Stream.empty(), Stream::concat)
+                    .sorted(PLACE_HOLDER_ORDER)
+                    .collect(Fragments::new, Fragments::add, Fragments::addAll);
         }
-        return result;
+
+        private Stream<PlaceHolder> placeHolders(final String symbol) {
+            final Collection<PlaceHolder> result = new LinkedList<>();
+            int start = template.indexOf(symbol);
+            while (0 <= start) {
+                final int limit = start + symbol.length();
+                result.add(new PlaceHolder(symbol, start, limit));
+                start = template.indexOf(symbol, limit);
+            }
+            return result.stream();
+        }
+
+        private String resolve(final Map<String, ?> data) {
+            return fragments.stream()
+                    .map(fragment -> fragment.resolve(data))
+                    .collect(Collectors.joining());
+        }
     }
 
     @FunctionalInterface
@@ -89,11 +86,12 @@ public class TextTemplate {
             if (placeHolder.start >= last) {
                 final String prefix = template.substring(last, placeHolder.start);
                 result.add(map -> prefix);
-                result.add(map -> map.get(placeHolder.symbol).toString());
+                result.add(map -> String.valueOf(map.get(placeHolder.symbol)));
                 last = placeHolder.limit;
             }
         }
 
+        @SuppressWarnings("unused")
         private void addAll(final Fragments other) {
             throw new UnsupportedOperationException("This method is not expected to be called at all");
         }

@@ -17,13 +17,22 @@ public class TextTemplateTest {
                 .replace("i", "[I]")
                 .replace("mpl", "[MPL]")
                 .replace("Te", "[TE]")
-                .replace("e", "[E]");
+                .replace("e", "[E]")
+                .replace("x", "null");
         final String result = template.resolve(new HashMap<String, String>() {{
             put("i", "[I]");
             put("mpl", "[MPL]");
             put("Te", "[TE]");
             put("e", "[E]");
+            put("x", null);
         }});
         Assert.assertEquals(expected, result);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public final void resolveNull() {
+        template.resolve(new HashMap<String, String>() {{
+            put(null, "[X]");
+        }});
     }
 }
