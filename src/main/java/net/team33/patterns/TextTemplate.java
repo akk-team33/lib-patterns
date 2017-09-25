@@ -26,11 +26,37 @@ public class TextTemplate {
         this.template = template;
     }
 
-    public final String resolve(final Map<String, ?> data) {
-        return new Resolver(data.keySet()).resolve(data);
+    public final Resolver prepare(final Collection<String> keySet) {
+        return new Resolver(keySet);
     }
 
-    private class Resolver {
+    public final String resolve(final Map<String, ?> data) {
+        return prepare(data.keySet()).resolve(data);
+    }
+
+    @FunctionalInterface
+    private interface Fragment {
+
+        String resolve(Map<String, ?> data);
+    }
+
+    private static class PlaceHolder {
+
+        private final String symbol;
+        private final int start;
+        private final int limit;
+
+        private PlaceHolder(final String symbol, final int start, final int limit) {
+            assert 0 <= start;
+            assert start <= limit;
+            this.symbol = symbol;
+            this.start = start;
+            this.limit = limit;
+        }
+    }
+
+    public class Resolver {
+
         private final Fragments fragments;
 
         private Resolver(final Collection<String> placeHolders) {
@@ -52,33 +78,15 @@ public class TextTemplate {
             return result.stream();
         }
 
-        private String resolve(final Map<String, ?> data) {
+        public final String resolve(final Map<String, ?> data) {
             return fragments.stream()
                     .map(fragment -> fragment.resolve(data))
                     .collect(Collectors.joining());
         }
     }
 
-    @FunctionalInterface
-    private interface Fragment {
-        String resolve(Map<String, ?> data);
-    }
-
-    private static class PlaceHolder {
-        private final String symbol;
-        private final int start;
-        private final int limit;
-
-        private PlaceHolder(final String symbol, final int start, final int limit) {
-            assert 0 <= start;
-            assert start <= limit;
-            this.symbol = symbol;
-            this.start = start;
-            this.limit = limit;
-        }
-    }
-
     private class Fragments {
+
         private final Collection<Fragment> result = new LinkedList<>();
         private int last = 0;
 
@@ -91,7 +99,6 @@ public class TextTemplate {
             }
         }
 
-        @SuppressWarnings("unused")
         private void addAll(final Fragments other) {
             throw new UnsupportedOperationException("This method is not expected to be called at all");
         }

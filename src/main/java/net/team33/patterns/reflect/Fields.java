@@ -1,5 +1,9 @@
 package net.team33.patterns.reflect;
 
+import net.team33.patterns.reflect.fields.Filter;
+import net.team33.patterns.reflect.fields.Modder;
+import net.team33.patterns.reflect.fields.ToName;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
@@ -141,8 +145,8 @@ public class Fields<T> {
 
         private final Class<T> subjectClass;
         private Function<Class<?>, Stream<Field>> toStream = ToStream.SIMPLE;
-        private Predicate<Field> filter = FieldUtil.SIGNIFICANT;
-        private Function<Field, String> toName = FieldUtil.TO_SIMPLE_NAME;
+        private Predicate<Field> filter = Filter.SIGNIFICANT;
+        private Function<Field, String> toName = ToName.SIMPLE;
 
         private Builder(final Class<T> subjectClass) {
             this.subjectClass = subjectClass;
@@ -171,7 +175,7 @@ public class Fields<T> {
         public final Function<T, Fields<T>> build() {
             final Map<String, Field> backing = toStream.apply(subjectClass)
                     .filter(filter)
-                    .peek(FieldUtil.SET_ACCESSIBLE)
+                    .peek(Modder.SET_ACCESSIBLE)
                     .collect(Collectors.toMap(toName, field -> field));
             return subject -> new Fields<>(subject, backing);
         }
