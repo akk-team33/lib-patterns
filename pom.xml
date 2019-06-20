@@ -6,7 +6,7 @@
     <version>8.1.5-SNAPSHOT</version>
     <!--version>8.1.5</version-->
     <name>Team33 Patterns Library</name>
-    <description>Team33 patterns library</description>
+    <description>Experimental platform for draft and evaluating pattern implementations</description>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
