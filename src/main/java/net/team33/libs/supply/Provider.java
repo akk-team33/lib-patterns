@@ -24,9 +24,12 @@ public class Provider<T> {
     }
 
     /**
-     * Runs a {@link Consumer} supplied with the appropriate input managed by this provider.
+     * <p>Convenience method:</p>
+     * <p>Runs a {@link Consumer} supplied with the appropriate input managed by this provider.
      * The input is available to the {@link Consumer} during its runtime and in the executing thread
-     * exclusively, but it must not be "hijacked" out of this context!
+     * exclusively, but it must not be "hijacked" out of this context!</p>
+     * <p>Saves the explicit {@linkplain #provide() request} and {@linkplain #restore(Object) return}
+     * of an item in a try-finally construct.</p>
      */
     public final void run(final Consumer<? super T> consumer) {
         get(item -> {
@@ -36,16 +39,48 @@ public class Provider<T> {
     }
 
     /**
-     * Performs a {@link Function} that is provided with a corresponding parameter managed by this provider
+     * <p>Convenience method:</p>
+     * <p>Performs a {@link Function} that is provided with a corresponding parameter managed by this provider
      * and returns its result. The parameter is exclusively available to the {@link Function} during its
-     * runtime and in the executing thread, but it must not be "hijacked" out of this context!
+     * runtime and in the executing thread, but it must not be "hijacked" out of this context!</p>
+     * <p>Saves the explicit {@linkplain #provide() request} and {@linkplain #restore(Object) return}
+     * of an item in a try-finally construct.</p>
      */
     public final <R> R get(final Function<? super T, ? extends R> function) {
-        final T item = Optional.ofNullable(stock.poll()).orElseGet(newItem);
+        final T item = provide();
         try {
             return function.apply(item);
         } finally {
-            stock.add(item);
+            restore(item);
         }
+    }
+
+    /**
+     * <p>Provides an instance of the associated type for temporary use. It is intended that this instance
+     * will only be used in the current thread, {@linkplain #restore(Object) returned to this provider}
+     * after use, and then no longer used.</p>
+     * <p>A typical application looks like this:</p>
+     * <pre>
+     * final T item = provide();
+     * try {
+     *     // do anything with the provided item ...
+     * } finally {
+     *     restore(item);
+     * }
+     * </pre>
+     *
+     * @see #restore(Object)
+     */
+    public final T provide() {
+        return Optional.ofNullable(stock.poll()).orElseGet(newItem);
+    }
+
+    /**
+     * <p>Returns an item previously {@linkplain #provide() provided} by this provider.</p>
+     *
+     * @see #provide()
+     */
+    public final void restore(final T item) {
+        stock.add(item);
     }
 }
