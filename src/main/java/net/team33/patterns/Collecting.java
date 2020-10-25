@@ -18,10 +18,12 @@ import static java.util.Arrays.asList;
  */
 @SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
 public final class Collecting {
+
     private Collecting() {
     }
 
     /**
+     * For the sake of completeness.
      * Just like {@link Collection#add(Object)} for a given {@code subject}, but ...
      *
      * @return The {@code subject}.
