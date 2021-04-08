@@ -1,9 +1,9 @@
 # mvn / build artifacts
-/target
+*/target/
 
 # IntelliJ IDEA artifacts
 .DS_Store
-/.idea
+/.idea/
 *.iml
 
 # eclipse artifacts

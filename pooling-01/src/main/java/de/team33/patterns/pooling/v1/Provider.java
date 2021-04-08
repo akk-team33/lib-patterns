@@ -70,7 +70,7 @@ public class Provider<P> {
      *
      * @param <R> The result type of the given {@link Function}
      */
-    public final <R> R get(final Function<? super P, ? extends R> function) {
+    public final <R> R get(final Function<? super P, R> function) {
         final P item = Optional.ofNullable(stock.poll())
                                .orElseGet(newItem);
         try {
