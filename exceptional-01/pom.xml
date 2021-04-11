@@ -8,12 +8,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pooling-01</artifactId>
+    <artifactId>exceptional-01</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Team33 Pooling Library</name>
-    <description>Provides pooling of "expensive" but thread-sensitive instances</description>
+    <name>Team33 Exceptional Library</name>
+    <description>Contains variants of basic functional constructs that can throw checked exceptions</description>
 
     <dependencies>
         <dependency>

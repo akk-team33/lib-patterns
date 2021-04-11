@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library</name>
@@ -39,12 +39,18 @@
     </properties>
 
     <modules>
+        <module>exceptional-01</module>
         <module>pooling-01</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- Submodules -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>exceptional-01</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>
@@ -73,7 +79,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.2.0</version>
                     <configuration>
-                        <show>public</show>
+                        <show>protected</show>
                         <bottom><![CDATA[Copyright &copy; ${copyright.year} Andreas Kluge-Kaindl, Bremen (de). All rights reserved.]]></bottom>
                     </configuration>
                 </plugin>
