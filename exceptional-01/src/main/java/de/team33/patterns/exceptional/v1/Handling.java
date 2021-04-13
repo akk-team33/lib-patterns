@@ -1,7 +1,6 @@
 package de.team33.patterns.exceptional.v1;
 
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 /**
  * A tool that supports the differentiated handling of an exception, especially its {@link Throwable#getCause() cause}.
@@ -34,14 +33,17 @@ import java.util.function.Predicate;
  * </pre>
  *
  * @see #of(Throwable)
- * @see #reThrowAs(Class)
+ * @see #reThrowCauseIf(Class)
+ * @see #mappedCause(Function)
  */
 public final class Handling<T extends Throwable> {
 
     private final T subject;
+    private final Throwable cause;
 
     private Handling(final T subject) {
         this.subject = subject;
+        this.cause = subject.getCause();
     }
 
     /**
@@ -52,6 +54,12 @@ public final class Handling<T extends Throwable> {
      */
     public static <T extends Throwable> Handling<T> of(final T subject) {
         return new Handling<>(subject);
+    }
+
+    private static <X extends Throwable> void throwIfPresent(final X exception) throws X {
+        if (null != exception) {
+            throw exception;
+        }
     }
 
     /**
@@ -78,22 +86,65 @@ public final class Handling<T extends Throwable> {
      * @return This handling, which can be continued if no exception has been thrown.
      * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
      * @see #of(Throwable)
+     * @see #mappedCause(Function)
+     * @see #throwMappedCause(Function)
      */
-    public final <X extends Throwable> Handling<T> reThrowAs(final Class<X> type) throws X {
-        return when(type::isInstance).thenThrow(type::cast);
+    public final <X extends Throwable> Handling<T> reThrowCauseIf(final Class<X> type) throws X {
+        throwIfPresent(type.isInstance(cause) ? type.cast(cause) : null);
+        return this;
     }
 
-    public final Conditional<T> when(final Predicate<? super T> condition) {
-        if (condition.test(subject))
-            return new Positive();
-        else
-            return new Negative();
+    /**
+     * @deprecated This method has been found to be redundant. Use a standard {@code try-catch} statement instead.
+     */
+    @Deprecated
+    public final <X extends Throwable> Handling<T> reThrowIf(final Class<X> type) throws X {
+        throwIfPresent(type.isInstance(subject) ? type.cast(subject) : null);
+        return this;
+    }
+
+    /**
+     * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} and throws the
+     * result if it is NOT {@code null}. Otherwise this {@link Handling} will be returned.
+     *
+     * @param mapping A {@link Function} that converts the {@linkplain #of(Throwable) associated exception} to a
+     *                specific type of exception to be thrown at that point, or returns {@code null} if handling should
+     *                continue.
+     * @param <X>     The exception type that is intended as a result of the given mapping and that is thrown by this
+     *                method, if applicable.
+     * @return This handling, which can be continued if no exception has been thrown.
+     * @throws X The converted exception, if present.
+     * @see #throwMappedCause(Function)
+     */
+    public final <X extends Throwable> Handling<T> throwMapped(final Function<? super T, X> mapping) throws X {
+        throwIfPresent(mapping.apply(subject));
+        return this;
+    }
+
+    /**
+     * Applies a given {@link Function mapping} to the {@link Throwable#getCause() cause} of the
+     * {@linkplain #of(Throwable) associated exception} and throws the result if it is NOT {@code null}.
+     * Otherwise this {@link Handling} will be returned.
+     *
+     * @param mapping A {@link Function} that converts the {@link Throwable#getCause() cause} of the
+     *                {@linkplain #of(Throwable) associated exception} to a specific type of exception to be thrown at
+     *                that point, or returns {@code null} if handling should continue.
+     * @param <X>     The exception type that is intended as a result of the given mapping and that is thrown by this
+     *                method, if applicable.
+     * @return This handling, which can be continued if no exception has been thrown.
+     * @throws X The converted exception, if present.
+     * @see #throwMapped(Function)
+     * @see #reThrowCauseIf(Class)
+     */
+    public final <X extends Throwable> Handling<T> throwMappedCause(final Function<Throwable, X> mapping) throws X {
+        throwIfPresent(mapping.apply(cause));
+        return this;
     }
 
     /**
      * Returns the {@linkplain #of(Throwable) associated exception}.
      */
-    public final T get() {
+    public final T fallback() {
         return subject;
     }
 
@@ -101,26 +152,15 @@ public final class Handling<T extends Throwable> {
      * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} and returns the
      * result.
      */
-    public final <X extends Throwable> X map(final Function<? super T, X> mapping) {
+    public final <X extends Throwable> X mapped(final Function<? super T, X> mapping) {
         return mapping.apply(subject);
     }
 
-    public interface Conditional<T extends Throwable> {
-
-        <X extends Throwable> Handling<T> thenThrow(final Function<T, X> mapping) throws X;
-    }
-
-    private class Negative implements Conditional<T> {
-        @Override
-        public <X extends Throwable> Handling<T> thenThrow(final Function<T, X> mapping) throws X {
-            return Handling.this;
-        }
-    }
-
-    private class Positive implements Conditional<T> {
-        @Override
-        public <X extends Throwable> Handling<T> thenThrow(final Function<T, X> mapping) throws X {
-            throw mapping.apply(subject);
-        }
+    /**
+     * Applies a given {@link Function mapping} to the {@link Throwable#getCause() cause} of the
+     * {@linkplain #of(Throwable) associated exception} and returns the result.
+     */
+    public final <X extends Throwable> X mappedCause(final Function<Throwable, X> mapping) {
+        return mapping.apply(cause);
     }
 }

@@ -34,7 +34,7 @@ import java.util.function.Predicate;
  * </pre>
  *
  * @see #of(Throwable)
- * @see #reThrow(Class)
+ * @see #reThrowWhen(Class)
  */
 public final class Choices<T extends Throwable> {
 
@@ -55,39 +55,38 @@ public final class Choices<T extends Throwable> {
     }
 
     /**
-     * Re-throws the {@link Throwable#getCause() cause} of the {@linkplain #of(Throwable) associated exception}
-     * if it matches the given exception type. Otherwise this {@link Choices} will be returned. Example:
+     * Rethrows the  {@linkplain #of(Throwable) associated exception} if it matches the given exception type.
+     * Otherwise this {@link Choices} will be returned. Example:
      * <pre>
      * try {
      *     doSomethingThatMayThrowAWrappedException();
      * } catch (final WrappedException caught) {
      *     // We want to unwrap the cause of the caught exception and rethrow
      *     // it as a certain type of exception that meets our expectations ...
-     *     throw Handling.of(caught)
-     *                   .reThrowCauseIf(IOException.class)
-     *                   .reThrowCauseIf(SQLException.class)
-     *                   .reThrowCauseIf(URISyntaxException.class)
-     *                   // Technically, it could happen that our expectations are not met.
-     *                   // To be on the safe side, this should lead to a meaningful exception ...
-     *                   .mappedCause(ExpectationException::new);
+     *     Choices.of(caught.getCause())
+     *            .<b>reThrowWhen(IOException.class)</b>
+     *            .<b>reThrowWhen(SQLException.class)</b>
+     *            .<b>reThrowWhen(URISyntaxException.class)</b>;
      * }
      * </pre>
      *
      * @param type The {@link Class} that represents the type of exception that is expected.
-     * @param <X>  The type of exception that is expected and, if applicable, thrown by this method.
-     * @return This handling, which can be continued if no exception has been thrown.
-     * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
+     * @param <X>  The type of exception that this method expects and that is thrown when the expectation is met.
+     * @return This {@link Choices}, which can be continued if no exception has been thrown.
+     * @throws X The {@linkplain #of(Throwable) associated exception}, cast to the expected type if the expectation is
+     *           met.
      * @see #of(Throwable)
      */
-    public final <X extends Throwable> Choices<T> reThrow(final Class<X> type) throws X {
-        return when(type::isInstance).reThrow(type::cast);
+    public final <X extends Throwable> Choices<T> reThrowWhen(final Class<X> type) throws X {
+        return throwWhen(type::isInstance, type::cast);
     }
 
-    public final Conditional<T> when(final Predicate<? super T> condition) {
-        if (condition.test(subject))
-            return new Positive();
-        else
-            return new Negative();
+    public final <X extends Throwable> Choices<T> throwWhen(final Predicate<? super T> condition,
+                                                            final Function<? super T, X> mapping) throws X {
+        if (condition.test(subject)) {
+            throw mapping.apply(subject);
+        }
+        return this;
     }
 
     /**
@@ -103,24 +102,5 @@ public final class Choices<T extends Throwable> {
      */
     public final <X extends Throwable> X finish(final Function<? super T, X> mapping) {
         return mapping.apply(subject);
-    }
-
-    public interface Conditional<T extends Throwable> {
-
-        <X extends Throwable> Choices<T> reThrow(final Function<T, X> mapping) throws X;
-    }
-
-    private class Negative implements Conditional<T> {
-        @Override
-        public <X extends Throwable> Choices<T> reThrow(final Function<T, X> mapping) throws X {
-            return Choices.this;
-        }
-    }
-
-    private class Positive implements Conditional<T> {
-        @Override
-        public <X extends Throwable> Choices<T> reThrow(final Function<T, X> mapping) throws X {
-            throw mapping.apply(subject);
-        }
     }
 }

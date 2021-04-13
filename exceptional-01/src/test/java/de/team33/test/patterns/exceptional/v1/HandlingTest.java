@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertSame;
@@ -50,10 +51,38 @@ public class HandlingTest {
                     fail(EXPECTED_AN_EXCEPTION);
                 } catch (final WrappedException caught) {
                     Handling.of(caught)
-                            .reThrowAs(IOException.class)
-                            .reThrowAs(SQLException.class)
-                            .reThrowAs(IllegalArgumentException.class)
-                            .reThrowAs(IllegalStateException.class);
+                            .reThrowCauseIf(IOException.class)
+                            .reThrowCauseIf(SQLException.class)
+                            .reThrowCauseIf(IllegalArgumentException.class)
+                            .reThrowCauseIf(IllegalStateException.class);
+                    fail(EXPECTED_AN_EXCEPTION);
+                }
+            } catch (final IOException caught) {
+                assertSame(EXCEPTION_LIST.get(0), caught);
+            } catch (final SQLException caught) {
+                assertSame(EXCEPTION_LIST.get(1), caught);
+            } catch (final IllegalArgumentException caught) {
+                assertSame(EXCEPTION_LIST.get(2), caught);
+            } catch (final IllegalStateException caught) {
+                assertSame(EXCEPTION_LIST.get(3), caught);
+            }
+        }
+    }
+
+    @Deprecated
+    @Test
+    public final void reThrowIf() {
+        for (final Exception exception : EXCEPTION_LIST) {
+            try {
+                try {
+                    doThrow(() -> exception);
+                    fail(EXPECTED_AN_EXCEPTION);
+                } catch (final Exception caught) {
+                    Handling.of(caught)
+                            .reThrowIf(IOException.class)
+                            .reThrowIf(SQLException.class)
+                            .reThrowIf(IllegalArgumentException.class)
+                            .reThrowIf(IllegalStateException.class);
                     fail(EXPECTED_AN_EXCEPTION);
                 }
             } catch (final IOException caught) {
@@ -77,10 +106,10 @@ public class HandlingTest {
                     fail(EXPECTED_AN_EXCEPTION);
                 } catch (final WrappedException caught) {
                     Handling.of(caught)
-                            .throwIfPresent(causeWhen(IOException.class))
-                            .throwIfPresent(causeWhen(SQLException.class))
-                            .throwIfPresent(causeWhen(IllegalArgumentException.class))
-                            .throwIfPresent(causeWhen(IllegalStateException.class));
+                            .throwMapped(causeWhen(IOException.class))
+                            .throwMapped(causeWhen(SQLException.class))
+                            .throwMapped(causeWhen(IllegalArgumentException.class))
+                            .throwMapped(causeWhen(IllegalStateException.class));
                     fail(EXPECTED_AN_EXCEPTION);
                 }
             } catch (final IOException caught) {
@@ -126,7 +155,7 @@ public class HandlingTest {
     public final void fallback() {
         final IOException original = new IOException();
         final IOException result = Handling.of(original)
-                                           .get();
+                                           .fallback();
         assertSame(original, result);
     }
 
@@ -134,7 +163,7 @@ public class HandlingTest {
     public final void mapped() {
         final IOException original = new IOException();
         final IOException result = Handling.of(original)
-                                           .map(Function.identity());
+                                           .mapped(Function.identity());
         assertSame(original, result);
     }
 
