@@ -9,12 +9,14 @@ import java.util.Arrays;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 
 public class ConversionTest {
 
-    private static <X extends Exception> String rise(final Function<String, X> newException, Object... args) throws X {
+    private static <X extends Exception>
+    String rise(final Function<? super String, X> newException, final Object... args) throws X {
         throw newException.apply("args: " + Arrays.asList(args));
     }
 
@@ -25,8 +27,8 @@ public class ConversionTest {
                       .run();
             fail("expected to fail but worked");
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: []", e.getCause().getMessage());
         }
     }
@@ -38,8 +40,8 @@ public class ConversionTest {
                       .accept(278);
             fail("expected to fail but worked");
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [278]", e.getCause().getMessage());
         }
     }
@@ -51,8 +53,8 @@ public class ConversionTest {
                       .accept(3.141592654, "a string");
             fail("expected to fail but worked");
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [3.141592654, a string]", e.getCause().getMessage());
         }
     }
@@ -64,8 +66,8 @@ public class ConversionTest {
                                             .get();
             fail("expected to fail but was " + result);
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: []", e.getCause().getMessage());
         }
     }
@@ -77,8 +79,8 @@ public class ConversionTest {
                                              .test(null);
             fail("expected to fail but was " + result);
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [null]", e.getCause().getMessage());
         }
     }
@@ -90,8 +92,8 @@ public class ConversionTest {
                                              .test(0, 'x');
             fail("expected to fail but was " + result);
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [0, x]", e.getCause().getMessage());
         }
     }
@@ -103,8 +105,8 @@ public class ConversionTest {
                                             .apply("another string");
             fail("expected to fail but was " + result);
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [another string]", e.getCause().getMessage());
         }
     }
@@ -116,8 +118,8 @@ public class ConversionTest {
                                             .apply('a', 'b');
             fail("expected to fail but was " + result);
         } catch (final RuntimeException e) {
-            assertEquals(WrappedException.class, e.getClass());
-            assertEquals(IOException.class, e.getCause().getClass());
+            assertSame(WrappedException.class, e.getClass());
+            assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [a, b]", e.getCause().getMessage());
         }
     }

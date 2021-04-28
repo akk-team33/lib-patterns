@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 
 /**
  * A utility class that can convert certain functional constructs that may throw checked exceptions
- * (e.g. {@link XFunction}) into more common constructs (e.g. {@link Function}) that will wrap such exceptions in
- * {@link WrappedException}s.
+ * (e.g. {@link XFunction}) into more common constructs (e.g. {@link Function}) that will wrap such
+ * exceptions in {@link WrappedException}s.
  *
  * @see Converter
  */

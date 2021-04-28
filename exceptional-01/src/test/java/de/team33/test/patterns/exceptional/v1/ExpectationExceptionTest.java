@@ -7,14 +7,13 @@ import java.io.IOException;
 
 import static org.junit.Assert.*;
 
-@SuppressWarnings("ThrowableNotThrown")
 public class ExpectationExceptionTest {
 
     @Test
     public final void initByCause() {
         assertEquals("Unexpected: null",
                      new ExpectationException((Throwable) null).getMessage());
-        assertEquals("Unexpected: IllegalArgumentException",
+        assertEquals("Unexpected: " + IllegalArgumentException.class.getCanonicalName(),
                      new ExpectationException(new IllegalArgumentException()).getMessage());
         assertEquals("Unexpected: the message",
                      new ExpectationException(new IllegalArgumentException("the message")).getMessage());

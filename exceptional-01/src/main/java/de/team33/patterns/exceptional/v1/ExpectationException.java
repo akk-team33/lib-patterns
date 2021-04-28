@@ -36,6 +36,6 @@ public class ExpectationException extends RuntimeException {
 
     private static String messageOfNonNull(final Throwable cause) {
         return Optional.ofNullable(cause.getMessage())
-                       .orElseGet(() -> cause.getClass().getSimpleName());
+                       .orElseGet(() -> cause.getClass().getCanonicalName());
     }
 }

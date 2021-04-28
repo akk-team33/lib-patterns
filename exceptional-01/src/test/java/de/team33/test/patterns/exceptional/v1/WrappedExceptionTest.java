@@ -13,7 +13,7 @@ import static org.junit.Assert.fail;
 
 public class WrappedExceptionTest {
 
-    private String anyMessage() {
+    private static String anyMessage() {
         return UUID.randomUUID().toString();
     }
 
@@ -61,7 +61,7 @@ public class WrappedExceptionTest {
         assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
                    cause, sample.getCause());
         assertTrue("The <sample> is expected to contain the original <message> within its message",
-                   sample.getMessage().contains("null"));
+                   sample.getMessage().contains(cause.getClass().getCanonicalName()));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class WrappedExceptionTest {
         final WrappedException sample = new WrappedException(message, cause);
         assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
                    cause, sample.getCause());
-        assertEquals("The <sample> is expected to contain the given <message> as message",
+        assertEquals("The <sample> is expected to contain the exactly given <message> as message",
                      message, sample.getMessage());
     }
 }

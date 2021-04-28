@@ -34,6 +34,7 @@ public class WrappedException extends RuntimeException {
     }
 
     private static String stdMessage(final Throwable cause) {
-        return "wrapped: " + cause.getMessage();
+        return "wrapped: " + Optional.ofNullable(cause.getMessage())
+                                     .orElseGet(() -> cause.getClass().getCanonicalName());
     }
 }
