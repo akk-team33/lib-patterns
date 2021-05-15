@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntSupplier;
@@ -28,15 +27,17 @@ public class ProviderTest {
 
     @Test
     public final void run() throws InterruptedException {
+        final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
         final Collection<Integer> results = new ConcurrentLinkedQueue<>();
-        final List<Thread> threads = new ArrayList<>(MAX);
+        final Collection<Thread> threads = new ArrayList<>(MAX);
         for (int count = MAX; count > 0; count--) {
             threads.add(new Thread(() -> provider.run(e -> {
                 try {
                     results.add(e.getAsInt());
                     Thread.sleep(10);
                 } catch (final InterruptedException ex) {
-                    throw new UnsupportedOperationException("not yet implemented", ex);
+                    errors.add(ex);
+                    Thread.currentThread().interrupt();
                 }
             })));
         }
@@ -48,12 +49,52 @@ public class ProviderTest {
         }
         assertEquals(MAX, results.size());
         assertTrue(1 < results.stream().reduce(0, Math::max));
+        assertEquals(0, errors.size());
+    }
+
+    @Test
+    public final void runEx() throws InterruptedException {
+        final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
+        final Collection<Integer> results = new ConcurrentLinkedQueue<>();
+        final Collection<Thread> threads = new ArrayList<>(MAX);
+        for (int count = MAX; count > 0; count--) {
+            threads.add(new Thread(() -> {
+                try {
+                    provider.runEx(e -> {
+                        results.add(e.getAsInt());
+                        Thread.sleep(10);
+                    });
+                } catch (final InterruptedException ex) {
+                    errors.add(ex);
+                    Thread.currentThread().interrupt();
+                }
+            }));
+        }
+        for (final Thread thread : threads) {
+            thread.start();
+        }
+        for (final Thread thread : threads) {
+            thread.join();
+        }
+        assertEquals(MAX, results.size());
+        assertTrue(1 < results.stream().reduce(0, Math::max));
+        assertEquals(0, errors.size());
     }
 
     @Test
     public final void get() {
         for (int i = 0; i < MAX; ++i) {
             assertEquals(Integer.valueOf(1), provider.get(IntSupplier::getAsInt));
+        }
+    }
+
+    @Test
+    public final void getEx() throws InterruptedException {
+        for (int i = 0; i < MAX; ++i) {
+            assertEquals(Integer.valueOf(1), provider.getEx(intSupplier -> {
+                Thread.sleep(1);
+                return intSupplier.getAsInt();
+            }));
         }
     }
 }
