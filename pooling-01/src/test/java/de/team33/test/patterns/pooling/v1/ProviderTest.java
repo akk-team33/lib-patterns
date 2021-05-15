@@ -18,11 +18,10 @@ public class ProviderTest {
     private static final int MAX = 16;
 
     private final AtomicInteger nextInt = new AtomicInteger(0);
-    private final Provider<IntSupplier> provider = new Provider<>(this::newDispenser);
+    private final Provider<Dispenser> provider = new Provider<>(this::newDispenser);
 
-    private IntSupplier newDispenser() {
-        final int result = nextInt.incrementAndGet();
-        return () -> result;
+    private Dispenser newDispenser() {
+        return new Dispenser(nextInt.incrementAndGet());
     }
 
     @Test
@@ -31,9 +30,9 @@ public class ProviderTest {
         final Collection<Integer> results = new ConcurrentLinkedQueue<>();
         final Collection<Thread> threads = new ArrayList<>(MAX);
         for (int count = MAX; count > 0; count--) {
-            threads.add(new Thread(() -> provider.run(e -> {
+            threads.add(new Thread(() -> provider.run(dsp -> {
                 try {
-                    results.add(e.getAsInt());
+                    results.add(dsp.getValue());
                     Thread.sleep(10);
                 } catch (final InterruptedException ex) {
                     errors.add(ex);
@@ -54,14 +53,15 @@ public class ProviderTest {
 
     @Test
     public final void runEx() throws InterruptedException {
+        //Repetition.of(() -> {})
         final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
         final Collection<Integer> results = new ConcurrentLinkedQueue<>();
         final Collection<Thread> threads = new ArrayList<>(MAX);
         for (int count = MAX; count > 0; count--) {
             threads.add(new Thread(() -> {
                 try {
-                    provider.runEx(e -> {
-                        results.add(e.getAsInt());
+                    provider.runEx(dsp -> {
+                        results.add(dsp.getValue());
                         Thread.sleep(10);
                     });
                 } catch (final InterruptedException ex) {
@@ -84,16 +84,16 @@ public class ProviderTest {
     @Test
     public final void get() {
         for (int i = 0; i < MAX; ++i) {
-            assertEquals(Integer.valueOf(1), provider.get(IntSupplier::getAsInt));
+            assertEquals(Integer.valueOf(1), provider.get(Dispenser::getValue));
         }
     }
 
     @Test
     public final void getEx() throws InterruptedException {
         for (int i = 0; i < MAX; ++i) {
-            assertEquals(Integer.valueOf(1), provider.getEx(intSupplier -> {
+            assertEquals(Integer.valueOf(1), provider.getEx(dsp -> {
                 Thread.sleep(1);
-                return intSupplier.getAsInt();
+                return dsp.getValue();
             }));
         }
     }
