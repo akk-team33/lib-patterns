@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.IntSupplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -26,6 +25,9 @@ public class ProviderTest {
 
     @Test
     public final void run() throws InterruptedException {
+//        Repetition.run(50, 50, () -> {
+//
+//        });
         final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
         final Collection<Integer> results = new ConcurrentLinkedQueue<>();
         final Collection<Thread> threads = new ArrayList<>(MAX);
