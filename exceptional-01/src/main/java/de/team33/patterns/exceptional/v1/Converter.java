@@ -10,29 +10,29 @@ import java.util.function.Supplier;
 
 
 /**
- * A tool that can convert certain functional constructs that may throw checked exceptions (e.g.
- * {@link XFunction}) into more common constructs (e.g. {@link Function}) that will wrap such exceptions in
- * unchecked exceptions.
+ * A tool class that can convert certain functional constructs defined in this package (e.g. {@link XFunction})
+ * to more common ones (e.g. {@link Function}) that, when executed, will wrap any occurring checked exception in a
+ * specific unchecked exception. Any unchecked exception that may occur will remain unaffected.
  *
  * @see Conversion
  */
 public final class Converter {
 
-    private final Function<Throwable, RuntimeException> wrapping;
+    private final Function<Throwable, ? extends RuntimeException> wrapping;
 
-    private Converter(final Function<Throwable, RuntimeException> wrapping) {
+    private Converter(final Function<Throwable, ? extends RuntimeException> wrapping) {
         this.wrapping = wrapping;
     }
 
     /**
      * Returns a new instance using a given wrapping method.
      *
-     * @see Wrapping#normal(BiFunction)
-     * @see Wrapping#normal(String, BiFunction)
+     * @see Wrapping#method(BiFunction)
+     * @see Wrapping#method(String, BiFunction)
      * @see Wrapping#varying(Function)
      * @see Wrapping#varying(String, Function)
      */
-    public static Converter using(final Function<Throwable, RuntimeException> wrapping) {
+    public static Converter using(final Function<Throwable, ? extends RuntimeException> wrapping) {
         return new Converter(wrapping);
     }
 
@@ -85,8 +85,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XRunnable} that may throw a checked exception as {@link Runnable} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XRunnable} that may throw a checked exception to a {@link Runnable} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final Runnable runnable(final XRunnable<?> xRunnable) {
         final XBiFunction<Void, Void, Void, ?> normal = normalized(xRunnable);
@@ -94,8 +96,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XConsumer} that may throw a checked exception as {@link Consumer} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XConsumer} that may throw a checked exception to a {@link Consumer} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T> Consumer<T> consumer(final XConsumer<T, ?> xConsumer) {
         final XBiFunction<T, Void, Void, ?> normal = normalized(xConsumer);
@@ -103,8 +107,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XBiConsumer} that may throw a checked exception as {@link BiConsumer} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XBiConsumer} that may throw a checked exception to a {@link BiConsumer} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<T, U, ?> xBiConsumer) {
         final XBiFunction<T, U, Void, ?> normal = normalized(xBiConsumer);
@@ -112,8 +118,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XSupplier} that may throw a checked exception as {@link Supplier} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XSupplier} that may throw a checked exception to a {@link Supplier} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <R> Supplier<R> supplier(final XSupplier<R, ?> xSupplier) {
         final XBiFunction<Void, Void, R, ?> normal = normalized(xSupplier);
@@ -121,8 +129,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XPredicate} that may throw a checked exception as {@link Predicate} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XPredicate} that may throw a checked exception to a {@link Predicate} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T> Predicate<T> predicate(final XPredicate<T, ?> xPredicate) {
         final XBiFunction<T, Void, Boolean, ?> normal = normalized(xPredicate);
@@ -130,8 +140,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XBiPredicate} that may throw a checked exception as {@link BiPredicate} that,
-     * when executed, wraps any occurring checked exception as a specific unchecked exception.
+     * Converts an {@link XBiPredicate} that may throw a checked exception to a {@link BiPredicate} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<T, U, ?> xBiPredicate) {
         final XBiFunction<T, U, Boolean, ?> normal = normalized(xBiPredicate);
@@ -139,8 +151,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XFunction} that may throw a checked exception as {@link Function} that,
-     * when executed, wraps any occurring checked exception as specific unchecked exception.
+     * Converts an {@link XFunction} that may throw a checked exception to a {@link Function} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T, R> Function<T, R> function(final XFunction<T, R, ?> xFunction) {
         final XBiFunction<T, Void, R, ?> normal = normalized(xFunction);
@@ -148,8 +162,10 @@ public final class Converter {
     }
 
     /**
-     * Wraps an {@link XBiFunction} that may throw a checked exception as {@link BiFunction} that,
-     * when executed, wraps any occurring checked exception as a specific unchecked exception.
+     * Converts an {@link XBiFunction} that may throw a checked exception to a {@link BiFunction} that,
+     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     *
+     * @see #using(Function)
      */
     public final <T, U, R> BiFunction<T, U, R> biFunction(final XBiFunction<T, U, R, ?> xBiFunction) {
         return (t, u) -> call(xBiFunction, t, u);

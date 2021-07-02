@@ -11,11 +11,11 @@ public class ReviewExample<R> {
         try {
             return somethingThatMayCauseAWrappedException();
         } catch (final WrappedException caught) {
-            throw Review.of(caught.getCause())
-                        .reThrow(IOException.class)
-                        .reThrow(SQLException.class)
-                        .reThrow(URISyntaxException.class)
-                        .finish(ExpectationException::new);
+            throw Revision.of(caught.getCause())
+                          .reThrow(IOException.class)
+                          .reThrow(SQLException.class)
+                          .reThrow(URISyntaxException.class)
+                          .finish(ExpectationException::new);
         }
     }
 

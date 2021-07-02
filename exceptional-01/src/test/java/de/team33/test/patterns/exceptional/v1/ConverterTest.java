@@ -33,7 +33,7 @@ public class ConverterTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {WrappedException.class, Converter.using(WrappedException::new)},
-                {IllegalStateException.class, Converter.using(Wrapping.normal(IllegalStateException::new))},
+                {IllegalStateException.class, Converter.using(Wrapping.method(IllegalStateException::new))},
                 {RuntimeException.class, Converter.using(Wrapping.varying(RuntimeException::new))}
         });
     }

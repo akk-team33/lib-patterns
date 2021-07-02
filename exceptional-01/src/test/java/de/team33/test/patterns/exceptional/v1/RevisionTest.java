@@ -1,6 +1,6 @@
 package de.team33.test.patterns.exceptional.v1;
 
-import de.team33.patterns.exceptional.v1.Review;
+import de.team33.patterns.exceptional.v1.Revision;
 import de.team33.patterns.exceptional.v1.WrappedException;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 
 @SuppressWarnings("NestedTryStatement")
-public class ReviewTest {
+public class RevisionTest {
 
     private static final String EXPECTED_AN_EXCEPTION = "It is expected that an exception was thrown previously";
     private static final List<Exception> EXCEPTION_LIST = Arrays.asList(
@@ -34,11 +34,11 @@ public class ReviewTest {
                     doThrow(() -> new WrappedException(exception));
                     fail(EXPECTED_AN_EXCEPTION);
                 } catch (final WrappedException caught) {
-                    Review.of(caught.getCause())
-                          .reThrow(IOException.class)
-                          .reThrow(SQLException.class)
-                          .reThrow(IllegalArgumentException.class)
-                          .reThrow(IllegalStateException.class);
+                    Revision.of(caught.getCause())
+                            .reThrow(IOException.class)
+                            .reThrow(SQLException.class)
+                            .reThrow(IllegalArgumentException.class)
+                            .reThrow(IllegalStateException.class);
                     fail(EXPECTED_AN_EXCEPTION);
                 }
             } catch (final IOException caught) {
@@ -62,11 +62,11 @@ public class ReviewTest {
                     doThrow(() -> exception);
                     fail(EXPECTED_AN_EXCEPTION);
                 } catch (final Exception caught) {
-                    Review.of(caught)
-                          .reThrow(IOException.class)
-                          .reThrow(SQLException.class)
-                          .reThrow(IllegalArgumentException.class)
-                          .reThrow(IllegalStateException.class);
+                    Revision.of(caught)
+                            .reThrow(IOException.class)
+                            .reThrow(SQLException.class)
+                            .reThrow(IllegalArgumentException.class)
+                            .reThrow(IllegalStateException.class);
                     fail(EXPECTED_AN_EXCEPTION);
                 }
             } catch (final IOException caught) {
@@ -89,11 +89,11 @@ public class ReviewTest {
                     doThrow(() -> new WrappedException(exception));
                     fail(EXPECTED_AN_EXCEPTION);
                 } catch (final WrappedException caught) {
-                    Review.of(caught.getCause())
-                          .throwIf(IOException.class::isInstance, IOException.class::cast)
-                          .throwIf(SQLException.class::isInstance, SQLException.class::cast)
-                          .throwIf(IllegalArgumentException.class::isInstance, IllegalArgumentException.class::cast)
-                          .throwIf(IllegalStateException.class::isInstance, IllegalStateException.class::cast);
+                    Revision.of(caught.getCause())
+                            .throwIf(IOException.class::isInstance, IOException.class::cast)
+                            .throwIf(SQLException.class::isInstance, SQLException.class::cast)
+                            .throwIf(IllegalArgumentException.class::isInstance, IllegalArgumentException.class::cast)
+                            .throwIf(IllegalStateException.class::isInstance, IllegalStateException.class::cast);
                     fail(EXPECTED_AN_EXCEPTION);
                 }
             } catch (final IOException caught) {
@@ -111,16 +111,16 @@ public class ReviewTest {
     @Test
     public final void finish() {
         final IOException original = new IOException();
-        final IOException result = Review.of(original)
-                                         .finish();
+        final IOException result = Revision.of(original)
+                                           .finish();
         assertSame(original, result);
     }
 
     @Test
     public final void finishMapped() {
         final IOException original = new IOException();
-        final IOException result = Review.of(original)
-                                         .finish(Function.identity());
+        final IOException result = Revision.of(original)
+                                           .finish(Function.identity());
         assertSame(original, result);
     }
 }

@@ -16,7 +16,7 @@ public class WrappingTest {
         final IOException original =
                 new IOException(UUID.randomUUID().toString());
         final Function<Exception, IllegalArgumentException> wrapping =
-                Wrapping.normal(IllegalArgumentException::new);
+                Wrapping.method(IllegalArgumentException::new);
         final IllegalArgumentException result =
                 wrapping.apply(original);
         assertSame("The <result> is expected to wrap the <original>",
@@ -34,7 +34,7 @@ public class WrappingTest {
                         message, original.getMessage());
 
         final Function<Exception, IllegalArgumentException> wrapping =
-                Wrapping.normal(message, IllegalArgumentException::new);
+                Wrapping.method(message, IllegalArgumentException::new);
         final IllegalArgumentException result =
                 wrapping.apply(original);
         assertSame("The <result> is expected to wrap the <original>",

@@ -1,77 +1,93 @@
 package de.team33.test.patterns.exceptional.v1;
 
+import de.team33.patterns.exceptional.v1.ExpectationException;
 import de.team33.patterns.exceptional.v1.WrappedException;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class WrappedExceptionTest {
+
+    private static final String MISSING_EXCEPTION =
+            "Missing: an exception to be wrapped in a " + WrappedException.class.getSimpleName();
 
     private static String anyMessage() {
         return UUID.randomUUID().toString();
     }
 
-    @Test(expected = NullPointerException.class)
-    public final void initByNull() {
-        fail("expected to fail but was " + new WrappedException(null));
+    @Test
+    public final void noMessageAlsoInCause() {
+        final Throwable cause = new IOException((String) null);
+        final WrappedException case1 = new WrappedException(cause);
+        final WrappedException case2 = new WrappedException(null, cause);
+
+        assertEquals("Wrapped: " + cause.getClass().getCanonicalName(), case1.getMessage());
+        assertEquals(case1.getMessage(), case2.getMessage());
+
+        assertEquals(cause, case1.getCause());
+        assertEquals(case1.getCause(), case2.getCause());
     }
 
     @Test
-    public final void initByNullAny() {
+    public final void noMessageButInCause() {
         final String message = anyMessage();
-        final IOException cause = new IOException(message);
-        final WrappedException sample = new WrappedException(null, cause);
-        assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
-                   cause, sample.getCause());
-        assertTrue("The <sample> is expected to contain the original <message> within its message",
-                   sample.getMessage().contains(message));
-    }
+        final Throwable cause = new IOException(message);
+        final WrappedException case1 = new WrappedException(cause);
+        final WrappedException case2 = new WrappedException(null, cause);
 
-    @Test(expected = NullPointerException.class)
-    public final void initByAnyNull() {
-        fail("expected to fail but was " + new WrappedException(anyMessage(), null));
-    }
+        assertEquals("Wrapped: " + message, case1.getMessage());
+        assertEquals(case1.getMessage(), case2.getMessage());
 
-    @Test(expected = NullPointerException.class)
-    public final void initByNullNull() {
-        fail("expected to fail but was " + new WrappedException(null, null));
+        assertEquals(cause, case1.getCause());
+        assertEquals(case1.getCause(), case2.getCause());
     }
 
     @Test
-    public final void initByCause() {
+    public final void noParameters() {
+        final WrappedException case1 = new WrappedException(null);
+        final WrappedException case2 = new WrappedException(null, null);
+
+        assertEquals("Wrapped: nothing!?", case1.getMessage());
+        assertEquals(case1.getMessage(), case2.getMessage());
+
+        final Throwable cause1 = case1.getCause();
+        final Throwable cause2 = case2.getCause();
+        assertTrue(cause1 instanceof IllegalStateException);
+        assertSame(cause1.getClass(), cause2.getClass());
+
+        assertEquals(MISSING_EXCEPTION, cause1.getMessage());
+        assertEquals(cause1.getMessage(), cause2.getMessage());
+    }
+
+    @Test
+    public final void noCause() {
         final String message = anyMessage();
-        final IOException cause = new IOException(message);
-        final WrappedException sample = new WrappedException(cause);
-        assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
-                   cause, sample.getCause());
-        assertTrue("The <sample> is expected to contain the original <message> within its message",
-                   sample.getMessage().contains(message));
+        final WrappedException case2 = new WrappedException(message, null);
+
+        assertEquals("Wrapped: nothing!? Message: " + message, case2.getMessage());
+        assertTrue(case2.getCause() instanceof IllegalStateException);
+        assertEquals(MISSING_EXCEPTION, case2.getCause().getMessage());
     }
 
     @Test
-    public final void initByCauseWithoutMessage() {
-        final IOException cause = new IOException();
-        final WrappedException sample = new WrappedException(cause);
-        assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
-                   cause, sample.getCause());
-        assertTrue("The <sample> is expected to contain the original <message> within its message",
-                   sample.getMessage().contains(cause.getClass().getCanonicalName()));
-    }
-
-    @Test
-    public final void initByBoth() {
+    public final void allParameters() {
         final String message = anyMessage();
-        final IOException cause = new IOException(anyMessage());
-        final WrappedException sample = new WrappedException(message, cause);
-        assertSame("The <sample> is expected to wrap the exactly given <cause> as cause",
-                   cause, sample.getCause());
-        assertEquals("The <sample> is expected to contain the exactly given <message> as message",
-                     message, sample.getMessage());
+        final Throwable cause1 = new IOException((String) null);
+        final Throwable cause2 = new IOException(anyMessage());
+        final WrappedException case1 = new WrappedException(message, cause1);
+        final WrappedException case2 = new WrappedException(message, cause2);
+
+        assertNotEquals(message, cause1.getMessage());
+        assertNotEquals(message, cause2.getMessage());
+        assertNotEquals(cause1.getMessage(), cause2.getMessage());
+
+        assertEquals(message, case1.getMessage());
+        assertEquals(case1.getMessage(), case2.getMessage());
+
+        assertEquals(cause1, case1.getCause());
+        assertEquals(cause2, case2.getCause());
     }
 }

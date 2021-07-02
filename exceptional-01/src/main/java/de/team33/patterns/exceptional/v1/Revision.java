@@ -4,7 +4,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 /**
- * A tool that supports a review and handling of an exception.
+ * A tool that supports a revision and handling of an exception.
  * <p>
  * In general, there is little need for a special tool for differentiated handling of exceptions.
  * The possibilities of Java’s own language elements (try-catch) are compact, expressive and efficient.
@@ -15,17 +15,17 @@ import java.util.function.Predicate;
  * <p>
  * For example, in order not to have to deal with it all the time, we would like to temporarily wrap
  * <em>checked</em> exceptions into <em>unchecked</em> exceptions. However, we would then like to bring the
- * <em>checked</em> exceptions back to the fore in order to enforce a structured approach. A {@link Review}
+ * <em>checked</em> exceptions back to the fore in order to enforce a structured approach. A {@link Revision}
  * supports the latter, as the following code example shows:
  * <pre>
  *         try {
  *             return somethingThatMayCauseAWrappedException();
  *         } catch (final WrappedException caught) {
- *             throw Review.of(caught.getCause())
- *                         .reThrow(IOException.class)
- *                         .reThrow(SQLException.class)
- *                         .reThrow(URISyntaxException.class)
- *                         .finish(ExpectationException::new);
+ *             throw Revision.of(caught.getCause())
+ *                           .reThrow(IOException.class)
+ *                           .reThrow(SQLException.class)
+ *                           .reThrow(URISyntaxException.class)
+ *                           .finish(ExpectationException::new);
  *         }
  * </pre>
  *
@@ -33,11 +33,11 @@ import java.util.function.Predicate;
  * @see #reThrow(Class)
  * @see #finish(Function)
  */
-public final class Review<T extends Throwable> {
+public final class Revision<T extends Throwable> {
 
     private final T subject;
 
-    private Review(final T subject) {
+    private Revision(final T subject) {
         this.subject = subject;
     }
 
@@ -47,13 +47,13 @@ public final class Review<T extends Throwable> {
      * @param subject the exception to be handled
      * @param <T>     the type of the given exception
      */
-    public static <T extends Throwable> Review<T> of(final T subject) {
-        return new Review<>(subject);
+    public static <T extends Throwable> Revision<T> of(final T subject) {
+        return new Revision<>(subject);
     }
 
     /**
      * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} and throws the
-     * result if the given {@link Predicate condition} applies. Otherwise this {@link Review} will be returned.
+     * result if the given {@link Predicate condition} applies. Otherwise this {@link Revision} will be returned.
      *
      * @param condition A {@link Predicate} that is used to check the {@linkplain #of(Throwable) associated exception}
      *                  for applicability.
@@ -61,11 +61,11 @@ public final class Review<T extends Throwable> {
      *                  specific type of exception to be thrown at that point.
      * @param <X>       The exception type that is intended as a result of the given mapping and that is thrown by this
      *                  method, if applicable.
-     * @return This {@link Review}, which can be continued if no exception has been thrown.
+     * @return This {@link Revision}, which can be continued if no exception has been thrown.
      * @throws X The converted exception, if present.
      */
-    public final <X extends Throwable> Review<T> throwIf(final Predicate<? super T> condition,
-                                                         final Function<? super T, X> mapping) throws X {
+    public final <X extends Throwable> Revision<T> throwIf(final Predicate<? super T> condition,
+                                                           final Function<? super T, X> mapping) throws X {
         if (condition.test(subject)) {
             throw mapping.apply(subject);
         } else {
@@ -75,27 +75,27 @@ public final class Review<T extends Throwable> {
 
     /**
      * Rethrows the {@linkplain #of(Throwable) associated exception} if it matches the given exception type.
-     * Otherwise this {@link Review} will be returned. Example:
+     * Otherwise this {@link Revision} will be returned. Example:
      * <pre>
      *         try {
      *             return somethingThatMayCauseAWrappedException();
      *         } catch (final WrappedException caught) {
-     *             throw Review.of(caught.getCause())
-     *                         .reThrow(IOException.class)
-     *                         .reThrow(SQLException.class)
-     *                         .reThrow(URISyntaxException.class)
-     *                         .finish(ExpectationException::new);
+     *             throw Revision.of(caught.getCause())
+     *                           .reThrow(IOException.class)
+     *                           .reThrow(SQLException.class)
+     *                           .reThrow(URISyntaxException.class)
+     *                           .finish(ExpectationException::new);
      *         }
      * </pre>
      *
      * @param xClass The {@link Class} that represents the type of exception that is expected.
      * @param <X>    The type of exception that is expected and, if applicable, thrown by this method.
-     * @return This {@link Review}, which can be continued if no exception has been thrown.
+     * @return This {@link Revision}, which can be continued if no exception has been thrown.
      * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
      * @see #of(Throwable)
      * @see #finish(Function)
      */
-    public final <X extends Throwable> Review<T> reThrow(final Class<X> xClass) throws X {
+    public final <X extends Throwable> Revision<T> reThrow(final Class<X> xClass) throws X {
         return throwIf(xClass::isInstance, xClass::cast);
     }
 

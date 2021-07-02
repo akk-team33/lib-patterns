@@ -7,7 +7,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Team33 Patterns Library</name>
+    <name>Team33 Patterns Library Collection</name>
     <description>Provides pattern implementations</description>
     <url>http://team33.de/dev/patterns</url>
 

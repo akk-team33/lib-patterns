@@ -4,7 +4,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
- * A utility that provides wrapping methods for exceptions.
+ * A utility class that provides wrapping methods for exceptions.
  */
 public final class Wrapping {
 
@@ -22,7 +22,7 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String, Throwable)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> normal(final BiFunction<String, X1, X2> biFunction) {
+    Function<X1, X2> method(final BiFunction<String, X1, X2> biFunction) {
         return x1 -> biFunction.apply(x1.getMessage(), x1);
     }
 
@@ -37,7 +37,7 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String, Throwable)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> normal(final String message, final BiFunction<String, X1, X2> biFunction) {
+    Function<X1, X2> method(final String message, final BiFunction<String, X1, X2> biFunction) {
         return x1 -> biFunction.apply(message, x1);
     }
 
