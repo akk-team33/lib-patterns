@@ -40,6 +40,7 @@
 
     <modules>
         <module>exceptional-01</module>
+        <module>lazy-01</module>
         <module>pooling-01</module>
     </modules>
 
@@ -49,6 +50,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-01</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-01</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
