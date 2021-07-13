@@ -11,7 +11,7 @@ import java.util.function.Supplier;
  * <p>
  * In this respect, this tool is suitable for providing <em>subject</em> types whose instantiation is relatively
  * "expensive", which are rather unsuitable for concurrent access, but are designed for multiple or permanent use.
- * Database or other client-server connections, but also {@link java.util.Random} instances, may be an example.
+ * Database or other client-server connections may be an example.
  * <p>
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>subject</em> could be made available.

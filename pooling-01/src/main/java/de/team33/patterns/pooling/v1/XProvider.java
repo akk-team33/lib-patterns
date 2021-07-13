@@ -18,7 +18,7 @@ import java.util.function.Function;
  * <p>
  * In this respect, this tool is suitable for providing <em>subject</em> types whose instantiation is relatively
  * "expensive", which are rather unsuitable for concurrent access, but are designed for multiple or permanent use.
- * Database or other client-server connections, but also {@link java.util.Random} instances, may be an example.
+ * Database or other client-server connections may be an example.
  * <p>
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>subject</em> could be made available.
@@ -39,9 +39,9 @@ public class XProvider<S, X extends Exception> {
     }
 
     /**
-     * Runs a given {@link Consumer} with a parameter provided for it. The parameter is kept for future use.
+     * Runs a given {@link XConsumer} with a parameter provided for it. The parameter is kept for future use.
      * <p>
-     * While the {@link Consumer} is being executed, the parameter is exclusively available to it, but must not be
+     * While the {@link XConsumer} is being executed, the parameter is exclusively available to it, but must not be
      * "hijacked" from the context of the execution or the executing thread!
      */
     public final <EX extends Exception> void runEx(final XConsumer<? super S, EX> consumer) throws X, EX {
@@ -62,10 +62,10 @@ public class XProvider<S, X extends Exception> {
     }
 
     /**
-     * Calls a given {@link Function} with a parameter provided for it and returns its result.
+     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
      * The parameter is kept for future use.
      * <p>
-     * While the {@link Function} is being called, the parameter is exclusively available to it, but must not be
+     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
      * "hijacked" from the context of the call or the executing thread!
      *
      * @param <R> The result type of the given {@link Function}

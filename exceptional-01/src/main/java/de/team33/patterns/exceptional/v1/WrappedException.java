@@ -6,8 +6,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * An unchecked exception dedicated to wrap checked exceptions.
  */
