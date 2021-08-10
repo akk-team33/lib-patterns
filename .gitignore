@@ -1,8 +1,10 @@
 # mvn / build artifacts
-*/target/
+target/
+
+# Mac artifacts
+.DS_Store
 
 # IntelliJ IDEA artifacts
-.DS_Store
 /.idea/
 *.iml
 
