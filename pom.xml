@@ -36,6 +36,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <copyright.year>2021</copyright.year>
+        <skipHome>true</skipHome>
     </properties>
 
     <modules>
@@ -93,6 +94,30 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>1.6</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.2.0</version>
+                    <executions>
+                        <execution>
+                            <id>default-resources-home</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/../00-home/${project.artifactId}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>../00-home/00-template</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                                <skip>${skipHome}</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
