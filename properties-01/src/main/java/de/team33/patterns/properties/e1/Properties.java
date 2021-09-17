@@ -1,12 +1,23 @@
 package de.team33.patterns.properties.e1;
 
+import java.util.Collection;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Properties<T> {
 
+    private final Collection<Property<T>> backing;
+
     private Properties(final Builder<T> builder) {
         throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    private Properties(final Collection<Property<T>> backing) {
+        this.backing = backing;
     }
 
     public static <T> Builder<T> add(final String name, final Function<T, Object> getter) {
@@ -19,8 +30,58 @@ public class Properties<T> {
         return new Builder<T>().add(name, getter, setter);
     }
 
+    public static <T> Stage<T> of(final Class<T> subjectClass) {
+        return new Stage<>(subjectClass);
+    }
+
     public boolean equals(final T subject, final T other) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return toMap(subject).equals(toMap(other));
+    }
+
+    private Map<String, Object> toMap(final T subject) {
+        return backing.stream()
+                      .collect(TreeMap::new, (map, prop) -> map.put(prop.name(), prop.valueOf(subject)), Map::putAll);
+    }
+
+    public enum Strategy {
+
+        FIELDS_FLAT(cls -> Fields.flatStreamOf(cls)
+                                 .peek(field -> field.setAccessible(true))
+                                 .map(FieldProperty::new)),
+
+        FIELDS_DEEP(cls -> Fields.deepStreamOf(cls)
+                                 .peek(field -> field.setAccessible(true))
+                                 .map(FieldProperty::new)),
+
+        PUBLIC_GETTERS(null),
+
+        PUBLIC_GETTERS_AND_SETTERS(null);
+
+        @SuppressWarnings("rawtypes")
+        private final Function streaming;
+
+        <T> Strategy(final Function<Class<T>, Stream<Property<T>>> streaming) {
+            this.streaming = streaming;
+        }
+
+        @SuppressWarnings("unchecked")
+        final <T> Stream<Property<T>> stream(final Class<T> subjectClass) {
+            return (Stream<Property<T>>) streaming.apply(subjectClass);
+        }
+    }
+
+    public static class Stage<T> {
+
+        private final Class<T> subjectClass;
+
+        private Stage(final Class<T> subjectClass) {
+            this.subjectClass = subjectClass;
+        }
+
+        public Properties<T> by(final Strategy strategy) {
+            return new Properties<T>(strategy.stream(subjectClass)
+                                             .collect(Collectors.toList()));
+        }
     }
 
     public static class Builder<T> {
