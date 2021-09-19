@@ -34,8 +34,16 @@ public class Properties<T> {
         return new Stage<>(subjectClass);
     }
 
-    public boolean equals(final T subject, final T other) {
+    public final boolean equals(final T subject, final T other) {
         return toMap(subject).equals(toMap(other));
+    }
+
+    public final int hashCode(final T subject) {
+        return toMap(subject).hashCode();
+    }
+
+    public final String toString(final T subject) {
+        return toMap(subject).toString();
     }
 
     private Map<String, Object> toMap(final T subject) {
@@ -46,10 +54,12 @@ public class Properties<T> {
     public enum Strategy {
 
         FIELDS_FLAT(cls -> Fields.flatStreamOf(cls)
+                                 .filter(Fields::isSignificant)
                                  .peek(field -> field.setAccessible(true))
                                  .map(FieldProperty::new)),
 
         FIELDS_DEEP(cls -> Fields.deepStreamOf(cls)
+                                 .filter(Fields::isSignificant)
                                  .peek(field -> field.setAccessible(true))
                                  .map(FieldProperty::new)),
 

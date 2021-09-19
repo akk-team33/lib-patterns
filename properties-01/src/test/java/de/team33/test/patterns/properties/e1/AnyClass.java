@@ -2,18 +2,41 @@ package de.team33.test.patterns.properties.e1;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import static java.lang.System.identityHashCode;
+import static java.lang.System.nanoTime;
 
 public class AnyClass extends AnyBaseClass {
 
     private int anInt;
-    private double aDouble;
+    private Double aDouble;
     private String aString;
     private Date aDate;
 
+    private transient List<Object> aTransient = new LinkedList<>(Arrays.asList(identityHashCode(this), nanoTime()));
+
     public AnyClass() {
+    }
+
+    public AnyClass(final Random random) {
+        super((random));
+        anInt = random.nextInt();
+        aDouble = (0 == random.nextInt(100)) ? null : random.nextDouble();
+        aString = (0 == random.nextInt(100)) ? null : new BigInteger(100, random).toString(Character.MAX_RADIX);
+        aDate = (0 == random.nextInt(100)) ? null : new Date(System.currentTimeMillis() + random.nextInt());
+    }
+
+    public AnyClass(final AnyClass origin) {
+        super(origin);
+        anInt = origin.anInt;
+        aDouble = origin.aDouble;
+        aString = origin.aString;
+        setADate(origin.getADate());
     }
 
     @Override
@@ -31,22 +54,6 @@ public class AnyClass extends AnyBaseClass {
         return (AnyClass) super.setAList(aList);
     }
 
-    public AnyClass(final Random random) {
-        super((random));
-        anInt = random.nextInt();
-        aDouble = random.nextDouble();
-        aString = new BigInteger(100, random).toString(Character.MAX_RADIX);
-        aDate = new Date(System.currentTimeMillis() + random.nextInt());
-    }
-
-    public AnyClass(final AnyClass origin) {
-        super(origin);
-        anInt = origin.anInt;
-        aDouble = origin.aDouble;
-        aString = origin.aString;
-        aDate = new Date(origin.aDate.getTime());
-    }
-
     public int getAnInt() {
         return anInt;
     }
@@ -56,11 +63,11 @@ public class AnyClass extends AnyBaseClass {
         return this;
     }
 
-    public double getADouble() {
+    public Double getADouble() {
         return aDouble;
     }
 
-    public AnyClass setADouble(final double aDouble) {
+    public AnyClass setADouble(final Double aDouble) {
         this.aDouble = aDouble;
         return this;
     }
@@ -75,11 +82,11 @@ public class AnyClass extends AnyBaseClass {
     }
 
     public Date getADate() {
-        return aDate;
+        return (null == aDate) ? null : new Date(aDate.getTime());
     }
 
     public AnyClass setADate(final Date aDate) {
-        this.aDate = aDate;
+        this.aDate = (null == aDate) ? null : new Date(aDate.getTime());
         return this;
     }
 }

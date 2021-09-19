@@ -21,7 +21,7 @@ public class AnyBaseClass {
 
     public AnyBaseClass(final Random random) {
         aLong = random.nextLong();
-        aBigDecimal = BigDecimal.valueOf(random.nextDouble());
+        aBigDecimal = (0 == random.nextInt(100)) ? null : BigDecimal.valueOf(random.nextDouble());
         aList = Stream.of(random.nextInt(),
                           random.nextDouble(),
                           new BigInteger(100, random).toString(Character.MAX_RADIX),
