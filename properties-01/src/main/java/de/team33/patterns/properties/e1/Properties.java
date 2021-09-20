@@ -52,21 +52,37 @@ public class Properties<T> {
                       .collect(TreeMap::new, (map, prop) -> map.put(prop.name(), prop.valueOf(subject)), Map::putAll);
     }
 
+    private static class Streaming {
+
+        private static <T> Stream<Property<T>> bySignificantFieldsFlat(final Class<T> tClass) {
+            return Fields.flatStreamOf(tClass)
+                         .filter(Fields::isSignificant)
+                         .peek(field -> field.setAccessible(true))
+                         .map(FieldProperty::new);
+        }
+
+        private static <T> Stream<Property<T>> bySignificantFieldsDeep(final Class<T> tClass) {
+            return Fields.deepStreamOf(tClass)
+                         .filter(Fields::isSignificant)
+                         .peek(field -> field.setAccessible(true))
+                         .map(FieldProperty::new);
+        }
+
+        private static <T> Stream<Property<T>> byPublicGetters(final Class<T> tClass) {
+            return Methods.streamOf(tClass)
+                          .filter(Methods::isGetter)
+                          .collect(() -> new Aggregator<T>(), Aggregator::add, Aggregator::addAll)
+                          .stream();
+        }
+    }
+
     public enum Strategy {
 
-        FIELDS_FLAT(cls -> Fields.flatStreamOf(cls)
-                                 .filter(Fields::isSignificant)
-                                 .peek(field -> field.setAccessible(true))
-                                 .map(FieldProperty::new)),
+        FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
 
-        FIELDS_DEEP(cls -> Fields.deepStreamOf(cls)
-                                 .filter(Fields::isSignificant)
-                                 .peek(field -> field.setAccessible(true))
-                                 .map(FieldProperty::new)),
+        FIELDS_DEEP(Streaming::bySignificantFieldsDeep),
 
-        PUBLIC_GETTERS((Class<T> cls) -> Methods.streamOf(cls)
-                                     .collect((Supplier<Aggregator<T>>) Aggregator::new, Aggregator::add, Aggregator::addAll)
-                                     .stream()),
+        PUBLIC_GETTERS(Streaming::byPublicGetters),
 
         PUBLIC_GETTERS_AND_SETTERS(null);
 

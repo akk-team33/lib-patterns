@@ -25,7 +25,7 @@ class PropertiesTest {
     private final Properties<AnyClass> propertiesByGetters = Properties.of(AnyClass.class).by(PUBLIC_GETTERS);
     private final Properties<AnyClass> propertiesByAccessors = null; // Properties.of(AnyClass.class).by(PUBLIC_GETTERS_AND_SETTERS);
     private final List<Properties<AnyClass>> allProperties = Arrays.asList(
-            propertiesByFieldsFlat, propertiesByFieldsDeep/*, propertiesByGetters, propertiesByAccessors*/);
+            propertiesByFieldsFlat, propertiesByFieldsDeep, propertiesByGetters/*, propertiesByAccessors*/);
 
 
     private static List<AnyClass> newSamples(final Random random) {
@@ -39,7 +39,7 @@ class PropertiesTest {
     }
 
     @Test
-    void testEquals() {
+    final void testEquals() {
         allProperties.forEach(properties -> samples.forEach(sample -> {
             assertTrue(properties.equals(sample, new AnyClass(sample)));
             samples.stream().map(AnyClass::new).forEach(other -> {
