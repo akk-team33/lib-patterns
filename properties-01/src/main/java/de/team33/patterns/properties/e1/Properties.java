@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,7 +64,9 @@ public class Properties<T> {
                                  .peek(field -> field.setAccessible(true))
                                  .map(FieldProperty::new)),
 
-        PUBLIC_GETTERS(null),
+        PUBLIC_GETTERS((Class<T> cls) -> Methods.streamOf(cls)
+                                     .collect((Supplier<Aggregator<T>>) Aggregator::new, Aggregator::add, Aggregator::addAll)
+                                     .stream()),
 
         PUBLIC_GETTERS_AND_SETTERS(null);
 

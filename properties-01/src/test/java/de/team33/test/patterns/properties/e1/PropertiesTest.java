@@ -22,7 +22,7 @@ class PropertiesTest {
 
     private final Properties<AnyClass> propertiesByFieldsFlat = Properties.of(AnyClass.class).by(FIELDS_FLAT);
     private final Properties<AnyClass> propertiesByFieldsDeep = Properties.of(AnyClass.class).by(FIELDS_DEEP);
-    private final Properties<AnyClass> propertiesByGetters = null; // Properties.of(AnyClass.class).by(PUBLIC_GETTERS);
+    private final Properties<AnyClass> propertiesByGetters = Properties.of(AnyClass.class).by(PUBLIC_GETTERS);
     private final Properties<AnyClass> propertiesByAccessors = null; // Properties.of(AnyClass.class).by(PUBLIC_GETTERS_AND_SETTERS);
     private final List<Properties<AnyClass>> allProperties = Arrays.asList(
             propertiesByFieldsFlat, propertiesByFieldsDeep/*, propertiesByGetters, propertiesByAccessors*/);
