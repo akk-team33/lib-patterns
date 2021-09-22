@@ -107,7 +107,7 @@ public class Properties<T> {
             this.subjectClass = subjectClass;
         }
 
-        public Properties<T> by(final Strategy strategy) {
+        public final Properties<T> by(final Strategy strategy) {
             return new Properties<T>(strategy.stream(subjectClass)
                                              .collect(Collectors.toList()));
         }
@@ -115,15 +115,15 @@ public class Properties<T> {
 
     public static class Builder<T> {
 
-        public Builder<T> add(final String name, final Function<T, Object> getter) {
+        public final Builder<T> add(final String name, final Function<T, Object> getter) {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        public Builder<T> add(final String name, final Function<T, Object> getter, final BiConsumer<T, Object> setter) {
+        public final Builder<T> add(final String name, final Function<T, Object> getter, final BiConsumer<T, Object> setter) {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        public Properties<T> build() {
+        public final Properties<T> build() {
             return new Properties<>(this);
         }
     }

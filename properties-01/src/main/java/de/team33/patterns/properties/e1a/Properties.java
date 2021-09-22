@@ -42,14 +42,14 @@ public class Properties<T> {
             return Fields.flatStreamOf(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(Fields.Property::new);
+                         .map(field -> new Fields.Property<>(tClass, field));
         }
 
         static <T> Stream<Property<T>> bySignificantFieldsDeep(final Class<T> tClass) {
             return Fields.deepStreamOf(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(Fields.Property::new);
+                         .map(field -> new Fields.Property<>(tClass, field));
         }
     }
 

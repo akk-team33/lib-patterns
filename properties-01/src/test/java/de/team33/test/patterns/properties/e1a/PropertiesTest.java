@@ -18,7 +18,7 @@ class PropertiesTest {
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
     @SuppressWarnings({"SwitchStatement", "fallthrough"})
-    private static Map<String, Object> expectationOf(final AnyClass sample, final Properties.Mode mode) {
+    private static Map<String, Object> expectedMap(final AnyClass sample, final Properties.Mode mode) {
         final Map<String, Object> result = new TreeMap<>();
         switch (mode) {
         case BY_FIELDS_DEEP:
@@ -41,7 +41,7 @@ class PropertiesTest {
             LOG.info(() -> "Properties.Mode: " + mode);
             final Properties<AnyClass> properties = Properties.of(AnyClass.class, mode);
             final AnyClass sample = RANDOM.get(AnyClass::new);
-            final Map<String, Object> expected = expectationOf(sample, mode);
+            final Map<String, Object> expected = expectedMap(sample, mode);
             final Map<String, Object> result = properties.toMap(sample);
             assertEquals(expected, result);
         }

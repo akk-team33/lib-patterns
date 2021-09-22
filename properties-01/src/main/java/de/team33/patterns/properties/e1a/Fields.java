@@ -39,15 +39,21 @@ class Fields {
                 "- class of subject: %s%n" +
                 "- value of subject: %s%n";
 
+        private final Class<T> context;
         private final Field field;
 
-        Property(final Field field) {
+        Property(final Class<T> context, final Field field) {
+            this.context = context;
             this.field = field;
+        }
+
+        private static String prefix(final Class<?> declaring, final Class<?> context) {
+            return (declaring == context) ? "" : ("." + prefix(declaring, context.getSuperclass()));
         }
 
         @Override
         public final String name() {
-            return field.getName();
+            return prefix(field.getDeclaringClass(), context) + field.getName();
         }
 
         @Override

@@ -16,11 +16,12 @@ public class AnyBaseClass {
     private BigDecimal aBigDecimal;
     private List<?> aList;
 
-    public AnyBaseClass() {
+    AnyBaseClass() {
     }
 
-    public AnyBaseClass(final Random random) {
+    AnyBaseClass(final Random random) {
         aLong = random.nextLong();
+        //noinspection AssignmentToNull
         aBigDecimal = (0 == random.nextInt(100)) ? null : BigDecimal.valueOf(random.nextDouble());
         aList = Stream.of(random.nextInt(),
                           random.nextDouble(),
@@ -30,35 +31,40 @@ public class AnyBaseClass {
                       .collect(Collectors.toList());
     }
 
-    public AnyBaseClass(final AnyBaseClass origin) {
+    AnyBaseClass(final AnyBaseClass origin) {
         aLong = origin.aLong;
         aBigDecimal = origin.aBigDecimal;
         aList = origin.aList;
     }
 
-    public long getALong() {
+    public final long getALong() {
         return aLong;
     }
 
+    @SuppressWarnings("DesignForExtension")
     public AnyBaseClass setALong(final long aLong) {
         this.aLong = aLong;
         return this;
     }
 
-    public BigDecimal getABigDecimal() {
+    public final BigDecimal getABigDecimal() {
         return aBigDecimal;
     }
 
+    @SuppressWarnings("DesignForExtension")
     public AnyBaseClass setABigDecimal(final BigDecimal aBigDecimal) {
         this.aBigDecimal = aBigDecimal;
         return this;
     }
 
-    public List<?> getAList() {
+    public final List<?> getAList() {
+        //noinspection ReturnOfNull
         return (null == aList) ? null : Collections.unmodifiableList(aList);
     }
 
+    @SuppressWarnings("DesignForExtension")
     public AnyBaseClass setAList(final List<?> aList) {
+        //noinspection AssignmentToNull
         this.aList = (null == aList) ? null : new ArrayList<>(aList);
         return this;
     }

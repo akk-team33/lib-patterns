@@ -40,52 +40,52 @@ public class AnyClass extends AnyBaseClass {
     }
 
     @Override
-    public AnyClass setALong(final long aLong) {
+    public final AnyClass setALong(final long aLong) {
         return (AnyClass) super.setALong(aLong);
     }
 
     @Override
-    public AnyClass setABigDecimal(final BigDecimal aBigDecimal) {
+    public final AnyClass setABigDecimal(final BigDecimal aBigDecimal) {
         return (AnyClass) super.setABigDecimal(aBigDecimal);
     }
 
     @Override
-    public AnyClass setAList(final List<?> aList) {
+    public final AnyClass setAList(final List<?> aList) {
         return (AnyClass) super.setAList(aList);
     }
 
-    public int getAnInt() {
+    public final int getAnInt() {
         return anInt;
     }
 
-    public AnyClass setAnInt(final int anInt) {
+    public final AnyClass setAnInt(final int anInt) {
         this.anInt = anInt;
         return this;
     }
 
-    public Double getADouble() {
+    public final Double getADouble() {
         return aDouble;
     }
 
-    public AnyClass setADouble(final Double aDouble) {
+    public final AnyClass setADouble(final Double aDouble) {
         this.aDouble = aDouble;
         return this;
     }
 
-    public String getAString() {
+    public final String getAString() {
         return aString;
     }
 
-    public AnyClass setAString(final String aString) {
+    public final AnyClass setAString(final String aString) {
         this.aString = aString;
         return this;
     }
 
-    public Date getADate() {
+    public final Date getADate() {
         return (null == aDate) ? null : new Date(aDate.getTime());
     }
 
-    public AnyClass setADate(final Date aDate) {
+    public final AnyClass setADate(final Date aDate) {
         this.aDate = (null == aDate) ? null : new Date(aDate.getTime());
         return this;
     }

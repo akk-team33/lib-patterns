@@ -21,7 +21,7 @@ class FieldProperty<T> implements Property<T> {
     }
 
     @Override
-    public Object valueOf(final T subject) {
+    public final Object valueOf(final T subject) {
         try {
             return field.get(subject);
         } catch (IllegalAccessException e) {
@@ -30,7 +30,7 @@ class FieldProperty<T> implements Property<T> {
     }
 
     @Override
-    public void setValueOf(final T subject, final Object value) {
+    public final void setValueOf(final T subject, final Object value) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 }
