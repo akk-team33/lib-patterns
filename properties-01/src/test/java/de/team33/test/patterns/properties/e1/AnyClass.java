@@ -51,6 +51,8 @@ public class AnyClass extends AnyBaseClass {
 
     @Override
     public final AnyClass setAList(final List<?> aList) {
+        if (true)
+            throw new UnsupportedOperationException("- Test -");
         return (AnyClass) super.setAList(aList);
     }
 

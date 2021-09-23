@@ -21,17 +21,22 @@ class PropertiesTest {
     private static Map<String, Object> expectedMap(final AnyClass sample, final Properties.Mode mode) {
         final Map<String, Object> result = new TreeMap<>();
         switch (mode) {
+        case BY_PUBLIC_GETTERS:
+        case BY_PUBLIC_ACCESSORS:
+            result.put("aLong", sample.getALong());
+            result.put("aBigDecimal", sample.getABigDecimal());
+            result.put("aList", sample.getAList());
+            break;
         case BY_FIELDS_DEEP:
             result.put(".aLong", sample.getALong());
             result.put(".aBigDecimal", sample.getABigDecimal());
             result.put(".aList", sample.getAList());
-        case BY_FIELDS_FLAT:
-            result.put("anInt", sample.getAnInt());
-            result.put("aDouble", sample.getADouble());
-            result.put("aString", sample.getAString());
-            result.put("aDate", sample.getADate());
-        default:
+            break;
         }
+        result.put("anInt", sample.getAnInt());
+        result.put("aDouble", sample.getADouble());
+        result.put("aString", sample.getAString());
+        result.put("aDate", sample.getADate());
         return result;
     }
 

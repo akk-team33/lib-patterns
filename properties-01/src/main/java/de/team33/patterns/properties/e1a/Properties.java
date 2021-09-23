@@ -51,12 +51,36 @@ public class Properties<T> {
                          .peek(field -> field.setAccessible(true))
                          .map(field -> new Fields.Property<>(tClass, field));
         }
+
+        static <T> Stream<Property<T>> byPublicGetters(final Class<T> tClass) {
+            return Stream.of(tClass.getMethods())
+                         .filter(Methods::isSignificant)
+                         .map(Methods.Info::new)
+                         .filter(Methods.Info::isGetter)
+                         .collect(() -> new Methods.Collector<T>(),
+                                  Methods.Collector::add,
+                                  Methods.Collector::addAll)
+                         .stream();
+        }
+
+        static <T> Stream<Property<T>> byPublicAccesors(final Class<T> tClass) {
+            return Stream.of(tClass.getMethods())
+                         .filter(Methods::isSignificant)
+                         .map(Methods.Info::new)
+                         .filter(Methods.Info::isAccessor)
+                         .collect(() -> new Methods.Collector<T>(),
+                                  Methods.Collector::add,
+                                  Methods.Collector::addAll)
+                         .stream();
+        }
     }
 
     public enum Mode {
 
         BY_FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
-        BY_FIELDS_DEEP(Streaming::bySignificantFieldsDeep);
+        BY_FIELDS_DEEP(Streaming::bySignificantFieldsDeep),
+        BY_PUBLIC_GETTERS(Streaming::byPublicGetters),
+        BY_PUBLIC_ACCESSORS(Streaming::byPublicAccesors);
 
         @SuppressWarnings("rawtypes")
         private final Function streaming;
@@ -66,7 +90,7 @@ public class Properties<T> {
         }
 
         @SuppressWarnings("unchecked")
-        private final <T> Stream<Property<T>> stream(final Class<T> tClass) {
+        private <T> Stream<Property<T>> stream(final Class<T> tClass) {
             return (Stream<Property<T>>) streaming.apply(tClass);
         }
     }
