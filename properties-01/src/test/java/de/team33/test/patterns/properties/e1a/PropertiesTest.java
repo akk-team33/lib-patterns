@@ -51,5 +51,4 @@ class PropertiesTest {
             assertEquals(expected, result);
         }
     }
-
 }
