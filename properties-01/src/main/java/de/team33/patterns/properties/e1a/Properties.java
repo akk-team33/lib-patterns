@@ -36,6 +36,13 @@ public class Properties<T> {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
+    /**
+     * Maps the properties of a given origin to a given target {@link Map} and returns the {@link Map}.
+     */
+    public <M extends Map<String, Object>> M map(final T origin, final M target) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
     private static final class Streaming {
 
         static <T> Stream<Property<T>> bySignificantFieldsFlat(final Class<T> tClass) {

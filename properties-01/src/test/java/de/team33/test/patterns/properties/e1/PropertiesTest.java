@@ -2,10 +2,10 @@ package de.team33.test.patterns.properties.e1;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1.Properties;
+import de.team33.test.patterns.properties.shared.AnyClass;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;

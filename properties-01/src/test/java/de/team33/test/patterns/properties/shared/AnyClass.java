@@ -1,4 +1,4 @@
-package de.team33.test.patterns.properties.e1;
+package de.team33.test.patterns.properties.shared;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import static java.lang.System.identityHashCode;
 import static java.lang.System.nanoTime;
@@ -26,9 +28,11 @@ public class AnyClass extends AnyBaseClass {
     public AnyClass(final Random random) {
         super((random));
         anInt = random.nextInt();
-        aDouble = (0 == random.nextInt(100)) ? null : random.nextDouble();
-        aString = (0 == random.nextInt(100)) ? null : new BigInteger(100, random).toString(Character.MAX_RADIX);
-        aDate = (0 == random.nextInt(100)) ? null : new Date(System.currentTimeMillis() + random.nextInt());
+        aDouble = (0 == random.nextInt(16)) ? null : random.nextDouble();
+        aString = (0 == random.nextInt(16))
+                ? null
+                : new BigInteger(8 + random.nextInt(128), random).toString(Character.MAX_RADIX);
+        aDate = (0 == random.nextInt(16)) ? null : new Date(System.currentTimeMillis() + random.nextInt());
     }
 
     public AnyClass(final AnyClass origin) {

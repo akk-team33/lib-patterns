@@ -2,7 +2,7 @@ package de.team33.test.patterns.properties.e1a;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1a.Properties;
-import de.team33.test.patterns.properties.e1.AnyClass;
+import de.team33.test.patterns.properties.shared.AnyClass;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -38,6 +38,23 @@ class PropertiesTest {
         result.put("aString", sample.getAString());
         result.put("aDate", sample.getADate());
         return result;
+    }
+
+    @Test
+    final void mapTo() {
+        final Properties<AnyClass> properties = Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP);
+        final AnyClass sample = RANDOM.get(AnyClass::new);
+        final Map<String, Object> sampleMap = properties.map(sample, new TreeMap<>());
+        final AnyClass result = properties.map(sampleMap, new AnyClass());
+        assertEquals(sample, result);
+    }
+
+    @Test
+    final void copyTo() {
+        final Properties<AnyClass> properties = Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP);
+        final AnyClass sample = RANDOM.get(AnyClass::new);
+        final AnyClass result = properties.copy(sample, new AnyClass());
+        assertEquals(sample, result);
     }
 
     @Test

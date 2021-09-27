@@ -1,4 +1,4 @@
-package de.team33.test.patterns.properties.e1;
+package de.team33.test.patterns.properties.shared;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,7 +24,7 @@ public class AnyBaseClass {
     AnyBaseClass(final Random random) {
         aLong = random.nextLong();
         //noinspection AssignmentToNull
-        aBigDecimal = (0 == random.nextInt(100)) ? null : BigDecimal.valueOf(random.nextDouble());
+        aBigDecimal = (0 == random.nextInt(16)) ? null : BigDecimal.valueOf(random.nextDouble());
         aList = Stream.of(random.nextInt(),
                           random.nextDouble(),
                           new BigInteger(100, random).toString(Character.MAX_RADIX),
