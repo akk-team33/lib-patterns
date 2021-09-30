@@ -5,10 +5,13 @@ import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-class Fields {
+final class Fields {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
+
+    private Fields() {
+    }
 
     static Stream<Field> flatStreamOf(final Class<?> cls) {
         return Stream.of(cls.getDeclaredFields());
@@ -39,6 +42,12 @@ class Fields {
                 "- class of subject: %s%n" +
                 "- value of subject: %s%n";
 
+        private static final String CANNOT_SET_VALUE = "cannot set value of field to a given subject:%n" +
+                "- field: %s%n" +
+                "- value: %s%n" +
+                "- class of subject: %s%n" +
+                "- value of subject: %s%n";
+
         private final Class<T> context;
         private final Field field;
 
@@ -61,8 +70,18 @@ class Fields {
             try {
                 return field.get(subject);
             } catch (final IllegalAccessException e) {
-                throw new IllegalArgumentException(String.format(CANNOT_GET_VALUE, field, subject.getClass(), subject),
-                                                   e);
+                throw new IllegalArgumentException(
+                        String.format(CANNOT_GET_VALUE, field, subject.getClass(), subject), e);
+            }
+        }
+
+        @Override
+        public final void setValue(final T subject, final Object value) {
+            try {
+                field.set(subject, value);
+            } catch (final IllegalAccessException e) {
+                throw new IllegalArgumentException(
+                        String.format(CANNOT_SET_VALUE, field, value, subject.getClass(), subject), e);
             }
         }
     }

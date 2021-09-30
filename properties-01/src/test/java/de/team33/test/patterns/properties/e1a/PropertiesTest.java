@@ -3,21 +3,21 @@ package de.team33.test.patterns.properties.e1a;
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1a.Properties;
 import de.team33.test.patterns.properties.shared.AnyClass;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.logging.Logger;
+import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PropertiesTest {
 
-    private static final Logger LOG = Logger.getLogger(PropertiesTest.class.getCanonicalName());
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
-    @SuppressWarnings({"SwitchStatement", "fallthrough"})
+    @SuppressWarnings("SwitchStatement")
     private static Map<String, Object> expectedMap(final AnyClass sample, final Properties.Mode mode) {
         final Map<String, Object> result = new TreeMap<>();
         switch (mode) {
@@ -40,32 +40,76 @@ class PropertiesTest {
         return result;
     }
 
-    @Test
-    final void mapTo() {
-        final Properties<AnyClass> properties = Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP);
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void pass_via_map(final Case c) {
         final AnyClass sample = RANDOM.get(AnyClass::new);
-        final Map<String, Object> sampleMap = properties.map(sample, new TreeMap<>());
-        final AnyClass result = properties.map(sampleMap, new AnyClass());
-        assertEquals(sample, result);
+        final AnyClass expected = c.expected.apply(sample);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        final Map<String, Object> stage = c.properties.pass(sample, new TreeMap<>());
+        final AnyClass result = c.properties.pass(stage, new AnyClass());
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        assertEquals(expected, result);
     }
 
-    @Test
-    final void copyTo() {
-        final Properties<AnyClass> properties = Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP);
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void pass_directly(final Case c) {
         final AnyClass sample = RANDOM.get(AnyClass::new);
-        final AnyClass result = properties.copy(sample, new AnyClass());
-        assertEquals(sample, result);
+        final AnyClass expected = c.expected.apply(sample);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        final AnyClass result = c.properties.pass(sample, new AnyClass());
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        assertEquals(expected, result);
     }
 
-    @Test
-    final void toMap() {
-        for (final Properties.Mode mode : Properties.Mode.values()) {
-            LOG.info(() -> "Properties.Mode: " + mode);
-            final Properties<AnyClass> properties = Properties.of(AnyClass.class, mode);
-            final AnyClass sample = RANDOM.get(AnyClass::new);
-            final Map<String, Object> expected = expectedMap(sample, mode);
-            final Map<String, Object> result = properties.toMap(sample);
-            assertEquals(expected, result);
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void toMap(final Case c) {
+        final AnyClass sample = RANDOM.get(AnyClass::new);
+        final Map<String, Object> expected = c.expectedMap.apply(sample);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        final Map<String, Object> result = c.properties.toMap(sample);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        assertEquals(expected, result);
+    }
+
+    @SuppressWarnings("PackageVisibleField")
+    enum Case {
+
+        BY_FIELDS_FLAT(Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_FLAT),
+                       sample -> new AnyClass(sample, false),
+                       sample -> expectedMap(sample, Properties.Mode.BY_FIELDS_FLAT),
+                       false),
+
+        BY_FIELDS_DEEP(Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP),
+                       sample -> new AnyClass(sample, true),
+                       sample -> expectedMap(sample, Properties.Mode.BY_FIELDS_DEEP),
+                       false),
+
+        BY_PUBLIC_GETTERS(Properties.of(AnyClass.class, Properties.Mode.BY_PUBLIC_GETTERS),
+                          sample -> new AnyClass(),
+                          sample -> expectedMap(sample, Properties.Mode.BY_PUBLIC_GETTERS),
+                          true),
+
+        BY_PUBLIC_ACCESSORS(Properties.of(AnyClass.class, Properties.Mode.BY_PUBLIC_ACCESSORS),
+                            sample -> new AnyClass(sample, true),
+                            sample -> expectedMap(sample, Properties.Mode.BY_PUBLIC_ACCESSORS),
+                            false);
+
+        final Properties<AnyClass> properties;
+        final Function<AnyClass, AnyClass> expected;
+        final Function<AnyClass, Map<String, Object>> expectedMap;
+        final boolean readOnly;
+
+        Case(final Properties<AnyClass> properties,
+             final Function<AnyClass, AnyClass> expected,
+             final Function<AnyClass, Map<String, Object>> expectedMap,
+             final boolean readOnly) {
+            this.properties = properties;
+            this.expected = expected;
+            this.expectedMap = expectedMap;
+            this.readOnly = readOnly;
         }
     }
 }

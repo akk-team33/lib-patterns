@@ -8,9 +8,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-class Methods {
+final class Methods {
 
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.NATIVE;
+
+    private Methods() {
+    }
 
     static boolean isSignificant(final Method method) {
         return isSignificant(method.getModifiers());
@@ -20,13 +23,12 @@ class Methods {
         return 0 == (modifiers & NOT_SIGNIFICANT);
     }
 
-    static class Info {
+    static class Details {
 
         private final Prefix prefix;
         private final Method method;
-        //private final String name;
 
-        Info(final Method method) {
+        Details(final Method method) {
             this.prefix = Stream.of(Prefix.values())
                                 .filter(value -> method.getName().startsWith(value.name()))
                                 .findAny()
@@ -46,7 +48,7 @@ class Methods {
             return isGetter() || isSetter();
         }
 
-        final String getName() {
+        final String getPropertyName() {
             final String name0 = method.getName();
             final int index0 = prefix.name().length();
             final int index1 = index0 < name0.length() ? index0 + 1 : index0;
@@ -78,38 +80,86 @@ class Methods {
 
     static class Collector<T> {
 
-        private final Map<String, Property<T>> properties = new TreeMap<>();
+        private final Map<String, Builder<T>> properties = new TreeMap<>();
 
-        final void add(final Info info) {
-            properties.computeIfAbsent(info.getName(), Property::new)
-                      .add(info);
+        Collector(final Class<T> ignored) {
+        }
+
+        final void add(final Details details) {
+            properties.computeIfAbsent(details.getPropertyName(), Builder::new)
+                      .add(details);
         }
 
         final void addAll(final Collector<T> other) {
             throw new UnsupportedOperationException("should not be necessary");
         }
 
-        final Stream<de.team33.patterns.properties.e1a.Property<T>> stream() {
+        final Stream<Property<T>> stream() {
             return properties.values()
                              .stream()
-                             .map(Property::generalize);
+                             .map(Builder::build);
         }
     }
 
-    static final class Property<T> implements de.team33.patterns.properties.e1a.Property<T> {
+    static final class Builder<T> {
 
-        private static final String CANNOT_GET_VALUE = "cannot get value gy getter from a given subject:%n" +
+        private final String name;
+        private Method getter;
+        private Method setter;
+
+        Builder(final String name) {
+            this.name = name;
+        }
+
+        private static boolean overrides(final Method actual, final Method deposited) {
+            return (null == deposited); //|| deposited.getDeclaringClass().isAssignableFrom(actual.getDeclaringClass());
+        }
+
+        final Property<T> build() {
+            return new Accessor<T>(this);
+        }
+
+        final void add(final Details details) {
+            if (details.prefix.type == Type.GETTER) {
+                if (overrides(details.method, getter)) {
+                    getter = details.method;
+                }
+            } else if (details.prefix.type == Type.SETTER) {
+                if (overrides(details.method, setter)) {
+                    setter = details.method;
+                }
+            } else {
+                throw new IllegalArgumentException(String.format("cannot set method%n" +
+                                                                         "- type: %s%n" +
+                                                                         "- method: %s%n" +
+                                                                         "- current getter: %s%n" +
+                                                                         "- current setter: %s%n",
+                                                                 details.prefix.type, details.method, getter, setter));
+            }
+        }
+    }
+
+    static final class Accessor<T> implements Property<T> {
+
+        private static final String CANNOT_GET_VALUE = "cannot get value by getter from a given subject:%n" +
                 "- getter: %s%n" +
                 "- class of subject: %s%n" +
                 "- value of subject: %s%n";
 
+        private static final String CANNOT_SET_VALUE = "cannot set value by setter to a given subject:%n" +
+                "- setter: %s%n" +
+                "- value: %s%n" +
+                "- class of subject: %s%n" +
+                "- value of subject: %s%n";
+
         private final String name;
+        private final Method getter;
+        private final Method setter;
 
-        private Method getter;
-        private Method setter;
-
-        private Property(final String name) {
-            this.name = name;
+        Accessor(final Builder<T> builder) {
+            name = builder.name;
+            getter = builder.getter;
+            setter = builder.setter;
         }
 
         @Override
@@ -120,38 +170,24 @@ class Methods {
         @Override
         public final Object valueOf(final T subject) {
             try {
-                return getter.invoke(subject);
+                //noinspection ReturnOfNull
+                return (null == getter) ? null : getter.invoke(subject);
             } catch (final IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalArgumentException(String.format(CANNOT_GET_VALUE, getter, subject.getClass(), subject),
-                                                   e);
+                throw new IllegalArgumentException(
+                        String.format(CANNOT_GET_VALUE, getter, subject.getClass(), subject), e);
             }
         }
 
-        private void add(final Info info) {
-            if (info.prefix.type == Type.GETTER) {
-                if (overrides(info.method, getter)) {
-                    getter = info.method;
+        @Override
+        public final void setValue(final T subject, final Object value) {
+            if (null != setter) {
+                try {
+                    setter.invoke(subject, value);
+                } catch (final IllegalAccessException | InvocationTargetException e) {
+                    throw new IllegalArgumentException(
+                            String.format(CANNOT_SET_VALUE, setter, value, subject.getClass(), subject), e);
                 }
-            } else if (info.prefix.type == Type.SETTER) {
-                if (overrides(info.method, setter)) {
-                    setter = info.method;
-                }
-            } else {
-                throw new IllegalArgumentException(String.format("cannot set method%n" +
-                                                                         "- type: %s%n" +
-                                                                         "- method: %s%n" +
-                                                                         "- current getter: %s%n" +
-                                                                         "- current setter: %s%n",
-                                                                 info.prefix.type, info.method, getter, setter));
             }
-        }
-
-        private static boolean overrides(final Method actual, final Method deposited) {
-            return true; //(null == deposited); //|| deposited.getDeclaringClass().isAssignableFrom(actual.getDeclaringClass());
-        }
-
-        private de.team33.patterns.properties.e1a.Property<T> generalize() {
-            return this;
         }
     }
 }

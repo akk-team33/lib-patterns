@@ -3,12 +3,12 @@ package de.team33.test.patterns.properties.shared;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.TreeMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,8 +23,7 @@ public class AnyBaseClass {
 
     AnyBaseClass(final Random random) {
         aLong = random.nextLong();
-        //noinspection AssignmentToNull
-        aBigDecimal = (0 == random.nextInt(16)) ? null : BigDecimal.valueOf(random.nextDouble());
+        aBigDecimal = nullable(random, () -> BigDecimal.valueOf(random.nextDouble()));
         aList = Stream.of(random.nextInt(),
                           random.nextDouble(),
                           new BigInteger(100, random).toString(Character.MAX_RADIX),
@@ -33,10 +32,20 @@ public class AnyBaseClass {
                       .collect(Collectors.toList());
     }
 
-    AnyBaseClass(final AnyBaseClass origin) {
-        aLong = origin.aLong;
-        aBigDecimal = origin.aBigDecimal;
-        aList = origin.aList;
+    AnyBaseClass(final AnyBaseClass origin, final boolean deep) {
+        if (deep) {
+            aLong = origin.aLong;
+            aBigDecimal = origin.aBigDecimal;
+            aList = origin.aList;
+        }
+    }
+
+    static List<Object> toList(final AnyBaseClass any) {
+        return Arrays.asList(any.aLong, any.aBigDecimal, any.aList);
+    }
+
+    static <T> T nullable(final Random random, final Supplier<T> supplier) {
+        return (0 == random.nextInt(16)) ? null : supplier.get();
     }
 
     public final long getALong() {

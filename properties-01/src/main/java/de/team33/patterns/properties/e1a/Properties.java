@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Properties<T> {
+public final class Properties<T> {
 
     private final List<Property<T>> backing;
 
@@ -37,10 +37,39 @@ public class Properties<T> {
     }
 
     /**
-     * Maps the properties of a given origin to a given target {@link Map} and returns the {@link Map}.
+     * Passes the properties of a given origin to a given target {@link Map}.
+     *
+     * @return the target {@link Map}.
      */
-    public <M extends Map<String, Object>> M map(final T origin, final M target) {
-        throw new UnsupportedOperationException("not yet implemented");
+    public final <M extends Map<String, Object>> M pass(final T origin, final M target) {
+        for (final Property<T> property : backing) {
+            target.put(property.name(), property.valueOf(origin));
+        }
+        return target;
+    }
+
+    /**
+     * Passes the entries of a given origin {@link Map} as properties to a given target.
+     *
+     * @return the target.
+     */
+    public final T pass(final Map<?, ?> origin, final T target) {
+        for (final Property<T> property : backing) {
+            property.setValue(target, origin.get(property.name()));
+        }
+        return target;
+    }
+
+    /**
+     * Passes the properties of a given origin to a given target.
+     *
+     * @return the target.
+     */
+    public final T pass(final T origin, final T target) {
+        for (final Property<T> property : backing) {
+            property.setValue(target, property.valueOf(origin));
+        }
+        return target;
     }
 
     private static final class Streaming {
@@ -62,9 +91,9 @@ public class Properties<T> {
         static <T> Stream<Property<T>> byPublicGetters(final Class<T> tClass) {
             return Stream.of(tClass.getMethods())
                          .filter(Methods::isSignificant)
-                         .map(Methods.Info::new)
-                         .filter(Methods.Info::isGetter)
-                         .collect(() -> new Methods.Collector<T>(),
+                         .map(Methods.Details::new)
+                         .filter(Methods.Details::isGetter)
+                         .collect(() -> new Methods.Collector<T>(tClass),
                                   Methods.Collector::add,
                                   Methods.Collector::addAll)
                          .stream();
@@ -73,9 +102,9 @@ public class Properties<T> {
         static <T> Stream<Property<T>> byPublicAccesors(final Class<T> tClass) {
             return Stream.of(tClass.getMethods())
                          .filter(Methods::isSignificant)
-                         .map(Methods.Info::new)
-                         .filter(Methods.Info::isAccessor)
-                         .collect(() -> new Methods.Collector<T>(),
+                         .map(Methods.Details::new)
+                         .filter(Methods.Details::isAccessor)
+                         .collect(() -> new Methods.Collector<T>(tClass),
                                   Methods.Collector::add,
                                   Methods.Collector::addAll)
                          .stream();

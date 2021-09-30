@@ -34,15 +34,11 @@ class PropertiesTest {
                      .collect(Collectors.toList());
     }
 
-    private static AnyClass cloneOf(final AnyClass origin) {
-        return new AnyClass(origin);
-    }
-
     @Test
     final void testEquals() {
         allProperties.forEach(properties -> samples.forEach(sample -> {
-            assertTrue(properties.equals(sample, new AnyClass(sample)));
-            samples.stream().map(AnyClass::new).forEach(other -> {
+            assertTrue(properties.equals(sample, new AnyClass(sample, true)));
+            samples.stream().map(any -> new AnyClass(any, true)).forEach(other -> {
                 if (properties.equals(sample, other)) {
                     assertEquals(properties.hashCode(sample), properties.hashCode(other));
                     assertEquals(properties.toString(sample), properties.toString(other));
