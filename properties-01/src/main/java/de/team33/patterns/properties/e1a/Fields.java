@@ -13,17 +13,21 @@ final class Fields {
     private Fields() {
     }
 
-    static Stream<Field> flatStreamOf(final Class<?> cls) {
+    static Stream<Field> streamDeclaredFlat(final Class<?> cls) {
         return Stream.of(cls.getDeclaredFields());
     }
 
-    static Stream<Field> deepStreamOf(final Class<?> cls) {
-        return Stream.concat(superStreamOf(cls), flatStreamOf(cls));
+    static Stream<Field> streamDeclaredDeep(final Class<?> cls) {
+        return Stream.concat(superStreamOf(cls), streamDeclaredFlat(cls));
+    }
+
+    static <T> Property<T> newProperty(final Class<T> tClass, final Field field) {
+        return new PropertyImpl<>(tClass, field);
     }
 
     private static Stream<Field> superStreamOf(final Class<?> cls) {
         return Optional.ofNullable(cls.getSuperclass())
-                       .map(Fields::deepStreamOf)
+                       .map(Fields::streamDeclaredDeep)
                        .orElseGet(Stream::empty);
     }
 
@@ -35,7 +39,7 @@ final class Fields {
         return 0 == (modifiers & NOT_SIGNIFICANT);
     }
 
-    static class Property<T> implements de.team33.patterns.properties.e1a.Property<T> {
+    private static class PropertyImpl<T> implements Property<T> {
 
         private static final String CANNOT_GET_VALUE = "cannot get value of field from a given subject:%n" +
                 "- field: %s%n" +
@@ -51,7 +55,7 @@ final class Fields {
         private final Class<T> context;
         private final Field field;
 
-        Property(final Class<T> context, final Field field) {
+        PropertyImpl(final Class<T> context, final Field field) {
             this.context = context;
             this.field = field;
         }

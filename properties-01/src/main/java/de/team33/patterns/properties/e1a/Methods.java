@@ -61,7 +61,9 @@ final class Methods {
     }
 
     private enum Prefix {
-        get(Type.GETTER), is(Type.GETTER), set(Type.SETTER);
+        get(Type.GETTER),
+        is(Type.GETTER),
+        set(Type.SETTER);
 
         private final Type type;
 
@@ -78,36 +80,39 @@ final class Methods {
         }
     }
 
-    static class Collector<T> {
+    static class Aggregator<T> {
 
-        private final Map<String, Builder<T>> properties = new TreeMap<>();
+        private final Map<String, Condenser<T>> properties = new TreeMap<>();
 
-        Collector(final Class<T> ignored) {
+        Aggregator(final Class<T> ignored) {
         }
 
         final void add(final Details details) {
-            properties.computeIfAbsent(details.getPropertyName(), Builder::new)
+            properties.computeIfAbsent(details.getPropertyName(), Condenser::new)
                       .add(details);
         }
 
-        final void addAll(final Collector<T> other) {
+        final void addAll(final Aggregator<T> other) {
             throw new UnsupportedOperationException("should not be necessary");
         }
 
         final Stream<Property<T>> stream() {
             return properties.values()
                              .stream()
-                             .map(Builder::build);
+                             .map(Condenser::build);
         }
     }
 
-    static final class Builder<T> {
+    /**
+     * Combines all methods that relate to a specific logical property and can generate a property from them.
+     */
+    static final class Condenser<T> {
 
         private final String name;
         private Method getter;
         private Method setter;
 
-        Builder(final String name) {
+        Condenser(final String name) {
             this.name = name;
         }
 
@@ -115,8 +120,19 @@ final class Methods {
             return (null == deposited); //|| deposited.getDeclaringClass().isAssignableFrom(actual.getDeclaringClass());
         }
 
+        private static Prefix prefix(final Method method) {
+            return Stream.of(Prefix.values())
+                         .filter(value -> method.getName().startsWith(value.name()))
+                         .findAny()
+                         .orElse(null);
+        }
+
         final Property<T> build() {
-            return new Accessor<T>(this);
+            return new PropertyImpl<>(this);
+        }
+
+        final void add(final Method method) {
+            Prefix prefix = prefix(method);
         }
 
         final void add(final Details details) {
@@ -139,7 +155,7 @@ final class Methods {
         }
     }
 
-    static final class Accessor<T> implements Property<T> {
+    static final class PropertyImpl<T> implements Property<T> {
 
         private static final String CANNOT_GET_VALUE = "cannot get value by getter from a given subject:%n" +
                 "- getter: %s%n" +
@@ -156,7 +172,7 @@ final class Methods {
         private final Method getter;
         private final Method setter;
 
-        Accessor(final Builder<T> builder) {
+        PropertyImpl(final Condenser<T> builder) {
             name = builder.name;
             getter = builder.getter;
             setter = builder.setter;

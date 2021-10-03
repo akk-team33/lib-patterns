@@ -24,8 +24,7 @@ public final class Properties<T> {
     }
 
     public final Map<String, Object> toMap(final T subject) {
-        return backing.stream()
-                      .collect(TreeMap::new, accumulator(subject), Map::putAll);
+        return pass(subject, new TreeMap<>());
     }
 
     private BiConsumer<TreeMap<String, Object>, Property<T>> accumulator(final T subject) {
@@ -75,17 +74,17 @@ public final class Properties<T> {
     private static final class Streaming {
 
         static <T> Stream<Property<T>> bySignificantFieldsFlat(final Class<T> tClass) {
-            return Fields.flatStreamOf(tClass)
+            return Fields.streamDeclaredFlat(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(field -> new Fields.Property<>(tClass, field));
+                         .map(field -> Fields.newProperty(tClass, field));
         }
 
         static <T> Stream<Property<T>> bySignificantFieldsDeep(final Class<T> tClass) {
-            return Fields.deepStreamOf(tClass)
+            return Fields.streamDeclaredDeep(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(field -> new Fields.Property<>(tClass, field));
+                         .map(field -> Fields.newProperty(tClass, field));
         }
 
         static <T> Stream<Property<T>> byPublicGetters(final Class<T> tClass) {
@@ -93,20 +92,20 @@ public final class Properties<T> {
                          .filter(Methods::isSignificant)
                          .map(Methods.Details::new)
                          .filter(Methods.Details::isGetter)
-                         .collect(() -> new Methods.Collector<T>(tClass),
-                                  Methods.Collector::add,
-                                  Methods.Collector::addAll)
+                         .collect(() -> new Methods.Aggregator<T>(tClass),
+                                  Methods.Aggregator::add,
+                                  Methods.Aggregator::addAll)
                          .stream();
         }
 
-        static <T> Stream<Property<T>> byPublicAccesors(final Class<T> tClass) {
+        static <T> Stream<Property<T>> byPublicAccessors(final Class<T> tClass) {
             return Stream.of(tClass.getMethods())
                          .filter(Methods::isSignificant)
                          .map(Methods.Details::new)
                          .filter(Methods.Details::isAccessor)
-                         .collect(() -> new Methods.Collector<T>(tClass),
-                                  Methods.Collector::add,
-                                  Methods.Collector::addAll)
+                         .collect(() -> new Methods.Aggregator<T>(tClass),
+                                  Methods.Aggregator::add,
+                                  Methods.Aggregator::addAll)
                          .stream();
         }
     }
@@ -116,7 +115,7 @@ public final class Properties<T> {
         BY_FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
         BY_FIELDS_DEEP(Streaming::bySignificantFieldsDeep),
         BY_PUBLIC_GETTERS(Streaming::byPublicGetters),
-        BY_PUBLIC_ACCESSORS(Streaming::byPublicAccesors);
+        BY_PUBLIC_ACCESSORS(Streaming::byPublicAccessors);
 
         @SuppressWarnings("rawtypes")
         private final Function streaming;
