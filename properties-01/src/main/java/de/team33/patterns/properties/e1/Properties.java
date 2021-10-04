@@ -1,130 +1,108 @@
 package de.team33.patterns.properties.e1;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Properties<T> {
+public final class Properties<T> {
 
-    private final Collection<Property<T>> backing;
+    private final List<Property<T>> backing;
 
-    private Properties(final Builder<T> builder) {
+    private Properties(final List<Property<T>> backing) {
+        this.backing = Collections.unmodifiableList(new ArrayList<>(backing));
+    }
+
+    public static <T> Properties<T> of(final Class<T> tClass, final Mode mode) {
+        return new Properties<>(mode.stream(tClass)
+                                    .collect(Collectors.toList()));
+    }
+
+    public final Map<String, Object> toMap(final T subject) {
+        return pass(subject, new TreeMap<>());
+    }
+
+    private BiConsumer<TreeMap<String, Object>, Property<T>> accumulator(final T subject) {
+        return (map, property) -> map.put(property.name(), property.valueOf(subject));
+    }
+
+    private static <T> void put(final Map<String, Object> map, final Property<T> property) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    private Properties(final Collection<Property<T>> backing) {
-        this.backing = backing;
+    /**
+     * Passes the properties of a given origin to a given target {@link Map}.
+     *
+     * @return the target {@link Map}.
+     */
+    public final <M extends Map<String, Object>> M pass(final T origin, final M target) {
+        for (final Property<T> property : backing) {
+            target.put(property.name(), property.valueOf(origin));
+        }
+        return target;
     }
 
-    public static <T> Builder<T> add(final String name, final Function<T, Object> getter) {
-        return new Builder<T>().add(name, getter);
+    /**
+     * Passes the entries of a given origin {@link Map} as properties to a given target.
+     *
+     * @return the target.
+     */
+    public final T pass(final Map<?, ?> origin, final T target) {
+        for (final Property<T> property : backing) {
+            property.setValue(target, origin.get(property.name()));
+        }
+        return target;
     }
 
-    public static <T> Builder<T> add(final String name,
-                                     final Function<T, Object> getter,
-                                     final BiConsumer<T, Object> setter) {
-        return new Builder<T>().add(name, getter, setter);
+    /**
+     * Passes the properties of a given origin to a given target.
+     *
+     * @return the target.
+     */
+    public final T pass(final T origin, final T target) {
+        for (final Property<T> property : backing) {
+            property.setValue(target, property.valueOf(origin));
+        }
+        return target;
     }
 
-    public static <T> Stage<T> of(final Class<T> subjectClass) {
-        return new Stage<>(subjectClass);
-    }
+    private static final class Streaming {
 
-    public final boolean equals(final T subject, final T other) {
-        return toMap(subject).equals(toMap(other));
-    }
-
-    public final int hashCode(final T subject) {
-        return toMap(subject).hashCode();
-    }
-
-    public final String toString(final T subject) {
-        return toMap(subject).toString();
-    }
-
-    private Map<String, Object> toMap(final T subject) {
-        return backing.stream()
-                      .collect(TreeMap::new, (map, prop) -> map.put(prop.name(), prop.valueOf(subject)), Map::putAll);
-    }
-
-    private static class Streaming {
-
-        private static <T> Stream<Property<T>> bySignificantFieldsFlat(final Class<T> tClass) {
-            return Fields.flatStreamOf(tClass)
+        static <T> Stream<Property<T>> bySignificantFieldsFlat(final Class<T> tClass) {
+            return Fields.streamDeclaredFlat(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(FieldProperty::new);
+                         .map(field -> Fields.newProperty(tClass, field));
         }
 
-        private static <T> Stream<Property<T>> bySignificantFieldsDeep(final Class<T> tClass) {
-            return Fields.deepStreamOf(tClass)
+        static <T> Stream<Property<T>> bySignificantFieldsDeep(final Class<T> tClass) {
+            return Fields.streamDeclaredDeep(tClass)
                          .filter(Fields::isSignificant)
                          .peek(field -> field.setAccessible(true))
-                         .map(FieldProperty::new);
-        }
-
-        private static <T> Stream<Property<T>> byPublicGetters(final Class<T> tClass) {
-            return Methods.streamOf(tClass)
-                          .filter(Methods::isGetter)
-                          .collect(() -> new Aggregator<T>(), Aggregator::add, Aggregator::addAll)
-                          .stream();
+                         .map(field -> Fields.newProperty(tClass, field));
         }
     }
 
-    public enum Strategy {
+    public enum Mode {
 
-        FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
-
-        FIELDS_DEEP(Streaming::bySignificantFieldsDeep),
-
-        PUBLIC_GETTERS(Streaming::byPublicGetters),
-
-        PUBLIC_GETTERS_AND_SETTERS(null);
+        BY_FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
+        BY_FIELDS_DEEP(Streaming::bySignificantFieldsDeep);
 
         @SuppressWarnings("rawtypes")
         private final Function streaming;
 
-        <T> Strategy(final Function<Class<T>, Stream<Property<T>>> streaming) {
+        <T> Mode(final Function<Class<T>, Stream<Property<T>>> streaming) {
             this.streaming = streaming;
         }
 
         @SuppressWarnings("unchecked")
-        final <T> Stream<Property<T>> stream(final Class<T> subjectClass) {
-            return (Stream<Property<T>>) streaming.apply(subjectClass);
-        }
-    }
-
-    public static class Stage<T> {
-
-        private final Class<T> subjectClass;
-
-        private Stage(final Class<T> subjectClass) {
-            this.subjectClass = subjectClass;
-        }
-
-        public final Properties<T> by(final Strategy strategy) {
-            return new Properties<T>(strategy.stream(subjectClass)
-                                             .collect(Collectors.toList()));
-        }
-    }
-
-    public static class Builder<T> {
-
-        public final Builder<T> add(final String name, final Function<T, Object> getter) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public final Builder<T> add(final String name, final Function<T, Object> getter, final BiConsumer<T, Object> setter) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public final Properties<T> build() {
-            return new Properties<>(this);
+        private <T> Stream<Property<T>> stream(final Class<T> tClass) {
+            return (Stream<Property<T>>) streaming.apply(tClass);
         }
     }
 }

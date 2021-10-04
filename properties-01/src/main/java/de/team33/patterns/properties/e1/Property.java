@@ -6,5 +6,5 @@ interface Property<T> {
 
     Object valueOf(T subject);
 
-    void setValueOf(T subject, Object value);
+    void setValue(T subject, Object value);
 }
