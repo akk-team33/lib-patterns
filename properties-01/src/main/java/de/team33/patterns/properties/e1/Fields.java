@@ -73,7 +73,7 @@ final class Fields {
         public final Object valueOf(final T subject) {
             try {
                 return field.get(subject);
-            } catch (final IllegalAccessException e) {
+            } catch (final Exception e) {
                 throw new IllegalArgumentException(
                         String.format(CANNOT_GET_VALUE, field, subject.getClass(), subject), e);
             }
@@ -83,7 +83,7 @@ final class Fields {
         public final void setValue(final T subject, final Object value) {
             try {
                 field.set(subject, value);
-            } catch (final IllegalAccessException e) {
+            } catch (final Exception e) {
                 throw new IllegalArgumentException(
                         String.format(CANNOT_SET_VALUE, field, value, subject.getClass(), subject), e);
             }

@@ -18,10 +18,10 @@ public class AnyBaseClass {
     private BigDecimal aBigDecimal;
     private List<?> aList;
 
-    AnyBaseClass() {
+    public AnyBaseClass() {
     }
 
-    AnyBaseClass(final Random random) {
+    public AnyBaseClass(final Random random) {
         aLong = random.nextLong();
         aBigDecimal = nullable(random, () -> BigDecimal.valueOf(random.nextDouble()));
         aList = Stream.of(random.nextInt(),

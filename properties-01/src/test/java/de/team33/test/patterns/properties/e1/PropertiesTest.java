@@ -2,6 +2,7 @@ package de.team33.test.patterns.properties.e1;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1.Properties;
+import de.team33.test.patterns.properties.shared.AnyBaseClass;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -12,6 +13,7 @@ import java.util.TreeMap;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class PropertiesTest {
 
@@ -42,11 +44,21 @@ class PropertiesTest {
 
     @ParameterizedTest
     @EnumSource(Case.class)
-    final void pass_via_map(final Case c) {
+    final void toMap(final Case c) {
         final AnyClass sample = RANDOM.get(AnyClass::new);
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        final Map<String, Object> stage = c.properties.pass(sample, new TreeMap<>());
-        final AnyClass result = c.properties.pass(stage, new AnyClass());
+        final Map<String, Object> result = c.properties.toMap(sample);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        assertEquals(c.expectedMap.apply(sample), result);
+    }
+
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void map(final Case c) {
+        final AnyClass sample = RANDOM.get(AnyClass::new);
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        final Map<String, Object> stage = c.properties.map(sample, new TreeMap<>());
+        final AnyClass result = c.properties.map(stage, new AnyClass());
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         assertEquals(c.expectedMap.apply(sample), stage);
         assertEquals(c.expected.apply(sample), result);
@@ -54,12 +66,32 @@ class PropertiesTest {
 
     @ParameterizedTest
     @EnumSource(Case.class)
-    final void pass_directly(final Case c) {
+    final void copy(final Case c) {
         final AnyClass sample = RANDOM.get(AnyClass::new);
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-        final AnyClass result = c.properties.pass(sample, new AnyClass());
+        final AnyClass result = c.properties.copy(sample, new AnyClass());
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         assertEquals(c.expected.apply(sample), result);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void failRead(final Case c) {
+        final AnyBaseClass sample = RANDOM.get(AnyBaseClass::new);
+        final Properties rawProperties = c.properties;
+        //rawProperties.toMap(sample);
+        assertThrows(IllegalArgumentException.class, () -> rawProperties.toMap(sample));
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @ParameterizedTest
+    @EnumSource(Case.class)
+    final void failWrite(final Case c) {
+        final AnyClass sample = RANDOM.get(AnyClass::new);
+        final Properties rawProperties = c.properties;
+        //rawProperties.copy(sample, new AnyBaseClass());
+        assertThrows(IllegalArgumentException.class, () -> rawProperties.copy(sample, new AnyBaseClass()));
     }
 
     @SuppressWarnings("PackageVisibleField")
