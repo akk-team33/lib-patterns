@@ -41,16 +41,18 @@ final class Fields {
 
     private static class PropertyImpl<T> implements Property<T> {
 
-        private static final String CANNOT_GET_VALUE = "cannot get value of field from a given subject:%n" +
-                "- field: %s%n" +
-                "- class of subject: %s%n" +
-                "- value of subject: %s%n";
+        private static final String CANNOT_GET_VALUE = //
+                "The value of an alleged field of the given target instance cannot be determined:%n" +
+                        "- field: %s%n" +
+                        "- type of the target instance: %s%n" +
+                        "- the target instance: %s%n";
 
-        private static final String CANNOT_SET_VALUE = "cannot set value of field to a given subject:%n" +
-                "- field: %s%n" +
-                "- value: %s%n" +
-                "- class of subject: %s%n" +
-                "- value of subject: %s%n";
+        private static final String CANNOT_SET_VALUE = //
+                "An alleged field of the given target instance cannot be set to the given value:%n" +
+                        "- field: %s%n" +
+                        "- value: %s%n" +
+                        "- type of the target instance: %s%n" +
+                        "- the target instance: %s%n";
 
         private final Class<T> context;
         private final Field field;
@@ -73,7 +75,7 @@ final class Fields {
         public final Object valueOf(final T subject) {
             try {
                 return field.get(subject);
-            } catch (final Exception e) {
+            } catch (final IllegalArgumentException | IllegalAccessException e) {
                 throw new IllegalArgumentException(
                         String.format(CANNOT_GET_VALUE, field, subject.getClass(), subject), e);
             }
@@ -83,7 +85,7 @@ final class Fields {
         public final void setValue(final T subject, final Object value) {
             try {
                 field.set(subject, value);
-            } catch (final Exception e) {
+            } catch (final IllegalArgumentException | IllegalAccessException e) {
                 throw new IllegalArgumentException(
                         String.format(CANNOT_SET_VALUE, field, value, subject.getClass(), subject), e);
             }

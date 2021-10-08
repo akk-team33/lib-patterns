@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,8 +45,8 @@ public final class Properties<T> {
     }
 
     /**
-     * Creates a new instance by determining the logical properties of a given class via reflection.
-     * A {@link Mode} defines what exactly the properties should result from.
+     * Creates a new instance by determining the logical properties of a particular class through reflection.
+     * A {@link Mode} defines what exactly should be viewed as properties.
      */
     public static <T> Properties<T> of(final Class<T> tClass, final Mode mode) {
         return new Properties<>(mode.stream(tClass)
@@ -56,6 +55,8 @@ public final class Properties<T> {
 
     /**
      * Convenience method to get a {@link Map} from the properties of a given instance of the associated type.
+     *
+     * @see #map(Object, Map)
      */
     public final Map<String, Object> toMap(final T subject) {
         return map(subject, new TreeMap<>());
@@ -65,6 +66,7 @@ public final class Properties<T> {
      * Maps the properties of a given origin to a given target {@link Map}.
      *
      * @return the target {@link Map}.
+     * @see #toMap(Object)
      */
     public final <M extends Map<String, Object>> M map(final T origin, final M target) {
         for (final Property<T> property : backing) {
@@ -105,13 +107,13 @@ public final class Properties<T> {
     public enum Mode {
 
         /**
-         * Specifies that all fields that are directly defined by the relevant class
+         * Specifies that all fields that are directly defined by the class in question
          * and that are not static, transient or synthetic are to be understood as logical properties.
          */
         BY_FIELDS_FLAT(Streaming::bySignificantFieldsFlat),
 
         /**
-         * Specifies that all fields that are defined by the relevant class or one of its superclasses
+         * Specifies that all fields that are defined by the class in question or one of its superclasses
          * and that are not static, transient or synthetic are to be understood as logical properties.
          */
         BY_FIELDS_DEEP(Streaming::bySignificantFieldsDeep);
