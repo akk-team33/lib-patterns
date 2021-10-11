@@ -6,7 +6,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import static java.lang.System.identityHashCode;
 import static java.lang.System.nanoTime;
@@ -18,6 +20,7 @@ public class AnyClass extends AnyBaseClass {
     private String aString;
     private Date aDate;
 
+    @SuppressWarnings({"FieldMayBeFinal", "unused", "MismatchedQueryAndUpdateOfCollection"})
     private transient List<Object> aTransient = new LinkedList<>(Arrays.asList(identityHashCode(this), nanoTime()));
 
     public AnyClass() {
@@ -107,5 +110,18 @@ public class AnyClass extends AnyBaseClass {
     @Override
     public final String toString() {
         return toList(this).toString();
+    }
+
+    public final Map<String, Object> toMap(final MapMode mode) {
+        return toMap(new TreeMap<String, Object>(), mode);
+    }
+
+    public final <M extends Map<String, Object>> M toMap(final M target, final MapMode mode) {
+        final M result = super.toMap(target, mode);
+        result.put("anInt", anInt);
+        result.put("aDouble", aDouble);
+        result.put("aString", aString);
+        result.put("aDate", getADate());
+        return result;
     }
 }

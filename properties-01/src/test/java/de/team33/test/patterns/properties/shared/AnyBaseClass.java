@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -78,5 +79,23 @@ public class AnyBaseClass {
         //noinspection AssignmentToNull
         this.aList = (null == aList) ? null : new ArrayList<>(aList);
         return this;
+    }
+
+    @SuppressWarnings("DesignForExtension")
+    public <M extends Map<String, Object>> M toMap(final M target, final MapMode mode) {
+        //noinspection SwitchStatement
+        switch (mode) {
+        case DEEP:
+            target.put("aLong", aLong);
+            target.put("aBigDecimal", aBigDecimal);
+            target.put("aList", getAList());
+            break;
+        case PREFIXED:
+            target.put(".aLong", aLong);
+            target.put(".aBigDecimal", aBigDecimal);
+            target.put(".aList", getAList());
+            break;
+        }
+        return target;
     }
 }
