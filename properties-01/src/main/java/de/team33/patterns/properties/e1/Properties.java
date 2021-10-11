@@ -1,10 +1,13 @@
 package de.team33.patterns.properties.e1;
 
+import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,6 +54,25 @@ public final class Properties<T> {
     public static <T> Properties<T> of(final Class<T> tClass, final Mode mode) {
         return new Properties<>(mode.stream(tClass)
                                     .collect(Collectors.toList()));
+    }
+
+    public static <T, V> Builder<T> add(final String name,
+                                        final Function<T, V> getter,
+                                        final BiConsumer<T, ? super V> setter) {
+        return new Builder<T>().add(name, getter, setter);
+    }
+
+    public static class Builder<T> {
+
+        public Properties<T> build() {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+
+        public <V> Builder<T> add(final String name,
+                                  final Function<T, V> getter,
+                                  final BiConsumer<T, ? super V> setter) {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
     }
 
     /**

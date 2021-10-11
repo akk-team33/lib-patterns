@@ -19,17 +19,22 @@ class PropertiesTest {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
+    private enum Mode {
+        FLAT,
+        DEEP,
+        PREFIXED
+    }
+
     @SuppressWarnings("SwitchStatement")
-    private static Map<String, Object> expectedMap(final AnyClass sample, final Properties.Mode mode) {
+    private static Map<String, Object> expectedMap(final AnyClass sample, final Mode mode) {
         final Map<String, Object> result = new TreeMap<>();
         switch (mode) {
-//        case BY_PUBLIC_GETTERS:
-//        case BY_PUBLIC_ACCESSORS:
-//            result.put("aLong", sample.getALong());
-//            result.put("aBigDecimal", sample.getABigDecimal());
-//            result.put("aList", sample.getAList());
-//            break;
-        case BY_FIELDS_DEEP:
+        case DEEP:
+            result.put("aLong", sample.getALong());
+            result.put("aBigDecimal", sample.getABigDecimal());
+            result.put("aList", sample.getAList());
+            break;
+        case PREFIXED:
             result.put(".aLong", sample.getALong());
             result.put(".aBigDecimal", sample.getABigDecimal());
             result.put(".aList", sample.getAList());
@@ -99,13 +104,25 @@ class PropertiesTest {
 
         REFLECTIVE_BY_FIELDS_FLAT(Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_FLAT),
                                   sample -> new AnyClass(sample, false),
-                                  sample -> expectedMap(sample, Properties.Mode.BY_FIELDS_FLAT),
+                                  sample -> expectedMap(sample, Mode.FLAT),
                                   false),
 
         REFLECTIVE_BY_FIELDS_DEEP(Properties.of(AnyClass.class, Properties.Mode.BY_FIELDS_DEEP),
                                   sample -> new AnyClass(sample, true),
-                                  sample -> expectedMap(sample, Properties.Mode.BY_FIELDS_DEEP),
-                                  false);
+                                  sample -> expectedMap(sample, Mode.PREFIXED),
+                                  false),
+
+        DECLARATIVE_RW_NAMED(Properties.add("aLong", AnyClass::getALong, AnyClass::setALong)
+                                       .add("aBigDecimal", AnyClass::getABigDecimal, AnyClass::setABigDecimal)
+                                       .add("aList", AnyClass::getAList, AnyClass::setAList)
+                                       .add("anInt", AnyClass::getAnInt, AnyClass::setAnInt)
+                                       .add("aDouble", AnyClass::getADouble, AnyClass::setADouble)
+                                       .add("aString", AnyClass::getAString, AnyClass::setAString)
+                                       .add("aDate", AnyClass::getADate, AnyClass::setADate)
+                                       .build(),
+                             sample -> new AnyClass(sample, false),
+                             sample -> expectedMap(sample, Mode.DEEP),
+                             false);
 
         final Properties<AnyClass> properties;
         final Function<AnyClass, AnyClass> expected;
