@@ -12,4 +12,12 @@ public class Mapping {
         result.put("listProp", sample.getListProp());
         return result;
     }
+
+    static Map<String, Object> toMap(final BasiXSample sample) {
+        final TreeMap<String, Object> result = new TreeMap<>();
+        result.put("intProp", sample.getIntProp());
+        result.put("strProp", sample.getStrProp());
+        result.put("listProp", sample.getListProp());
+        return result;
+    }
 }

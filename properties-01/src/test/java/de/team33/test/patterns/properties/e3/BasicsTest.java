@@ -33,10 +33,10 @@ class BasicsTest {
 
     @Test
     final void testEquals() {
-        assertFalse(BASICS.equals(origin, other),
+        assertFalse(BASICS.isEqual(origin, other),
                     "It is extremely unlikely, but theoretically possible, that the two values are actually the " +
                             "same. If in doubt, please repeat this test.");
-        assertTrue(BASICS.equals(origin, copy));
+        assertTrue(BASICS.isEqual(origin, copy));
     }
 
     @Test

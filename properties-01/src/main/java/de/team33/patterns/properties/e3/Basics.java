@@ -15,7 +15,7 @@ public class Basics<T> {
         return toMap(subject).hashCode();
     }
 
-    public final boolean equals(final T subject, final T other) {
+    public final boolean isEqual(final T subject, final T other) {
         return toMap(subject).equals(toMap(other));
     }
 
