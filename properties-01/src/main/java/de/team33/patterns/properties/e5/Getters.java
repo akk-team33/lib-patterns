@@ -18,7 +18,7 @@ public class Getters<T> {
         return this;
     }
 
-    public final ForwardMapper<T> mapper() {
+    public final Mapping<T> mapper() {
         return () -> Collections.unmodifiableMap(new TreeMap<>(backing));
     }
 }
