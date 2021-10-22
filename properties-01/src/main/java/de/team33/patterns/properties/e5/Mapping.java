@@ -1,5 +1,6 @@
 package de.team33.patterns.properties.e5;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Function;
@@ -51,20 +52,27 @@ public interface Mapping<T> {
      */
     class Builder<T> {
 
+        private final Map<String, Function<T, ?>> backing = new TreeMap<>();
+
+        private static <T> Mapping<T> newMapping(final Map<String, Function<T, ?>> backing) {
+            return () -> backing;
+        }
+
         /**
          * Adds a link between name and getter method, which represents a property of the associated type.
          *
          * @return This.
          */
         public final Builder<T> add(final String name, final Function<T, ?> getter) {
-            throw new UnsupportedOperationException("not yet implemented");
+            backing.put(name, getter);
+            return this;
         }
 
         /**
          * Builds and returns a new {@link Mapping}.
          */
-        public Mapping<T> build() {
-            throw new UnsupportedOperationException("not yet implemented");
+        public final Mapping<T> build() {
+            return newMapping(Collections.unmodifiableMap(new TreeMap<>(backing)));
         }
     }
 }
