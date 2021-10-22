@@ -14,6 +14,16 @@ import java.util.function.Function;
 public interface Mapping<T> {
 
     /**
+     * Creates a new {@link Builder} and adds a link between name and getter method, which represents a property
+     * of the associated type.
+     *
+     * @param <T> The type whose properties are to be mapped.
+     */
+    static <T> Builder<T> add(final String name, final Function<T, ?> getter) {
+        return new Builder<T>().add(name, getter);
+    }
+
+    /**
      * Returns a {@link Map} that links the names of the properties to be mapped with methods that can determine the
      * corresponding values from an instance of the associated type.
      */
@@ -33,16 +43,6 @@ public interface Mapping<T> {
      */
     default Map<String, Object> toMap(final T origin) {
         return map(origin).to(new TreeMap<>());
-    }
-
-    /**
-     * Creates a new {@link Builder} and adds a link between name and getter method, which represents a property
-     * of the associated type.
-     *
-     * @param <T> The type whose properties are to be mapped.
-     */
-    static <T> Builder<T> add(final String name, final Function<T, ?> getter) {
-        return new Builder<T>().add(name, getter);
     }
 
     /**
