@@ -19,7 +19,7 @@ public interface Mapping<T> {
      *
      * @param <T> The type whose properties are to be mapped.
      */
-    static <T> Builder<T> add(final String name, final Function<T, ?> getter) {
+    static <T> Builder<T> add(final String name, final Function<T, Object> getter) {
         return new Builder<T>().add(name, getter);
     }
 
@@ -27,14 +27,14 @@ public interface Mapping<T> {
      * Returns a {@link Map} that links the names of the properties to be mapped with methods that can determine the
      * corresponding values from an instance of the associated type.
      */
-    Map<String, ? extends Function<T, ?>> backing();
+    Map<String, Function<T, Object>> getters();
 
     /**
      * Results in a concrete {@link TargetOperation} for a given origin instance of the associated type,
      * which can map its properties into a {@link Map}.
      */
     default TargetOperation<Map<String, Object>> map(final T origin) {
-        return new MappingOperation<>(backing(), origin);
+        return new MappingOperation<>(getters(), origin);
     }
 
     /**
@@ -52,9 +52,9 @@ public interface Mapping<T> {
      */
     class Builder<T> {
 
-        private final Map<String, Function<T, ?>> backing = new TreeMap<>();
+        private final Map<String, Function<T, Object>> backing = new TreeMap<>();
 
-        private static <T> Mapping<T> newMapping(final Map<String, Function<T, ?>> backing) {
+        private static <T> Mapping<T> newMapping(final Map<String, Function<T, Object>> backing) {
             return () -> backing;
         }
 
@@ -63,7 +63,7 @@ public interface Mapping<T> {
          *
          * @return This.
          */
-        public final Builder<T> add(final String name, final Function<T, ?> getter) {
+        public final Builder<T> add(final String name, final Function<T, Object> getter) {
             backing.put(name, getter);
             return this;
         }

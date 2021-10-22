@@ -29,14 +29,14 @@ public interface ReMapping<T> {
      * Returns a {@link Map} that links the names of the properties to be re-mapped with methods that can
      * set the corresponding values to an instance of the associated type.
      */
-    Map<String, ? extends BiConsumer<T, Object>> backing();
+    Map<String, BiConsumer<T, Object>> setters();
 
     /**
      * Results in a concrete {@link TargetOperation} for a given origin {@link Map},
      * which can map its entries as properties into an instance of the associated type.
      */
     default TargetOperation<T> map(final Map<?, ?> origin) {
-        return new ReMappingOperation<>(backing(), origin);
+        return new ReMappingOperation<>(setters(), origin);
     }
 
     /**

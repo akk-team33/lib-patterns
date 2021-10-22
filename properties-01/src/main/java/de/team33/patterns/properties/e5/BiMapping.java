@@ -1,6 +1,7 @@
 package de.team33.patterns.properties.e5;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiConsumer;
@@ -26,10 +27,20 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
         return new Builder<T>().add(name, getter, setter);
     }
 
-    Map<String, ? extends Accessor<T>> backing();
+    Map<String, Accessor<T>> accessors();
+
+    @Override
+    default Map<String, Function<T, Object>> getters() {
+        return new HashMap<>(accessors());
+    }
+
+    @Override
+    default Map<String, BiConsumer<T, Object>> setters() {
+        return new HashMap<>(accessors());
+    }
 
     default TargetOperation<T> copy(final T origin) {
-        return new CopyOperation<>(backing(), origin);
+        return new CopyOperation<>(accessors(), origin);
     }
 
 
@@ -42,7 +53,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
 
         private final Map<String, Accessor<T>> backing = new TreeMap<>();
 
-        private static <T> BiMapping<T> newMapping(final Map<String, ? extends Accessor<T>> backing) {
+        private static <T> BiMapping<T> newMapping(final Map<String, Accessor<T>> backing) {
             return () -> backing;
         }
 
