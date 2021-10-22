@@ -1,11 +1,5 @@
 package de.team33.test.patterns.properties.e5;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Map;
-import java.util.Random;
-import java.util.function.Supplier;
-
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e5.BiMapping;
 import de.team33.patterns.properties.e5.Fields;
@@ -15,16 +9,20 @@ import de.team33.test.patterns.properties.shared.MapMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Supplier;
 
-class ReMappingTest
-{
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+class ReMappingTest {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
     @ParameterizedTest
     @EnumSource(Case.class)
-    final void map(final Case testCase)
-    {
+    final void map(final Case testCase) {
         // prepare ...
         final ReMapping<AnyClass> mapping = testCase.mapping.get();
         final AnyClass expected = RANDOM.get(AnyClass::new);
@@ -37,8 +35,7 @@ class ReMappingTest
         assertEquals(expected, result);
     }
 
-    enum Case
-    {
+    enum Case {
 
         RE_MAPPING_DECLARATIVE(() -> ReMapping.add("aLong", AnyClass::setALong)
                                               .add("aBigDecimal", AnyClass::setABigDecimal)
@@ -64,8 +61,7 @@ class ReMappingTest
 
         final Supplier<ReMapping<AnyClass>> mapping;
 
-        Case(final Supplier<ReMapping<AnyClass>> mapping)
-        {
+        Case(final Supplier<ReMapping<AnyClass>> mapping) {
             this.mapping = mapping;
         }
     }

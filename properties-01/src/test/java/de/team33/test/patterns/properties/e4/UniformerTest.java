@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Random;
 import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class UniformerTest {
 
     private Uniformer<AnyClass> uniformer;

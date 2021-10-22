@@ -18,15 +18,13 @@ import java.util.function.Supplier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class MappingTest
-{
+class MappingTest {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
     @ParameterizedTest
     @EnumSource(Case.class)
-    final void map(final Case testCase)
-    {
+    final void map(final Case testCase) {
         // prepare ...
         final Mapping<AnyClass> mapping = testCase.mapping.get();
         final AnyClass origin = RANDOM.get(AnyClass::new);
@@ -39,8 +37,7 @@ class MappingTest
         assertEquals(expected, result);
     }
 
-    enum Case
-    {
+    enum Case {
 
         MAPPING_DECLARATIVE(() -> Mapping.add("aLong", AnyClass::getALong)
                                          .add("aBigDecimal", AnyClass::getABigDecimal)
@@ -71,8 +68,7 @@ class MappingTest
 
         final Function<AnyClass, Map<String, Object>> expected;
 
-        Case(final Supplier<Mapping<AnyClass>> mapping, final Function<AnyClass, Map<String, Object>> expected)
-        {
+        Case(final Supplier<Mapping<AnyClass>> mapping, final Function<AnyClass, Map<String, Object>> expected) {
             this.mapping = mapping;
             this.expected = expected;
         }

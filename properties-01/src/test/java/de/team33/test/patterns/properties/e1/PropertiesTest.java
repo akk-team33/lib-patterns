@@ -19,12 +19,6 @@ class PropertiesTest {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
-    private enum Mode {
-        FLAT,
-        DEEP,
-        PREFIXED
-    }
-
     @SuppressWarnings("SwitchStatement")
     private static Map<String, Object> expectedMap(final AnyClass sample, final Mode mode) {
         final Map<String, Object> result = new TreeMap<>();
@@ -97,6 +91,12 @@ class PropertiesTest {
         final Properties rawProperties = c.properties;
         //rawProperties.copy(sample, new AnyBaseClass());
         assertThrows(IllegalArgumentException.class, () -> rawProperties.copy(sample, new AnyBaseClass()));
+    }
+
+    private enum Mode {
+        FLAT,
+        DEEP,
+        PREFIXED
     }
 
     @SuppressWarnings("PackageVisibleField")

@@ -59,7 +59,7 @@ public class Fields {
             public Object apply(final T t) {
                 try {
                     return field.get(t);
-                } catch (IllegalAccessException e) {
+                } catch (final IllegalAccessException e) {
                     throw new IllegalArgumentException("not yet implemented", e);
                 }
             }

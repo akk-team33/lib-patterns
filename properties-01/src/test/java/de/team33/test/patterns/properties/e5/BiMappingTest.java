@@ -13,15 +13,13 @@ import java.util.function.Supplier;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-class BiMappingTest
-{
+class BiMappingTest {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
     @ParameterizedTest
     @EnumSource(Case.class)
-    final void map(final Case testCase)
-    {
+    final void map(final Case testCase) {
         // prepare ...
         final BiMapping<AnyClass> mapping = testCase.mapping.get();
         final AnyClass expected = RANDOM.get(AnyClass::new);
@@ -33,8 +31,7 @@ class BiMappingTest
         assertEquals(expected, result);
     }
 
-    enum Case
-    {
+    enum Case {
 
         BI_MAPPING_DECLARATIVE(() -> BiMapping.add("aLong", AnyClass::getALong, AnyClass::setALong)
                                               .add("aBigDecimal",
@@ -51,8 +48,7 @@ class BiMappingTest
 
         final Supplier<BiMapping<AnyClass>> mapping;
 
-        Case(final Supplier<BiMapping<AnyClass>> mapping)
-        {
+        Case(final Supplier<BiMapping<AnyClass>> mapping) {
             this.mapping = mapping;
         }
     }

@@ -26,10 +26,6 @@ public class AnyClass extends AnyBaseClass {
     public AnyClass() {
     }
 
-    static List<Object> toList(final AnyClass any) {
-        return Arrays.asList(AnyBaseClass.toList(any), any.anInt, any.aDouble, any.aString, any.aDate);
-    }
-
     public AnyClass(final Random random) {
         super((random));
         anInt = random.nextInt();
@@ -44,6 +40,10 @@ public class AnyClass extends AnyBaseClass {
         aDouble = origin.aDouble;
         aString = origin.aString;
         setADate(origin.getADate());
+    }
+
+    static List<Object> toList(final AnyClass any) {
+        return Arrays.asList(AnyBaseClass.toList(any), any.anInt, any.aDouble, any.aString, any.aDate);
     }
 
     @Override

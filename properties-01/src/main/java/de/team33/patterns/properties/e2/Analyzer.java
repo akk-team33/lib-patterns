@@ -16,7 +16,7 @@ public interface Analyzer<T> {
      *
      * @param origin The instance to be analyzed.
      * @param target A mutable {@link Map} that is supposed to represent the normalized properties.
-     * @param <M> The exact type of the target {@link Map}.
+     * @param <M>    The exact type of the target {@link Map}.
      * @return The target {@link Map}.
      */
     <M extends Map<String, Object>> M analyse(T origin, M target);

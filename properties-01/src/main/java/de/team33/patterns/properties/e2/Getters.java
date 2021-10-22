@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 public class Getters<T> {
 
-    private Map<String, Function<T, ?>> getters;
+    private final Map<String, Function<T, ?>> getters;
 
     private Getters(final Builder<T> builder) {
         getters = Collections.unmodifiableMap(new TreeMap<>(builder.getters));

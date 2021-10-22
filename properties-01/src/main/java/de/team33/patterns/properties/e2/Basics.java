@@ -3,7 +3,6 @@ package de.team33.patterns.properties.e2;
 import de.team33.patterns.lazy.e1.Lazy;
 
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.function.Function;
 
 /**

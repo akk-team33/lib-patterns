@@ -1,6 +1,5 @@
 package de.team33.test.patterns.properties.methods;
 
-import java.io.Serializable;
 import java.util.AbstractCollection;
 import java.util.HashSet;
 
@@ -19,15 +18,15 @@ public class BaseClass implements X1 {
         return first;
     }
 
+    public BaseClass setFirst(final AbstractCollection<String> value) {
+        first = new HashSet<>(value);
+        return this;
+    }
+
     @Override
     public X1 setFirst(final Object value) {
         //noinspection unchecked
         return setFirst((AbstractCollection<String>) value);
-    }
-
-    public BaseClass setFirst(final AbstractCollection<String> value) {
-        first = new HashSet<>(value);
-        return this;
     }
 
     @Override

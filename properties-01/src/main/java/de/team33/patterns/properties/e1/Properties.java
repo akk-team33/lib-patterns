@@ -1,7 +1,5 @@
 package de.team33.patterns.properties.e1;
 
-import javafx.beans.property.adapter.JavaBeanBooleanPropertyBuilder;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -60,19 +58,6 @@ public final class Properties<T> {
                                         final Function<T, V> getter,
                                         final BiConsumer<T, ? super V> setter) {
         return new Builder<T>().add(name, getter, setter);
-    }
-
-    public static class Builder<T> {
-
-        public Properties<T> build() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public <V> Builder<T> add(final String name,
-                                  final Function<T, V> getter,
-                                  final BiConsumer<T, ? super V> setter) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
     }
 
     /**
@@ -150,6 +135,19 @@ public final class Properties<T> {
         @SuppressWarnings("unchecked")
         private <T> Stream<Property<T>> stream(final Class<T> tClass) {
             return (Stream<Property<T>>) streaming.apply(tClass);
+        }
+    }
+
+    public static class Builder<T> {
+
+        public Properties<T> build() {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+
+        public <V> Builder<T> add(final String name,
+                                  final Function<T, V> getter,
+                                  final BiConsumer<T, ? super V> setter) {
+            throw new UnsupportedOperationException("not yet implemented");
         }
     }
 

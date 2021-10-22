@@ -1,6 +1,5 @@
 package de.team33.test.patterns.properties.methods;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 public interface X2 {

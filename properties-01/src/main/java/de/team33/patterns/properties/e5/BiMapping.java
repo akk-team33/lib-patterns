@@ -14,8 +14,7 @@ import java.util.function.Function;
  * @param <T> The type whose properties are to be mapped.
  */
 @FunctionalInterface
-public interface BiMapping<T> extends Mapping<T>, ReMapping<T>
-{
+public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
 
     /**
      * Creates a new {@link Builder} and adds a link between name and getter method, which represents a
@@ -23,15 +22,13 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T>
      *
      * @param <T> The type whose properties are to be mapped.
      */
-    static <T, V> Builder<T> add(final String name, final Function<T, V> getter, final BiConsumer<T, V> setter)
-    {
+    static <T, V> Builder<T> add(final String name, final Function<T, V> getter, final BiConsumer<T, V> setter) {
         return new Builder<T>().add(name, getter, setter);
     }
 
     Map<String, ? extends Accessor<T>> backing();
 
-    default TargetOperation<T> copy(final T origin)
-    {
+    default TargetOperation<T> copy(final T origin) {
         return new CopyOperation<>(backing(), origin);
     }
 
@@ -41,13 +38,11 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T>
      *
      * @param <T> The type whose properties are to be mapped.
      */
-    class Builder<T>
-    {
+    class Builder<T> {
 
         private final Map<String, Accessor<T>> backing = new TreeMap<>();
 
-        private static <T> BiMapping<T> newMapping(final Map<String, ? extends Accessor<T>> backing)
-        {
+        private static <T> BiMapping<T> newMapping(final Map<String, ? extends Accessor<T>> backing) {
             return () -> backing;
         }
 
@@ -58,15 +53,13 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T>
          */
         public final <V> Builder<T> add(final String name,
                                         final Function<T, V> getter,
-                                        final BiConsumer<T, V> setter)
-        {
+                                        final BiConsumer<T, V> setter) {
             backing.put(name, combine(getter, setter));
             return this;
         }
 
         @SuppressWarnings({"rawtypes", "unchecked", "AnonymousInnerClass"})
-        private Accessor<T> combine(final Function getter, final BiConsumer setter)
-        {
+        private Accessor<T> combine(final Function getter, final BiConsumer setter) {
             return new Accessor<T>() {
                 @Override
                 public void accept(final T t, final Object o) {
@@ -83,8 +76,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T>
         /**
          * Builds and returns a new {@link Mapping}.
          */
-        public final BiMapping<T> build()
-        {
+        public final BiMapping<T> build() {
             return newMapping(Collections.unmodifiableMap(new TreeMap<>(backing)));
         }
     }

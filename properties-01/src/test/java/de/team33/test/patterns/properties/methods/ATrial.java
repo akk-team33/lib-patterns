@@ -35,7 +35,7 @@ class ATrial {
                 final Object resultA = methodA.invoke(sample);
                 final Object resultB = methodB.invoke(sample);
                 assertEquals(resultA, resultB);
-            } catch (final IllegalAccessException |  InvocationTargetException e) {
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 throw new AssertionError(e.getMessage(), e);
             }
         }));
@@ -62,7 +62,7 @@ class ATrial {
             try {
                 final Object resultA = method.invoke(sample);
                 assertEquals("[de.team33.test.patterns.properties.methods.SubClass.getFirst()]", resultA.toString());
-            } catch (final IllegalAccessException |  InvocationTargetException e) {
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 throw new AssertionError(e.getMessage(), e);
             }
         });
@@ -89,7 +89,7 @@ class ATrial {
                 final Object resultA = methodA.invoke(sample);
                 final Object resultB = methodB.invoke(sample);
                 assertEquals(resultA, resultB);
-            } catch (final IllegalAccessException |  InvocationTargetException e) {
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
         }));
