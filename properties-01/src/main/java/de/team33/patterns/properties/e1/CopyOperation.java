@@ -1,4 +1,4 @@
-package de.team33.patterns.properties.e5;
+package de.team33.patterns.properties.e1;
 
 import java.util.Map;
 
