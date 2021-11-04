@@ -12,7 +12,8 @@
     <packaging>jar</packaging>
 
     <name>Team33 Features Library - Edition 1</name>
-    <description>Provides features of complex types</description>
+    <description>Provides classes and mechanisms for assigning any feature
+        to appropriately prepared objects.</description>
 
     <dependencies>
         <dependency>
