@@ -2,57 +2,35 @@ package de.team33.patterns.features.e1;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
- * Used to manage <em>features</em>.
- * <p>
- * Example:
- * <pre>
- * class FeatureSetSample {
+ * Implements a common {@link FeatureHub}.
  *
- *     static final Key&lt;Random&gt; RANDOM = Random::new;
- *     static final Key&lt;Date&gt; DATE = Date::new;
- *     static final Key&lt;List&lt;Throwable&gt;&gt; PROBLEMS = LinkedList::new;
- *
- *     private final FeatureSet features = new FeatureSet();
- *
- *     final int anyInt() {
- *         try {
- *             return features.get(RANDOM).nextInt();
- *         } catch (final RuntimeException e) {
- *             features.get(PROBLEMS).add(e);
- *             return -1;
- *         }
- *     }
- *
- *     final long getTime() {
- *         try {
- *             return features.get(DATE).getTime();
- *         } catch (final RuntimeException e) {
- *             features.get(PROBLEMS).add(e);
- *             return -1;
- *         }
- *     }
- *
- *     final List&lt;Throwable&gt; getProblems() {
- *         return features.get(PROBLEMS);
- *     }
- * }
- * </pre>
+ * @param <H> The type of the host.
  */
-public class FeatureSet {
+public class FeatureSet<H> implements FeatureHub<H> {
 
-    private final Map<Key<?>, Object> backing = new ConcurrentHashMap<>(0);
+    @SuppressWarnings("rawtypes")
+    private final Map<Function, Object> backing = new ConcurrentHashMap<>(0);
+    private final H host;
 
     /**
-     * Returns the <em>feature</em> identified by the given {@link Key}.
-     * When the <em>feature</em> in question is requested for the first time, it is created.
-     * Once created, the same <em>feature</em> is always returned.
-     *
-     * @param <T> The type of the <em>feature</em>.
+     * Initializes a new instance with a given host.
      */
-    @SuppressWarnings("unchecked")
-    public final <T> T get(final Key<T> key) {
-        return (T) backing.computeIfAbsent(key, Key::get);
+    public FeatureSet(final H host) {
+        this.host = host;
+    }
+
+    @Override
+    public final <R> R get(final Function<? super H, ? extends R> key) {
+        // This is the only place where a feature is created and associated with the key
+        // and this feature is clearly of type <F>, so that a cast can take place without any problems ...
+        // noinspection unchecked
+        return (R) backing.computeIfAbsent(key, this::create);
+    }
+
+    private <R> R create(final Function<? super H, ? extends R> key) {
+        return key.apply(host);
     }
 }
