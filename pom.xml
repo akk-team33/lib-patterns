@@ -36,10 +36,11 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <copyright.year>2021</copyright.year>
-        <skipHome>true</skipHome>
+        <skipHome>false</skipHome>
     </properties>
 
     <modules>
+        <module>random-01</module>
         <module>exceptional-01</module>
         <module>lazy-01</module>
         <module>pooling-01</module>
@@ -48,6 +49,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Submodules -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-01</artifactId>
