@@ -5,10 +5,11 @@ import de.team33.patterns.producing.e1.FactoryHub;
 import java.math.BigInteger;
 import java.util.Random;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class RandomHub {
+public class RandomHub extends XRandom {
 
     public static final Byte BYTE = Byte.MAX_VALUE;
     public static final Short SHORT = Short.MAX_VALUE;
@@ -20,25 +21,25 @@ public class RandomHub {
     public static final String STRING = "****";
 
     private final FactoryHub<RandomHub> backing;
-    private final Random random = new Random();
     private final String stdCharacters;
 
     private RandomHub(final Builder builder) {
+        super(builder.newBitFactory.get());
         backing = new FactoryHub<>(builder.backing, () -> this);
         stdCharacters = builder.stdCharacters;
     }
 
     public static Builder builder() {
-        return new Builder().on(false).apply(rnd -> rnd.anyOf(false, true))
-                            .on(true).apply(rnd -> rnd.anyOf(false, true))
-                            .on(BYTE).apply(rnd -> rnd.anyBits(Byte.SIZE).byteValue())
-                            .on(SHORT).apply(rnd -> rnd.anyBits(Short.SIZE).shortValue())
-                            .on(INTEGER).apply(rnd -> rnd.anyBits(Integer.SIZE).intValue())
-                            .on(LONG).apply(rnd -> rnd.anyBits(Long.SIZE).longValue())
-                            .on(FLOAT).apply(rnd -> rnd.random.nextFloat())
-                            .on(DOUBLE).apply(rnd -> rnd.random.nextDouble())
+        return new Builder().on(false).apply(XRandom::anyBoolean)
+                            .on(true).apply(XRandom::anyBoolean)
+                            .on(BYTE).apply(XRandom::anyByte)
+                            .on(SHORT).apply(XRandom::anyShort)
+                            .on(INTEGER).apply(XRandom::anyInt)
+                            .on(LONG).apply(XRandom::anyLong)
+                            .on(FLOAT).apply(XRandom::anyFloat)
+                            .on(DOUBLE).apply(XRandom::anyDouble)
                             .on(CHARACTER).apply(rnd -> rnd.anyChar(rnd.stdCharacters))
-                            .on(STRING).apply(rnd -> rnd.anyString(rnd.stdCharacters, rnd.anyInt(1, 65)));
+                            .on(STRING).apply(rnd -> rnd.anyString(rnd.anyInt(10), rnd.stdCharacters));
     }
 
     public final <R> R any(final R template) {
@@ -49,49 +50,7 @@ public class RandomHub {
         return backing.stream(template);
     }
 
-    public final BigInteger anyBits(final int numBits) {
-        return new BigInteger(numBits, random);
-    }
-
-    public final BigInteger anyBigInteger(final BigInteger bound) {
-        if (BigInteger.ZERO.compareTo(bound) < 0) {
-            final int numBits = bound.bitLength() + 32;
-            return bound.multiply(anyBits(numBits))
-                        .divide(BigInteger.ONE.shiftLeft(numBits));
-        }
-        throw new IllegalArgumentException("<bound> must be greater than ZERO but was " + bound);
-    }
-
-    public final BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
-        return anyBigInteger(bound.subtract(min)).add(min);
-    }
-
-    public final int anyInt(final int bound) {
-        return anyBigInteger(BigInteger.valueOf(bound)).intValue();
-    }
-
-    public final int anyInt(final int min, final int bound) {
-        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
-    }
-
-    public final char anyChar(final String characters) {
-        return characters.charAt(anyInt(characters.length()));
-    }
-
-    public final String anyString(final String characters, final int length) {
-        return IntStream.generate(() -> anyInt(characters.length()))
-                        .limit(length)
-                        .collect(StringBuilder::new,
-                                 (sb, index) -> sb.append(characters.charAt(index)),
-                                 StringBuilder::append)
-                        .toString();
-    }
-
-    @SafeVarargs
-    public final <R> R anyOf(final R... values) {
-        return values[anyInt(values.length)];
-    }
-
+    @SuppressWarnings("FieldHasSetterButNoGetter")
     public static class Builder {
 
         private static final String STD_CHARACTERS =
@@ -100,6 +59,7 @@ public class RandomHub {
         private final FactoryHub.Collector<RandomHub> backing;
 
         private String stdCharacters = STD_CHARACTERS;
+        private Supplier<BitFactory> newBitFactory = () -> BitFactory.using(new Random());
 
         private Builder() {
             backing = new FactoryHub.Collector<>();
@@ -112,6 +72,15 @@ public class RandomHub {
         public final Builder setStdCharacters(final String characters) {
             this.stdCharacters = characters;
             return this;
+        }
+
+        public final Builder setNewBitFactory(final Supplier<BitFactory> newBitFactory) {
+            this.newBitFactory = newBitFactory;
+            return this;
+        }
+
+        public final Builder setNewRandom(final Supplier<Random> newRandom) {
+            return setNewBitFactory(() -> BitFactory.using(newRandom.get()));
         }
 
         public final RandomHub build() {
