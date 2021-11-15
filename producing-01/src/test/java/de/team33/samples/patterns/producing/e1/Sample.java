@@ -17,8 +17,8 @@ public class Sample {
     public static class Builder extends FactoryHub.Collector<Sample> {
 
         @Override
-        public final <T> Function<Function<Sample, T>, Builder> on(final T template) {
-            return on(template, this);
+        public final <T> Function<Function<Sample, T>, Builder> on(final T token) {
+            return on(token, this);
         }
 
         public final Sample build() {

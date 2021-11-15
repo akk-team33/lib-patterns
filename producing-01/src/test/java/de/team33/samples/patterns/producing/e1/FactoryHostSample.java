@@ -23,8 +23,8 @@ public class FactoryHostSample {
         return new Builder();
     }
 
-    public final <R> R any(final R template) {
-        return hub.create(template);
+    public final <R> R any(final R token) {
+        return hub.create(token);
     }
 
     public final BigInteger anyBits(final int numBits) {
@@ -42,8 +42,8 @@ public class FactoryHostSample {
                     .on(INTEGER).apply(host -> host.anyBits(Integer.SIZE).intValue());
         }
 
-        public final <R> Function<Function<FactoryHostSample, R>, Builder> on(final R template) {
-            return collector.on(template, this);
+        public final <R> Function<Function<FactoryHostSample, R>, Builder> on(final R token) {
+            return collector.on(token, this);
         }
 
         public final FactoryHostSample build() {

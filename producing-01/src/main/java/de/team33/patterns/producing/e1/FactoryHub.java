@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -14,8 +15,8 @@ import static java.lang.String.format;
  * A hub of methods for creating instances of virtually any type.
  * <p>
  * When called, a method is parameterized with a context of a certain type.
- * It is identified by a template (a constant) of the respective result type,
- * so that the templates can also be used within complex templates as placeholders
+ * It is identified by a token (a constant) of the respective result type,
+ * so that the tokens can also be used within complex tokens as placeholders
  * for methods for initializing their components.
  * <p>
  * Instances that contain a {@link FactoryHub}, are derived from it or simply a {@link FactoryHub} itself,
@@ -27,7 +28,7 @@ import static java.lang.String.format;
  * <pre>
  * public final class FactoryHubSample extends FactoryHub&lt;FactoryHubSample&gt; {
  *
- *     // Some pre-defined templates ...
+ *     // Some pre-defined tokens ...
  *     public static final Byte BYTE = Byte.MAX_VALUE;
  *     public static final Short SHORT = Short.MAX_VALUE;
  *     public static final Integer INTEGER = Integer.MAX_VALUE;
@@ -40,7 +41,7 @@ import static java.lang.String.format;
  *     }
  *
  *     // To get a builder that has already been pre-initialized
- *     // with the templates defined above and corresponding methods ...
+ *     // with the tokens defined above and corresponding methods ...
  *     public static Builder builder() {
  *         return new Builder().on(BYTE).apply(ctx -&gt; ctx.createBits(Byte.SIZE).byteValue())
  *                             .on(SHORT).apply(ctx -&gt; ctx.createBits(Short.SIZE).shortValue())
@@ -60,8 +61,8 @@ import static java.lang.String.format;
  *
  *         // In order to implement the two-stage builder pattern as proposed by the collector,
  *         // this method delegates to the collector ...
- *         public final &lt;T&gt; Function&lt;Function&lt;FactoryHubSample, T&gt;, Builder&gt; on(final T template) {
- *             return collector.on(template, this);
+ *         public final &lt;T&gt; Function&lt;Function&lt;FactoryHubSample, T&gt;, Builder&gt; on(final T token) {
+ *             return collector.on(token, this);
  *         }
  *
  *         // finally the typical production method ...
@@ -81,9 +82,9 @@ public class FactoryHub<C> {
             "- type of this: %s%n" +
             "- context type: %s%n";
     private static final String ILLEGAL_TEMPLATE =
-            "unknown template:%n" +
-            "- type of template   : %s%n" +
-            "- value* of template : %s%n" +
+            "unknown token:%n" +
+            "- type of token   : %s%n" +
+            "- value* of token : %s%n" +
             "*(string representation)";
 
     @SuppressWarnings("rawtypes")
@@ -138,38 +139,75 @@ public class FactoryHub<C> {
     }
 
     @SuppressWarnings("unchecked")
-    private <R> Function<C, R> getMethod(final R template) {
-        return Optional.ofNullable(methods.get(template))
+    private <T> Function<C, T> getMethod(final T token) {
+        return Optional.ofNullable(methods.get(token))
                        .orElseThrow(() -> new IllegalArgumentException(format(ILLEGAL_TEMPLATE,
-                                                                              classOf(template), template)));
+                                                                              classOf(token), token)));
     }
 
     /**
      * Produces a new* instance of a certain type, whereby the production method to be used is identified by a
-     * template of the same type.
+     * token of the same type.
      * <p>
-     * The association of template and production method is made when the hub is initialized via a {@link Collector}.
+     * The association of token and production method is made when the hub is initialized via a {@link Collector}.
      * <p>
      * *The result is typically but not necessarily a new instance. In principle, it can also be a singleton,
      * for example.
      *
-     * @param <R> The type of the produced result.
+     * @param <T> The type of the produced result.
      * @see #stream(Object)
      */
     @SuppressWarnings("ReturnOfNull")
-    public final <R> R create(final R template) {
-        return (null == template) ? null : getMethod(template).apply(context.get());
+    public final <T> T create(final T token) {
+        return (null == token) ? null : getMethod(token).apply(context.get());
     }
 
     /**
      * Produces an infinite (!) {@link Stream} of newly* produced elements af a certain type,
-     * whereby the production method to be used for each element is identified by a template of the same type.
+     * whereby the production method to be used for each element is identified by a token of the same type.
      *
-     * @param <R> The type of the produced result.
+     * @param <T> The type of the produced result.
      * @see #create(Object)
      */
-    public final <R> Stream<R> stream(final R template) {
-        return Stream.generate(() -> create(template));
+    public final <T> Stream<T> stream(final T token) {
+        return Stream.generate(() -> create(token));
+    }
+
+    /**
+     * Returns an {@link Initializer} that initializes the significant* fields of an instance of a specific type
+     * by (the significant* fields of) a given token of that type.
+     *
+     * @param <T> The type of the token / the instance to be initialized.
+     */
+    public final <T> Initializer<T> byFieldsOf(final T token) {
+        return subject -> {
+            Fields.stream(token.getClass(), Fields.Mode.DEEP)
+                  .filter(Fields::isSignificant)
+                  .map(Fields::setAccessible)
+                  .forEach(field -> {
+                      try {
+                          field.set(subject, create(field.get(token)));
+                      } catch (final IllegalAccessException e) {
+                          throw new IllegalArgumentException(e.getMessage(), e);
+                      }
+                  });
+            return subject;
+        };
+    }
+
+    /**
+     * Produces a new {@link Map} based on a given {@code tokenMap}.
+     * The keys of the {@code tokenMap} are adopted unchanged in the result and the values are
+     * {@linkplain #create(Object) recreated} based on the values (tokens) of the {@code tokenMap}.
+     *
+     * @param <K> The type of the keys
+     * @param <T> The type of the values / tokens / the instances to be {@linkplain #create(Object) recreated}.
+     */
+    public final <K, T> Map<K, T> map(final Map<K, T> tokenMap) {
+        return tokenMap.entrySet()
+                       .stream()
+                       .collect(Collectors.toMap(Map.Entry::getKey,
+                                                 entry -> create(entry.getValue())));
     }
 
     /**
@@ -188,8 +226,8 @@ public class FactoryHub<C> {
         /**
          * Offers a two-step builder pattern:
          * <p>
-         * Takes a template of a certain type as a parameter and returns a {@link Function} that will associate that
-         * template with a production method (also a {@link Function}) and will return this collector.
+         * Takes a token of a certain type as a parameter and returns a {@link Function} that will associate that
+         * token with a production method (also a {@link Function}) and will return this collector.
          * <hr>
          * <em>Implementation details</em>
          * <p>
@@ -205,8 +243,8 @@ public class FactoryHub<C> {
          *     public static class Builder extends FactoryHub.Collector&lt;Sample&gt; {
          *
          *         &#64;Override
-         *         public final &lt;T&gt; Function&lt;Function&lt;Sample, T&gt;, Builder&gt; on(final T template) {
-         *             return on(template, this);
+         *         public final &lt;T&gt; Function&lt;Function&lt;Sample, T&gt;, Builder&gt; on(final T token) {
+         *             return on(token, this);
          *         }
          *
          *         public final Sample build() {
@@ -216,12 +254,12 @@ public class FactoryHub<C> {
          * }
          * </pre>
          *
-         * @param <T> The type of the template and also the result type of the production method.
+         * @param <T> The type of the token and also the result type of the production method.
          * @see #on(Object, Object)
          */
         @SuppressWarnings("DesignForExtension")
-        public <T> Function<Function<C, T>, ? extends Collector<C>> on(final T template) {
-            return on(template, this);
+        public <T> Function<Function<C, T>, ? extends Collector<C>> on(final T token) {
+            return on(token, this);
         }
 
         /**
@@ -232,13 +270,13 @@ public class FactoryHub<C> {
          * <p>
          * Examples can be found in the descriptions of {@link #on(Object)} and {@link FactoryHub}.
          *
-         * @param <T> The type of the template and also the result type of the production method.
+         * @param <T> The type of the token and also the result type of the production method.
          * @param <R> The result typ of the resulting {@link Function}.
          * @see #on(Object)
          */
-        public final <T, R> Function<Function<C, T>, R> on(final T template, final R result) {
+        public final <T, R> Function<Function<C, T>, R> on(final T token, final R result) {
             return function -> {
-                methods.put(template, function);
+                methods.put(token, function);
                 return result;
             };
         }

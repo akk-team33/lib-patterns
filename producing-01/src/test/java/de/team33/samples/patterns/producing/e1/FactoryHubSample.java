@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
 
-    // Some pre-defined templates ...
+    // Some pre-defined tokens ...
     public static final Byte BYTE = Byte.MAX_VALUE;
     public static final Short SHORT = Short.MAX_VALUE;
     public static final Integer INTEGER = Integer.MAX_VALUE;
@@ -21,7 +21,7 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
     }
 
     // To get a builder that has already been pre-initialized
-    // with the templates defined above and corresponding methods ...
+    // with the tokens defined above and corresponding methods ...
     public static Builder builder() {
         return new Builder().on(BYTE).apply(host -> host.createBits(Byte.SIZE).byteValue())
                             .on(SHORT).apply(host -> host.createBits(Short.SIZE).shortValue())
@@ -42,8 +42,8 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
 
         // In order to implement the two-stage builder pattern as proposed by the collector,
         // this method delegates to the collector ...
-        public final <T> Function<Function<FactoryHubSample, T>, Builder> on(final T template) {
-            return collector.on(template, this);
+        public final <T> Function<Function<FactoryHubSample, T>, Builder> on(final T token) {
+            return collector.on(token, this);
         }
 
         // finally the typical production method ...

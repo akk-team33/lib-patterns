@@ -42,12 +42,12 @@ public class RandomHub extends XRandom {
                             .on(STRING).apply(rnd -> rnd.anyString(rnd.anyInt(10), rnd.stdCharacters));
     }
 
-    public final <R> R any(final R template) {
-        return backing.create(template);
+    public final <R> R any(final R token) {
+        return backing.create(token);
     }
 
-    public final <R> Stream<R> stream(final R template) {
-        return backing.stream(template);
+    public final <R> Stream<R> stream(final R token) {
+        return backing.stream(token);
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
@@ -65,8 +65,8 @@ public class RandomHub extends XRandom {
             backing = new FactoryHub.Collector<>();
         }
 
-        public final <T> Function<Function<RandomHub, T>, Builder> on(final T template) {
-            return backing.on(template, this);
+        public final <T> Function<Function<RandomHub, T>, Builder> on(final T token) {
+            return backing.on(token, this);
         }
 
         public final Builder setStdCharacters(final String characters) {
