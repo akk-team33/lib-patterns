@@ -1,4 +1,4 @@
-package de.team33.test.patterns.producing.shared;
+package de.team33.test.patterns.production.shared;
 
 import java.lang.reflect.Field;
 import java.util.Map;

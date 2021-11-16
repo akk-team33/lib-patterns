@@ -1,17 +1,15 @@
-package de.team33.test.patterns.producing.e1;
+package de.team33.test.patterns.production.e1;
 
-import de.team33.patterns.producing.e1.FactoryHub;
-import de.team33.test.patterns.producing.shared.Complex;
-import de.team33.test.patterns.producing.shared.Mappable;
+import de.team33.patterns.production.e1.FactoryHub;
+import de.team33.test.patterns.production.shared.Complex;
+import de.team33.test.patterns.production.shared.Mappable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

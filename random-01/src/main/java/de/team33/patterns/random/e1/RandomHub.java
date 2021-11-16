@@ -1,12 +1,10 @@
 package de.team33.patterns.random.e1;
 
-import de.team33.patterns.producing.e1.FactoryHub;
+import de.team33.patterns.production.e1.FactoryHub;
 
-import java.math.BigInteger;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class RandomHub extends XRandom {

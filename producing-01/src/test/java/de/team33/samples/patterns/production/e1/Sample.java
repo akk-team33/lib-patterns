@@ -1,6 +1,6 @@
-package de.team33.samples.patterns.producing.e1;
+package de.team33.samples.patterns.production.e1;
 
-import de.team33.patterns.producing.e1.FactoryHub;
+import de.team33.patterns.production.e1.FactoryHub;
 
 import java.util.function.Function;
 

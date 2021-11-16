@@ -1,4 +1,4 @@
-package de.team33.test.patterns.producing.shared;
+package de.team33.test.patterns.production.shared;
 
 import java.util.ArrayList;
 import java.util.Collections;

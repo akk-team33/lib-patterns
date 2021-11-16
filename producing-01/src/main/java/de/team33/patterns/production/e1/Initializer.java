@@ -1,4 +1,4 @@
-package de.team33.patterns.producing.e1;
+package de.team33.patterns.production.e1;
 
 /**
  * Defines an initializer for Instances of a specific typ.

@@ -1,4 +1,4 @@
-package de.team33.test.patterns.producing.shared;
+package de.team33.test.patterns.production.shared;
 
 public class SuperComplex {
 
