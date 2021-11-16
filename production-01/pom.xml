@@ -8,11 +8,11 @@
         <version>1.0.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>producing-01</artifactId>
+    <artifactId>production-01</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Producing Library - Edition 1</name>
-    <description>Provides classes that support the producing of instances.</description>
+    <name>Team33 Production Library - Edition 1</name>
+    <description>Provides classes that support the production of instances.</description>
 
     <dependencies>
         <dependency>

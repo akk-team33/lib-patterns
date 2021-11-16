@@ -40,7 +40,7 @@
     </properties>
 
     <modules>
-        <module>producing-01</module>
+        <module>production-01</module>
         <module>random-01</module>
         <module>exceptional-01</module>
         <module>lazy-01</module>
@@ -52,7 +52,7 @@
             <!-- Submodules -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>producing-01</artifactId>
+                <artifactId>production-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
