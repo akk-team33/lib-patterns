@@ -1,5 +1,7 @@
 package de.team33.patterns.production.e1;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,10 +16,16 @@ import static java.lang.String.format;
 /**
  * A hub of methods for creating instances of virtually any type.
  * <p>
- * When called, a method is parameterized with a context of a certain type.
- * It is identified by a token (a constant) of the respective result type,
- * so that the tokens can also be used within complex tokens as placeholders
- * for methods for initializing their components.
+ * A method is identified by a <em>token</em> (a constant) of the respective result type and called indirectly via
+ * {@link #create(Object)}.
+ * <p>
+ * When a method is called, it is parameterized internally with a context of a certain type.
+ * This is specified when the hub is initialized. Externally, apart from the identification of the method via the
+ * <em>token</em>, no further parameterization is required.
+ * <p>
+ * In addition to the central method {@link #create(Object)} mentioned above, a hub provides additional methods
+ * that are used to generate composite instances, whereby <em>tokens</em> can be used to define the generation of
+ * individual elements: {@link #stream(Object)}, {@link #map(Object, Object, int)}.
  * <p>
  * Instances that contain a {@link FactoryHub}, are derived from it or simply a {@link FactoryHub} itself,
  * are typically used as context, so that the methods that are assigned to a {@link FactoryHub}
@@ -79,13 +87,13 @@ public class FactoryHub<C> {
 
     private static final String ILLEGAL_CONTEXT_TYPE =
             "This instance cannot be viewed as a context of the specified type!%n" +
-            "- type of this: %s%n" +
-            "- context type: %s%n";
+                    "- type of this: %s%n" +
+                    "- context type: %s%n";
     private static final String ILLEGAL_TEMPLATE =
             "unknown token:%n" +
-            "- type of token   : %s%n" +
-            "- value* of token : %s%n" +
-            "*(string representation)";
+                    "- type of token   : %s%n" +
+                    "- value* of token : %s%n" +
+                    "*(string representation)";
 
     @SuppressWarnings("rawtypes")
     private final Map<Object, Function> methods;
@@ -147,15 +155,16 @@ public class FactoryHub<C> {
 
     /**
      * Produces a new* instance of a certain type, whereby the production method to be used is identified by a
-     * token of the same type.
+     * <em>token</em> of the same type.
      * <p>
-     * The association of token and production method is made when the hub is initialized via a {@link Collector}.
+     * The association of <em>token</em> and production method is made when the hub is initialized via a
+     * {@link Collector}.
      * <p>
-     * *The result is typically but not necessarily a new instance. In principle, it can also be a singleton,
-     * for example.
+     * *The result is typically but not necessarily a new instance. In principle, it can also be a predefined
+     * constant, for example.
      *
      * @param <T> The type of the produced result.
-     * @see #stream(Object)
+     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
      */
     @SuppressWarnings("ReturnOfNull")
     public final <T> T create(final T token) {
@@ -163,10 +172,10 @@ public class FactoryHub<C> {
     }
 
     /**
-     * Produces an infinite (!) {@link Stream} of newly* produced elements af a certain type,
-     * whereby the production method to be used for each element is identified by a token of the same type.
+     * Produces an infinite (!) {@link Stream} of newly produced elements af a certain type,
+     * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
      *
-     * @param <T> The type of the produced result.
+     * @param <T> The type of the produced elements.
      * @see #create(Object)
      */
     public final <T> Stream<T> stream(final T token) {
@@ -174,40 +183,50 @@ public class FactoryHub<C> {
     }
 
     /**
-     * Returns an {@link Initializer} that initializes the significant* fields of an instance of a specific type
-     * by (the significant* fields of) a given token of that type.
+     * Produces a {@link Map} of a given {@code size} whose keys are {@link #create(Object) produced} based on
+     * the given {@code keyToken} and whose values are {@link #create(Object) produced} based on the given
+     * {@code valueToken}.
      *
-     * @param <T> The type of the token / the instance to be initialized.
+     * @param <K> The type of keys of the resulting {@link Map}.
+     * @param <V> The type of values of the resulting {@link Map}.
      */
-    public final <T> Initializer<T> byFieldsOf(final T token) {
-        return subject -> {
-            Fields.stream(token.getClass(), Fields.Mode.DEEP)
-                  .filter(Fields::isSignificant)
-                  .map(Fields::setAccessible)
-                  .forEach(field -> {
-                      try {
-                          field.set(subject, create(field.get(token)));
-                      } catch (final IllegalAccessException e) {
-                          throw new IllegalArgumentException(e.getMessage(), e);
-                      }
-                  });
-            return subject;
-        };
+    public final <K, V> Map<K, V> map(final K keyToken, final V valueToken, final int size) {
+        return stream(keyToken).distinct()
+                               .limit(size)
+                               .collect(Collectors.toMap(key -> key, key -> create(valueToken)));
     }
 
     /**
-     * Produces a new {@link Map} based on a given {@code tokenMap}.
-     * The keys of the {@code tokenMap} are adopted unchanged in the result and the values are
-     * {@linkplain #create(Object) recreated} based on the values (tokens) of the {@code tokenMap}.
+     * Produces a {@link Map} based on a given {@code template}.
+     * The keys of the {@code template} are adopted unchanged in the result and the values are
+     * {@linkplain #create(Object) produced} based on the values (<em>tokens</em>) of the {@code template}.
      *
-     * @param <K> The type of the keys
-     * @param <T> The type of the values / tokens / the instances to be {@linkplain #create(Object) recreated}.
+     * @param <K> The type of keys of the resulting {@link Map}.
+     * @param <V> The type of values of the resulting {@link Map}.
      */
-    public final <K, T> Map<K, T> map(final Map<K, T> tokenMap) {
-        return tokenMap.entrySet()
+    public final <K, V> Map<K, V> map(final Map<K, V> template) {
+        return template.entrySet()
                        .stream()
                        .collect(Collectors.toMap(Map.Entry::getKey,
                                                  entry -> create(entry.getValue())));
+    }
+
+    /**
+     * Produces a result of a specific type based on a given {@code template}.
+     * TODO
+     *
+     * @param <R> The type of the result / template.
+     */
+    public final <R> R map(final R template) {
+        final Class<?> templateClass = template.getClass();
+        try {
+            final Constructor<?> constructor = templateClass.getConstructor(Map.class);
+            final Method toMap = templateClass.getMethod("toMap");
+            final Map<String, Object> map = (Map<String, Object>) toMap.invoke(template);
+            return (R) constructor.newInstance(map(map));
+        } catch (final ReflectiveOperationException | ClassCastException e) {
+            throw new IllegalArgumentException(e.getMessage(), e);
+        }
     }
 
     /**

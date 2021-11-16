@@ -3,6 +3,9 @@ package de.team33.test.patterns.production.e1;
 import de.team33.patterns.production.e1.FactoryHub;
 import de.team33.test.patterns.production.shared.Complex;
 import de.team33.test.patterns.production.shared.Mappable;
+import de.team33.test.patterns.production.shared.UnmappableA;
+import de.team33.test.patterns.production.shared.UnmappableB;
+import de.team33.test.patterns.production.shared.UnmappableC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -93,10 +96,36 @@ class FactoryHubTest {
     }
 
     @Test
-    final void map() {
-        final Map<String, Object> result = factoryHub.map(MAPPABLE_MAP);
-        assertNotSame(MAPPABLE_MAP, result);
-        assertEquals(MAPPABLE_MAP, result);
+    final void map_k_v_sized() {
+        final Map<String, Date> result = factoryHub.map(STRING, DATE, 1);
+        assertEquals(Collections.singletonMap(STRING, DATE), result);
+    }
+
+    @Test
+    final void map_templateMap() {
+        final Map<String, Integer> expected = new TreeMap<String, Integer>(){{
+            put("a", INTEGER);
+            put("b", INTEGER);
+            put("c", INTEGER);
+        }};
+        final Map<String, Integer> result = factoryHub.map(expected);
+        assertNotSame(expected, result);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void map_unmappable_a() {
+        factoryHub.map(new UnmappableA());
+    }
+
+    @Test
+    final void map_unmappable_b() {
+        factoryHub.map(new UnmappableB());
+    }
+
+    @Test
+    final void map_unmappable_c() {
+        factoryHub.map(new UnmappableC());
     }
 
     @Test
@@ -104,12 +133,6 @@ class FactoryHubTest {
         final Mappable<Integer> result = factoryHub.create(MAPPABLE);
         assertNotSame(MAPPABLE, result);
         assertEquals(MAPPABLE, result);
-    }
-
-    @Test
-    final void byFieldsOf_COMPLEX() {
-        final Complex<Integer> result = factoryHub.byFieldsOf(COMPLEX).init(Complex.empty());
-        assertEquals(COMPLEX, result);
     }
 
     static class EmptyHub extends FactoryHub<EmptyHub> {
