@@ -11,23 +11,22 @@ import java.util.TreeMap;
 @SuppressWarnings("unused")
 public class Mappable<T> {
 
-    @SuppressWarnings("rawtypes")
-    private static final Mapping<Mappable> MAPPING = Fields.mapping(Mappable.class);
-
     private T simple;
     private List<T> list;
     private Map<T, Set<T>> map;
 
-    @SuppressWarnings("ThisEscapedInObjectConstruction")
-    public Mappable(final Map<String, ?> origin) {
-        MAPPING.remap(origin, this);
-    }
-
     public Mappable() {
     }
 
-    public final Map<String, Object> toMap() {
-        return MAPPING.map(this, new TreeMap<>());
+    public Mappable(final Map<?, ?> origin) {
+        this.simple = cast(origin.get("simple"));
+        this.list = new ArrayList<>(cast(origin.get("list")));
+        this.map = new HashMap<>(cast(origin.get("map")));
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <R> R cast(final Object obj) {
+        return (R) obj;
     }
 
     public final T getSimple() {
@@ -70,5 +69,13 @@ public class Mappable<T> {
     @Override
     public final String toString() {
         return toMap().toString();
+    }
+
+    public final Map<String, Object> toMap() {
+        final Map<String, Object> result = new TreeMap<>();
+        result.put("simple", simple);
+        result.put("list", list);
+        result.put("map", map);
+        return result;
     }
 }

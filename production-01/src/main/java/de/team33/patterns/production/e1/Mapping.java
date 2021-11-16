@@ -11,22 +11,22 @@ import java.util.function.Function;
  */
 public interface Mapping<T> {
 
-    public static <T> Mapping<T> combine(final Function<T, Map<String, Object>> toMap,
-                                         final Function<Map<String, Object>, T> mapTo) {
+    static <T> Mapping<T> using(final Function<T, Map<?, ?>> toMap,
+                                final Function<Map<?, ?>, T> remap) {
         return new Mapping<T>() {
             @Override
-            public Map<String, Object> map(final T origin) {
+            public Map<?, ?> map(final T origin) {
                 return toMap.apply(origin);
             }
 
             @Override
             public T remap(final Map<?, ?> origin) {
-                return mapTo.apply(origin);
+                return remap.apply(origin);
             }
         };
     }
 
-    Map<String, Object> map(T origin);
+    Map<?, ?> map(T origin);
 
     T remap(Map<?, ?> origin);
 }

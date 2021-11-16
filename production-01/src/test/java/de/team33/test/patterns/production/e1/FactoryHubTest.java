@@ -1,11 +1,8 @@
 package de.team33.test.patterns.production.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
-import de.team33.test.patterns.production.shared.Complex;
+import de.team33.patterns.production.e1.Mapping;
 import de.team33.test.patterns.production.shared.Mappable;
-import de.team33.test.patterns.production.shared.UnmappableA;
-import de.team33.test.patterns.production.shared.UnmappableB;
-import de.team33.test.patterns.production.shared.UnmappableC;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,9 +17,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class FactoryHubTest {
+public class FactoryHubTest {
 
     private static final Random OUTER_RANDOM = new Random();
     private static final Object UNKNOWN = new Object();
@@ -34,17 +36,10 @@ class FactoryHubTest {
     private static final List<Integer> INT_LIST = Collections.singletonList(INTEGER);
     private static final Set<Integer> INT_SET = Collections.singleton(INTEGER);
     private static final Map<Integer, Set<Integer>> INT_MAP = Collections.singletonMap(INTEGER, INT_SET);
-    private static final Complex<Integer> COMPLEX = new Complex.Builder<Integer>()
-            .collect(collector -> collector.setIntValue(INTEGER)
-                                           .setStringValue(STRING))
-            .setSimple(INTEGER)
-            .setList(INT_LIST)
-            .setMap(INT_MAP)
-            .build();
     private static final Mappable<Integer> MAPPABLE = new Mappable<Integer>().setSimple(INTEGER)
                                                                              .setList(INT_LIST)
                                                                              .setMap(INT_MAP);
-    private static final Map<String, Object> MAPPABLE_MAP = MAPPABLE.toMap();
+    private static final Mapping<Mappable<Integer>> MAPPABLE_MAPPING = Mapping.using(Mappable::toMap, Mappable::new);
 
     private final Random random = new Random();
     private final FactoryHub<FactoryHubTest> factoryHub;
@@ -58,7 +53,7 @@ class FactoryHubTest {
                 .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
                 .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
                 .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
-                .on(MAPPABLE).apply(ctx -> new Mappable<>(ctx.factoryHub.map(MAPPABLE.toMap())));
+                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, MAPPABLE_MAPPING));
         factoryHub = new FactoryHub<>(collector, () -> this);
     }
 
@@ -82,6 +77,7 @@ class FactoryHubTest {
     final void create_fixed() {
         assertEquals(INTEGER, factoryHub.create(INTEGER));
         assertEquals(DATE, factoryHub.create(DATE));
+        assertEquals(MAPPABLE, factoryHub.create(MAPPABLE));
     }
 
     @Test
@@ -114,23 +110,8 @@ class FactoryHubTest {
     }
 
     @Test
-    final void map_unmappable_a() {
-        factoryHub.map(new UnmappableA());
-    }
-
-    @Test
-    final void map_unmappable_b() {
-        factoryHub.map(new UnmappableB());
-    }
-
-    @Test
-    final void map_unmappable_c() {
-        factoryHub.map(new UnmappableC());
-    }
-
-    @Test
-    final void map_indirect() {
-        final Mappable<Integer> result = factoryHub.create(MAPPABLE);
+    final void map_Mappable() {
+        final Mappable<Integer> result = factoryHub.map(MAPPABLE, MAPPABLE_MAPPING);
         assertNotSame(MAPPABLE, result);
         assertEquals(MAPPABLE, result);
     }

@@ -1,7 +1,5 @@
 package de.team33.patterns.production.e1;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -217,16 +215,8 @@ public class FactoryHub<C> {
      *
      * @param <R> The type of the result / template.
      */
-    public final <R> R map(final R template) {
-        final Class<?> templateClass = template.getClass();
-        try {
-            final Constructor<?> constructor = templateClass.getConstructor(Map.class);
-            final Method toMap = templateClass.getMethod("toMap");
-            final Map<String, Object> map = (Map<String, Object>) toMap.invoke(template);
-            return (R) constructor.newInstance(map(map));
-        } catch (final ReflectiveOperationException | ClassCastException e) {
-            throw new IllegalArgumentException(e.getMessage(), e);
-        }
+    public final <R> R map(final R template, final Mapping<R> mapping) {
+        return mapping.remap(map(mapping.map(template)));
     }
 
     /**
