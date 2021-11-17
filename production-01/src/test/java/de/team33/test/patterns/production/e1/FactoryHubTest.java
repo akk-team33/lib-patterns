@@ -63,28 +63,28 @@ public class FactoryHubTest {
 
     @Test
     final void illegalTemplate() {
-        assertThrows(IllegalArgumentException.class, () -> new EmptyHub().create(UNKNOWN));
+        assertThrows(IllegalArgumentException.class, () -> new EmptyHub().another(UNKNOWN));
     }
 
     @Test
     final void nullTemplate() {
-        assertNull(new EmptyHub().create(null));
+        assertNull(new EmptyHub().another(null));
     }
 
     @Test
-    final void create_fixed() {
-        assertEquals(INTEGER, factoryHub.create(INTEGER));
-        assertEquals(DATE, factoryHub.create(DATE));
-        assertEquals(MAPPABLE, factoryHub.create(MAPPABLE));
+    final void another_fixed() {
+        assertEquals(INTEGER, factoryHub.another(INTEGER));
+        assertEquals(DATE, factoryHub.another(DATE));
+        assertEquals(MAPPABLE, factoryHub.another(MAPPABLE));
     }
 
     @Test
-    final void create_random() {
-        final Double aDouble = factoryHub.create(DOUBLE);
+    final void another_random() {
+        final Double aDouble = factoryHub.another(DOUBLE);
         assertInstanceOf(Double.class, aDouble);
         assertNotEquals(DOUBLE, aDouble);
 
-        final BigInteger bigInteger = factoryHub.create(BIG_INTEGER);
+        final BigInteger bigInteger = factoryHub.another(BIG_INTEGER);
         assertInstanceOf(BigInteger.class, bigInteger);
         assertNotEquals(BIG_INTEGER, bigInteger);
     }

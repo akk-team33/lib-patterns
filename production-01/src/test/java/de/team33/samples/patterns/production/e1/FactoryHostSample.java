@@ -24,7 +24,7 @@ public class FactoryHostSample {
     }
 
     public final <R> R any(final R token) {
-        return hub.create(token);
+        return hub.another(token);
     }
 
     public final BigInteger anyBits(final int numBits) {

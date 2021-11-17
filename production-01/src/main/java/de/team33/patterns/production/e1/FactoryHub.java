@@ -15,13 +15,13 @@ import static java.lang.String.format;
  * A hub of methods for creating instances of virtually any type.
  * <p>
  * A method is identified by a <em>token</em> (a constant) of the respective result type and called indirectly via
- * {@link #create(Object)}.
+ * {@link #another(Object)}.
  * <p>
  * When a method is called, it is parameterized internally with a context of a certain type.
  * This is specified when the hub is initialized. Externally, apart from the identification of the method via the
  * <em>token</em>, no further parameterization is required.
  * <p>
- * In addition to the central method {@link #create(Object)} mentioned above, a hub provides additional methods
+ * In addition to the central method {@link #another(Object)} mentioned above, a hub provides additional methods
  * that are used to generate composite instances, whereby <em>tokens</em> can be used to define the generation of
  * individual elements: {@link #stream(Object)}, {@link #map(Object, Object, int)}.
  * <p>
@@ -152,70 +152,80 @@ public class FactoryHub<C> {
     }
 
     /**
-     * Produces a new* instance of a certain type, whereby the production method to be used is identified by a
-     * <em>token</em> of the same type.
+     * Produces another instance of a certain type, whereby the production method to be used is identified by a
+     * <em>token</em> of the result type.
      * <p>
      * The association of <em>token</em> and production method is made when the hub is initialized via a
      * {@link Collector}.
      * <p>
-     * *The result is typically but not necessarily a new instance. In principle, it can also be a predefined
-     * constant, for example.
+     * The result is always {@code null} if the <em>token</em> is {@code null}.
      *
      * @param <T> The type of the produced result.
      * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
      */
     @SuppressWarnings("ReturnOfNull")
-    public final <T> T create(final T token) {
+    public final <T> T another(final T token) {
         return (null == token) ? null : getMethod(token).apply(context.get());
     }
 
     /**
-     * Produces an infinite (!) {@link Stream} of newly produced elements af a certain type,
+     * Produces an infinite (!) {@link Stream} of {@link #another(Object) newly produced} elements af a certain type,
      * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
      *
      * @param <T> The type of the produced elements.
+     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
+     * @see #another(Object)
+     * @see #stream(Object, int)
      */
     public final <T> Stream<T> stream(final T token) {
-        return Stream.generate(() -> create(token));
+        return Stream.generate(() -> another(token));
     }
 
     /**
-     * Produces a {@link Stream} with limited length of newly produced elements af a certain type,
-     * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
+     * Produces a {@link Stream} with limited length of {@link #another(Object) newly produced} elements
+     * af a certain type, whereby the production method to be used for each element is identified by a
+     * <em>token</em> of the same type.
      *
      * @param <T> The type of the produced elements.
+     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
+     * @see #another(Object)
+     * @see #stream(Object)
      */
     public final <T> Stream<T> stream(final T token, final int length) {
         return stream(token).limit(length);
     }
 
     /**
-     * Produces a {@link Map} of a given {@code size} whose keys are {@link #create(Object) produced} based on
-     * the given {@code keyToken} and whose values are {@link #create(Object) produced} based on the given
+     * Produces a {@link Map} of a given {@code size} whose keys are {@link #another(Object) produced} based on
+     * the given {@code keyToken} and whose values are {@link #another(Object) produced} based on the given
      * {@code valueToken}.
      *
      * @param <K> The type of keys of the resulting {@link Map}.
      * @param <V> The type of values of the resulting {@link Map}.
+     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @see #another(Object)
      */
     public final <K, V> Map<K, V> map(final K keyToken, final V valueToken, final int size) {
         return stream(keyToken).distinct()
                                .limit(size)
-                               .collect(Collectors.toMap(key -> key, key -> create(valueToken)));
+                               .collect(Collectors.toMap(key -> key, key -> another(valueToken)));
     }
 
     /**
      * Produces a {@link Map} based on a given {@code template} {@link Map}.
      * The keys of the {@code template} are adopted unchanged in the result and the values are
-     * {@linkplain #create(Object) produced} based on the values (<em>tokens</em>) of the {@code template}.
+     * {@linkplain #another(Object) produced} based on the values (<em>tokens</em>) of the {@code template}.
      *
      * @param <K> The type of keys of the resulting {@link Map}.
      * @param <V> The type of values of the resulting {@link Map}.
+     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @see #another(Object)
      */
     public final <K, V> Map<K, V> map(final Map<K, V> template) {
         return template.entrySet()
                        .stream()
                        .collect(Collectors.toMap(Map.Entry::getKey,
-                                                 entry -> create(entry.getValue())));
+                                                 entry -> another(entry.getValue())));
     }
 
     /**
@@ -229,6 +239,8 @@ public class FactoryHub<C> {
      * @param reMap A method to create the result from a {@link Map}.
      * @param <T> The type of the template.
      * @param <R> The type of the result. Mostly but not necessarily the same as the template type.
+     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @see #another(Object)
      */
     public final <T, R> R map(final T template,
                               final Function<T, Map<?, ?>> toMap,

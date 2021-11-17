@@ -41,7 +41,7 @@ public class RandomHub extends XRandom {
     }
 
     public final <R> R any(final R token) {
-        return backing.create(token);
+        return backing.another(token);
     }
 
     public final <R> Stream<R> stream(final R token) {

@@ -23,13 +23,13 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
     // To get a builder that has already been pre-initialized
     // with the tokens defined above and corresponding methods ...
     public static Builder builder() {
-        return new Builder().on(BYTE).apply(host -> host.createBits(Byte.SIZE).byteValue())
-                            .on(SHORT).apply(host -> host.createBits(Short.SIZE).shortValue())
-                            .on(INTEGER).apply(host -> host.createBits(Integer.SIZE).intValue());
+        return new Builder().on(BYTE).apply(host -> host.anyBits(Byte.SIZE).byteValue())
+                            .on(SHORT).apply(host -> host.anyBits(Short.SIZE).shortValue())
+                            .on(INTEGER).apply(host -> host.anyBits(Integer.SIZE).intValue());
     }
 
     // A basic method to be provided by the context ...
-    public final BigInteger createBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, random);
     }
 
