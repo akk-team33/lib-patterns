@@ -1,7 +1,6 @@
 package de.team33.test.patterns.production.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
-import de.team33.patterns.production.e1.Mapping;
 import de.team33.test.patterns.production.shared.Mappable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -39,7 +38,6 @@ public class FactoryHubTest {
     private static final Mappable<Integer> MAPPABLE = new Mappable<Integer>().setSimple(INTEGER)
                                                                              .setList(INT_LIST)
                                                                              .setMap(INT_MAP);
-    private static final Mapping<Mappable<Integer>> MAPPABLE_MAPPING = Mapping.using(Mappable::toMap, Mappable::new);
 
     private final Random random = new Random();
     private final FactoryHub<FactoryHubTest> factoryHub;
@@ -53,7 +51,7 @@ public class FactoryHubTest {
                 .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
                 .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
                 .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
-                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, MAPPABLE_MAPPING));
+                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap, Mappable::new));
         factoryHub = new FactoryHub<>(collector, () -> this);
     }
 
@@ -111,7 +109,7 @@ public class FactoryHubTest {
 
     @Test
     final void map_Mappable() {
-        final Mappable<Integer> result = factoryHub.map(MAPPABLE, MAPPABLE_MAPPING);
+        final Mappable<Integer> result = factoryHub.map(MAPPABLE, Mappable::toMap, Mappable::new);
         assertNotSame(MAPPABLE, result);
         assertEquals(MAPPABLE, result);
     }

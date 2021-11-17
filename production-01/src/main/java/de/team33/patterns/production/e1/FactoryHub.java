@@ -174,10 +174,19 @@ public class FactoryHub<C> {
      * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
      *
      * @param <T> The type of the produced elements.
-     * @see #create(Object)
      */
     public final <T> Stream<T> stream(final T token) {
         return Stream.generate(() -> create(token));
+    }
+
+    /**
+     * Produces a {@link Stream} with limited length of newly produced elements af a certain type,
+     * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
+     *
+     * @param <T> The type of the produced elements.
+     */
+    public final <T> Stream<T> stream(final T token, final int length) {
+        return stream(token).limit(length);
     }
 
     /**
@@ -195,7 +204,7 @@ public class FactoryHub<C> {
     }
 
     /**
-     * Produces a {@link Map} based on a given {@code template}.
+     * Produces a {@link Map} based on a given {@code template} {@link Map}.
      * The keys of the {@code template} are adopted unchanged in the result and the values are
      * {@linkplain #create(Object) produced} based on the values (<em>tokens</em>) of the {@code template}.
      *
@@ -210,13 +219,21 @@ public class FactoryHub<C> {
     }
 
     /**
-     * Produces a result of a specific type based on a given {@code template}.
-     * TODO
+     * Produces a result of a certain type from a {@code template} of a certain type.
+     * First, a {@link Map} is generated from the {@code template} that contains its properties,
+     * which are interpreted as <em>tokens</em>. This is translated via {@link #map(Map)}.
+     * The resulting {@link Map} is then used to generate the result.
      *
-     * @param <R> The type of the result / template.
+     * @param template The template.
+     * @param toMap A method to create a {@link Map} containing the properties of the template.
+     * @param reMap A method to create the result from a {@link Map}.
+     * @param <T> The type of the template.
+     * @param <R> The type of the result. Mostly but not necessarily the same as the template type.
      */
-    public final <R> R map(final R template, final Mapping<R> mapping) {
-        return mapping.remap(map(mapping.map(template)));
+    public final <T, R> R map(final T template,
+                              final Function<T, Map<?, ?>> toMap,
+                              final Function<Map<?, ?>, R> reMap) {
+        return reMap.apply(map(toMap.apply(template)));
     }
 
     /**
