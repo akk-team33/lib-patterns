@@ -2,13 +2,14 @@ package de.team33.patterns.random.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
 
+import java.math.BigInteger;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class RandomHub extends XRandom {
+public class RandomHub implements XRandom {
 
     public static final Byte BYTE = Byte.MAX_VALUE;
     public static final Short SHORT = Short.MAX_VALUE;
@@ -19,11 +20,12 @@ public class RandomHub extends XRandom {
     public static final Character CHARACTER = '*';
     public static final String STRING = "****";
 
+    private final BitFactory bitFactory;
     private final FactoryHub<RandomHub> backing;
     private final String stdCharacters;
 
     private RandomHub(final Builder builder) {
-        super(builder.newBitFactory.get());
+        bitFactory = builder.newBitFactory.get();
         backing = new FactoryHub<>(builder.backing, () -> this, builder.unknownTokenListener);
         stdCharacters = builder.stdCharacters;
     }
@@ -51,6 +53,11 @@ public class RandomHub extends XRandom {
 
     public final <R> Stream<R> stream(final R token, final int length) {
         return backing.stream(token, length);
+    }
+
+    @Override
+    public final BigInteger anyBits(final int numBits) {
+        return bitFactory.anyBits(numBits);
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")

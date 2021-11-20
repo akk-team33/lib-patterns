@@ -26,12 +26,12 @@ class XRandomTest {
     private static final long FIXED = 0x0123456789abcdefL;
     public static final char FIXED_CHAR = '\ucdef';
 
-    private final XRandom fixed = new XRandom(numBits -> BigInteger.valueOf(FIXED)
-                                                                   .shiftLeft(Long.SIZE)
+    private final XRandom fixed = XRandom.using(numBits -> BigInteger.valueOf(FIXED)
+                                                                     .shiftLeft(Long.SIZE)
                                                                    .add(BigInteger.valueOf(FIXED))
                                                                    .and(BigInteger.ONE.shiftLeft(numBits)
                                                                                       .subtract(BigInteger.ONE)));
-    private final XRandom real = new XRandom(BitFactory.using(new Random()));
+    private final XRandom real = XRandom.using(new Random());
 
     @Test
     final void test_BigInteger_doubleValue() {

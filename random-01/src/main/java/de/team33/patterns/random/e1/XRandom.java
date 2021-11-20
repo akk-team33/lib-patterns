@@ -1,105 +1,105 @@
 package de.team33.patterns.random.e1;
 
 import java.math.BigInteger;
-import java.util.stream.IntStream;
+import java.util.Random;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-public class XRandom implements BitFactory {
+/**
+ * Represents a factory for values of many basic types, including {@link String} and {@link BigInteger},
+ * based on a {@link BitFactory}.
+ */
+@FunctionalInterface
+public interface XRandom extends BitFactory {
 
-    private static final int FLOAT_RESOLUTION = Float.SIZE;
-    private static final int DOUBLE_RESOLUTION = Double.SIZE;
-    private static final int BIG_RESOLUTION = Long.SIZE;
-
-    private final BitFactory backing;
-
-    public XRandom(final BitFactory backing) {
-        this.backing = backing;
+    /**
+     * Creates a new instance based on a given {@link BitFactory}.
+     */
+    static XRandom using(final BitFactory backing) {
+        return backing::anyBits;
     }
 
-    @Override
-    public final BigInteger anyBits(final int numBits) {
-        return backing.anyBits(numBits);
+    /**
+     * Creates a new instance based on a given {@link Random} instance.
+     */
+    static XRandom using(final Random random) {
+        return using(BitFactory.using(random));
     }
 
     /**
      * Returns any {@code boolean} value.
      */
-    public final boolean anyBoolean() {
+    default boolean anyBoolean() {
         return anyBits(1).equals(BigInteger.ONE);
     }
 
     /**
      * Returns any {@code byte} value.
      */
-    public final byte anyByte() {
+    default byte anyByte() {
         return anyBits(Byte.SIZE).byteValue();
     }
 
     /**
      * Returns any {@code short} value.
      */
-    public final short anyShort() {
+    default short anyShort() {
         return anyBits(Short.SIZE).shortValue();
     }
 
     /**
      * Returns any {@code int} value.
      */
-    public final int anyInt() {
+    default int anyInt() {
         return anyBits(Integer.SIZE).intValue();
     }
 
     /**
      * Returns an {@code int} value between {@code zero} (incl.) and {@code bound} (excl.).
      */
-    public final int anyInt(final int bound) {
-        final BigInteger result = anyBigInteger(BigInteger.valueOf(bound));
-        return result.intValue();
+    default int anyInt(final int bound) {
+        return anyBigInteger(BigInteger.valueOf(bound)).intValue();
     }
 
     /**
      * Returns an {@code int} value between {@code min} (incl.) and {@code bound} (excl.).
      */
-    public final int anyInt(final int min, final int bound) {
+    default int anyInt(final int min, final int bound) {
         return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
     }
 
     /**
      * Returns any {@code long} value.
      */
-    public final long anyLong() {
+    default long anyLong() {
         return anyBits(Long.SIZE).longValue();
     }
 
     /**
      * Returns a {@code float} value between zero (incl.) and one (excl.).
      */
-    public final float anyFloat() {
-        final float numerator = anyBits(FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(FLOAT_RESOLUTION).floatValue();
+    default float anyFloat() {
+        final float numerator = anyBits(XRandomUtil.FLOAT_RESOLUTION).floatValue();
+        final float denominator = BigInteger.ONE.shiftLeft(XRandomUtil.FLOAT_RESOLUTION).floatValue();
         return numerator / denominator;
     }
 
     /**
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      */
-    public final double anyDouble() {
-        final double numerator = anyBits(DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(DOUBLE_RESOLUTION).doubleValue();
+    default double anyDouble() {
+        final double numerator = anyBits(XRandomUtil.DOUBLE_RESOLUTION).doubleValue();
+        final double denominator = BigInteger.ONE.shiftLeft(XRandomUtil.DOUBLE_RESOLUTION).doubleValue();
         return numerator / denominator;
-    }
-
-    @SuppressWarnings("NumericCastThatLosesPrecision")
-    private char anyRawChar() {
-        return (char) anyBits(Character.SIZE).intValue();
     }
 
     /**
      * Returns any {@code char} value that {@linkplain Character#isDefined(char) is defined}.
      */
-    public final char anyChar() {
-        char result = anyRawChar();
+    default char anyChar() {
+        char result = XRandomUtil.anyRawChar(this);
         while (!Character.isDefined(result)) {
-            result = anyRawChar();
+            result = XRandomUtil.anyRawChar(this);
         }
         return result;
     }
@@ -109,16 +109,16 @@ public class XRandom implements BitFactory {
      *
      * @param characters A {@link String} made up of the characters that are a possible result.
      */
-    public final char anyChar(final String characters) {
+    default char anyChar(final String characters) {
         return characters.charAt(anyInt(characters.length()));
     }
 
     /**
      * Returns a {@link BigInteger} value between ZERO (incl.) and {@code bound} (excl.).
      */
-    public final BigInteger anyBigInteger(final BigInteger bound) {
+    default BigInteger anyBigInteger(final BigInteger bound) {
         if (BigInteger.ZERO.compareTo(bound) < 0) {
-            final int numBits = bound.bitLength() + BIG_RESOLUTION;
+            final int numBits = bound.bitLength() + XRandomUtil.BIG_RESOLUTION;
             final BigInteger numerator = bound.multiply(anyBits(numBits));
             final BigInteger denominator = BigInteger.ONE.shiftLeft(numBits);
             return numerator.divide(denominator);
@@ -129,8 +129,18 @@ public class XRandom implements BitFactory {
     /**
      * Returns a {@link BigInteger} value between {@code min} (incl.) and {@code bound} (excl.).
      */
-    public final BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
+    default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
         return anyBigInteger(bound.subtract(min)).add(min);
+    }
+
+    /**
+     * Returns a {@link String} with the given {@code length} consisting of any characters that
+     * {@linkplain Character#isDefined(char) are defined}.
+     *
+     * @param length The length of the resulting string.
+     */
+    default String anyString(final int length) {
+        return anyString(length, this::anyChar);
     }
 
     /**
@@ -138,16 +148,25 @@ public class XRandom implements BitFactory {
      *
      * @param length     The length of the resulting string.
      * @param characters A string made up of the characters that make up a possible result.
-     * @return
      */
-    public final String anyString(final int length, final String characters) {
+    default String anyString(final int length, final String characters) {
+        return anyString(length, () -> anyChar(characters));
+    }
+
+    /**
+     * Returns a {@link String} with the given {@code length}.
+     *
+     * @param length   The length of the resulting string.
+     * @param supplier A {@link Supplier} that supplies the characters.
+     */
+    default String anyString(final int length, final Supplier<Character> supplier) {
         if (0 <= length) {
-            return IntStream.generate(() -> anyInt(characters.length()))
-                            .limit(length)
-                            .collect(StringBuilder::new,
-                                     (sb, index) -> sb.append(characters.charAt(index)),
-                                     StringBuilder::append)
-                            .toString();
+            return Stream.generate(supplier)
+                         .limit(length)
+                         .collect(StringBuilder::new,
+                                  StringBuilder::append,
+                                  StringBuilder::append)
+                         .toString();
         }
         throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
     }
@@ -155,8 +174,8 @@ public class XRandom implements BitFactory {
     /**
      * Returns one of the given {@code values}.
      */
-    @SafeVarargs
-    public final <T> T anyOf(final T... values) {
+    @SuppressWarnings("unchecked")
+    default <T> T anyOf(final T... values) {
         return values[anyInt(values.length)];
     }
 }
