@@ -79,8 +79,8 @@ public interface XFactory extends BitFactory {
      * Returns a {@code float} value between zero (incl.) and one (excl.).
      */
     default float anyFloat() {
-        final float numerator = anyBits(XRandomUtil.FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(XRandomUtil.FLOAT_RESOLUTION).floatValue();
+        final float numerator = anyBits(XFactoryUtil.FLOAT_RESOLUTION).floatValue();
+        final float denominator = BigInteger.ONE.shiftLeft(XFactoryUtil.FLOAT_RESOLUTION).floatValue();
         return numerator / denominator;
     }
 
@@ -88,8 +88,8 @@ public interface XFactory extends BitFactory {
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      */
     default double anyDouble() {
-        final double numerator = anyBits(XRandomUtil.DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(XRandomUtil.DOUBLE_RESOLUTION).doubleValue();
+        final double numerator = anyBits(XFactoryUtil.DOUBLE_RESOLUTION).doubleValue();
+        final double denominator = BigInteger.ONE.shiftLeft(XFactoryUtil.DOUBLE_RESOLUTION).doubleValue();
         return numerator / denominator;
     }
 
@@ -97,9 +97,9 @@ public interface XFactory extends BitFactory {
      * Returns any {@code char} value that {@linkplain Character#isDefined(char) is defined}.
      */
     default char anyChar() {
-        char result = XRandomUtil.anyRawChar(this);
+        char result = XFactoryUtil.anyRawChar(this);
         while (!Character.isDefined(result)) {
-            result = XRandomUtil.anyRawChar(this);
+            result = XFactoryUtil.anyRawChar(this);
         }
         return result;
     }
@@ -118,7 +118,7 @@ public interface XFactory extends BitFactory {
      */
     default BigInteger anyBigInteger(final BigInteger bound) {
         if (BigInteger.ZERO.compareTo(bound) < 0) {
-            final int numBits = bound.bitLength() + XRandomUtil.BIG_RESOLUTION;
+            final int numBits = bound.bitLength() + XFactoryUtil.BIG_RESOLUTION;
             final BigInteger numerator = bound.multiply(anyBits(numBits));
             final BigInteger denominator = BigInteger.ONE.shiftLeft(numBits);
             return numerator.divide(denominator);
