@@ -7,20 +7,20 @@ import java.util.stream.Stream;
 
 /**
  * Represents a factory for values of many basic types, including {@link String} and {@link BigInteger},
- * based on a {@link BitFactory}.
+ * based on a {@link BitFactory}. Can and should serve as a randomizer if implemented appropriately.
  */
 @FunctionalInterface
 public interface XRandom extends BitFactory {
 
     /**
-     * Creates a new instance based on a given {@link BitFactory}.
+     * Creates a new instance backed by a given {@link BitFactory}.
      */
     static XRandom using(final BitFactory backing) {
         return backing::anyBits;
     }
 
     /**
-     * Creates a new instance based on a given {@link Random} instance.
+     * Creates a new instance backed by a given {@link Random} instance.
      */
     static XRandom using(final Random random) {
         return using(BitFactory.using(random));
