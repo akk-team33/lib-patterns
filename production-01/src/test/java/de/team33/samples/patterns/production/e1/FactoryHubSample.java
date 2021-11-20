@@ -17,7 +17,7 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
 
     // The instantiation takes place via a builder pattern ...
     private FactoryHubSample(final Builder builder) {
-        super(builder.collector, FactoryHubSample.class, FactoryHub.IGNORE_UNKNOWN_TOKEN);
+        super(builder.collector, FactoryHubSample.class, ACCEPT_UNKNOWN_TOKEN);
     }
 
     // To get a builder that has already been pre-initialized

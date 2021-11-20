@@ -62,8 +62,13 @@ public class FactoryHubTest {
     }
 
     @Test
-    final void illegalTemplate() {
-        assertThrows(IllegalArgumentException.class, () -> new EmptyHub().get(UNKNOWN));
+    final void unknownTemplate_denied() {
+        assertThrows(IllegalArgumentException.class, () -> factoryHub.get(UNKNOWN));
+    }
+
+    @Test
+    final void unknownTemplate_accepted() {
+        assertEquals(UNKNOWN, new EmptyHub().get(UNKNOWN));
     }
 
     @Test
@@ -117,21 +122,21 @@ public class FactoryHubTest {
     static class EmptyHub extends FactoryHub<EmptyHub> {
 
         EmptyHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class, IGNORE_UNKNOWN_TOKEN);
+            super(new FactoryHub.Collector<>(), EmptyHub.class, LOG_UNKNOWN_TOKEN);
         }
     }
 
     static class StringHub extends FactoryHub<String> {
 
         StringHub() {
-            super(new FactoryHub.Collector<>(), String.class, IGNORE_UNKNOWN_TOKEN);
+            super(new FactoryHub.Collector<>(), String.class, DENY_UNKNOWN_TOKEN);
         }
     }
 
     static class EmptyHubHub extends FactoryHub<EmptyHub> {
 
         EmptyHubHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class, IGNORE_UNKNOWN_TOKEN);
+            super(new FactoryHub.Collector<>(), EmptyHub.class, ACCEPT_UNKNOWN_TOKEN);
         }
     }
 }

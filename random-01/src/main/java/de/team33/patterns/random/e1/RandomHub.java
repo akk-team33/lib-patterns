@@ -60,7 +60,7 @@ public class RandomHub extends XRandom {
                 "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 @äöüÄÖÜß!§$%&";
 
         private final FactoryHub.Collector<RandomHub> backing;
-        private Consumer<Object> unknownTokenListener = FactoryHub.IGNORE_UNKNOWN_TOKEN;
+        private Consumer<Object> unknownTokenListener = FactoryHub.ACCEPT_UNKNOWN_TOKEN;
 
         private String stdCharacters = STD_CHARACTERS;
         private Supplier<BitFactory> newBitFactory = () -> BitFactory.using(new Random());

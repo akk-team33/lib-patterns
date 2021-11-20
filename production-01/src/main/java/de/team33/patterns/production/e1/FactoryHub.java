@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,7 +45,7 @@ import static java.lang.String.format;
  *
  *     // The instantiation takes place via a builder pattern ...
  *     private FactoryHubSample(final Builder builder) {
- *         super(builder.collector, FactoryHubSample.class);
+ *         super(builder.collector, FactoryHubSample.class, ACCEPT_UNKNOWN_TOKEN);
  *     }
  *
  *     // To get a builder that has already been pre-initialized
@@ -84,20 +85,38 @@ import static java.lang.String.format;
  */
 public class FactoryHub<C> {
 
+    private static final Logger LOG = Logger.getLogger(FactoryHub.class.getCanonicalName());
     private static final String ILLEGAL_CONTEXT_TYPE =
             "This instance cannot be viewed as a context of the specified type!%n" +
             "- type of this: %s%n" +
             "- context type: %s%n";
-    private static final String ILLEGAL_TEMPLATE =
+    private static final String UNKNOWN_TOKEN =
             "unknown token:%n" +
             "- type of token   : %s%n" +
             "- value* of token : %s%n" +
             "*(string representation)";
 
-    public static Consumer<Object> IGNORE_UNKNOWN_TOKEN = token -> {
+    /**
+     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
+     * {@link #FactoryHub(Collector, Class, Consumer)} that does nothing.
+     */
+    public static Consumer<Object> ACCEPT_UNKNOWN_TOKEN = token -> {
     };
+
+    /**
+     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
+     * {@link #FactoryHub(Collector, Class, Consumer)} that throws an {@link IllegalArgumentException}.
+     */
     public static Consumer<Object> DENY_UNKNOWN_TOKEN = token -> {
-        throw new IllegalArgumentException(format(ILLEGAL_TEMPLATE, classOf(token), token));
+        throw new IllegalArgumentException(format(UNKNOWN_TOKEN, classOf(token), token));
+    };
+
+    /**
+     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
+     * {@link #FactoryHub(Collector, Class, Consumer)} that lags the event via {@linkplain Logger java logging}.
+     */
+    public static Consumer<Object> LOG_UNKNOWN_TOKEN = token -> {
+        LOG.info(() -> format(UNKNOWN_TOKEN, classOf(token), token));
     };
 
     @SuppressWarnings("rawtypes")
@@ -118,6 +137,9 @@ public class FactoryHub<C> {
      * @param unknownTokenListener A {@link Consumer} that is called with the <em>token</em> as parameter
      *                             when an unknown <em>token</em> is used.
      * @see #FactoryHub(Collector, Class, Consumer)
+     * @see #ACCEPT_UNKNOWN_TOKEN
+     * @see #DENY_UNKNOWN_TOKEN
+     * @see #LOG_UNKNOWN_TOKEN
      */
     public FactoryHub(final Collector<C> collector,
                       final Supplier<C> context,
@@ -140,11 +162,14 @@ public class FactoryHub<C> {
      *                             when an unknown <em>token</em> is used.
      * @throws IllegalArgumentException if the given context type does not actually extend this {@link FactoryHub}.
      * @see #FactoryHub(Collector, Supplier, Consumer)
+     * @see #ACCEPT_UNKNOWN_TOKEN
+     * @see #DENY_UNKNOWN_TOKEN
+     * @see #LOG_UNKNOWN_TOKEN
      */
     protected FactoryHub(final Collector<C> collector,
                          final Class<C> contextType,
                          final Consumer<Object> unknownTokenListener) {
-        if (getClass().isAssignableFrom(contextType)) {
+        if (contextType.isAssignableFrom(getClass())) {
             this.methods = copyOf(collector);
             this.context = () -> contextType.cast(this);
             this.unknownTokenListener = unknownTokenListener;

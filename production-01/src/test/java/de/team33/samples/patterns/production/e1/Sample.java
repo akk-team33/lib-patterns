@@ -9,7 +9,7 @@ public class Sample {
     private final FactoryHub<Sample> factoryHub;
 
     private Sample(final Builder builder) {
-        factoryHub = new FactoryHub<>(builder, () -> this, FactoryHub.IGNORE_UNKNOWN_TOKEN);
+        factoryHub = new FactoryHub<>(builder, () -> this, FactoryHub.ACCEPT_UNKNOWN_TOKEN);
     }
 
     // ...
