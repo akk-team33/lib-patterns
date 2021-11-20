@@ -10,19 +10,19 @@ import java.util.stream.Stream;
  * based on a {@link BitFactory}. Can and should serve as a randomizer if implemented appropriately.
  */
 @FunctionalInterface
-public interface XRandom extends BitFactory {
+public interface XFactory extends BitFactory {
 
     /**
      * Creates a new instance backed by a given {@link BitFactory}.
      */
-    static XRandom using(final BitFactory backing) {
+    static XFactory using(final BitFactory backing) {
         return backing::anyBits;
     }
 
     /**
      * Creates a new instance backed by a given {@link Random} instance.
      */
-    static XRandom using(final Random random) {
+    static XFactory using(final Random random) {
         return using(BitFactory.using(random));
     }
 

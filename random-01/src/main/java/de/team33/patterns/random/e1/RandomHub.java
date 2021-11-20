@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-public class RandomHub implements XRandom {
+public class RandomHub implements XFactory {
 
     public static final Byte BYTE = Byte.MAX_VALUE;
     public static final Short SHORT = Short.MAX_VALUE;
@@ -31,14 +31,14 @@ public class RandomHub implements XRandom {
     }
 
     public static Builder builder() {
-        return new Builder().on(false).apply(XRandom::anyBoolean)
-                            .on(true).apply(XRandom::anyBoolean)
-                            .on(BYTE).apply(XRandom::anyByte)
-                            .on(SHORT).apply(XRandom::anyShort)
-                            .on(INTEGER).apply(XRandom::anyInt)
-                            .on(LONG).apply(XRandom::anyLong)
-                            .on(FLOAT).apply(XRandom::anyFloat)
-                            .on(DOUBLE).apply(XRandom::anyDouble)
+        return new Builder().on(false).apply(XFactory::anyBoolean)
+                            .on(true).apply(XFactory::anyBoolean)
+                            .on(BYTE).apply(XFactory::anyByte)
+                            .on(SHORT).apply(XFactory::anyShort)
+                            .on(INTEGER).apply(XFactory::anyInt)
+                            .on(LONG).apply(XFactory::anyLong)
+                            .on(FLOAT).apply(XFactory::anyFloat)
+                            .on(DOUBLE).apply(XFactory::anyDouble)
                             .on(CHARACTER).apply(rnd -> rnd.anyChar(rnd.stdCharacters))
                             .on(STRING).apply(rnd -> rnd.anyString(rnd.anyInt(10), rnd.stdCharacters));
     }

@@ -1,7 +1,6 @@
 package de.team33.test.patterns.random.e1;
 
-import de.team33.patterns.random.e1.BitFactory;
-import de.team33.patterns.random.e1.XRandom;
+import de.team33.patterns.random.e1.XFactory;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
@@ -21,17 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class XRandomTest {
+class XFactoryTest {
 
     private static final long FIXED = 0x0123456789abcdefL;
     public static final char FIXED_CHAR = '\ucdef';
 
-    private final XRandom fixed = XRandom.using(numBits -> BigInteger.valueOf(FIXED)
-                                                                     .shiftLeft(Long.SIZE)
-                                                                   .add(BigInteger.valueOf(FIXED))
-                                                                   .and(BigInteger.ONE.shiftLeft(numBits)
+    private final XFactory fixed = XFactory.using(numBits -> BigInteger.valueOf(FIXED)
+                                                                       .shiftLeft(Long.SIZE)
+                                                                       .add(BigInteger.valueOf(FIXED))
+                                                                       .and(BigInteger.ONE.shiftLeft(numBits)
                                                                                       .subtract(BigInteger.ONE)));
-    private final XRandom real = XRandom.using(new Random());
+    private final XFactory real = XFactory.using(new Random());
 
     @Test
     final void test_BigInteger_doubleValue() {
