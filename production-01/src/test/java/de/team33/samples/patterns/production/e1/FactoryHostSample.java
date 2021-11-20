@@ -16,7 +16,7 @@ public class FactoryHostSample {
     private final FactoryHub<FactoryHostSample> hub;
 
     private FactoryHostSample(final Builder builder) {
-        this.hub = new FactoryHub<>(builder.collector, () -> this);
+        this.hub = new FactoryHub<>(builder.collector, () -> this, FactoryHub.DENY_UNKNOWN_TOKEN);
     }
 
     public static Builder builder() {
@@ -24,7 +24,7 @@ public class FactoryHostSample {
     }
 
     public final <R> R any(final R token) {
-        return hub.another(token);
+        return hub.get(token);
     }
 
     public final BigInteger anyBits(final int numBits) {

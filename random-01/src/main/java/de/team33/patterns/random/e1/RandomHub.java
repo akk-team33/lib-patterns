@@ -3,6 +3,7 @@ package de.team33.patterns.random.e1;
 import de.team33.patterns.production.e1.FactoryHub;
 
 import java.util.Random;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -23,7 +24,7 @@ public class RandomHub extends XRandom {
 
     private RandomHub(final Builder builder) {
         super(builder.newBitFactory.get());
-        backing = new FactoryHub<>(builder.backing, () -> this);
+        backing = new FactoryHub<>(builder.backing, () -> this, builder.unknownTokenListener);
         stdCharacters = builder.stdCharacters;
     }
 
@@ -41,11 +42,15 @@ public class RandomHub extends XRandom {
     }
 
     public final <R> R any(final R token) {
-        return backing.another(token);
+        return backing.get(token);
     }
 
     public final <R> Stream<R> stream(final R token) {
         return backing.stream(token);
+    }
+
+    public final <R> Stream<R> stream(final R token, final int length) {
+        return backing.stream(token, length);
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
@@ -55,6 +60,7 @@ public class RandomHub extends XRandom {
                 "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 @äöüÄÖÜß!§$%&";
 
         private final FactoryHub.Collector<RandomHub> backing;
+        private Consumer<Object> unknownTokenListener = FactoryHub.IGNORE_UNKNOWN_TOKEN;
 
         private String stdCharacters = STD_CHARACTERS;
         private Supplier<BitFactory> newBitFactory = () -> BitFactory.using(new Random());
@@ -79,6 +85,11 @@ public class RandomHub extends XRandom {
 
         public final Builder setNewRandom(final Supplier<Random> newRandom) {
             return setNewBitFactory(() -> BitFactory.using(newRandom.get()));
+        }
+
+        public Builder setUnknownTokenListener(final Consumer<Object> unknownTokenListener) {
+            this.unknownTokenListener = unknownTokenListener;
+            return this;
         }
 
         public final RandomHub build() {

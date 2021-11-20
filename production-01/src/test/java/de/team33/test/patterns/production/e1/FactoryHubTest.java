@@ -52,7 +52,7 @@ public class FactoryHubTest {
                 .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
                 .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
                 .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap, Mappable::new));
-        factoryHub = new FactoryHub<>(collector, () -> this);
+        factoryHub = new FactoryHub<>(collector, () -> this, FactoryHub.DENY_UNKNOWN_TOKEN);
     }
 
     @ParameterizedTest
@@ -63,28 +63,28 @@ public class FactoryHubTest {
 
     @Test
     final void illegalTemplate() {
-        assertThrows(IllegalArgumentException.class, () -> new EmptyHub().another(UNKNOWN));
+        assertThrows(IllegalArgumentException.class, () -> new EmptyHub().get(UNKNOWN));
     }
 
     @Test
     final void nullTemplate() {
-        assertNull(new EmptyHub().another(null));
+        assertNull(new EmptyHub().get(null));
     }
 
     @Test
     final void another_fixed() {
-        assertEquals(INTEGER, factoryHub.another(INTEGER));
-        assertEquals(DATE, factoryHub.another(DATE));
-        assertEquals(MAPPABLE, factoryHub.another(MAPPABLE));
+        assertEquals(INTEGER, factoryHub.get(INTEGER));
+        assertEquals(DATE, factoryHub.get(DATE));
+        assertEquals(MAPPABLE, factoryHub.get(MAPPABLE));
     }
 
     @Test
     final void another_random() {
-        final Double aDouble = factoryHub.another(DOUBLE);
+        final Double aDouble = factoryHub.get(DOUBLE);
         assertInstanceOf(Double.class, aDouble);
         assertNotEquals(DOUBLE, aDouble);
 
-        final BigInteger bigInteger = factoryHub.another(BIG_INTEGER);
+        final BigInteger bigInteger = factoryHub.get(BIG_INTEGER);
         assertInstanceOf(BigInteger.class, bigInteger);
         assertNotEquals(BIG_INTEGER, bigInteger);
     }
@@ -117,21 +117,21 @@ public class FactoryHubTest {
     static class EmptyHub extends FactoryHub<EmptyHub> {
 
         EmptyHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class);
+            super(new FactoryHub.Collector<>(), EmptyHub.class, IGNORE_UNKNOWN_TOKEN);
         }
     }
 
     static class StringHub extends FactoryHub<String> {
 
         StringHub() {
-            super(new FactoryHub.Collector<>(), String.class); // <- illegal!
+            super(new FactoryHub.Collector<>(), String.class, IGNORE_UNKNOWN_TOKEN);
         }
     }
 
     static class EmptyHubHub extends FactoryHub<EmptyHub> {
 
         EmptyHubHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class); // <- illegal!
+            super(new FactoryHub.Collector<>(), EmptyHub.class, IGNORE_UNKNOWN_TOKEN);
         }
     }
 }
