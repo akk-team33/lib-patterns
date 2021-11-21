@@ -36,7 +36,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <copyright.year>2021</copyright.year>
-        <skipHome>true</skipHome>
+        <skipHome>false</skipHome>
     </properties>
 
     <modules>
