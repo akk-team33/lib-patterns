@@ -3,15 +3,13 @@ package de.team33.test.patterns.random.e1;
 import de.team33.patterns.random.e1.RandomHub;
 import de.team33.test.patterns.random.shared.Buildable;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
-import java.math.BigInteger;
 import java.util.IntSummaryStatistics;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 class RandomHubTest {
 
@@ -57,5 +55,15 @@ class RandomHubTest {
         defaultHub.stream(RandomHub.INTEGER)
                   .limit(10000)
                   .forEach(value -> assertInstanceOf(Integer.class, value));
+    }
+
+    @Test
+    final void any_STRING() {
+        final int[] counts = new int[24];
+        Stream.generate(() -> defaultHub.any(RandomHub.STRING)).limit(1000)
+              .peek(System.out::println)
+              .forEach(str -> counts[str.length()] += 1);
+        final IntSummaryStatistics stats = IntStream.of(counts).summaryStatistics();
+        assertEquals(counts[0], stats.getMax());
     }
 }
