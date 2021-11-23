@@ -183,7 +183,7 @@ class XFactoryTest {
               .limit((long) expected * RoundingMode.values().length)
               .forEach(mode -> counts.computeIfAbsent(mode, key -> new AtomicInteger(0)).incrementAndGet());
 
-        counts.forEach((mode, count) -> System.out.printf("[%s] -> %s%n", mode, count));
+        //counts.forEach((mode, count) -> System.out.printf("[%s] -> %s%n", mode, count));
 
         final IntSummaryStatistics stats = counts.values()
                                                  .stream()
@@ -193,7 +193,7 @@ class XFactoryTest {
                                                           IntSummaryStatistics::combine);
         assertEquals(1.0 * expected, stats.getAverage());
 
-        final int spread = expected / 100;
+        final int spread = expected / 50;
         assertEquals((1.0 * expected) - spread, stats.getMin(), 1.0 * spread);
         assertEquals((1.0 * expected) + spread, stats.getMax(), 1.0 * spread);
     }

@@ -113,7 +113,7 @@ public class FactoryHub<C> {
 
     /**
      * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
-     * {@link #FactoryHub(Collector, Class, Consumer)} that lags the event via {@linkplain Logger java logging}.
+     * {@link #FactoryHub(Collector, Class, Consumer)} that logs the event via {@linkplain Logger java logging}.
      */
     public static Consumer<Object> LOG_UNKNOWN_TOKEN = token -> {
         LOG.info(() -> format(UNKNOWN_TOKEN, classOf(token), token));
@@ -206,10 +206,19 @@ public class FactoryHub<C> {
      * The association of <em>token</em> and production method is made when the hub is initialized via a
      * {@link Collector}.
      * <p>
+     * Returns the <em>token</em> itself if no method is associated with it (<em>"unknown token"</em>),
+     * unless the initially defined unknownTokenListener, which is then called, throws an exception.
+     * <p>
      * The result is always {@code null} if the <em>token</em> is {@code null}.
      *
      * @param <T> The type of the produced result.
-     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if the <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
+     * @see #FactoryHub(Collector, Supplier, Consumer)
+     * @see #FactoryHub(Collector, Class, Consumer)
+     * @see #ACCEPT_UNKNOWN_TOKEN
+     * @see #DENY_UNKNOWN_TOKEN
+     * @see #LOG_UNKNOWN_TOKEN
      */
     @SuppressWarnings("ReturnOfNull")
     public final <T> T get(final T token) {
@@ -219,9 +228,12 @@ public class FactoryHub<C> {
     /**
      * Produces an infinite (!) {@link Stream} of {@link #get(Object) newly produced} elements af a certain type,
      * whereby the production method to be used for each element is identified by a <em>token</em> of the same type.
+     * <p>
+     * Does the same as {@code Stream.generate(() -> get(token))}.
      *
      * @param <T> The type of the produced elements.
-     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if the <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
      * @see #get(Object)
      * @see #stream(Object, int)
      */
@@ -233,9 +245,12 @@ public class FactoryHub<C> {
      * Produces a {@link Stream} with limited length of {@link #get(Object) newly produced} elements
      * af a certain type, whereby the production method to be used for each element is identified by a
      * <em>token</em> of the same type.
+     * <p>
+     * Does the same as {@code Stream.generate(() -> get(token)).limit(length)}.
      *
      * @param <T> The type of the produced elements.
-     * @throws IllegalArgumentException if the <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if the <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
      * @see #get(Object)
      * @see #stream(Object)
      */
@@ -250,8 +265,10 @@ public class FactoryHub<C> {
      *
      * @param <K> The type of keys of the resulting {@link Map}.
      * @param <V> The type of values of the resulting {@link Map}.
-     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if a <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
      * @see #get(Object)
+     * @see #map(Map)
      */
     public final <K, V> Map<K, V> map(final K keyToken, final V valueToken, final int size) {
         return stream(keyToken).distinct()
@@ -266,8 +283,10 @@ public class FactoryHub<C> {
      *
      * @param <K> The type of keys of the resulting {@link Map}.
      * @param <V> The type of values of the resulting {@link Map}.
-     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if a <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
      * @see #get(Object)
+     * @see #map(Object, Object, int)
      */
     public final <K, V> Map<K, V> map(final Map<K, V> template) {
         return template.entrySet()
@@ -287,7 +306,8 @@ public class FactoryHub<C> {
      * @param reMap    A method to create the result from a {@link Map}.
      * @param <T>      The type of the template.
      * @param <R>      The type of the result. Mostly but not necessarily the same as the template type.
-     * @throws IllegalArgumentException if a <em>token</em> is not associated with a production method.
+     * @throws RuntimeException if a <em>token</em> is not associated with a production method
+     *                          and the initially defined unknownTokenListener throws one.
      * @see #get(Object)
      */
     public final <T, R> R map(final T template,
