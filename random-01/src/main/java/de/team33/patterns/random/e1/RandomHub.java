@@ -6,7 +6,6 @@ import de.team33.patterns.production.e1.FactoryUtil;
 import java.math.BigInteger;
 import java.util.Random;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -59,8 +58,13 @@ public class RandomHub implements XFactory {
     private final String stdCharacters;
 
     private RandomHub(final Builder builder) {
+        backing = new FactoryHub<RandomHub>(builder) {
+            @Override
+            protected RandomHub getContext() {
+                return RandomHub.this;
+            }
+        };
         bitFactory = builder.newBitFactory.get();
-        backing = new FactoryHub<>(builder.backing, () -> this, builder.unknownTokenListener);
         stdCharacters = builder.stdCharacters;
     }
 
@@ -95,23 +99,22 @@ public class RandomHub implements XFactory {
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
-    public static class Builder {
+    public static class Builder extends FactoryHub.Collector<RandomHub, Builder> {
 
         private static final String STD_CHARACTERS =
                 "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 @äöüÄÖÜß!§$%&";
 
-        private final FactoryHub.Collector<RandomHub> backing;
         private Consumer<Object> unknownTokenListener = FactoryUtil.ACCEPT_UNKNOWN_TOKEN;
 
         private String stdCharacters = STD_CHARACTERS;
         private Supplier<BitFactory> newBitFactory = () -> BitFactory.using(new Random());
 
         private Builder() {
-            backing = new FactoryHub.Collector<>();
         }
 
-        public final <T> Function<Function<RandomHub, T>, Builder> on(final T token) {
-            return backing.on(token, this);
+        @Override
+        protected Builder getBuilder() {
+            return this;
         }
 
         public final Builder setStdCharacters(final String characters) {
@@ -126,11 +129,6 @@ public class RandomHub implements XFactory {
 
         public final Builder setNewRandom(final Supplier<Random> newRandom) {
             return setNewBitFactory(() -> BitFactory.using(newRandom.get()));
-        }
-
-        public Builder setUnknownTokenListener(final Consumer<Object> unknownTokenListener) {
-            this.unknownTokenListener = unknownTokenListener;
-            return this;
         }
 
         public final RandomHub build() {

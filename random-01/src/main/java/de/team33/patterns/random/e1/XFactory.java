@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 /**
  * Represents a factory for values of many basic types, including {@link String} and {@link BigInteger},
- * based on a {@link BitFactory}. Can and should serve as a randomizer if implemented appropriately.
+ * based on a {@link BitFactory}. Mainly intended to serve as a randomizer when implemented appropriately.
  */
 @FunctionalInterface
 public interface XFactory extends BitFactory {
