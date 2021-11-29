@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -83,109 +81,23 @@ import static java.lang.String.format;
  *
  * @param <C> The type of the context.
  */
-public class FactoryHub<C> {
-
-    private static final Logger LOG = Logger.getLogger(FactoryHub.class.getCanonicalName());
-    private static final String ILLEGAL_CONTEXT_TYPE =
-            "This instance cannot be viewed as a context of the specified type!%n" +
-            "- type of this: %s%n" +
-            "- context type: %s%n";
-    private static final String UNKNOWN_TOKEN =
-            "unknown token:%n" +
-            "- type of token   : %s%n" +
-            "- value* of token : %s%n" +
-            "*(string representation)";
-
-    /**
-     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
-     * {@link #FactoryHub(Collector, Class, Consumer)} that does nothing.
-     */
-    public static Consumer<Object> ACCEPT_UNKNOWN_TOKEN = token -> {
-    };
-
-    /**
-     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
-     * {@link #FactoryHub(Collector, Class, Consumer)} that throws an {@link IllegalArgumentException}.
-     */
-    public static Consumer<Object> DENY_UNKNOWN_TOKEN = token -> {
-        throw new IllegalArgumentException(format(UNKNOWN_TOKEN, classOf(token), token));
-    };
-
-    /**
-     * A {@link Consumer} to be used with {@link #FactoryHub(Collector, Supplier, Consumer)} or
-     * {@link #FactoryHub(Collector, Class, Consumer)} that logs the event via {@linkplain Logger java logging}.
-     */
-    public static Consumer<Object> LOG_UNKNOWN_TOKEN = token -> {
-        LOG.info(() -> format(UNKNOWN_TOKEN, classOf(token), token));
-    };
+public abstract class FactoryHub<C> {
 
     @SuppressWarnings("rawtypes")
     private final Map<Object, Function> methods;
-    private final Supplier<C> context;
     private final Consumer<Object> unknownTokenListener;
 
     /**
      * Initializes a new instance.
-     * <p>
-     * This variant is used when a {@link FactoryHub} is to be used as part of its context.
-     *
-     * @param collector            A fully prepared {@link Collector} that associates the constants to be supported
-     *                             with appropriate methods.
-     * @param context              A {@link Supplier} that provides the context as soon as it is actually needed.
-     *                             It is expected that every call to {@link Supplier#get()} will return the same
-     *                             context instance!
-     * @param unknownTokenListener A {@link Consumer} that is called with the <em>token</em> as parameter
-     *                             when an unknown <em>token</em> is used.
-     * @see #FactoryHub(Collector, Class, Consumer)
-     * @see #ACCEPT_UNKNOWN_TOKEN
-     * @see #DENY_UNKNOWN_TOKEN
-     * @see #LOG_UNKNOWN_TOKEN
      */
-    public FactoryHub(final Collector<C> collector,
-                      final Supplier<C> context,
-                      final Consumer<Object> unknownTokenListener) {
+    protected FactoryHub(final Collector<C, ?> collector) {
         this.methods = copyOf(collector);
-        this.context = context;
-        this.unknownTokenListener = unknownTokenListener;
-    }
-
-    /**
-     * Initializes a new instance.
-     * <p>
-     * This variant is used when a context type extends a {@link FactoryHub}.
-     *
-     * @param collector            A fully prepared {@link Collector} that associates the <em>tokens</em> to be
-     *                            supported with appropriate methods.
-     * @param contextType          The {@link Class} that represents the context type that actually extends this
-     *                             {@link FactoryHub}.
-     * @param unknownTokenListener A {@link Consumer} that is called with the <em>token</em> as parameter
-     *                             when an unknown <em>token</em> is used.
-     * @throws IllegalArgumentException if the given context type does not actually extend this {@link FactoryHub}.
-     * @see #FactoryHub(Collector, Supplier, Consumer)
-     * @see #ACCEPT_UNKNOWN_TOKEN
-     * @see #DENY_UNKNOWN_TOKEN
-     * @see #LOG_UNKNOWN_TOKEN
-     */
-    protected FactoryHub(final Collector<C> collector,
-                         final Class<C> contextType,
-                         final Consumer<Object> unknownTokenListener) {
-        if (contextType.isAssignableFrom(getClass())) {
-            this.methods = copyOf(collector);
-            this.context = () -> contextType.cast(this);
-            this.unknownTokenListener = unknownTokenListener;
-        } else {
-            throw new IllegalArgumentException(format(ILLEGAL_CONTEXT_TYPE, getClass(), contextType));
-        }
+        this.unknownTokenListener = collector.unknownTokenListener;
     }
 
     @SuppressWarnings("rawtypes")
-    private static <C> Map<Object, Function> copyOf(final Collector<C> collector) {
+    private static <C> Map<Object, Function> copyOf(final Collector<C, ?> collector) {
         return Collections.unmodifiableMap(new HashMap<>(collector.methods));
-    }
-
-    @SuppressWarnings("ReturnOfNull")
-    private static Class<?> classOf(final Object subject) {
-        return (subject == null) ? null : subject.getClass();
     }
 
     @SuppressWarnings("unchecked")
@@ -200,6 +112,11 @@ public class FactoryHub<C> {
     }
 
     /**
+     * Returns the context associated with this {@link FactoryHub}.
+     */
+    protected abstract C getContext();
+
+    /**
      * Produces an instance of a certain type, whereby the production method to be used is identified by a
      * <em>token</em> of the result type.
      * <p>
@@ -207,22 +124,22 @@ public class FactoryHub<C> {
      * {@link Collector}.
      * <p>
      * Returns the <em>token</em> itself if no method is associated with it (<em>"unknown token"</em>),
-     * unless the initially defined unknownTokenListener, which is then called, throws an exception.
+     * unless the {@linkplain Collector#setUnknownTokenListener(Consumer) initially defined} unknownTokenListener,
+     * which is then called, throws an exception.
      * <p>
      * The result is always {@code null} if the <em>token</em> is {@code null}.
      *
      * @param <T> The type of the produced result.
      * @throws RuntimeException if the <em>token</em> is not associated with a production method
-     *                          and the initially defined unknownTokenListener throws one.
-     * @see #FactoryHub(Collector, Supplier, Consumer)
-     * @see #FactoryHub(Collector, Class, Consumer)
-     * @see #ACCEPT_UNKNOWN_TOKEN
-     * @see #DENY_UNKNOWN_TOKEN
-     * @see #LOG_UNKNOWN_TOKEN
+     *                          and the {@linkplain Collector#setUnknownTokenListener(Consumer) initially defined}
+     *                          unknownTokenListener throws one.
+     * @see FactoryUtil#ACCEPT_UNKNOWN_TOKEN
+     * @see FactoryUtil#DENY_UNKNOWN_TOKEN
+     * @see FactoryUtil#LOG_UNKNOWN_TOKEN
      */
     @SuppressWarnings("ReturnOfNull")
     public final <T> T get(final T token) {
-        return (null == token) ? null : getMethod(token).apply(context.get());
+        return (null == token) ? null : getMethod(token).apply(getContext());
     }
 
     /**
@@ -317,74 +234,50 @@ public class FactoryHub<C> {
     }
 
     /**
-     * A tool for preparing and initializing a {@link FactoryHub}.
-     * <p>
-     * It provides a two-stage builder pattern.
-     * A {@link Collector} is not a complete builder, but it can serve as the basis for the implementation of one,
-     * e.g. a context builder. An example of this can be found in the description of {@link FactoryHub}.
+     * Abstracts a tool for preparing and initializing a {@link FactoryHub} intended for extension into a
+     * <em>Builder</em> implementation.
      *
-     * @param <C> The type of the context.
+     * @param <C> The type of the context of a resulting {@link FactoryHub}.
+     * @param <B> The type of the <em>Builder</em> implementation that utilizes this.
      */
-    public static class Collector<C> {
+    public abstract static class Collector<C, B> {
 
         private final Map<Object, Function<C, ?>> methods = new HashMap<>();
+        private Consumer<Object> unknownTokenListener = FactoryUtil.ACCEPT_UNKNOWN_TOKEN;
 
         /**
-         * Offers a two-step builder pattern:
+         * Returns the <em>Builder</em> instance that utilizes this.
+         * Usually (but not necessarily) this itself in its extended representation.
+         */
+        protected abstract B getBuilder();
+
+        /**
+         * Provides a two-step builder pattern to add a specific factory method and map it to a token:
          * <p>
          * Takes a token of a certain type as a parameter and returns a {@link Function} that will associate that
-         * token with a production method (also a {@link Function}) and will return this collector.
-         * <hr>
-         * <em>Implementation details</em>
-         * <p>
-         * A builder implementation that extends a collector can override this method so that the result type of the
-         * resulting {@link Function} meets the requirements of that builder implementation.
-         * In particular, the {@linkplain #on(Object, Object) variant of this method} can be used for that.
-         * Example:
-         * <pre>
-         * public class Sample {
-         *
-         *     // ...
-         *
-         *     public static class Builder extends FactoryHub.Collector&lt;Sample&gt; {
-         *
-         *         &#64;Override
-         *         public final &lt;T&gt; Function&lt;Function&lt;Sample, T&gt;, Builder&gt; on(final T token) {
-         *             return on(token, this);
-         *         }
-         *
-         *         public final Sample build() {
-         *             return new Sample(...);
-         *         }
-         *     }
-         * }
-         * </pre>
+         * token with a factory method (also a {@link Function}) and will return
+         * {@linkplain #getBuilder() the builder}.
          *
          * @param <T> The type of the token and also the result type of the production method.
-         * @see #on(Object, Object)
          */
-        @SuppressWarnings("DesignForExtension")
-        public <T> Function<Function<C, T>, ? extends Collector<C>> on(final T token) {
-            return on(token, this);
+        public final <T> Function<Function<C, T>, B> on(final T token) {
+            return method -> {
+                methods.put(token, method);
+                return getBuilder();
+            };
         }
 
         /**
-         * Extended variant of {@link #on(Object)}:
-         * allows an explicit specification of the result and thus the result type of the resulting {@link Function}.
-         * This enables a builder implementation that uses a {@link Collector} or is derived from it to adapt
-         * its two-stage builder pattern.
+         * Defines a given consumer as the unknownTokenListener of a FactoryHub resulting from this Collector.
          * <p>
-         * Examples can be found in the descriptions of {@link #on(Object)} and {@link FactoryHub}.
+         * Unless otherwise specified, {@link FactoryUtil#ACCEPT_UNKNOWN_TOKEN} is used as the unknownTokenListener.
          *
-         * @param <T> The type of the token and also the result type of the production method.
-         * @param <R> The result typ of the resulting {@link Function}.
-         * @see #on(Object)
+         * @return {@linkplain #getBuilder() the builder}.
          */
-        public final <T, R> Function<Function<C, T>, R> on(final T token, final R result) {
-            return function -> {
-                methods.put(token, function);
-                return result;
-            };
+        public final B setUnknownTokenListener(final Consumer<Object> consumer) {
+            this.unknownTokenListener = consumer;
+            return getBuilder();
         }
     }
+
 }

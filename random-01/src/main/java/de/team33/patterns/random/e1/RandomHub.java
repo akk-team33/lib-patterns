@@ -1,6 +1,7 @@
 package de.team33.patterns.random.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
+import de.team33.patterns.production.e1.FactoryUtil;
 
 import java.math.BigInteger;
 import java.util.Random;
@@ -100,7 +101,7 @@ public class RandomHub implements XFactory {
                 "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789 @äöüÄÖÜß!§$%&";
 
         private final FactoryHub.Collector<RandomHub> backing;
-        private Consumer<Object> unknownTokenListener = FactoryHub.ACCEPT_UNKNOWN_TOKEN;
+        private Consumer<Object> unknownTokenListener = FactoryUtil.ACCEPT_UNKNOWN_TOKEN;
 
         private String stdCharacters = STD_CHARACTERS;
         private Supplier<BitFactory> newBitFactory = () -> BitFactory.using(new Random());

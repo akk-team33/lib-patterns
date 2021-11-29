@@ -1,10 +1,9 @@
 package de.team33.test.patterns.production.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
+import de.team33.patterns.production.e1.FactoryUtil;
 import de.team33.test.patterns.production.shared.Mappable;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
 import java.util.Collections;
@@ -43,22 +42,18 @@ public class FactoryHubTest {
     private final FactoryHub<FactoryHubTest> factoryHub;
 
     FactoryHubTest() {
-        final FactoryHub.Collector<FactoryHubTest> collector = new FactoryHub.Collector<FactoryHubTest>()
-                .on(INTEGER).apply(ctx -> INTEGER)
-                .on(DATE).apply(ctx -> DATE)
-                .on(STRING).apply(ctx -> STRING)
-                .on(INT_LIST).apply(ctx -> new LinkedList<>(INT_LIST))
-                .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
-                .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
-                .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
-                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap, Mappable::new));
-        factoryHub = new FactoryHub<>(collector, () -> this, FactoryHub.DENY_UNKNOWN_TOKEN);
-    }
-
-    @ParameterizedTest
-    @ValueSource(classes = {StringHub.class, EmptyHubHub.class})
-    final void illegalDerivation(final Class<?> hubClass) {
-        assertThrows(IllegalArgumentException.class, hubClass::newInstance);
+        factoryHub = FactoryUtil.builder(() -> this)
+                                .on(INTEGER).apply(ctx -> INTEGER)
+                                .on(DATE).apply(ctx -> DATE)
+                                .on(STRING).apply(ctx -> STRING)
+                                .on(INT_LIST).apply(ctx -> new LinkedList<>(INT_LIST))
+                                .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
+                                .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
+                                .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
+                                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap,
+                                                                              Mappable::new))
+                                .setUnknownTokenListener(FactoryUtil.DENY_UNKNOWN_TOKEN)
+                                .build();
     }
 
     @Test
@@ -102,7 +97,7 @@ public class FactoryHubTest {
 
     @Test
     final void map_templateMap() {
-        final Map<String, Integer> expected = new TreeMap<String, Integer>(){{
+        final Map<String, Integer> expected = new TreeMap<String, Integer>() {{
             put("a", INTEGER);
             put("b", INTEGER);
             put("c", INTEGER);
@@ -122,21 +117,17 @@ public class FactoryHubTest {
     static class EmptyHub extends FactoryHub<EmptyHub> {
 
         EmptyHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class, LOG_UNKNOWN_TOKEN);
+            super(new Collector<EmptyHub, Void>() {
+                @Override
+                protected Void getBuilder() {
+                    return null;
+                }
+            });
         }
-    }
 
-    static class StringHub extends FactoryHub<String> {
-
-        StringHub() {
-            super(new FactoryHub.Collector<>(), String.class, DENY_UNKNOWN_TOKEN);
-        }
-    }
-
-    static class EmptyHubHub extends FactoryHub<EmptyHub> {
-
-        EmptyHubHub() {
-            super(new FactoryHub.Collector<>(), EmptyHub.class, ACCEPT_UNKNOWN_TOKEN);
+        @Override
+        protected final EmptyHub getContext() {
+            return this;
         }
     }
 }

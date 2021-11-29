@@ -1,24 +1,28 @@
 package de.team33.samples.patterns.production.e1;
 
 import de.team33.patterns.production.e1.FactoryHub;
-
-import java.util.function.Function;
+import de.team33.patterns.production.e1.FactoryUtil;
 
 public class Sample {
 
     private final FactoryHub<Sample> factoryHub;
 
     private Sample(final Builder builder) {
-        factoryHub = new FactoryHub<>(builder, () -> this, FactoryHub.ACCEPT_UNKNOWN_TOKEN);
+        factoryHub = new FactoryHub<Sample>(builder) {
+            @Override
+            protected Sample getContext() {
+                return Sample.this;
+            }
+        };
     }
 
     // ...
 
-    public static class Builder extends FactoryHub.Collector<Sample> {
+    public static class Builder extends FactoryHub.Collector<Sample, Builder> {
 
         @Override
-        public final <T> Function<Function<Sample, T>, Builder> on(final T token) {
-            return on(token, this);
+        protected final Builder getBuilder() {
+            return this;
         }
 
         public final Sample build() {

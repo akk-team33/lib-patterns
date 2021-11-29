@@ -17,7 +17,7 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
 
     // The instantiation takes place via a builder pattern ...
     private FactoryHubSample(final Builder builder) {
-        super(builder.collector, FactoryHubSample.class, ACCEPT_UNKNOWN_TOKEN);
+        super(builder);
     }
 
     // To get a builder that has already been pre-initialized
@@ -28,22 +28,22 @@ public final class FactoryHubSample extends FactoryHub<FactoryHubSample> {
                             .on(INTEGER).apply(host -> host.anyBits(Integer.SIZE).intValue());
     }
 
+    @Override
+    protected final FactoryHubSample getContext() {
+        return this;
+    }
+
     // A basic method to be provided by the context ...
     public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, random);
     }
 
-    // Definition of the builder ...
-    public static class Builder {
+    // Definition of a builder for a FactoryHubSample ...
+    public static class Builder extends Collector<FactoryHubSample, Builder> {
 
-        // ... which in this case contains a FactoryHub.Collector
-        //     (it could also be derived from it instead)
-        private final FactoryHub.Collector<FactoryHubSample> collector = new FactoryHub.Collector<>();
-
-        // In order to implement the two-stage builder pattern as proposed by the collector,
-        // this method delegates to the collector ...
-        public final <T> Function<Function<FactoryHubSample, T>, Builder> on(final T token) {
-            return collector.on(token, this);
+        @Override
+        protected final Builder getBuilder() {
+            return this;
         }
 
         // finally the typical production method ...
