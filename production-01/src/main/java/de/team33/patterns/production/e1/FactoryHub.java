@@ -3,6 +3,7 @@ package de.team33.patterns.production.e1;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -210,9 +211,8 @@ public abstract class FactoryHub<C> {
      * @see #map(Map)
      */
     public final <K, V> Map<K, V> map(final K keyToken, final V valueToken, final int size) {
-        return stream(keyToken).distinct()
-                               .limit(size)
-                               .collect(Collectors.toMap(key -> key, key -> get(valueToken)));
+        return stream(keyToken).limit(size)
+                               .collect(TreeMap::new, (map, key) -> map.put(key, get(valueToken)), Map::putAll);
     }
 
     /**

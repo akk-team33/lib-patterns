@@ -5,6 +5,9 @@ import java.util.Random;
 
 /**
  * Represents a factory for bit sequences or bit patterns of variable length.
+ * <p>
+ * It is primarily intended as a random generator.
+ * For certain purposes, however, there can also be deterministic implementations.
  */
 @FunctionalInterface
 public interface BitFactory {

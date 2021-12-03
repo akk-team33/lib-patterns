@@ -7,22 +7,25 @@ import java.util.stream.Stream;
 
 /**
  * Represents a factory for values of many basic types, including {@link String} and {@link BigInteger},
- * based on a {@link BitFactory}. Mainly intended to serve as a randomizer when implemented appropriately.
+ * based on a {@link BitFactory}.
+ * <p>
+ * It is primarily intended as a random generator.
+ * For certain purposes, however, there can also be deterministic implementations.
  */
 @FunctionalInterface
-public interface XFactory extends BitFactory {
+public interface XRandom extends BitFactory {
 
     /**
      * Creates a new instance backed by a given {@link BitFactory}.
      */
-    static XFactory using(final BitFactory backing) {
+    static XRandom using(final BitFactory backing) {
         return backing::anyBits;
     }
 
     /**
      * Creates a new instance backed by a given {@link Random} instance.
      */
-    static XFactory using(final Random random) {
+    static XRandom using(final Random random) {
         return using(BitFactory.using(random));
     }
 
@@ -79,8 +82,8 @@ public interface XFactory extends BitFactory {
      * Returns a {@code float} value between zero (incl.) and one (excl.).
      */
     default float anyFloat() {
-        final float numerator = anyBits(XFactoryUtil.FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(XFactoryUtil.FLOAT_RESOLUTION).floatValue();
+        final float numerator = anyBits(RandomUtil.FLOAT_RESOLUTION).floatValue();
+        final float denominator = BigInteger.ONE.shiftLeft(RandomUtil.FLOAT_RESOLUTION).floatValue();
         return numerator / denominator;
     }
 
@@ -88,8 +91,8 @@ public interface XFactory extends BitFactory {
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      */
     default double anyDouble() {
-        final double numerator = anyBits(XFactoryUtil.DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(XFactoryUtil.DOUBLE_RESOLUTION).doubleValue();
+        final double numerator = anyBits(RandomUtil.DOUBLE_RESOLUTION).doubleValue();
+        final double denominator = BigInteger.ONE.shiftLeft(RandomUtil.DOUBLE_RESOLUTION).doubleValue();
         return numerator / denominator;
     }
 
@@ -97,9 +100,9 @@ public interface XFactory extends BitFactory {
      * Returns any {@code char} value that {@linkplain Character#isDefined(char) is defined}.
      */
     default char anyChar() {
-        char result = XFactoryUtil.anyRawChar(this);
+        char result = RandomUtil.anyRawChar(this);
         while (!Character.isDefined(result)) {
-            result = XFactoryUtil.anyRawChar(this);
+            result = RandomUtil.anyRawChar(this);
         }
         return result;
     }
@@ -118,7 +121,7 @@ public interface XFactory extends BitFactory {
      */
     default BigInteger anyBigInteger(final BigInteger bound) {
         if (BigInteger.ZERO.compareTo(bound) < 0) {
-            final int numBits = bound.bitLength() + XFactoryUtil.BIG_RESOLUTION;
+            final int numBits = bound.bitLength() + RandomUtil.BIG_RESOLUTION;
             final BigInteger numerator = bound.multiply(anyBits(numBits));
             final BigInteger denominator = BigInteger.ONE.shiftLeft(numBits);
             return numerator.divide(denominator);
