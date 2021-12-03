@@ -1,24 +1,24 @@
 package de.team33.patterns.production.e1;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.lang.String.format;
+import static java.util.Collections.unmodifiableMap;
 
 /**
- * A hub of methods for creating instances of virtually any type.
+ * A hub of methods for creating instances of virtually any type under constant conditions.
  * <p>
  * A method is identified by a <em>token</em> (a constant) of the respective result type and called indirectly via
  * {@link #get(Object)}.
  * <p>
- * When a method is called, it is parameterized internally with a context of a certain type.
- * This is specified when the hub is initialized. Externally, apart from the identification of the method via the
+ * When a method is called, it is parameterized internally with a context of a certain type that is predefined
+ * when the hub is initialized. Externally, apart from the identification of the method via the
  * <em>token</em>, no further parameterization is required.
  * <p>
  * In addition to the central method {@link #get(Object)} mentioned above, a hub provides additional methods
@@ -29,8 +29,9 @@ import static java.lang.String.format;
  * Instances that contain a {@link FactoryHub} or are an extended {@link FactoryHub} itself are typically used as
  * context, so that the methods that are assigned to a {@link FactoryHub} can be used by other such methods.
  * <p>
- * A class intended to serve as the context of a {@link FactoryHub} will either contain a {@link FactoryHub}
- * or be derived from it. The following example shows a derivation:
+ * Types that contain a {@link FactoryHub} or are themselves extended {@link FactoryHub}s are typically used
+ * as context type, so that the methods assigned to a FactoryHub can be used by other such methods.
+ * The following example shows a derivation:
  * <pre>
  * public final class FactoryHubSample extends FactoryHub&lt;FactoryHubSample&gt; {
  *
@@ -38,40 +39,45 @@ import static java.lang.String.format;
  *     public static final Byte BYTE = Byte.MAX_VALUE;
  *     public static final Short SHORT = Short.MAX_VALUE;
  *     public static final Integer INTEGER = Integer.MAX_VALUE;
+ *     public static final Long LONG = Long.MAX_VALUE;
  *
  *     private final Random random = new Random();
  *
  *     // The instantiation takes place via a builder pattern ...
  *     private FactoryHubSample(final Builder builder) {
- *         super(builder.collector, FactoryHubSample.class, ACCEPT_UNKNOWN_TOKEN);
+ *         super(builder);
  *     }
  *
  *     // To get a builder that has already been pre-initialized
  *     // with the tokens defined above and corresponding methods ...
  *     public static Builder builder() {
- *         return new Builder().on(BYTE).apply(ctx -&gt; ctx.createBits(Byte.SIZE).byteValue())
- *                             .on(SHORT).apply(ctx -&gt; ctx.createBits(Short.SIZE).shortValue())
- *                             .on(INTEGER).apply(ctx -&gt; ctx.createBits(Integer.SIZE).intValue());
+ *         return new Builder().on(BYTE).apply(context -&gt; context.anyBits(Byte.SIZE).byteValue())
+ *                             .on(SHORT).apply(context -&gt; context.anyBits(Short.SIZE).shortValue())
+ *                             .on(INTEGER).apply(context -&gt; context.anyBits(Integer.SIZE).intValue())
+ *                             .on(LONG).apply(context -&gt; context.anyBits(Long.SIZE).longValue());
  *     }
  *
- *     // A basic method to be provided by the context ...
- *     public final BigInteger createBits(final int numBits) {
+ *     // Implementation of the method that provides the context ...
+ *     &#64;Override
+ *     protected final FactoryHubSample getContext() {
+ *         return this;
+ *     }
+ *
+ *     // A basic method to be provided by this context ...
+ *     public final BigInteger anyBits(final int numBits) {
  *         return new BigInteger(numBits, random);
  *     }
  *
- *     // Definition of the builder ...
- *     public static class Builder {
+ *     // Definition of a Builder for a new instance ...
+ *     public static class Builder extends Collector&lt;FactoryHubSample, Builder&gt; {
  *
- *         // ... which in this case contains a FactoryHub.Collector (it could also be derived from it instead)
- *         private final FactoryHub.Collector&lt;FactoryHubSample&gt; collector = new FactoryHub.Collector&lt;&gt;();
- *
- *         // In order to implement the two-stage builder pattern as proposed by the collector,
- *         // this method delegates to the collector ...
- *         public final &lt;T&gt; Function&lt;Function&lt;FactoryHubSample, T&gt;, Builder&gt; on(final T token) {
- *             return collector.on(token, this);
+ *         // Implementation of the method that provides the Builder as such for the underlying Collector ...
+ *         &#64;Override
+ *         protected final Builder getBuilder() {
+ *             return this;
  *         }
  *
- *         // finally the typical production method ...
+ *         // finally the typical production method of the Builder ...
  *         public final FactoryHubSample build() {
  *             return new FactoryHubSample(this);
  *         }
@@ -81,6 +87,7 @@ import static java.lang.String.format;
  *
  * @param <C> The type of the context.
  */
+@SuppressWarnings("BoundedWildcard")
 public abstract class FactoryHub<C> {
 
     @SuppressWarnings("rawtypes")
@@ -91,13 +98,28 @@ public abstract class FactoryHub<C> {
      * Initializes a new instance.
      */
     protected FactoryHub(final Collector<C, ?> collector) {
-        this.methods = copyOf(collector);
+        this.methods = unmodifiableMap(new HashMap<>(collector.methods));
         this.unknownTokenListener = collector.unknownTokenListener;
     }
 
-    @SuppressWarnings("rawtypes")
-    private static <C> Map<Object, Function> copyOf(final Collector<C, ?> collector) {
-        return Collections.unmodifiableMap(new HashMap<>(collector.methods));
+    /**
+     * Returns a new generic instance of {@link FactoryHub}.
+     */
+    @SuppressWarnings({"AnonymousInnerClass", "WeakerAccess"})
+    public static <C> FactoryHub<C> instance(final Collector<C, ?> collector, final Supplier<C> contextGetter) {
+        return new FactoryHub<C>(collector) {
+            @Override
+            protected C getContext() {
+                return contextGetter.get();
+            }
+        };
+    }
+
+    /**
+     * Returns a new generic instance of {@link Builder}.
+     */
+    public static <C> Builder<C> builder(final Supplier<C> contextGetter) {
+        return new Builder<>(contextGetter);
     }
 
     @SuppressWarnings("unchecked")
@@ -242,7 +264,7 @@ public abstract class FactoryHub<C> {
      */
     public abstract static class Collector<C, B> {
 
-        private final Map<Object, Function<C, ?>> methods = new HashMap<>();
+        private final Map<Object, Function<C, ?>> methods = new HashMap<>(0);
         private Consumer<Object> unknownTokenListener = FactoryUtil.ACCEPT_UNKNOWN_TOKEN;
 
         /**
@@ -280,4 +302,33 @@ public abstract class FactoryHub<C> {
         }
     }
 
+    /**
+     * A generic Builder implementation.
+     *
+     * @param <C> The type of the context of a resulting {@link FactoryHub}.
+     * @see #builder(Supplier)
+     */
+    public static final class Builder<C> extends Collector<C, Builder<C>> {
+
+        private final Supplier<C> contextGetter;
+
+        private Builder(final Supplier<C> contextGetter) {
+            this.contextGetter = contextGetter;
+        }
+
+        /**
+         * @return {@code this}
+         */
+        @Override
+        protected final Builder<C> getBuilder() {
+            return this;
+        }
+
+        /**
+         * Returns a new instance of {@link FactoryHub}.
+         */
+        public final FactoryHub<C> build() {
+            return instance(this, contextGetter);
+        }
+    }
 }

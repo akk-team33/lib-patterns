@@ -15,12 +15,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FactoryHubTest {
 
@@ -42,18 +37,18 @@ public class FactoryHubTest {
     private final FactoryHub<FactoryHubTest> factoryHub;
 
     FactoryHubTest() {
-        factoryHub = FactoryUtil.builder(() -> this)
-                                .on(INTEGER).apply(ctx -> INTEGER)
-                                .on(DATE).apply(ctx -> DATE)
-                                .on(STRING).apply(ctx -> STRING)
-                                .on(INT_LIST).apply(ctx -> new LinkedList<>(INT_LIST))
-                                .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
-                                .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
-                                .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
-                                .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap,
-                                                                              Mappable::new))
-                                .setUnknownTokenListener(FactoryUtil.DENY_UNKNOWN_TOKEN)
-                                .build();
+        factoryHub = FactoryHub.builder(() -> this)
+                               .on(INTEGER).apply(ctx -> INTEGER)
+                               .on(DATE).apply(ctx -> DATE)
+                               .on(STRING).apply(ctx -> STRING)
+                               .on(INT_LIST).apply(ctx -> new LinkedList<>(INT_LIST))
+                               .on(INT_MAP).apply(ctx -> new TreeMap<>(INT_MAP))
+                               .on(DOUBLE).apply(ctx -> ctx.random.nextDouble())
+                               .on(BIG_INTEGER).apply(ctx -> new BigInteger(128, ctx.random))
+                               .on(MAPPABLE).apply(ctx -> ctx.factoryHub.map(MAPPABLE, Mappable::toMap,
+                                                                             Mappable::new))
+                               .setUnknownTokenListener(FactoryUtil.DENY_UNKNOWN_TOKEN)
+                               .build();
     }
 
     @Test
