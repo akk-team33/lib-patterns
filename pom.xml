@@ -45,6 +45,7 @@
         <module>exceptional-01</module>
         <module>lazy-01</module>
         <module>pooling-01</module>
+        <module>patterns-bom</module>
     </modules>
 
     <dependencyManagement>

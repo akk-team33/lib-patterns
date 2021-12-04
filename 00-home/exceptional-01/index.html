@@ -14,12 +14,41 @@
     <li><a href="apidocs/">Java Doc</a></li>
 </ul>
 <h2>Maven</h2>
+<h3>Single dependency to <em>de.team33.patterns:exceptional-01</em> ...</h3>
 <pre>
-    &lt;dependency&gt;
-        &lt;groupId&gt;de.team33.patterns&lt;/groupId&gt;
-        &lt;artifactId&gt;exceptional-01&lt;/artifactId&gt;
-        &lt;version&gt;1.0.2-SNAPSHOT&lt;/version&gt;
-    &lt;/dependency&gt;
+    &lt;dependencies&gt;
+        &lt;!-- ... --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;de.team33.patterns&lt;/groupId&gt;
+            &lt;artifactId&gt;exceptional-01&lt;/artifactId&gt;
+            &lt;version&gt;1.0.2-SNAPSHOT&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;!-- ... --&gt;
+    &lt;/dependencies&gt;
+</pre>
+<h3>Multiple dependencies to group <em>de.team33.patterns</em> ...</h3>
+<pre>
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;!-- ... --&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;de.team33.patterns&lt;/groupId&gt;
+                &lt;artifactId&gt;patterns-bom&lt;/artifactId&gt;
+                &lt;version&gt;1.0.2-SNAPSHOT&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+            &lt;!-- ... --&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;!-- ... --&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;de.team33.patterns&lt;/groupId&gt;
+            &lt;artifactId&gt;exceptional-01&lt;/artifactId&gt;
+        &lt;/dependency&gt;
+        &lt;!-- ... --&gt;
+    &lt;/dependencies&gt;
 </pre>
 </body>
 </html>

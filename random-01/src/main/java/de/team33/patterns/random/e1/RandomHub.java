@@ -198,7 +198,7 @@ public final class RandomHub implements XRandom {
         }
 
         /**
-         * Specifies a {@link BitFactory} that will underlie a resulting instance of {@link RandomHub}.
+         * Specifies a producer for a {@link BitFactory} that will underlie a resulting instance of {@link RandomHub}.
          * <p>
          * Overwrites a previous definition by {@link #setNewRandom(Supplier)}, if one has been made.
          *
@@ -210,7 +210,8 @@ public final class RandomHub implements XRandom {
         }
 
         /**
-         * Specifies a {@link Random} that will underlie a resulting instance of {@link RandomHub}.
+         * Specifies a producer for a {@link Random} instance that will underlie a resulting instance of
+         * {@link RandomHub}.
          * <p>
          * Overwrites a previous definition by {@link #setNewBitFactory(Supplier)}, if one has been made.
          *

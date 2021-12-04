@@ -8,6 +8,7 @@ Team33 Patterns Library Collection
 * pooling-01 (Team33 Pooling Library - Edition 1)
 * production-01 (Team33 Production Library - Edition 1)
 * random-01 (Team33 Randomization Library - Edition 1)
+* patterns-bom (Team33 Patterns Library BOM)
 
 ## Home
 

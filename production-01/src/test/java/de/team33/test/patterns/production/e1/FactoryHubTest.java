@@ -86,8 +86,10 @@ public class FactoryHubTest {
 
     @Test
     final void map_k_v_sized() {
-        final Map<String, Date> result = factoryHub.map(STRING, DATE, 1);
-        assertEquals(Collections.singletonMap(STRING, DATE), result);
+        // STRING results in STRING each time -> resulting size should be 1 ...
+        assertEquals(Collections.singletonMap(STRING, DATE), factoryHub.map(STRING, DATE, 5));
+        // BIG_INTEGER results in random values -> resulting size should be 5 ...
+        assertEquals(5, factoryHub.map(BIG_INTEGER, DATE, 5).size());
     }
 
     @Test

@@ -202,6 +202,9 @@ public abstract class FactoryHub<C> {
      * Produces a {@link Map} of a given {@code size} whose keys are {@link #get(Object) produced} based on
      * the given {@code keyToken} and whose values are {@link #get(Object) produced} based on the given
      * {@code valueToken}.
+     * <p>
+     * The {@linkplain Map#size() size} of the resulting map may be less than the requested {@code size}
+     * if the method for key generation returns the same values over several calls.
      *
      * @param <K> The type of keys of the resulting {@link Map}.
      * @param <V> The type of values of the resulting {@link Map}.
