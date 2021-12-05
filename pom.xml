@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Collection</name>
@@ -36,19 +36,32 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <copyright.year>2021</copyright.year>
-        <skipHome>true</skipHome>
+        <skipHome>false</skipHome>
     </properties>
 
     <modules>
+        <module>production-01</module>
+        <module>random-01</module>
         <module>exceptional-01</module>
         <module>lazy-01</module>
         <module>pooling-01</module>
         <module>properties-01</module>
+        <module>patterns-bom</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <!-- Submodules -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>production-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-01</artifactId>
@@ -91,6 +104,11 @@
             <plugins>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
                     <version>3.2.1</version>
                 </plugin>
@@ -106,7 +124,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
+                    <version>3.0.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

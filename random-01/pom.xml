@@ -8,20 +8,20 @@
         <version>1.1.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lazy-01</artifactId>
+    <artifactId>random-01</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Lazy Initialization Library - Edition 1</name>
-    <description>Provides generic envelope classes that support lazy initialization</description>
+    <name>Team33 Randomization Library - Edition 1</name>
+    <description>Provides classes that support the random generation / initialization of virtually any type.</description>
 
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-01</artifactId>
+            <artifactId>production-01</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
