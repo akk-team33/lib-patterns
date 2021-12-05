@@ -2,6 +2,7 @@ package de.team33.test.patterns.properties.e2;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e2.BiMapping;
+import de.team33.patterns.properties.e2.Fields;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -41,7 +42,9 @@ class BiMappingTest {
                                               .add("aDouble", AnyClass::getADouble, AnyClass::setADouble)
                                               .add("aString", AnyClass::getAString, AnyClass::setAString)
                                               .add("aDate", AnyClass::getADate, AnyClass::setADate)
-                                              .build());
+                                              .build()),
+
+        BI_MAPPING_BY_FIELDS_DEEP(() -> Fields.mapping(AnyClass.class, Fields.Mode.DEEP));
 
         final Supplier<BiMapping<AnyClass>> mapping;
 

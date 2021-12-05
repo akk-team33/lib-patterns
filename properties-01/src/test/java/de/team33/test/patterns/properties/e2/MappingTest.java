@@ -2,6 +2,7 @@ package de.team33.test.patterns.properties.e2;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e2.BiMapping;
+import de.team33.patterns.properties.e2.Fields;
 import de.team33.patterns.properties.e2.Mapping;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import de.team33.test.patterns.properties.shared.MapMode;
@@ -56,7 +57,13 @@ class MappingTest {
                                               .add("aString", AnyClass::getAString, AnyClass::setAString)
                                               .add("aDate", AnyClass::getADate, AnyClass::setADate)
                                               .build(), //
-                               template -> template.toMap(MapMode.DEEP));
+                               template -> template.toMap(MapMode.DEEP)),
+
+        BI_MAPPING_BY_FIELDS_FLAT(() -> Fields.mapping(AnyClass.class, Fields.Mode.FLAT),
+                                  template -> template.toMap(MapMode.STRAIGHT)),
+
+        BI_MAPPING_BY_FIELDS_DEEP(() -> Fields.mapping(AnyClass.class, Fields.Mode.DEEP),
+                                  template -> template.toMap(MapMode.PREFIXED));
 
         final Supplier<Mapping<AnyClass>> mapping;
 
