@@ -3,7 +3,7 @@ package de.team33.patterns.properties.e2;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public interface Accessor<T, V> extends Function<T, V>, BiConsumer<T, V> {
+interface Accessor<T, V> extends Function<T, V>, BiConsumer<T, V> {
 
     static <T, V> Accessor<T, V> combine(final Function<T, V> getter,
                                          final BiConsumer<T, V> setter) {
