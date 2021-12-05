@@ -1,6 +1,6 @@
-package de.team33.test.patterns.properties.e1.samples;
+package de.team33.samples.patterns.properties.e2;
 
-import de.team33.patterns.properties.e1.Mapping;
+import de.team33.patterns.properties.e2.Mapping;
 
 import java.util.ArrayList;
 import java.util.Collections;

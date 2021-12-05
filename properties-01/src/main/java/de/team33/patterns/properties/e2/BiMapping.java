@@ -26,6 +26,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
         return new Builder<T>().add(name, getter, setter);
     }
 
+    TargetOperation<T> copy(T origin);
 
     /**
      * Defines a builder for the declarative creation of a {@link BiMapping}.
@@ -37,17 +38,22 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
         @SuppressWarnings("rawtypes")
         private final Map<String, Accessor> backing = new TreeMap<>();
 
-        @SuppressWarnings({"unchecked", "rawtypes"})
-        private static <T> BiMapping<T> newMapping(final Map<String, Accessor> accessors) {
+        @SuppressWarnings({"rawtypes", "unchecked", "AnonymousInnerClass"})
+        private static <T> BiMapping<T> newMapping(final Map accessors) {
             return new BiMapping<T>() {
                 @Override
                 public TargetOperation<Map<String, Object>> map(final T origin) {
-                    return new MappingOperation(accessors, origin);
+                    return MappingUtil.mappingOperation(accessors, origin);
                 }
 
                 @Override
                 public TargetOperation<T> remap(final Map<?, ?> origin) {
-                    return new ReMappingOperation(accessors, origin);
+                    return MappingUtil.reMappingOperation(accessors, origin);
+                }
+
+                @Override
+                public TargetOperation<T> copy(final T origin) {
+                    return MappingUtil.copyOperation(accessors, origin);
                 }
             };
         }
@@ -55,7 +61,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
         /**
          * Adds a link between name and getter method, which represents a property of the associated type.
          *
-         * @return This.
+         * @return {@code this}.
          */
         public final <V> Builder<T> add(final String name,
                                         final Function<T, V> getter,

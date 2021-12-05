@@ -9,8 +9,7 @@ import java.util.function.BiConsumer;
 
 
 /**
- * Abstracts a tool which can re-map properties of an instance of a certain type in a certain way from a
- * {@link Map}.
+ * Abstracts a tool which can re-map properties of an instance of a certain type from a {@link Map}.
  *
  * @param <T> The type whose properties are to be re-mapped.
  */
@@ -31,7 +30,7 @@ public interface ReMapping<T> {
      * Results in a {@link TargetOperation} for a given origin {@link Map},
      * which can map its entries as properties into an instance of the associated type.
      */
-    TargetOperation<T> remap(final Map<?, ?> origin);
+    TargetOperation<T> remap(Map<?, ?> origin);
 
     /**
      * Defines a builder for the declarative creation of a {@link ReMapping}.
@@ -44,15 +43,14 @@ public interface ReMapping<T> {
         private final Map<String, BiConsumer> backing = new TreeMap<>();
 
         @SuppressWarnings({"rawtypes", "unchecked"})
-        private static <T> ReMapping<T> newMapping(final Map backing) {
-            final Map<String, BiConsumer<T, Object>> setters = Collections.unmodifiableMap(new TreeMap<>(backing));
-            return origin -> new ReMappingOperation<>(setters, origin);
+        private static <T> ReMapping<T> newMapping(final Map setters) {
+            return origin -> MappingUtil.reMappingOperation(setters, origin);
         }
 
         /**
          * Adds a link between name and setter method, which represents a property of the associated type.
          *
-         * @return This.
+         * @return {@code this}.
          */
         public final <V> Builder<T> add(final String name, final BiConsumer<T, V> setter) {
             backing.put(name, setter);
