@@ -1,4 +1,4 @@
-package de.team33.patterns.properties.e2;
+package de.team33.patterns.properties.e1;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

@@ -1,9 +1,9 @@
 package de.team33.test.patterns.properties.e2;
 
 import de.team33.patterns.pooling.e1.Provider;
-import de.team33.patterns.properties.e2.BiMapping;
-import de.team33.patterns.properties.e2.Fields;
-import de.team33.patterns.properties.e2.ReMapping;
+import de.team33.patterns.properties.e1.BiMapping;
+import de.team33.patterns.properties.e1.Fields;
+import de.team33.patterns.properties.e1.ReMapping;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import de.team33.test.patterns.properties.shared.MapMode;
 import org.junit.jupiter.params.ParameterizedTest;
