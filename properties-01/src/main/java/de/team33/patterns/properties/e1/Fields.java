@@ -69,7 +69,7 @@ public final class Fields {
                 try {
                     return field.get(t);
                 } catch (final IllegalAccessException e) {
-                    throw new IllegalArgumentException("not yet implemented", e);
+                    throw new IllegalArgumentException(e.getMessage(), e);
                 }
             }
         };

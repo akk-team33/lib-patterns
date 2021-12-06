@@ -4,6 +4,7 @@ import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1.BiMapping;
 import de.team33.patterns.properties.e1.Fields;
 import de.team33.patterns.properties.e1.Mapping;
+import de.team33.patterns.properties.e1.Methods;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import de.team33.test.patterns.properties.shared.MapMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -48,6 +49,9 @@ class MappingTest {
                                          .add("aDate", AnyClass::getADate)
                                          .build(), //
                             template -> template.toMap(MapMode.DEEP)),
+
+        MAPPING_BY_GETTERS(() -> Methods.mapping(AnyClass.class),
+                           template -> template.toMap(MapMode.DEEP)),
 
         BI_MAPPING_DECLARATIVE(() -> BiMapping.add("aLong", AnyClass::getALong, AnyClass::setALong)
                                               .add("aBigDecimal", AnyClass::getABigDecimal, AnyClass::setABigDecimal)
