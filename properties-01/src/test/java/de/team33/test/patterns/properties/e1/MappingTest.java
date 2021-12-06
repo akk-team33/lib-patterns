@@ -1,4 +1,4 @@
-package de.team33.test.patterns.properties.e2;
+package de.team33.test.patterns.properties.e1;
 
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1.BiMapping;

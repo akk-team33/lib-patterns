@@ -24,6 +24,10 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
         return new Builder<T>().add(name, getter, setter);
     }
 
+    /**
+     * Results in a {@link TargetOperation} for a given origin instance of the associated type,
+     * which can copy its properties into another instance of that type.
+     */
     TargetOperation<T> copy(T origin);
 
     /**
