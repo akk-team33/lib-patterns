@@ -1,12 +1,9 @@
 package de.team33.patterns.properties.e2;
 
-import de.team33.patterns.properties.e1.TargetOperation;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Stream;
 

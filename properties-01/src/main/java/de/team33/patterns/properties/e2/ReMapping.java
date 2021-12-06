@@ -1,7 +1,5 @@
 package de.team33.patterns.properties.e2;
 
-import de.team33.patterns.properties.e1.TargetOperation;
-
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
