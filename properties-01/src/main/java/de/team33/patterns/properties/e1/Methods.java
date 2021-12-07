@@ -3,11 +3,14 @@ package de.team33.patterns.properties.e1;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
@@ -81,6 +84,29 @@ public final class Methods {
         return origin -> MappingUtil.mappingOperation(getters, origin);
     }
 
+    public static <T> BiMapping<T> biMapping(final Class<T> tClass) {
+        final Supplier<Selector<T>> newSelector = Selector::new;
+        final Map<String, Accessor<T, Object>> methods = Stream.of(tClass.getMethods())
+                                                               .collect(newSelector, Selector::add, Selector::addAll)
+                                                               .toMethods();
+        return new AccessorMapping<>(methods);
+    }
+
+    private static class Selector<T> {
+
+        private void add(final Method method) {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+
+        private void addAll(final Selector<T> other) {
+            throw new UnsupportedOperationException("Unexpectedly called");
+        }
+
+        public <T> Map<String, Accessor<T, Object>> toMethods() {
+            throw new UnsupportedOperationException("not yet implemented");
+        }
+    }
+
     private enum Prefix {
         get, is, set
     }
@@ -99,4 +125,5 @@ public final class Methods {
                     : EnumSet.copyOf(Arrays.asList(prefixes));
         }
     }
+
 }

@@ -87,27 +87,10 @@ public final class Fields {
      *
      * @param <T> The type that is represented by the given {@link Class}.
      */
-    @SuppressWarnings("AnonymousInnerClass")
     public static <T> BiMapping<T> mapping(final Class<T> tClass, final Mode mode) {
-        final Map<String, Accessor<T, Object>> accessors = mode.streaming.apply(tClass)
-                                                                         .collect(toMap(mode.namingOf(tClass),
-                                                                                        Fields::newAccessor));
-        return new BiMapping<T>() {
-            @Override
-            public TargetOperation<T> copy(final T origin) {
-                return MappingUtil.copyOperation(accessors, origin);
-            }
-
-            @Override
-            public TargetOperation<Map<String, Object>> map(final T origin) {
-                return MappingUtil.mappingOperation(accessors, origin);
-            }
-
-            @Override
-            public TargetOperation<T> remap(final Map<?, ?> origin) {
-                return MappingUtil.reMappingOperation(accessors, origin);
-            }
-        };
+        return new AccessorMapping<>(mode.streaming.apply(tClass)
+                                                   .collect(toMap(mode.namingOf(tClass),
+                                                                  Fields::newAccessor)));
     }
 
     /**
