@@ -26,6 +26,16 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
     }
 
     /**
+     * Returns a new instance combining a {@link Mapping} and a {@link ReMapping}.
+     * <p>
+     * <em>WARNING:</em> There are several circumstances that can lead to a result that will not work properly.
+     * Therefore, an application of this method should be carefully tested!
+     */
+    static <T> BiMapping<T> combine(final Mapping<T> mapping, final ReMapping<T> reMapping) {
+        return new ComboMapping<>(mapping, reMapping);
+    }
+
+    /**
      * Results in a {@link TargetOperation} for a given origin instance of the associated type,
      * which can copy its properties into another instance of that type.
      */
@@ -80,4 +90,5 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
             return newMapping(Collections.unmodifiableMap(new TreeMap<>(backing)));
         }
     }
+
 }

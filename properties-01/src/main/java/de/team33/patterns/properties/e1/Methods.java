@@ -3,6 +3,8 @@ package de.team33.patterns.properties.e1;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
@@ -77,5 +79,24 @@ public final class Methods {
                                                                .collect(toMap(Methods::getterName,
                                                                               Methods::newGetter));
         return origin -> MappingUtil.mappingOperation(getters, origin);
+    }
+
+    private enum Prefix {
+        get, is, set
+    }
+
+    private enum Typ {
+
+        GETTER(Prefix.get, Prefix.is),
+        SETTER(Prefix.set),
+        OTHER();
+
+        private final EnumSet<Prefix> prefixes;
+
+        Typ(final Prefix ... prefixes) {
+            this.prefixes = (0 == prefixes.length)
+                    ? EnumSet.noneOf(Prefix.class)
+                    : EnumSet.copyOf(Arrays.asList(prefixes));
+        }
     }
 }
