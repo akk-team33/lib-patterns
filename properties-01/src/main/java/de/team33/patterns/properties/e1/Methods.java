@@ -10,6 +10,12 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * A utility for handling {@link Method}s. In particular, it can generate a {@link Mapping} based on the
+ * getter {@link Method}s of a specific class.
+ *
+ * @see #mapping(Class)
+ */
 public final class Methods {
 
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.NATIVE;

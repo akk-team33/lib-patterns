@@ -8,7 +8,8 @@ import java.util.function.Function;
 
 
 /**
- * A combination of {@link Mapping} and {@link ReMapping} for instances of an associated type.
+ * Abstracts a tool which can bidirectionally map properties of an instance of a certain type to and from a
+ * {@link Map}. In Addition, it can copy the properties from one instance of the type to another.
  *
  * @param <T> The type whose properties are to be mapped.
  */

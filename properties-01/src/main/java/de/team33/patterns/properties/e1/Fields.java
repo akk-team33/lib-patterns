@@ -9,6 +9,12 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * A utility for handling {@link Field}s. In particular, it can generate a {@link BiMapping} based on the
+ * {@link Field}s of a specific class.
+ *
+ * @see #mapping(Class, Mode)
+ */
 public final class Fields {
 
     private static final int SYNTHETIC = 0x00001000;
@@ -75,11 +81,16 @@ public final class Fields {
         };
     }
 
+    /**
+     * Results in a {@link BiMapping} based on the {@link Field}s of a given {@link Class}.
+     * Which {@link Field}s are taken into account depends on the specified {@code mode}.
+     *
+     * @param <T> The type that is represented by the given {@link Class}.
+     */
     @SuppressWarnings("AnonymousInnerClass")
     public static <T> BiMapping<T> mapping(final Class<T> tClass, final Mode mode) {
-        final Function<Field, String> naming = mode.namingOf(tClass);
         final Map<String, Accessor<T, Object>> accessors = mode.streaming.apply(tClass)
-                                                                         .collect(toMap(naming,
+                                                                         .collect(toMap(mode.namingOf(tClass),
                                                                                         Fields::newAccessor));
         return new BiMapping<T>() {
             @Override
@@ -118,11 +129,12 @@ public final class Fields {
          */
         DEEP(type -> streamDeclaredDeep(type).filter(Fields::isSignificant)
                                              .map(Fields::setAccessible),
-             type -> field -> Fields.prefixed(type, field));
+             type -> field -> prefixed(type, field));
 
         private final Function<Class<?>, Stream<Field>> streaming;
         private final Function<Class<?>, ? extends Function<Field, String>> naming;
 
+        @SuppressWarnings("BoundedWildcard")
         Mode(final Function<Class<?>, Stream<Field>> streaming,
              final Function<Class<?>, ? extends Function<Field, String>> naming) {
             this.streaming = streaming;
