@@ -3,6 +3,7 @@ package de.team33.test.patterns.properties.e1;
 import de.team33.patterns.pooling.e1.Provider;
 import de.team33.patterns.properties.e1.BiMapping;
 import de.team33.patterns.properties.e1.Fields;
+import de.team33.patterns.properties.e1.Methods;
 import de.team33.patterns.properties.e1.ReMapping;
 import de.team33.test.patterns.properties.shared.AnyClass;
 import de.team33.test.patterns.properties.shared.MapMode;
@@ -57,6 +58,9 @@ class ReMappingTest {
                                               .add("aDate", AnyClass::getADate, AnyClass::setADate)
                                               .build(),
                                any -> any.toMap(MapMode.DEEP)),
+
+        BI_MAPPING_BY_GETTERS(() -> Methods.biMapping(AnyClass.class),
+                              template -> template.toMap(MapMode.DEEP)),
 
         BI_MAPPING_BY_FIELDS_DEEP(() -> Fields.mapping(AnyClass.class, Fields.Mode.DEEP),
                                   any -> any.toMap(MapMode.PREFIXED));

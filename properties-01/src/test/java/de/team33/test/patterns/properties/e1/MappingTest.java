@@ -32,7 +32,7 @@ class MappingTest {
         final Map<String, Object> expected = testCase.expected.apply(origin);
 
         // charge ...
-        final Map<String, Object> result = mapping.map(origin).to(new TreeMap<>());
+        final Map<String, Object> result = mapping.toMap(origin);
 
         // verify ...
         assertEquals(expected, result);
@@ -52,6 +52,9 @@ class MappingTest {
 
         MAPPING_BY_GETTERS(() -> Methods.mapping(AnyClass.class),
                            template -> template.toMap(MapMode.DEEP)),
+
+        BI_MAPPING_BY_GETTERS(() -> Methods.biMapping(AnyClass.class),
+                              template -> template.toMap(MapMode.DEEP)),
 
         BI_MAPPING_DECLARATIVE(() -> BiMapping.add("aLong", AnyClass::getALong, AnyClass::setALong)
                                               .add("aBigDecimal", AnyClass::getABigDecimal, AnyClass::setABigDecimal)

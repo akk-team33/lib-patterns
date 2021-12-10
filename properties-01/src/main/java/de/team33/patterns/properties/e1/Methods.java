@@ -1,18 +1,24 @@
 package de.team33.patterns.properties.e1;
 
+import de.team33.patterns.exceptional.e1.Converter;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.security.SecureRandom;
-import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -34,8 +40,12 @@ public final class Methods {
         return isSignificant(method) && isParameterCount(method, 0) && isPrefixed(method, PF_GETTER, PF_BOOL_GETTER);
     }
 
-    private static boolean isPrefixed(final Method method, final String ... prefixes) {
+    private static boolean isPrefixed(final Method method, final String... prefixes) {
         return Stream.of(prefixes).anyMatch(prefix -> method.getName().startsWith(prefix));
+    }
+
+    private static boolean isSingleParam(final Method method) {
+        return isParameterCount(method, 1);
     }
 
     private static boolean isParameterCount(final Method method, final int count) {
@@ -84,46 +94,115 @@ public final class Methods {
         return origin -> MappingUtil.mappingOperation(getters, origin);
     }
 
+    /**
+     * Returns a {@link BiMapping} made up of the public getters and setters of a given class.
+     *
+     * @param <T> The type whose properties are to be mapped.
+     */
     public static <T> BiMapping<T> biMapping(final Class<T> tClass) {
-        final Supplier<Selector<T>> newSelector = Selector::new;
+        final Supplier<BiSelector<T>> newSelector = BiSelector::new;
         final Map<String, Accessor<T, Object>> methods = Stream.of(tClass.getMethods())
-                                                               .collect(newSelector, Selector::add, Selector::addAll)
+                                                               .filter(Methods::isSignificant)
+                                                               .map(Entry::new)
+                                                               .collect(newSelector,
+                                                                        BiSelector::add,
+                                                                        BiSelector::addAll)
                                                                .toMethods();
-        return new AccessorMapping<>(methods);
+        return new AccMapping<>(methods);
     }
 
     private static class Selector<T> {
+    }
 
-        private void add(final Method method) {
-            throw new UnsupportedOperationException("not yet implemented");
+    private static class BiSelector<T> {
+
+        private static final Converter CONVERTER =
+                Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
+
+        private final List<Entry> getters = new LinkedList<>();
+        private final Map<String, List<Entry>> setters = new TreeMap<>();
+
+        private static Method setter(final Class<?> paramType, final List<Entry> setters) {
+            return setters.stream()
+                          .map(setter -> setter.method)
+                          .filter(setter -> setter.getParameterTypes()[0].isAssignableFrom(paramType))
+                          .findAny()
+                          .orElseThrow(() -> new IllegalStateException(
+                                  format("No setter found matching parameter type %s in %s", paramType, setters)));
         }
 
-        private void addAll(final Selector<T> other) {
+        private void add(final Entry entry) {
+            if (entry.prefix.isGetter() && isParameterCount(entry.method, 0)) {
+                getters.add(entry);
+            }
+            if (entry.prefix.isSetter() && isParameterCount(entry.method, 1)) {
+                setters.computeIfAbsent(entry.normalName(), name -> new LinkedList<>())
+                       .add(entry);
+            }
+        }
+
+        private void addAll(final BiSelector<T> other) {
             throw new UnsupportedOperationException("Unexpectedly called");
         }
 
-        public <T> Map<String, Accessor<T, Object>> toMethods() {
-            throw new UnsupportedOperationException("not yet implemented");
+        private Map<String, Accessor<T, Object>> toMethods() {
+            return getters.stream()
+                          .collect(toMap(Entry::normalName, this::toAccessor));
+        }
+
+        private Accessor<T, Object> toAccessor(final Entry getterEntry) {
+            final Method getter = getterEntry.method;
+            final String name = getterEntry.normalName();
+            final Method setter = setter(getter.getReturnType(), setters.get(name));
+            return toAccessor(getter, setter);
+        }
+
+        private Accessor<T, Object> toAccessor(final Method getter, final Method setter) {
+            return Accessor.combine(CONVERTER.function(getter::invoke), CONVERTER.biConsumer(setter::invoke));
+        }
+    }
+
+    private static class Entry {
+
+        private final Prefix prefix;
+        private final Method method;
+
+        Entry(final Method method) {
+            this.prefix = Stream.of(Prefix.values()).filter(isPrefix(method)).findAny().orElse(Prefix.NONE);
+            this.method = method;
+        }
+
+        static Predicate<Prefix> isPrefix(final Method method) {
+            return prefix -> method.getName().startsWith(prefix.name());
+        }
+
+        final String normalName() {
+            final String methodName = method.getName();
+            final int index0 = prefix.length;
+            final int index1 = index0 + ((index0 < methodName.length()) ? 1 : 0);
+            return methodName.substring(index0, index1).toLowerCase(Locale.ROOT) + methodName.substring(index1);
         }
     }
 
     private enum Prefix {
-        get, is, set
-    }
 
-    private enum Typ {
+        get(true), is(true), set(true), NONE(false);
 
-        GETTER(Prefix.get, Prefix.is),
-        SETTER(Prefix.set),
-        OTHER();
+        private static final Set<Prefix> GETTERS = unmodifiableSet(EnumSet.of(get, is));
+        private static final Set<Prefix> SETTERS = unmodifiableSet(EnumSet.of(set));
 
-        private final EnumSet<Prefix> prefixes;
+        private final int length;
 
-        Typ(final Prefix ... prefixes) {
-            this.prefixes = (0 == prefixes.length)
-                    ? EnumSet.noneOf(Prefix.class)
-                    : EnumSet.copyOf(Arrays.asList(prefixes));
+        Prefix(final boolean real) {
+            this.length = real ? name().length() : 0;
+        }
+
+        final boolean isGetter() {
+            return GETTERS.contains(this);
+        }
+
+        final boolean isSetter() {
+            return SETTERS.contains(this);
         }
     }
-
 }

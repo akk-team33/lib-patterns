@@ -1,8 +1,9 @@
 package de.team33.patterns.properties.e1;
 
+import de.team33.patterns.exceptional.e1.Converter;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -19,6 +20,8 @@ public final class Fields {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
+    private static final Converter CONVERTER =
+            Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
 
     private Fields() {
     }
@@ -58,27 +61,8 @@ public final class Fields {
         }
     }
 
-    @SuppressWarnings("AnonymousInnerClass")
     private static <T> Accessor<T, Object> newAccessor(final Field field) {
-        return new Accessor<T, Object>() {
-            @Override
-            public void accept(final T t, final Object o) {
-                try {
-                    field.set(t, o);
-                } catch (final IllegalAccessException e) {
-                    throw new IllegalArgumentException(e.getMessage(), e);
-                }
-            }
-
-            @Override
-            public Object apply(final T t) {
-                try {
-                    return field.get(t);
-                } catch (final IllegalAccessException e) {
-                    throw new IllegalArgumentException(e.getMessage(), e);
-                }
-            }
-        };
+        return Accessor.combine(CONVERTER.function(field::get), CONVERTER.biConsumer(field::set));
     }
 
     /**
@@ -88,9 +72,9 @@ public final class Fields {
      * @param <T> The type that is represented by the given {@link Class}.
      */
     public static <T> BiMapping<T> mapping(final Class<T> tClass, final Mode mode) {
-        return new AccessorMapping<>(mode.streaming.apply(tClass)
-                                                   .collect(toMap(mode.namingOf(tClass),
-                                                                  Fields::newAccessor)));
+        return new AccMapping<>(mode.streaming.apply(tClass)
+                                              .collect(toMap(mode.namingOf(tClass),
+                                                             Fields::newAccessor)));
     }
 
     /**

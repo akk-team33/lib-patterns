@@ -5,11 +5,11 @@ import java.util.TreeMap;
 
 import static java.util.Collections.unmodifiableMap;
 
-class AccessorMapping<T> implements BiMapping<T> {
+class AccMapping<T> implements BiMapping<T> {
 
     private final Map<String, ? extends Accessor<T, Object>> methods;
 
-    AccessorMapping(final Map<String, ? extends Accessor<T, Object>> methods) {
+    AccMapping(final Map<String, ? extends Accessor<T, Object>> methods) {
         this.methods = unmodifiableMap(new TreeMap<>(methods));
     }
 
