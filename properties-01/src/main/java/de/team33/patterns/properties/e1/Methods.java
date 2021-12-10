@@ -2,7 +2,6 @@ package de.team33.patterns.properties.e1;
 
 import de.team33.patterns.exceptional.e1.Converter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.EnumSet;
@@ -15,6 +14,7 @@ import java.util.TreeMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
@@ -30,22 +30,14 @@ import static java.util.stream.Collectors.toMap;
 public final class Methods {
 
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.NATIVE;
-    private static final String PF_GETTER = "get";
-    private static final String PF_BOOL_GETTER = "is";
+    private static final Converter CONVERTER =
+            Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
 
     private Methods() {
     }
 
-    private static boolean isGetter(final Method method) {
-        return isSignificant(method) && isParameterCount(method, 0) && isPrefixed(method, PF_GETTER, PF_BOOL_GETTER);
-    }
-
-    private static boolean isPrefixed(final Method method, final String... prefixes) {
-        return Stream.of(prefixes).anyMatch(prefix -> method.getName().startsWith(prefix));
-    }
-
-    private static boolean isSingleParam(final Method method) {
-        return isParameterCount(method, 1);
+    private static boolean isNoParameter(final Method method) {
+        return isParameterCount(method, 0);
     }
 
     private static boolean isParameterCount(final Method method, final int count) {
@@ -60,37 +52,21 @@ public final class Methods {
         return 0 == (modifiers & NOT_SIGNIFICANT);
     }
 
-    private static String getterName(final Method method) {
-        final String name = method.getName();
-        final String prefix = Stream.of(PF_GETTER, PF_BOOL_GETTER)
-                                    .filter(name::startsWith)
-                                    .findAny()
-                                    .orElseThrow(() -> new IllegalStateException("method is not a getter: " + method));
-        final int index0 = prefix.length();
-        final int index1 = (index0 < name.length()) ? (index0 + 1) : index0;
-        return name.substring(index0, index1).toLowerCase(Locale.ROOT) + name.substring(index1);
-    }
-
-    private static <T> Function<T, Object> newGetter(final Method method) {
-        return origin -> {
-            try {
-                return method.invoke(origin);
-            } catch (final IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalArgumentException(e.getMessage(), e);
-            }
-        };
-    }
-
     /**
      * Returns a {@link Mapping} made up of the public getters of a given class.
      *
      * @param <T> The type whose properties are to be mapped.
      */
     public static <T> Mapping<T> mapping(final Class<T> tClass) {
+        final Collector<Entry, ?, Map<String, Function<T, Object>>> collector =
+                toMap(Entry::normalName,
+                      entry -> CONVERTER.function(entry.method::invoke));
         final Map<String, Function<T, Object>> getters = Stream.of(tClass.getMethods())
-                                                               .filter(Methods::isGetter)
-                                                               .collect(toMap(Methods::getterName,
-                                                                              Methods::newGetter));
+                                                               .filter(Methods::isSignificant)
+                                                               .filter(Methods::isNoParameter)
+                                                               .map(Entry::new)
+                                                               .filter(entry -> entry.prefix.isGetter())
+                                                               .collect(collector);
         return origin -> MappingUtil.mappingOperation(getters, origin);
     }
 
@@ -111,13 +87,29 @@ public final class Methods {
         return new AccMapping<>(methods);
     }
 
-    private static class Selector<T> {
+    private enum Prefix {
+
+        get(true), is(true), set(true), NONE(false);
+
+        private static final Set<Prefix> GETTERS = unmodifiableSet(EnumSet.of(get, is));
+        private static final Set<Prefix> SETTERS = unmodifiableSet(EnumSet.of(set));
+
+        private final int length;
+
+        Prefix(final boolean real) {
+            this.length = real ? name().length() : 0;
+        }
+
+        final boolean isGetter() {
+            return GETTERS.contains(this);
+        }
+
+        final boolean isSetter() {
+            return SETTERS.contains(this);
+        }
     }
 
     private static class BiSelector<T> {
-
-        private static final Converter CONVERTER =
-                Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
 
         private final List<Entry> getters = new LinkedList<>();
         private final Map<String, List<Entry>> setters = new TreeMap<>();
@@ -182,27 +174,10 @@ public final class Methods {
             final int index1 = index0 + ((index0 < methodName.length()) ? 1 : 0);
             return methodName.substring(index0, index1).toLowerCase(Locale.ROOT) + methodName.substring(index1);
         }
-    }
 
-    private enum Prefix {
-
-        get(true), is(true), set(true), NONE(false);
-
-        private static final Set<Prefix> GETTERS = unmodifiableSet(EnumSet.of(get, is));
-        private static final Set<Prefix> SETTERS = unmodifiableSet(EnumSet.of(set));
-
-        private final int length;
-
-        Prefix(final boolean real) {
-            this.length = real ? name().length() : 0;
-        }
-
-        final boolean isGetter() {
-            return GETTERS.contains(this);
-        }
-
-        final boolean isSetter() {
-            return SETTERS.contains(this);
+        @Override
+        public final String toString() {
+            return method.toString();
         }
     }
 }
