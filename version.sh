@@ -12,4 +12,4 @@ TAG=$1
 echo "You are using the tag: $TAG"
 read -p "Press enter to continue"
 
-mvn versions:set -DnewVersion=$TAG -DgenerateBackupPoms=false
+mvn versions:set -DnewVersion=$TAG -DgenerateBackupPoms=false -DprocessAllModules=true

@@ -7,7 +7,7 @@ SET TAG=%1
 echo You are using the tag: %TAG%
 pause
 
-CALL mvn versions:set -DnewVersion=%TAG% -DgenerateBackupPoms=false
+CALL mvn versions:set -DnewVersion=%TAG% -DgenerateBackupPoms=false -DprocessAllModules=true
 GOTO end
 
 :usage
