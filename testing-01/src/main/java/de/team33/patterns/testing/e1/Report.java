@@ -8,20 +8,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A report of multiple execution of a method.
+ */
 public class Report {
 
-    private final ArrayList<Throwable> problems;
+    private final List<Throwable> problems;
 
     private Report(final Builder builder) {
-        this.problems = new ArrayList<>(builder.problems);
+        this.problems = Collections.unmodifiableList(new ArrayList<>(builder.problems));
     }
 
+    /**
+     * Results in a new {@link Builder} instance.
+     */
     public static Builder builder() {
         return new Builder();
     }
 
-    public final <X extends Throwable> Report reThrow(final Class<X> xClass) throws X {
-        final Optional<X> caught = streamCaught(xClass).reduce((head, tail) -> {
+    @SafeVarargs
+    public final <X extends Throwable> Report reThrow(final Class<X> xClass,
+                                                      final Class<? extends X> ... ignorable) throws X {
+        final Optional<X> caught = streamCaught(xClass, ignorable).reduce((head, tail) -> {
             head.addSuppressed(tail);
             return head;
         });
@@ -33,16 +41,12 @@ public class Report {
 
     @SafeVarargs
     public final <X extends Throwable> Stream<X> streamCaught(final Class<X> xClass,
-                                                              final Class<? extends X> ... excluded) {
+                                                              final Class<? extends X> ... ignorable) {
         return problems.stream()
-                       .filter(problem -> xClass.isAssignableFrom(problem.getClass()))
-                       .filter(problem -> included(problem, excluded))
-                       .map(xClass::cast);
-    }
-
-    private boolean included(final Throwable problem, final Class<?>[] excluded) {
-        Stream.of(excluded).anyMatch(ex -> ex.isAssignableFrom(problem.getClass()));
-        throw new UnsupportedOperationException("not yet implemented");
+                       .filter(xClass::isInstance)
+                       .map(xClass::cast)
+                       .filter(problem -> Stream.of(ignorable)
+                                                .noneMatch(clss -> clss.isInstance(problem)));
     }
 
     public final <X extends Throwable> List<X> getCaught(final Class<X> xClass) {
