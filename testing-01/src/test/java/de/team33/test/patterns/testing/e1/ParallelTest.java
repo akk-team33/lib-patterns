@@ -18,14 +18,14 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class ParallelTest {
 
     @Test
-    final void getParallel_symmetric() throws Throwable {
+    final void apply_symmetric() throws Throwable {
         final int limit = 100;
         final XFunction<Integer, Integer, InterruptedException> method = index -> {
             Thread.sleep(2);
             return index;
         };
 
-        final Report<Integer> report = Parallel.get(limit, method)
+        final Report<Integer> report = Parallel.apply(limit, method)
                                                .reThrow(Throwable.class);
 
         assertEquals(Collections.emptyList(), report.getThrowables(),
@@ -40,7 +40,7 @@ class ParallelTest {
     }
 
     @Test
-    final void getParallel_asymmetric() throws Throwable {
+    final void apply_asymmetric() throws Throwable {
         final XFunction<Integer, Integer, InterruptedException> method = index -> {
             Thread.sleep(2);
             return index;
@@ -48,7 +48,7 @@ class ParallelTest {
 
         final int numberOfExecutions = 500;
         final int numberOfThreads = 50;
-        final Report<Integer> report = Parallel.get(numberOfExecutions, numberOfThreads, method)
+        final Report<Integer> report = Parallel.apply(numberOfExecutions, numberOfThreads, method)
                                                .reThrow(Throwable.class);
 
         assertEquals(Collections.emptyList(), report.getThrowables(),
@@ -63,7 +63,7 @@ class ParallelTest {
     }
 
     @Test
-    final void runParallel_withCaught_symmetric() throws Exception {
+    final void invoke_withCaught_symmetric() throws Exception {
         final int limit = 100;
         final List<Integer> values = Collections.synchronizedList(new ArrayList<>(limit));
         final XConsumer<Integer, PositiveException> method = index -> {
@@ -75,7 +75,7 @@ class ParallelTest {
         };
         final int expectedToFail = ((limit - 1) / 13) + 1;
 
-        final Report<Void> report = Parallel.run(limit, method)
+        final Report<Void> report = Parallel.invoke(limit, method)
                                             .reThrow(Error.class)
                                             .reThrow(Exception.class, PositiveException.class, NegativeException.class);
 
@@ -85,7 +85,7 @@ class ParallelTest {
     }
 
     @Test
-    final void runParallel_withCaught_asymmetric() throws Exception {
+    final void invoke_withCaught_asymmetric() throws Exception {
         final int numberOfExecutions = 279;
         final int numberOfThreads = 61;
         final List<Integer> values = Collections.synchronizedList(new ArrayList<>(numberOfExecutions));
@@ -98,7 +98,7 @@ class ParallelTest {
         };
         final int expectedToFail = ((numberOfExecutions - 1) / 13) + 1;
 
-        final Report<Void> report = Parallel.run(numberOfExecutions, numberOfThreads, method)
+        final Report<Void> report = Parallel.invoke(numberOfExecutions, numberOfThreads, method)
                                             .reThrow(Error.class)
                                             .reThrow(Exception.class, PositiveException.class, NegativeException.class);
 

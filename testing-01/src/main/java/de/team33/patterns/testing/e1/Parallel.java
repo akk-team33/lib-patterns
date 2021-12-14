@@ -29,14 +29,18 @@ public final class Parallel<R> {
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
+     * @param numberOfExecutions The total number of times the operation should be performed.
+     * @param numberOfThreads    Specifies the number of parallel threads in which the operation should be performed.
+     * @param operation          The operation to be performed.
+     * @param <R>                The type of result of the operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #get(int, XFunction)
-     * @see #run(int, int, XConsumer)
-     * @see #run(int, XConsumer)
+     * @see #apply(int, XFunction)
+     * @see #invoke(int, int, XConsumer)
+     * @see #invoke(int, XConsumer)
      */
-    public static <R> Report<R> get(final int numberOfExecutions,
-                                    final int numberOfThreads,
-                                    final XFunction<Integer, R, ?> operation) throws InterruptedException {
+    public static <R> Report<R> apply(final int numberOfExecutions,
+                                      final int numberOfThreads,
+                                      final XFunction<Integer, R, ?> operation) throws InterruptedException {
         return new Parallel<R>(numberOfExecutions, numberOfThreads, operation).startThreads()
                                                                               .joinThreads()
                                                                               .report();
@@ -45,41 +49,51 @@ public final class Parallel<R> {
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
+     * @param numberOfExecutionsInSeparateThreads The total number of operations to be performed each on its own
+     *                                            parallel thread.
+     * @param operation                           The operation to be performed.
+     * @param <R>                                 The type of result of the operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #get(int, int, XFunction)
-     * @see #run(int, int, XConsumer)
-     * @see #run(int, XConsumer)
+     * @see #apply(int, int, XFunction)
+     * @see #invoke(int, int, XConsumer)
+     * @see #invoke(int, XConsumer)
      */
-    public static <R> Report<R> get(final int numberOfExecutionsInSeparateThreads,
-                                    final XFunction<Integer, R, ?> operation) throws InterruptedException {
-        return get(numberOfExecutionsInSeparateThreads, numberOfExecutionsInSeparateThreads, operation);
+    public static <R> Report<R> apply(final int numberOfExecutionsInSeparateThreads,
+                                      final XFunction<Integer, R, ?> operation) throws InterruptedException {
+        return apply(numberOfExecutionsInSeparateThreads, numberOfExecutionsInSeparateThreads, operation);
     }
 
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
+     * @param numberOfExecutions The total number of times the operation should be performed.
+     * @param numberOfThreads    Specifies the number of parallel threads in which the operation should be performed.
+     * @param operation          The operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #run(int, XConsumer)
-     * @see #get(int, int, XFunction)
-     * @see #get(int, XFunction)
+     * @see #invoke(int, XConsumer)
+     * @see #apply(int, int, XFunction)
+     * @see #apply(int, XFunction)
      */
-    public static Report<Void> run(final int numberOfExecutions,
-                                   final int numberOfThreads,
-                                   final XConsumer<Integer, ?> operation) throws InterruptedException {
-        return get(numberOfExecutions, numberOfThreads, toXFunction(operation));
+    public static Report<Void> invoke(final int numberOfExecutions,
+                                      final int numberOfThreads,
+                                      final XConsumer<Integer, ?> operation) throws InterruptedException {
+        return apply(numberOfExecutions, numberOfThreads, toXFunction(operation));
     }
 
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
+     * @param numberOfExecutionsInSeparateThreads The total number of operations to be performed each on its own
+     *                                            parallel thread.
+     * @param operation                           The operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #run(int, int, XConsumer)
-     * @see #get(int, int, XFunction)
-     * @see #get(int, XFunction)
+     * @see #invoke(int, int, XConsumer)
+     * @see #apply(int, int, XFunction)
+     * @see #apply(int, XFunction)
      */
-    public static Report<Void> run(final int numberOfExecutionsInSeparateThreads,
-                                   final XConsumer<Integer, ?> operation) throws InterruptedException {
-        return run(numberOfExecutionsInSeparateThreads, numberOfExecutionsInSeparateThreads, operation);
+    public static Report<Void> invoke(final int numberOfExecutionsInSeparateThreads,
+                                      final XConsumer<Integer, ?> operation) throws InterruptedException {
+        return apply(numberOfExecutionsInSeparateThreads, toXFunction(operation));
     }
 
     @SuppressWarnings("BoundedWildcard")
