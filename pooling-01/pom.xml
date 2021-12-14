@@ -24,6 +24,11 @@
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-01</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
