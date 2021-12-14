@@ -2,18 +2,18 @@ package de.team33.test.patterns.exceptional.e1;
 
 import de.team33.patterns.exceptional.e1.Conversion;
 import de.team33.patterns.exceptional.e1.WrappedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.function.Function;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-public class ConversionTest {
+class ConversionTest {
 
     private static <X extends Exception>
     String rise(final Function<? super String, X> newException, final Object... args) throws X {
@@ -21,7 +21,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void runnable() {
+    final void runnable() {
         try {
             Conversion.runnable(() -> rise(IOException::new))
                       .run();
@@ -34,7 +34,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void consumer() {
+    final void consumer() {
         try {
             Conversion.consumer(t -> rise(IOException::new, t))
                       .accept(278);
@@ -47,7 +47,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void biConsumer() {
+    final void biConsumer() {
         try {
             Conversion.biConsumer((t, u) -> rise(IOException::new, t, u))
                       .accept(3.141592654, "a string");
@@ -60,7 +60,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void supplier() {
+    final void supplier() {
         try {
             final String result = Conversion.supplier(() -> rise(IOException::new))
                                             .get();
@@ -73,7 +73,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void predicate() {
+    final void predicate() {
         try {
             final boolean result = Conversion.predicate(t -> null == rise(IOException::new, t))
                                              .test(null);
@@ -86,7 +86,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void biPredicate() {
+    final void biPredicate() {
         try {
             final boolean result = Conversion.biPredicate((t, u) -> null == rise(IOException::new, t, u))
                                              .test(0, 'x');
@@ -99,7 +99,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void function() {
+    final void function() {
         try {
             final String result = Conversion.function(t -> rise(IOException::new, t))
                                             .apply("another string");
@@ -112,7 +112,7 @@ public class ConversionTest {
     }
 
     @Test
-    public final void biFunction() {
+    final void biFunction() {
         try {
             final String result = Conversion.biFunction((t, u) -> rise(IOException::new, t, u))
                                             .apply('a', 'b');

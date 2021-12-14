@@ -2,7 +2,7 @@ package de.team33.test.patterns.exceptional.e1;
 
 import de.team33.patterns.exceptional.e1.Revision;
 import de.team33.patterns.exceptional.e1.WrappedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("NestedTryStatement")
-public class RevisionTest {
+class RevisionTest {
 
     private static final String EXPECTED_AN_EXCEPTION = "It is expected that an exception was thrown previously";
     private static final List<Exception> EXCEPTION_LIST = Arrays.asList(
@@ -27,7 +27,7 @@ public class RevisionTest {
     }
 
     @Test
-    public final void reThrowCause() {
+    final void reThrowCause() {
         for (final Exception exception : EXCEPTION_LIST) {
             try {
                 try {
@@ -55,7 +55,7 @@ public class RevisionTest {
 
     @Deprecated
     @Test
-    public final void reThrow() {
+    final void reThrow() {
         for (final Exception exception : EXCEPTION_LIST) {
             try {
                 try {
@@ -82,7 +82,7 @@ public class RevisionTest {
     }
 
     @Test
-    public final void throwIf() {
+    final void throwIf() {
         for (final Exception exception : EXCEPTION_LIST) {
             try {
                 try {
@@ -109,16 +109,16 @@ public class RevisionTest {
     }
 
     @Test
-    public final void finish() {
-        final IOException original = new IOException();
+    final void finish() {
+        final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
                                            .finish();
         assertSame(original, result);
     }
 
     @Test
-    public final void finishMapped() {
-        final IOException original = new IOException();
+    final void finishMapped() {
+        final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
                                            .finish(Function.identity());
         assertSame(original, result);
