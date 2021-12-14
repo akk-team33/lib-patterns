@@ -46,8 +46,8 @@ class ParallelTest {
             return index;
         };
 
-        final int numberOfExecutions = 500;
-        final int numberOfThreads = 50;
+        final int numberOfExecutions = 449;
+        final int numberOfThreads = 59;
         final Report<Integer> report = Parallel.apply(numberOfExecutions, numberOfThreads, method)
                                                .reThrow(Throwable.class);
 
@@ -86,8 +86,8 @@ class ParallelTest {
 
     @Test
     final void invoke_withCaught_asymmetric() throws Exception {
-        final int numberOfExecutions = 279;
-        final int numberOfThreads = 61;
+        final int numberOfExecutions = 353;
+        final int numberOfThreads = 73;
         final List<Integer> values = Collections.synchronizedList(new ArrayList<>(numberOfExecutions));
         final XConsumer<Integer, PositiveException> method = index -> {
             if (index % 13 == 0) {

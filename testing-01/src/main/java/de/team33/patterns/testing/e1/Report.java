@@ -41,7 +41,7 @@ public final class Report<R> {
 
     /**
      * Returns a {@link List} of all {@linkplain Throwable exceptions} of a certain type that occurred during
-     * reporting. Certain derived types can be excluded from the resulting {@link Stream}.
+     * reporting. Certain derived types can be excluded from the result.
      *
      * @param <X> The type of {@linkplain Throwable exceptions} to be listed.
      */
