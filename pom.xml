@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Collection</name>
-    <description>Provides pattern implementations</description>
+    <description>Parent of team33 patterns library collection</description>
     <url>http://team33.de/dev/patterns</url>
 
     <licenses>

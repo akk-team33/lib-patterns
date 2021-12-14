@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library BOM</name>
-    <description>Provides pattern implementations</description>
+    <description>Team33 patterns library collection - bill of materials</description>
     <url>http://team33.de/dev/patterns/patterns-bom/</url>
 
     <licenses>
