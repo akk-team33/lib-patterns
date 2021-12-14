@@ -36,16 +36,18 @@ class XLazyTest {
     }
 
     @Test
-    final void getSequential() throws InterruptedException {
+    final void getSequential() throws Throwable {
         assertEquals(0, counter);
-        Parallel.apply(100, 1, ignored -> lazy.get());
+        Parallel.apply(100, 1, ignored -> lazy.get())
+                .reThrow(Throwable.class);
         assertEquals(1, counter);
     }
 
     @Test
-    final void getParallel() throws InterruptedException {
+    final void getParallel() throws Throwable {
         assertEquals(0, counter);
-        Parallel.apply(100, ignored -> lazy.get());
+        Parallel.apply(100, ignored -> lazy.get())
+                .reThrow(Throwable.class);
         assertEquals(1, counter);
     }
 }
