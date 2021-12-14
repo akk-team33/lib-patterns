@@ -1,35 +1,84 @@
 package de.team33.patterns.testing.e1;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Collections.synchronizedList;
+import static java.util.Collections.unmodifiableList;
+
 /**
- * A report of multiple execution of a method.
+ * A report of multiple executions of a method.
+ *
+ * @param <R> The type of result of the method to be run.
  */
-public class Report {
+public final class Report<R> {
 
-    private final List<Throwable> problems;
+    private final List<R> results;
+    private final List<Throwable> throwables;
 
-    private Report(final Builder builder) {
-        this.problems = Collections.unmodifiableList(new ArrayList<>(builder.problems));
+    private Report(final Builder<R> builder) {
+        this.results = unmodifiableList(new ArrayList<>(builder.results));
+        this.throwables = unmodifiableList(new ArrayList<>(builder.throwables));
     }
 
     /**
-     * Results in a new {@link Builder} instance.
+     * Returns a {@link List} of all results that have accumulated during reporting.
      */
-    public static Builder builder() {
-        return new Builder();
+    public final List<R> getResults() {
+        return results;
     }
 
+    /**
+     * Returns a {@link List} of all {@linkplain Throwable exceptions} that occurred during reporting.
+     */
+    public final List<Throwable> getThrowables() {
+        return throwables;
+    }
+
+    /**
+     * Returns a {@link List} of all {@linkplain Throwable exceptions} of a certain type that occurred during
+     * reporting. Certain derived types can be excluded from the resulting {@link Stream}.
+     *
+     * @param <X> The type of {@linkplain Throwable exceptions} to be listed.
+     */
     @SafeVarargs
-    public final <X extends Throwable> Report reThrow(final Class<X> xClass,
-                                                      final Class<? extends X> ... ignorable) throws X {
-        final Optional<X> caught = streamCaught(xClass, ignorable).reduce((head, tail) -> {
+    public final <X extends Throwable> List<X> getThrowables(final Class<X> xClass,
+                                                             final Class<? extends X> ... ignorable) {
+        return streamThrowables(xClass, ignorable).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns a {@link Stream} of all {@linkplain Throwable exceptions} of a certain type that occurred during
+     * reporting. Certain derived types can be excluded from the resulting {@link Stream}.
+     *
+     * @param <X> The type of {@linkplain Throwable exceptions} to be streamed.
+     */
+    @SafeVarargs
+    public final <X extends Throwable> Stream<X> streamThrowables(final Class<X> xClass,
+                                                                  final Class<? extends X> ... ignorable) {
+        return throwables.stream()
+                         .filter(xClass::isInstance)
+                         .map(xClass::cast)
+                         .filter(throwable -> Stream.of(ignorable)
+                                                    .noneMatch(clss -> clss.isInstance(throwable)));
+    }
+
+    /**
+     * Re-throws the first {@linkplain Throwable exception} of a certain type that occurred during
+     * reporting after all further {@linkplain Throwable exceptions} of that type have been
+     * {@linkplain Throwable#addSuppressed(Throwable) added to it as suppressed}.
+     * Certain derived types can be excluded from processing.
+     *
+     * @param <X> The type of {@linkplain Throwable exceptions} to be processed.
+     */
+    @SafeVarargs
+    public final <X extends Throwable> Report<R> reThrow(final Class<X> xClass,
+                                                         final Class<? extends X> ... ignorable) throws X {
+        final Optional<X> caught = streamThrowables(xClass, ignorable).reduce((head, tail) -> {
             head.addSuppressed(tail);
             return head;
         });
@@ -39,35 +88,23 @@ public class Report {
         return this;
     }
 
-    @SafeVarargs
-    public final <X extends Throwable> Stream<X> streamCaught(final Class<X> xClass,
-                                                              final Class<? extends X> ... ignorable) {
-        return problems.stream()
-                       .filter(xClass::isInstance)
-                       .map(xClass::cast)
-                       .filter(problem -> Stream.of(ignorable)
-                                                .noneMatch(clss -> clss.isInstance(problem)));
-    }
-
-    public final <X extends Throwable> List<X> getCaught(final Class<X> xClass) {
-        return streamCaught(xClass).collect(Collectors.toList());
-    }
-
-    public final List<Throwable> getCaught() {
-        return getCaught(Throwable.class);
-    }
-
     @SuppressWarnings("UnusedReturnValue")
-    public static class Builder {
+    static class Builder<R> {
 
-        private final List<Throwable> problems = Collections.synchronizedList(new LinkedList<>());
+        private final List<Throwable> throwables = synchronizedList(new LinkedList<>());
+        private final List<R> results = synchronizedList(new LinkedList<>());
 
-        public final Report build() {
-            return new Report(this);
+        final Report<R> build() {
+            return new Report<>(this);
         }
 
-        public final Builder add(final Throwable caught) {
-            problems.add(caught);
+        final Builder<R> add(final Throwable caught) {
+            throwables.add(caught);
+            return this;
+        }
+
+        final Builder<R> add(final R result) {
+            results.add(result);
             return this;
         }
     }
