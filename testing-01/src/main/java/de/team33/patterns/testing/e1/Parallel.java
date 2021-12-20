@@ -30,7 +30,7 @@ public final class Parallel<R> {
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
      * @param numberOfExecutions The total number of times the operation should be performed.
-     * @param numberOfThreads    Specifies the number of parallel threads in which the operation should be performed.
+     * @param numberOfThreads    The number of parallel threads in which the operation should be performed.
      * @param operation          The operation to be performed.
      * @param <R>                The type of result of the operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
@@ -67,7 +67,7 @@ public final class Parallel<R> {
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
      * @param numberOfExecutions The total number of times the operation should be performed.
-     * @param numberOfThreads    Specifies the number of parallel threads in which the operation should be performed.
+     * @param numberOfThreads    The number of parallel threads in which the operation should be performed.
      * @param operation          The operation to be performed.
      * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
      * @see #invoke(int, XConsumer)
