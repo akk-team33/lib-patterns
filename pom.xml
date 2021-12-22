@@ -4,11 +4,11 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns</artifactId>
-    <version>1.2.2-SNAPSHOT</version>
+    <version>1.3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Collection</name>
-    <description>Provides pattern implementations</description>
+    <description>Parent of team33 patterns library collection</description>
     <url>http://team33.de/dev/patterns</url>
 
     <licenses>
@@ -40,6 +40,7 @@
     </properties>
 
     <modules>
+        <module>testing-01</module>
         <module>production-01</module>
         <module>random-01</module>
         <module>exceptional-01</module>
@@ -88,19 +89,19 @@
                 <artifactId>math-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- Testing -->
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter</artifactId>
-                <version>5.8.1</version>
-                <scope>test</scope>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.8.2</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

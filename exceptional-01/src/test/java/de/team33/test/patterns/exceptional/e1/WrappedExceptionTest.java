@@ -1,14 +1,17 @@
 package de.team33.test.patterns.exceptional.e1;
 
 import de.team33.patterns.exceptional.e1.WrappedException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WrappedExceptionTest {
+class WrappedExceptionTest {
 
     private static final String MISSING_EXCEPTION =
             "Missing: an exception to be wrapped in a " + WrappedException.class.getSimpleName();
@@ -18,7 +21,7 @@ public class WrappedExceptionTest {
     }
 
     @Test
-    public final void noMessageAlsoInCause() {
+    final void noMessageAlsoInCause() {
         final Throwable cause = new IOException((String) null);
         final WrappedException case1 = new WrappedException(cause);
         final WrappedException case2 = new WrappedException(null, cause);
@@ -31,7 +34,7 @@ public class WrappedExceptionTest {
     }
 
     @Test
-    public final void noMessageButInCause() {
+    final void noMessageButInCause() {
         final String message = anyMessage();
         final Throwable cause = new IOException(message);
         final WrappedException case1 = new WrappedException(cause);
@@ -45,7 +48,7 @@ public class WrappedExceptionTest {
     }
 
     @Test
-    public final void noParameters() {
+    final void noParameters() {
         final WrappedException case1 = new WrappedException(null);
         final WrappedException case2 = new WrappedException(null, null);
 
@@ -62,7 +65,7 @@ public class WrappedExceptionTest {
     }
 
     @Test
-    public final void noCause() {
+    final void noCause() {
         final String message = anyMessage();
         final WrappedException case2 = new WrappedException(message, null);
 
@@ -72,7 +75,7 @@ public class WrappedExceptionTest {
     }
 
     @Test
-    public final void allParameters() {
+    final void allParameters() {
         final String message = anyMessage();
         final Throwable cause1 = new IOException((String) null);
         final Throwable cause2 = new IOException(anyMessage());

@@ -8,11 +8,11 @@
         <version>1.3.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>lazy-01</artifactId>
+    <artifactId>testing-01</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Lazy Initialization Library - Edition 1</name>
-    <description>Provides generic envelope classes that support lazy initialization</description>
+    <name>Team33 Testing Library - Edition 1</name>
+    <description>Provides classes for testing purpose</description>
 
     <dependencies>
         <dependency>
@@ -22,11 +22,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>testing-01</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

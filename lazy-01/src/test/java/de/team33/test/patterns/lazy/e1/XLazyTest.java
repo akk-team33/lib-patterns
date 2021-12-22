@@ -1,15 +1,16 @@
 package de.team33.test.patterns.lazy.e1;
 
 import de.team33.patterns.lazy.e1.XLazy;
-import org.junit.Test;
+import de.team33.patterns.testing.e1.Parallel;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
-import static de.team33.test.patterns.lazy.e1.Runner.parallel;
-import static de.team33.test.patterns.lazy.e1.Runner.sequential;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class XLazyTest {
+class XLazyTest {
 
     private static final String ZERO_SMALLER_FIRST =
             "Although <lazy> already exists, the date <zero> must be smaller than the (first) evaluation of <lazy>";
@@ -22,28 +23,31 @@ public class XLazyTest {
     });
 
     @Test
-    public final void getFirst() throws InterruptedException {
+    final void getFirst() throws InterruptedException {
         final Date zero = new Date();
         Thread.sleep(1);
-        assertTrue(ZERO_SMALLER_FIRST, zero.compareTo(lazy.get()) < 0);
+        assertTrue(zero.compareTo(lazy.get()) < 0, ZERO_SMALLER_FIRST);
     }
 
     @Test
-    public final void getSame() throws InterruptedException {
-        assertSame("If <lazy> is evaluated several times, the result must always be the same.", lazy.get(), lazy.get());
+    final void getSame() throws InterruptedException {
+        assertSame(lazy.get(), lazy.get(),
+                   "If <lazy> is evaluated several times, the result must always be the same.");
     }
 
     @Test
-    public final void getSequential() throws InterruptedException {
+    final void getSequential() throws Throwable {
         assertEquals(0, counter);
-        sequential(100, lazy::get);
+        Parallel.apply(100, 1, ignored -> lazy.get())
+                .reThrow(Throwable.class);
         assertEquals(1, counter);
     }
 
     @Test
-    public final void getParallel() throws InterruptedException {
+    final void getParallel() throws Throwable {
         assertEquals(0, counter);
-        parallel(100, lazy::get);
+        Parallel.apply(100, ignored -> lazy.get())
+                .reThrow(Throwable.class);
         assertEquals(1, counter);
     }
 }

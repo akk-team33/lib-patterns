@@ -1,20 +1,22 @@
 package de.team33.test.patterns.pooling.e1;
 
+import de.team33.patterns.exceptional.e1.XFunction;
 import de.team33.patterns.pooling.e1.Provider;
+import de.team33.patterns.testing.e1.Parallel;
+import de.team33.patterns.testing.e1.Report;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class ProviderTest {
+class ProviderTest {
 
-    private static final int MAX = 16;
+    private static final int MAX = 100;
 
     private final AtomicInteger nextInt = new AtomicInteger(0);
     private final Provider<Dispenser> provider = new Provider<>(this::newDispenser);
@@ -24,71 +26,43 @@ public class ProviderTest {
     }
 
     @Test
-    public final void run() throws InterruptedException {
-        final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
-        final Collection<Integer> results = new ConcurrentLinkedQueue<>();
-        final Collection<Thread> threads = new ArrayList<>(MAX);
-        for (int count = MAX; count > 0; count--) {
-            threads.add(new Thread(() -> provider.run(dsp -> {
-                try {
-                    results.add(dsp.getValue());
-                    Thread.sleep(10);
-                } catch (final InterruptedException ex) {
-                    errors.add(ex);
-                    Thread.currentThread().interrupt();
-                }
-            })));
-        }
-        for (final Thread thread : threads) {
-            thread.start();
-        }
-        for (final Thread thread : threads) {
-            thread.join();
-        }
-        assertEquals(MAX, results.size());
-        assertTrue(1 < results.stream().reduce(0, Math::max));
-        assertEquals(0, errors.size());
+    final void run() throws InterruptedException {
+        final XFunction<Integer, Integer, RuntimeException> operation = index -> {
+            final List<Integer> results = new ArrayList<>(0);
+            provider.run(dsp -> results.add(dsp.getValue()));
+            return results.get(0);
+        };
+        final Report<Integer> report = Parallel.apply(MAX, operation);
+        assertEquals(MAX, report.getResults().size());
+        assertTrue(1 < report.getResults().stream().reduce(0, Math::max));
+        assertEquals(0, report.getThrowables().size());
     }
 
     @Test
-    public final void runEx() throws InterruptedException {
-        //Repetition.of(() -> {})
-        final Collection<Throwable> errors = new ConcurrentLinkedQueue<>();
-        final Collection<Integer> results = new ConcurrentLinkedQueue<>();
-        final Collection<Thread> threads = new ArrayList<>(MAX);
-        for (int count = MAX; count > 0; count--) {
-            threads.add(new Thread(() -> {
-                try {
-                    provider.runEx(dsp -> {
-                        results.add(dsp.getValue());
-                        Thread.sleep(10);
-                    });
-                } catch (final InterruptedException ex) {
-                    errors.add(ex);
-                    Thread.currentThread().interrupt();
-                }
-            }));
-        }
-        for (final Thread thread : threads) {
-            thread.start();
-        }
-        for (final Thread thread : threads) {
-            thread.join();
-        }
-        assertEquals(MAX, results.size());
-        assertTrue(1 < results.stream().reduce(0, Math::max));
-        assertEquals(0, errors.size());
+    final void runEx() throws InterruptedException {
+        final XFunction<Integer, Integer, InterruptedException> operation = index -> {
+            final List<Integer> results = new ArrayList<>(0);
+            provider.runEx(dsp -> {
+                results.add(dsp.getValue());
+                Thread.sleep(2);
+            });
+            return results.get(0);
+        };
+        final Report<Integer> report = Parallel.apply(MAX, operation);
+        assertEquals(MAX, report.getResults().size());
+        assertTrue(1 < report.getResults().stream().reduce(0, Math::max));
+        assertEquals(0, report.getThrowables().size());
     }
 
     @Test
-    public final void get() {
+    final void get() {
         for (int i = 0; i < MAX; ++i) {
             assertEquals(Integer.valueOf(1), provider.get(Dispenser::getValue));
         }
     }
 
     @Test
-    public final void getEx() throws InterruptedException {
+    final void getEx() throws InterruptedException {
         for (int i = 0; i < MAX; ++i) {
             assertEquals(Integer.valueOf(1), provider.getEx(dsp -> {
                 Thread.sleep(1);
