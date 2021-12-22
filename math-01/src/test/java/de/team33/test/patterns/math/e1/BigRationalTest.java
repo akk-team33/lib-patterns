@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Random;
 
@@ -70,5 +71,13 @@ class BigRationalTest {
         assertEquals(expected, result);
         assertEquals(1092, result.getNumerator().intValue());
         assertEquals(55, result.getDenominator().intValue());
+    }
+
+    @Test
+    final void toBigDecimal() {
+        //assertEquals(BigDecimal.valueOf(1.0/3.0), BigRational.valueOf(1, 3).toBigDecimal());
+        //assertEquals(BigDecimal.valueOf(2.0/3.0), BigRational.valueOf(2, 3).toBigDecimal());
+        //assertEquals(BigDecimal.valueOf(2.0/7.0), BigRational.valueOf(2, 7).toBigDecimal());
+        assertEquals(BigDecimal.valueOf(5.0/7.0), BigRational.valueOf(5, 7).toBigDecimal());
     }
 }

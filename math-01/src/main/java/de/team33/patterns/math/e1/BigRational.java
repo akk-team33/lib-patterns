@@ -6,6 +6,10 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents a rational number, the size and accuracy of which is generally not limited or only limited by the
+ * available memory.
+ */
 public class BigRational extends Number {
 
     public static final BigRational ZERO = valueOf(BigInteger.ZERO, BigInteger.ONE);
@@ -24,6 +28,18 @@ public class BigRational extends Number {
         return Arrays.asList(br.numerator, br.denominator);
     }
 
+    /**
+     * Results in a {@link BigRational} value based on an integer numerator and denominator that are given as
+     * {@link BigInteger} values. The denominator must not be zero.
+     *
+     * @throws IllegalArgumentException When the denominator is zero.
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(long, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(long)
+     * @see #valueOf(double)
+     */
     public static BigRational valueOf(final BigInteger numerator, final BigInteger denominator) {
         switch (denominator.signum()) {
         case 1:
@@ -35,18 +51,92 @@ public class BigRational extends Number {
         }
     }
 
-    public static BigRational valueOf(final BigInteger integer) {
-        return valueOf(integer, BigInteger.ONE);
+    /**
+     * Results in a {@link BigRational} value based on a {@link BigInteger} numerator and a {@code long} denominator.
+     * The denominator must not be zero.
+     *
+     * @throws IllegalArgumentException When the denominator is zero.
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(long, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(long)
+     * @see #valueOf(double)
+     */
+    public static BigRational valueOf(final BigInteger numerator, final long denominator) {
+        return valueOf(numerator, BigInteger.valueOf(denominator));
     }
 
+    /**
+     * Results in a {@link BigRational} value based on a {@code long} numerator and a {@link BigInteger} denominator.
+     * The denominator must not be zero.
+     *
+     * @throws IllegalArgumentException When the denominator is zero.
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(long, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(long)
+     * @see #valueOf(double)
+     */
+    public static BigRational valueOf(final long numerator, final BigInteger denominator) {
+        return valueOf(BigInteger.valueOf(numerator), denominator);
+    }
+
+    /**
+     * Results in a {@link BigRational} value based on an integer numerator and denominator that are given as
+     * {@code long} values. The denominator must not be zero.
+     *
+     * @throws IllegalArgumentException When the denominator is zero.
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(long)
+     * @see #valueOf(double)
+     */
     public static BigRational valueOf(final long numerator, final long denominator) {
         return valueOf(BigInteger.valueOf(numerator), BigInteger.valueOf(denominator));
     }
 
+    /**
+     * Results in a {@link BigRational} value based on a {@link BigInteger} value.
+     *
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(long, long)
+     * @see #valueOf(long)
+     * @see #valueOf(double)
+     */
+    public static BigRational valueOf(final BigInteger integer) {
+        return valueOf(integer, BigInteger.ONE);
+    }
+
+    /**
+     * Results in a {@link BigRational} value based on a {@code long} value.
+     *
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(long, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(double)
+     */
     public static BigRational valueOf(final long integer) {
         return valueOf(BigInteger.valueOf(integer));
     }
 
+    /**
+     * Results in a {@link BigRational} value based on a {@code double} value.
+     *
+     * @see #valueOf(BigInteger, BigInteger)
+     * @see #valueOf(long, BigInteger)
+     * @see #valueOf(BigInteger, long)
+     * @see #valueOf(long, long)
+     * @see #valueOf(BigInteger)
+     * @see #valueOf(long)
+     */
     public static BigRational valueOf(final double value) {
         return (value < 0.0) ? valueOfPositive(-value).negative() : valueOfPositive(value);
     }
@@ -76,70 +166,110 @@ public class BigRational extends Number {
         return Math.floor(value) < value;
     }
 
+    /**
+     * This gives the negative, more precisely the additive inverse of this value.
+     */
     public final BigRational negative() {
         return new BigRational(numerator.negate(), denominator);
     }
 
+    /**
+     * Returns the inverse, more precisely multiplicative inverse of this value.
+     */
     public final BigRational inverse() {
         return new BigRational(denominator, numerator);
     }
 
+    /**
+     * Returns the sum of this and the other given value.
+     */
     public final BigRational add(final BigRational addend) {
         return new BigRational(numerator.multiply(addend.denominator)
                                         .add(addend.numerator.multiply(denominator)),
                                denominator.multiply(addend.denominator));
     }
 
+    /**
+     * Returns the difference between this and the other given value.
+     */
     public final BigRational subtract(final BigRational subtrahend) {
-        return new BigRational(numerator.multiply(subtrahend.denominator)
-                                        .subtract(subtrahend.numerator.multiply(denominator)),
-                               denominator.multiply(subtrahend.denominator));
+        return add(subtrahend.negative());
     }
 
+    /**
+     * Returns the product of this and the other given value.
+     */
     public final BigRational multiply(final BigRational multiplier) {
         return new BigRational(numerator.multiply(multiplier.numerator),
                                denominator.multiply(multiplier.denominator));
     }
 
+    /**
+     * Returns the quotient of this and the other given value.
+     */
     public final BigRational divide(final BigRational divisor) {
         return new BigRational(numerator.multiply(divisor.denominator),
                                denominator.multiply(divisor.numerator));
     }
 
+    /**
+     * Returns the (abbreviated) numerator of this value.
+     */
     public final BigInteger getNumerator() {
         return numerator;
     }
 
+    /**
+     * Returns the (abbreviated) denominator of this value.
+     */
     public final BigInteger getDenominator() {
         return denominator;
     }
 
+    /**
+     * Returns an (roughly) equivalent {@code double} value.
+     */
     @Override
     public final double doubleValue() {
         return numerator.doubleValue() / denominator.doubleValue();
     }
 
+    /**
+     * Returns an (roughly) equivalent {@code float} value.
+     */
     @Override
     public final float floatValue() {
         return numerator.floatValue() / denominator.floatValue();
     }
 
+    /**
+     * Returns an (roughly) equivalent {@code long} value.
+     */
     @Override
     public final long longValue() {
         return toBigInteger().longValue();
     }
 
+    /**
+     * Returns an (roughly) equivalent {@code int} value.
+     */
     @Override
     public final int intValue() {
         return toBigInteger().intValue();
     }
 
+    /**
+     * Returns an (roughly) equivalent {@link BigInteger} value.
+     */
     public final BigInteger toBigInteger() {
         return numerator.divide(denominator);
     }
 
+    /**
+     * Returns an (roughly) equivalent {@link BigDecimal} value.
+     */
     public final BigDecimal toBigDecimal() {
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), RoundingMode.HALF_UP);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 15, RoundingMode.HALF_UP);
     }
 
     @Override
@@ -149,7 +279,7 @@ public class BigRational extends Number {
 
     @Override
     public final boolean equals(final Object obj) {
-        return this == obj || (obj instanceof BigRational && toList(this).equals(toList((BigRational) obj)));
+        return (this == obj) || ((obj instanceof BigRational) && toList(this).equals(toList((BigRational) obj)));
     }
 
     @Override
