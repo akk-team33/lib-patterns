@@ -25,7 +25,7 @@ public class FeatureSet<H> implements FeatureHub<H> {
     @Override
     public final <R> R get(final Function<? super H, ? extends R> key) {
         // This is the only place where a feature is created and associated with the key
-        // and this feature is clearly of type <F>, so that a cast can take place without any problems ...
+        // and this feature is clearly of type <R>, so that a cast can take place without any problems ...
         // noinspection unchecked
         return (R) backing.computeIfAbsent(key, this::create);
     }
