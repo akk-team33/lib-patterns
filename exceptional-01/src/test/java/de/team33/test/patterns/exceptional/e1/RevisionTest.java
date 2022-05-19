@@ -112,7 +112,7 @@ class RevisionTest {
     final void finish() {
         final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
-                                           .finish();
+                                           .close();
         assertSame(original, result);
     }
 
@@ -120,7 +120,7 @@ class RevisionTest {
     final void finishMapped() {
         final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
-                                           .finish(Function.identity());
+                                           .close(Function.identity());
         assertSame(original, result);
     }
 }
