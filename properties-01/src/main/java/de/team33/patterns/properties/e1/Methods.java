@@ -29,27 +29,7 @@ import static java.util.stream.Collectors.toMap;
  */
 public final class Methods {
 
-    private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.NATIVE;
-    private static final Converter CONVERTER =
-            Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
-
     private Methods() {
-    }
-
-    private static boolean isNoParameter(final Method method) {
-        return isParameterCount(method, 0);
-    }
-
-    private static boolean isParameterCount(final Method method, final int count) {
-        return method.getParameterCount() == count;
-    }
-
-    private static boolean isSignificant(final Method method) {
-        return isSignificant(method.getModifiers());
-    }
-
-    private static boolean isSignificant(final int modifiers) {
-        return 0 == (modifiers & NOT_SIGNIFICANT);
     }
 
     /**
@@ -60,10 +40,10 @@ public final class Methods {
     public static <T> Mapping<T> mapping(final Class<T> tClass) {
         final Collector<Entry, ?, Map<String, Function<T, Object>>> collector =
                 toMap(Entry::normalName,
-                      entry -> CONVERTER.function(entry.method::invoke));
+                      entry -> Mutual.CONVERTER.function(entry.method::invoke));
         final Map<String, Function<T, Object>> getters = Stream.of(tClass.getMethods())
-                                                               .filter(Methods::isSignificant)
-                                                               .filter(Methods::isNoParameter)
+                                                               .filter(Mutual::isSignificant)
+                                                               .filter(Mutual::isNoParameter)
                                                                .map(Entry::new)
                                                                .filter(entry -> entry.prefix.isGetter())
                                                                .collect(collector);
@@ -78,7 +58,7 @@ public final class Methods {
     public static <T> BiMapping<T> biMapping(final Class<T> tClass) {
         final Supplier<BiSelector<T>> newSelector = BiSelector::new;
         final Map<String, Accessor<T, Object>> methods = Stream.of(tClass.getMethods())
-                                                               .filter(Methods::isSignificant)
+                                                               .filter(Mutual::isSignificant)
                                                                .map(Entry::new)
                                                                .collect(newSelector,
                                                                         BiSelector::add,
@@ -94,7 +74,7 @@ public final class Methods {
         private static final Set<Prefix> GETTERS = unmodifiableSet(EnumSet.of(get, is));
         private static final Set<Prefix> SETTERS = unmodifiableSet(EnumSet.of(set));
 
-        private final int length;
+        final int length;
 
         Prefix(final boolean real) {
             this.length = real ? name().length() : 0;
@@ -109,12 +89,36 @@ public final class Methods {
         }
     }
 
+    private static final class Mutual {
+
+        static final int SYNTHETIC = 0x00001000;
+        static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
+        static final Converter CONVERTER =
+                Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
+
+        static boolean isNoParameter(final Method method) {
+            return isParameterCount(method, 0);
+        }
+
+        static boolean isParameterCount(final Method method, final int count) {
+            return method.getParameterCount() == count;
+        }
+
+        static boolean isSignificant(final Method method) {
+            return isSignificant(method.getModifiers());
+        }
+
+        static boolean isSignificant(final int modifiers) {
+            return 0 == (modifiers & NOT_SIGNIFICANT);
+        }
+    }
+
     private static class BiSelector<T> {
 
         private final List<Entry> getters = new LinkedList<>();
         private final Map<String, List<Entry>> setters = new TreeMap<>();
 
-        private static Method setter(final Class<?> paramType, final List<Entry> setters) {
+        private static Method setter(final Class<?> paramType, final List<? extends Entry> setters) {
             return setters.stream()
                           .map(setter -> setter.method)
                           .filter(setter -> setter.getParameterTypes()[0].isAssignableFrom(paramType))
@@ -123,21 +127,21 @@ public final class Methods {
                                   format("No setter found matching parameter type %s in %s", paramType, setters)));
         }
 
-        private void add(final Entry entry) {
-            if (entry.prefix.isGetter() && isParameterCount(entry.method, 0)) {
+        final void add(final Entry entry) {
+            if (entry.prefix.isGetter() && Mutual.isParameterCount(entry.method, 0)) {
                 getters.add(entry);
             }
-            if (entry.prefix.isSetter() && isParameterCount(entry.method, 1)) {
+            if (entry.prefix.isSetter() && Mutual.isParameterCount(entry.method, 1)) {
                 setters.computeIfAbsent(entry.normalName(), name -> new LinkedList<>())
                        .add(entry);
             }
         }
 
-        private void addAll(final BiSelector<T> other) {
+        final void addAll(final BiSelector<T> other) {
             throw new UnsupportedOperationException("Unexpectedly called");
         }
 
-        private Map<String, Accessor<T, Object>> toMethods() {
+        final Map<String, Accessor<T, Object>> toMethods() {
             return getters.stream()
                           .collect(toMap(Entry::normalName, this::toAccessor));
         }
@@ -150,14 +154,15 @@ public final class Methods {
         }
 
         private Accessor<T, Object> toAccessor(final Method getter, final Method setter) {
-            return Accessor.combine(CONVERTER.function(getter::invoke), CONVERTER.biConsumer(setter::invoke));
+            return Accessor.combine(Mutual.CONVERTER.function(getter::invoke),
+                                    Mutual.CONVERTER.biConsumer(setter::invoke));
         }
     }
 
     private static class Entry {
 
-        private final Prefix prefix;
-        private final Method method;
+        final Prefix prefix;
+        final Method method;
 
         Entry(final Method method) {
             this.prefix = Stream.of(Prefix.values()).filter(isPrefix(method)).findAny().orElse(Prefix.NONE);

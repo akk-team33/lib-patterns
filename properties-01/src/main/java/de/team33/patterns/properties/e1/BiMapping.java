@@ -21,7 +21,9 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
      *
      * @param <T> The type whose properties are to be mapped.
      */
-    static <T, V> Builder<T> add(final String name, final Function<T, V> getter, final BiConsumer<T, V> setter) {
+    static <T, V> Builder<T> add(final String name,
+                                 final Function<T, ? extends V> getter,
+                                 final BiConsumer<T, V> setter) {
         return new Builder<T>().add(name, getter, setter);
     }
 
@@ -31,7 +33,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
      * <em>WARNING:</em> There are several circumstances that can lead to a result that will not work properly.
      * Therefore, an application of this method should be carefully tested!
      */
-    static <T> BiMapping<T> combine(final Mapping<T> mapping, final ReMapping<T> reMapping) {
+    static <T> BiMapping<T> combine(final Mapping<? super T> mapping, final ReMapping<T> reMapping) {
         return new ComboMapping<>(mapping, reMapping);
     }
 
@@ -77,7 +79,7 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
          * @return {@code this}.
          */
         public final <V> Builder<T> add(final String name,
-                                        final Function<T, V> getter,
+                                        final Function<T, ? extends V> getter,
                                         final BiConsumer<T, V> setter) {
             backing.put(name, Accessor.combine(getter, setter));
             return this;

@@ -5,8 +5,8 @@ import java.util.function.Function;
 
 interface Accessor<T, V> extends Function<T, V>, BiConsumer<T, V> {
 
-    static <T, V> Accessor<T, V> combine(final Function<T, V> getter,
-                                         final BiConsumer<T, V> setter) {
+    static <T, V> Accessor<T, V> combine(final Function<? super T, ? extends V> getter,
+                                         final BiConsumer<? super T, ? super V> setter) {
         return new Accessor<T, V>() {
             @Override
             public V apply(final T t) {
