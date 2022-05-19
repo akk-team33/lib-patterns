@@ -106,6 +106,7 @@ public final class Parallel<R> {
     }
 
     private Thread newThread(final int threadIndex, final XFunction<Integer, R, ?> method) {
+        //noinspection ObjectToString
         return new Thread(newRunnable(method), this + ":" + threadIndex);
     }
 
