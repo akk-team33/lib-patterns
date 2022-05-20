@@ -3,12 +3,12 @@ package de.team33.patterns.lazy.e1;
 import de.team33.patterns.exceptional.e1.XSupplier;
 
 @SuppressWarnings("BoundedWildcard")
-class LazyBase<T, X extends Exception> {
+class Mutual<T, X extends Exception> {
 
     @SuppressWarnings("PackageVisibleField")
     volatile XSupplier<T, X> backing;
 
-    LazyBase(final XSupplier<T, X> initial) {
+    Mutual(final XSupplier<T, X> initial) {
         this.backing = initiation(initial);
     }
 

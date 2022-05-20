@@ -12,7 +12,9 @@
     <packaging>jar</packaging>
 
     <name>Team33 Exceptional Library - Edition 1</name>
-    <description>Contains variants of basic functional constructs that can throw checked exceptions</description>
+    <description>Contains variants of basic functional constructs that can throw checked exceptions,
+        tools for converting them to their more manageable counterparts, exception types useful for this,
+        and some tools for exception handling.</description>
 
     <dependencies>
         <dependency>

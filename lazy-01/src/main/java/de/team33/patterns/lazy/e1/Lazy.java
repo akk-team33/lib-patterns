@@ -9,8 +9,10 @@ import java.util.function.Supplier;
  * This implementation ensures that the {@linkplain #Lazy(Supplier) originally defined initialization code}
  * is called at most once, even if there is concurrent access from multiple threads, unless the
  * initialization attempt causes a {@link RuntimeException}.
+ * <p>
+ * Once the value is established, unnecessary effort to synchronize competing accesses is avoided.
  */
-public class Lazy<T> extends LazyBase<T, RuntimeException> implements Supplier<T> {
+public class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
     /**
      * Initializes a new instance giving a supplier that defines the intended initialization of the
@@ -20,6 +22,10 @@ public class Lazy<T> extends LazyBase<T, RuntimeException> implements Supplier<T
         super(initial::get);
     }
 
+    /**
+     * Executes the {@linkplain #Lazy(Supplier) originally defined initialization code} on the first call and
+     * returns its result on that and every subsequent call without calling the supplier again.
+     */
     @Override
     public final T get() {
         return backing.get();

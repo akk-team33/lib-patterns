@@ -23,6 +23,10 @@ import java.util.function.Supplier;
  */
 public class Provider<S> extends XProvider<S, RuntimeException> {
 
+    /**
+     * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
+     * new <em>subject</em>.
+     */
     public Provider(final Supplier<S> newItem) {
         super(newItem::get);
     }
