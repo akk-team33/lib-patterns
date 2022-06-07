@@ -34,7 +34,6 @@ class TimedTest {
             return System.currentTimeMillis() - time0;
         })
                 .reThrow(Error.class)
-                .reThrow(RuntimeException.class)
                 .reThrow(Exception.class)
                 .getResults()
                 .forEach(delta -> assertTrue(delta > LIFETIME, () -> "delta = " + delta));
