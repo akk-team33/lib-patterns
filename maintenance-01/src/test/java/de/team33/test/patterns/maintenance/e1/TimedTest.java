@@ -1,6 +1,6 @@
 package de.team33.test.patterns.maintenance.e1;
 
-import de.team33.patterns.maintenance.e1.Updated;
+import de.team33.patterns.maintenance.e1.Timed;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -9,11 +9,11 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UpdatedTest {
+class TimedTest {
 
     private static final int LIFETIME = 10;
 
-    private final Updated<Random> random = new Updated<>(LIFETIME, Random::new);
+    private final Timed<Random> random = new Timed<>(LIFETIME, Random::new);
 
     @RepeatedTest(100)
     final void get_delivers() {

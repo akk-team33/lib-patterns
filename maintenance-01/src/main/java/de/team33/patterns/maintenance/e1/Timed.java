@@ -2,14 +2,14 @@ package de.team33.patterns.maintenance.e1;
 
 import java.util.function.Supplier;
 
-public class Updated<T> implements Supplier<T> {
+public class Timed<T> implements Supplier<T> {
 
     private final long lifetime;
     private final Supplier<T> newSubject;
     private volatile long timeout = Long.MIN_VALUE;
     private volatile T current = null;
 
-    public Updated(final long lifetime, final Supplier<T> newSubject) {
+    public Timed(final long lifetime, final Supplier<T> newSubject) {
         this.lifetime = lifetime;
         this.newSubject = newSubject;
     }
