@@ -1,6 +1,6 @@
-package de.team33.test.patterns.maintenance.e1;
+package de.team33.test.patterns.limitation.e1;
 
-import de.team33.patterns.maintenance.e1.Timed;
+import de.team33.patterns.limitation.e1.Timed;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;

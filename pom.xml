@@ -46,7 +46,7 @@
         <module>exceptional-01</module>
         <module>lazy-01</module>
         <module>pooling-01</module>
-        <module>maintenance-01</module>
+        <module>limitation-01</module>
         <module>properties-01</module>
         <module>patterns-bom</module>
     </modules>
@@ -81,7 +81,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>maintenance-01</artifactId>
+                <artifactId>limitation-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

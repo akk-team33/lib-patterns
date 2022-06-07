@@ -1,4 +1,4 @@
-package de.team33.patterns.maintenance.e1;
+package de.team33.patterns.limitation.e1;
 
 import java.util.function.Supplier;
 

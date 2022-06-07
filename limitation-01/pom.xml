@@ -8,11 +8,11 @@
         <version>1.3.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>maintenance-01</artifactId>
+    <artifactId>limitation-01</artifactId>
     <packaging>jar</packaging>
 
     <name>Team33 Maintenance Library - Edition 1</name>
-    <description>Provides a simple maintenance of instances that are inherently reusable but become obsolete after a
+    <description>Provides a simple limitation of instances that are inherently reusable but become obsolete after a
         period of time.</description>
 
     <dependencies>
