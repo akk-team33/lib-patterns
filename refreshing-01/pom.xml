@@ -8,11 +8,11 @@
         <version>1.3.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>limitation-01</artifactId>
+    <artifactId>refreshing-01</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Maintenance Library - Edition 1</name>
-    <description>Provides a simple limitation of instances that are inherently reusable but become obsolete after a
+    <name>Team33 Refreshing Library - Edition 1</name>
+    <description>Provides a simple refreshing of instances that are inherently reusable but become obsolete after a
         period of time.</description>
 
     <dependencies>
