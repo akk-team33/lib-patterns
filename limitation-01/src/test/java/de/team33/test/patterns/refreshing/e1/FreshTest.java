@@ -1,6 +1,7 @@
-package de.team33.test.patterns.limitation.e1;
+package de.team33.test.patterns.refreshing.e1;
 
-import de.team33.patterns.limitation.e1.Timed;
+import de.team33.patterns.refreshing.e1.Fresh;
+import de.team33.patterns.refreshing.e1.Fresh.Rule;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -9,27 +10,28 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TimedTest {
+class FreshTest {
 
     private static final int LIFETIME = 10;
+    private static final Rule<Random> RANDOM_RULE = new Rule<>(Random::new, LIFETIME);
 
-    private final Timed<Random> random = new Timed<>(LIFETIME, Random::new);
+    private final Fresh<Random> freshRandom = new Fresh<>(RANDOM_RULE);
 
     @RepeatedTest(100)
     final void get_delivers() {
-        assertInstanceOf(Random.class, random.get());
+        assertInstanceOf(Random.class, freshRandom.get());
     }
 
     @Test
     final void get_new_if_timeout() throws Exception {
         final long time0 = System.currentTimeMillis();
-        final Random first = random.get();
+        final Random first = freshRandom.get();
         Parallel.apply(100, i -> {
             Random prev = first;
-            Random next = random.get();
+            Random next = freshRandom.get();
             while (prev == next) {
                 prev = next;
-                next = random.get();
+                next = freshRandom.get();
             }
             return System.currentTimeMillis() - time0;
         })
