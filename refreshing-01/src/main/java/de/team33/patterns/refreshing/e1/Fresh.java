@@ -11,18 +11,21 @@ import java.util.function.Supplier;
  */
 public class Fresh<T> implements Supplier<T> {
 
-    @SuppressWarnings("rawtypes")
-    private static final Consumer PLAIN_OLD_SUBJECT = subject -> {};
+    private static final Consumer<Object> PLAIN_OLD_SUBJECT = subject -> {
+    };
 
     private final Rule<T> rule;
-    private volatile long timeout = Long.MIN_VALUE;
-    private volatile T current = null;
+    private volatile Actual<T> actual;
 
     /**
      * Initializes a new instance given a {@link Rule}.
+     *
+     * @see #rule(Supplier, long)
+     * @see #rule(Supplier, Consumer, long)
      */
     public Fresh(final Rule<T> rule) {
         this.rule = rule;
+        this.actual = new Actual<>(null, Long.MIN_VALUE);
     }
 
     /**
@@ -34,8 +37,7 @@ public class Fresh<T> implements Supplier<T> {
      *
      * @see #rule(Supplier, Consumer, long)
      */
-    public static <T> Rule<T> rule(final Supplier<T> newSubject, final long lifeSpan) {
-        //noinspection unchecked
+    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
         return new Rule<>(newSubject, PLAIN_OLD_SUBJECT, lifeSpan);
     }
 
@@ -48,7 +50,7 @@ public class Fresh<T> implements Supplier<T> {
      *
      * @see #rule(Supplier, long)
      */
-    public static <T> Rule<T> rule(final Supplier<T> newSubject,
+    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject,
                                    final Consumer<? super T> oldSubject,
                                    final long lifeSpan) {
         return new Rule<>(newSubject, oldSubject, lifeSpan);
@@ -56,17 +58,30 @@ public class Fresh<T> implements Supplier<T> {
 
     @Override
     public final T get() {
-        final long now = System.currentTimeMillis();
-        return (now > timeout) ? updated(current, now) : current;
+        return approved(actual, System.currentTimeMillis());
+    }
+
+    private T approved(final Actual<? extends T> candidate, final long now) {
+        return (now > candidate.timeout) ? updated(candidate.subject, now) : candidate.subject;
     }
 
     private synchronized T updated(final T outdated, final long now) {
-        if (current == outdated) {
-            current = rule.newSubject.get();
-            timeout = now + rule.lifeSpan;
-            rule.oldSubject.accept(outdated);
+        if (outdated == actual.subject) {
+            actual = new Actual<>(rule.newSubject.get(), now + rule.lifeSpan);
+            if (null != outdated) rule.oldSubject.accept(outdated);
         }
-        return current;
+        return actual.subject;
+    }
+
+    private static class Actual<T> {
+
+        final T subject;
+        final long timeout;
+
+        Actual(final T subject, final long timeout) {
+            this.subject = subject;
+            this.timeout = timeout;
+        }
     }
 
     /**
@@ -80,9 +95,9 @@ public class Fresh<T> implements Supplier<T> {
         final Consumer<? super T> oldSubject;
         final long lifeSpan;
 
-        private Rule(final Supplier<? extends T> newSubject,
-                     final Consumer<? super T> oldSubject,
-                     final long lifeSpan) {
+        Rule(final Supplier<? extends T> newSubject,
+             final Consumer<? super T> oldSubject,
+             final long lifeSpan) {
             this.newSubject = newSubject;
             this.oldSubject = oldSubject;
             this.lifeSpan = lifeSpan;

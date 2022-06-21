@@ -6,7 +6,10 @@ import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
 import java.util.Random;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,9 +18,18 @@ class FreshTest {
 
     private static final Logger LOG = Logger.getLogger(FreshTest.class.getCanonicalName());
     private static final int LIFETIME = 10;
-    private static final Rule<Random> PLAIN_RULE = Fresh.rule(Random::new, LIFETIME);
-    private static final Rule<Random> LOGGING_RULE = Fresh.rule(Random::new,
-                                                                subject -> LOG.info(() -> "old: " + subject),
+    private static final Supplier<Random> NEW_SUBJECT = () -> {
+        final Random result = new Random();
+        LOG.info("new: " + result);
+        return result;
+    };
+    private static final Consumer<Random> OLD_SUBJECT = subject -> {
+        Objects.requireNonNull(subject);
+        LOG.info(() -> "old: " + subject);
+    };
+    private static final Rule<Random> PLAIN_RULE = Fresh.rule(NEW_SUBJECT, LIFETIME);
+    private static final Rule<Random> LOGGING_RULE = Fresh.rule(NEW_SUBJECT,
+                                                                OLD_SUBJECT,
                                                                 LIFETIME);
 
     private final Fresh<Random> freshRandom = new Fresh<>(PLAIN_RULE);
@@ -32,7 +44,7 @@ class FreshTest {
         final Fresh<Random> loggingFresh = new Fresh<>(LOGGING_RULE);
         final long time0 = System.currentTimeMillis();
         final Random first = loggingFresh.get();
-        Parallel.apply(100, i -> {
+        Parallel.apply(10000, i -> {
             for (Random next = first; first == next; next = loggingFresh.get()) {
                 // LOG.info("same");
             }
