@@ -1,7 +1,7 @@
 package de.team33.test.patterns.refreshing.e1;
 
-import de.team33.patterns.refreshing.e1.Fresh;
-import de.team33.patterns.refreshing.e1.Fresh.Rule;
+import de.team33.patterns.refreshing.e1.Recent;
+import de.team33.patterns.refreshing.e1.Recent.Rule;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -14,9 +14,9 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FreshTest {
+class RecentTest {
 
-    private static final Logger LOG = Logger.getLogger(FreshTest.class.getCanonicalName());
+    private static final Logger LOG = Logger.getLogger(RecentTest.class.getCanonicalName());
     private static final int LIFETIME = 10;
     private static final Supplier<Random> NEW_SUBJECT = () -> {
         final Random result = new Random();
@@ -27,25 +27,25 @@ class FreshTest {
         Objects.requireNonNull(subject);
         LOG.info(() -> "old: " + subject);
     };
-    private static final Rule<Random> PLAIN_RULE = Fresh.rule(NEW_SUBJECT, LIFETIME);
-    private static final Rule<Random> LOGGING_RULE = Fresh.rule(NEW_SUBJECT,
-                                                                OLD_SUBJECT,
-                                                                LIFETIME);
+    private static final Rule<Random> PLAIN_RULE = Recent.rule(NEW_SUBJECT, LIFETIME);
+    private static final Rule<Random> LOGGING_RULE = Recent.rule(NEW_SUBJECT,
+                                                                 OLD_SUBJECT,
+                                                                 LIFETIME);
 
-    private final Fresh<Random> freshRandom = new Fresh<>(PLAIN_RULE);
+    private final Recent<Random> recentRandom = new Recent<>(PLAIN_RULE);
 
     @RepeatedTest(100)
     final void get_delivers() {
-        assertInstanceOf(Random.class, freshRandom.get());
+        assertInstanceOf(Random.class, recentRandom.get());
     }
 
     @Test
     final void get_new_if_timeout() throws Exception {
-        final Fresh<Random> loggingFresh = new Fresh<>(LOGGING_RULE);
+        final Recent<Random> loggingRecent = new Recent<>(LOGGING_RULE);
         final long time0 = System.currentTimeMillis();
-        final Random first = loggingFresh.get();
+        final Random first = loggingRecent.get();
         Parallel.apply(10000, i -> {
-            for (Random next = first; first == next; next = loggingFresh.get()) {
+            for (Random next = first; first == next; next = loggingRecent.get()) {
                 // LOG.info("same");
             }
             return System.currentTimeMillis() - time0;

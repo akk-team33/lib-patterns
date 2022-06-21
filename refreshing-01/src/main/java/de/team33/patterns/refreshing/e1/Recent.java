@@ -9,7 +9,7 @@ import java.util.function.Supplier;
  *
  * @param <T> The type of instances to handle.
  */
-public class Fresh<T> implements Supplier<T> {
+public class Recent<T> implements Supplier<T> {
 
     private static final Consumer<Object> PLAIN_OLD_SUBJECT = subject -> {
     };
@@ -23,7 +23,7 @@ public class Fresh<T> implements Supplier<T> {
      * @see #rule(Supplier, long)
      * @see #rule(Supplier, Consumer, long)
      */
-    public Fresh(final Rule<T> rule) {
+    public Recent(final Rule<T> rule) {
         this.rule = rule;
         this.actual = new Actual<>(null, Long.MIN_VALUE);
     }
@@ -85,9 +85,9 @@ public class Fresh<T> implements Supplier<T> {
     }
 
     /**
-     * Summarizes the immutable properties of a {@link Fresh}.
+     * Summarizes the immutable properties of a {@link Recent}.
      *
-     * @param <T> The type of instances to be handled (of a {@link Fresh}).
+     * @param <T> The type of instances to be handled (of a {@link Recent}).
      */
     public static final class Rule<T> {
 
