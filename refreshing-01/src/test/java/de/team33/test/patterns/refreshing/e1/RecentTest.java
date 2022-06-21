@@ -44,7 +44,7 @@ class RecentTest {
         final Recent<Random> loggingRecent = new Recent<>(LOGGING_RULE);
         final long time0 = System.currentTimeMillis();
         final Random first = loggingRecent.get();
-        Parallel.apply(10000, i -> {
+        Parallel.apply(100, i -> {
             for (Random next = first; first == next; next = loggingRecent.get()) {
                 // LOG.info("same");
             }

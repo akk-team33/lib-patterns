@@ -15,7 +15,7 @@ public class Recent<T> implements Supplier<T> {
     };
 
     private final Rule<T> rule;
-    private volatile Actual<T> actual;
+    private volatile Actual<T> actual = new Actual<>();
 
     /**
      * Initializes a new instance given a {@link Rule}.
@@ -25,7 +25,6 @@ public class Recent<T> implements Supplier<T> {
      */
     public Recent(final Rule<T> rule) {
         this.rule = rule;
-        this.actual = new Actual<>(null, Long.MIN_VALUE);
     }
 
     /**
@@ -62,25 +61,59 @@ public class Recent<T> implements Supplier<T> {
     }
 
     private T approved(final Actual<? extends T> candidate, final long now) {
-        return (now > candidate.timeout) ? updated(candidate.subject, now) : candidate.subject;
+        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get();
     }
 
-    private synchronized T updated(final T outdated, final long now) {
-        if (outdated == actual.subject) {
-            actual = new Actual<>(rule.newSubject.get(), now + rule.lifeSpan);
-            if (null != outdated) rule.oldSubject.accept(outdated);
+    private synchronized T updated(final Actual<? extends T> outdated, final long now) {
+        if (outdated == actual) {
+            actual = new Definite<>(rule.newSubject.get(), now + rule.lifeSpan);
+            outdated.quit(rule.oldSubject);
         }
-        return actual.subject;
+        return actual.get();
     }
 
+    @SuppressWarnings("DesignForExtension")
     private static class Actual<T> {
 
-        final T subject;
-        final long timeout;
+        Actual() {
+        }
 
-        Actual(final T subject, final long timeout) {
+        boolean isTimeout(final long now) {
+            return true;
+        }
+
+        void quit(final Consumer<? super T> oldSubject) {
+            // nothing to do in initial state
+        }
+
+        T get() {
+            throw new IllegalStateException("not available in initial state");
+        }
+    }
+
+    private static class Definite<T> extends Actual<T> {
+
+        private final T subject;
+        private final long timeout;
+
+        Definite(final T subject, final long timeout) {
             this.subject = subject;
             this.timeout = timeout;
+        }
+
+        @Override
+        final boolean isTimeout(final long now) {
+            return now > timeout;
+        }
+
+        @Override
+        final void quit(final Consumer<? super T> oldSubject) {
+            oldSubject.accept(subject);
+        }
+
+        @Override
+        final T get() {
+            return subject;
         }
     }
 
