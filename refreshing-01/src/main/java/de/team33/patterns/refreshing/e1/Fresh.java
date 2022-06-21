@@ -11,6 +11,9 @@ import java.util.function.Supplier;
  */
 public class Fresh<T> implements Supplier<T> {
 
+    @SuppressWarnings("rawtypes")
+    private static final Consumer PLAIN_OLD_SUBJECT = subject -> {};
+
     private final Rule<T> rule;
     private volatile long timeout = Long.MIN_VALUE;
     private volatile T current = null;
@@ -22,6 +25,35 @@ public class Fresh<T> implements Supplier<T> {
         this.rule = rule;
     }
 
+    /**
+     * Returns a new {@link Rule} given a method for creating a new instance to handle and their respective life span
+     * in milliseconds.
+     * <p>
+     * This variant is intended for handleable instances that do not require special deinitialization if they are
+     * to be discarded.
+     *
+     * @see #rule(Supplier, Consumer, long)
+     */
+    public static <T> Rule<T> rule(final Supplier<T> newSubject, final long lifeSpan) {
+        //noinspection unchecked
+        return new Rule<>(newSubject, PLAIN_OLD_SUBJECT, lifeSpan);
+    }
+
+    /**
+     * Returns a new {@link Rule} given a method for creating a new and discarding an old instance to handle
+     * and their respective life span in milliseconds.
+     * <p>
+     * This variant is intended for handleable instances that require special deinitialization if they are to be
+     * discarded.
+     *
+     * @see #rule(Supplier, long)
+     */
+    public static <T> Rule<T> rule(final Supplier<T> newSubject,
+                                   final Consumer<? super T> oldSubject,
+                                   final long lifeSpan) {
+        return new Rule<>(newSubject, oldSubject, lifeSpan);
+    }
+
     @Override
     public final T get() {
         final long now = System.currentTimeMillis();
@@ -30,9 +62,9 @@ public class Fresh<T> implements Supplier<T> {
 
     private synchronized T updated(final T outdated, final long now) {
         if (current == outdated) {
-            current = rule.nextSubject();
-            timeout = now + rule.lifetime;
-            rule.close(outdated);
+            current = rule.newSubject.get();
+            timeout = now + rule.lifeSpan;
+            rule.oldSubject.accept(outdated);
         }
         return current;
     }
@@ -42,57 +74,18 @@ public class Fresh<T> implements Supplier<T> {
      *
      * @param <T> The type of instances to be handled (of a {@link Fresh}).
      */
-    public static class Rule<T> {
+    public static final class Rule<T> {
 
-        @SuppressWarnings("rawtypes")
-        private static final Consumer PLAIN_OLD_SUBJECT = any -> {
-        };
+        final Supplier<? extends T> newSubject;
+        final Consumer<? super T> oldSubject;
+        final long lifeSpan;
 
-        final Supplier<T> newSubject;
-        final Consumer<T> oldSubject;
-        final long lifetime;
-
-        /**
-         * Initializes a new instance (of this type) given a method for creating a new instance to handle and their
-         * respective lifetimes in milliseconds.
-         * <p>
-         * This variant is intended for handleable instances that do not require special deinitialization if they are
-         * to be discarded.
-         *
-         * @see #Rule(Supplier, Consumer, long)
-         */
-        public Rule(final Supplier<T> newSubject, final long lifetime) {
-            this(newSubject, plainOldSubject(), lifetime);
-        }
-
-        /**
-         * Initializes a new instance (of this type) based on a method for creating a new and discarding a used
-         * instance to handle and their respective lifetimes in milliseconds.
-         * <p>
-         * This variant is intended for handleable instances that require special deinitialization if they are to be
-         * discarded.
-         *
-         * @see #Rule(Supplier, long)
-         */
-        public Rule(final Supplier<T> newSubject, final Consumer<T> oldSubject, final long lifetime) {
+        private Rule(final Supplier<? extends T> newSubject,
+                     final Consumer<? super T> oldSubject,
+                     final long lifeSpan) {
             this.newSubject = newSubject;
             this.oldSubject = oldSubject;
-            this.lifetime = lifetime;
-        }
-
-        @SuppressWarnings("unchecked")
-        private static <T> Consumer<T> plainOldSubject() {
-            return PLAIN_OLD_SUBJECT;
-        }
-
-        final T nextSubject() {
-            return newSubject.get();
-        }
-
-        final void close(final T outdated) {
-            if (null != outdated) {
-                oldSubject.accept(outdated);
-            }
+            this.lifeSpan = lifeSpan;
         }
     }
 }
