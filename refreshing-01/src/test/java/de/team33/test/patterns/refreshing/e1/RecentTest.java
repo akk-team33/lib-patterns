@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentTest {
 
@@ -45,14 +47,51 @@ class RecentTest {
         final long time0 = System.currentTimeMillis();
         final Random first = loggingRecent.get();
         Parallel.apply(100, i -> {
-            for (Random next = first; first == next; next = loggingRecent.get()) {
-                // LOG.info("same");
-            }
-            return System.currentTimeMillis() - time0;
-        })
-                .reThrow(Error.class)
-                .reThrow(Exception.class)
+                    for (Random next = first; first == next; next = loggingRecent.get()) {
+                        // LOG.info("same");
+                    }
+                    return System.currentTimeMillis() - time0;
+                })
+                .reThrowAny()
                 .getResults()
                 .forEach(delta -> assertTrue(delta > LIFETIME, () -> "delta = " + delta));
+    }
+
+    @Test
+    final void get_without_close() throws Exception {
+        final Recent<Subject> recentSubject = new Recent<>(Recent.rule(() -> new Subject(33), 30));
+        Parallel.apply(100000, 100, index -> recentSubject.get().getId())
+                .reThrowAny()
+                .getResults()
+                .forEach(result -> assertTrue(result < Subject.NEXT_ID.get()));
+    }
+
+    static class Subject {
+
+        static final AtomicLong NEXT_ID = new AtomicLong(0);
+
+        private final long id = NEXT_ID.getAndIncrement();
+        private final long timeout;
+        private volatile boolean closed = false;
+
+        Subject(final long lifeSpan) {
+            timeout = System.currentTimeMillis() + lifeSpan;
+            LOG.info(() -> String.format("new Subject: id = %d, timeout = %d", id, timeout));
+        }
+
+        final long getId() {
+            if (closed) {
+                throw new IllegalStateException("closed");
+            } else if (timeout < System.currentTimeMillis()) {
+                throw new IllegalStateException("timeout exceeded: " + timeout);
+            } else {
+                return id;
+            }
+        }
+
+        final void close() {
+            this.closed = true;
+            throw new UnsupportedOperationException("not yet implemented");
+        }
     }
 }

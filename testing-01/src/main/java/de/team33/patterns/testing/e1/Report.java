@@ -91,6 +91,17 @@ public final class Report<R> {
         return this;
     }
 
+    /**
+     * Re-throws the first {@link Error} if any, or else the first {@link Exception} that occurred during
+     * reporting after all further {@linkplain Throwable exceptions} of that type have been
+     * {@linkplain Throwable#addSuppressed(Throwable) added as suppressed}.
+     */
+    @SuppressWarnings({"ProhibitedExceptionDeclared", "UnnecessaryThis"})
+    public final Report<R> reThrowAny() throws Exception {
+        return this.reThrow(Error.class)
+                   .reThrow(Exception.class);
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     static class Builder<R> {
 

@@ -13,9 +13,26 @@ public class Recent<T> implements Supplier<T> {
 
     private static final Consumer<Object> PLAIN_OLD_SUBJECT = subject -> {
     };
+    @SuppressWarnings("rawtypes")
+    private static final Actual INITIAL = new Actual() {
+        @Override
+        public boolean isTimeout(final long now) {
+            return true;
+        }
+
+        @Override
+        public void quit(final Consumer method) {
+            // nothing to do in initial state
+        }
+
+        @Override
+        public Object get() {
+            throw new IllegalStateException("not available in initial state");
+        }
+    };
 
     private final Rule<T> rule;
-    private volatile Actual<T> actual = new Actual<>();
+    private volatile Actual<T> actual = initial();
 
     /**
      * Initializes a new instance given a {@link Rule}.
@@ -55,6 +72,30 @@ public class Recent<T> implements Supplier<T> {
         return new Rule<>(newSubject, oldSubject, lifeSpan);
     }
 
+    @SuppressWarnings("unchecked")
+    private static <T> Actual<T> initial() {
+        return INITIAL;
+    }
+
+    private static <T> Actual<T> substantial(final T subject, final long timeout) {
+        return new Actual<T>() {
+            @Override
+            public boolean isTimeout(final long now) {
+                return now > timeout;
+            }
+
+            @Override
+            public void quit(final Consumer<? super T> method) {
+                method.accept(subject);
+            }
+
+            @Override
+            public T get() {
+                return subject;
+            }
+        };
+    }
+
     @Override
     public final T get() {
         return approved(actual, System.currentTimeMillis());
@@ -66,55 +107,19 @@ public class Recent<T> implements Supplier<T> {
 
     private synchronized T updated(final Actual<? extends T> outdated, final long now) {
         if (outdated == actual) {
-            actual = new Definite<>(rule.newSubject.get(), now + rule.lifeSpan);
+            actual = substantial(rule.newSubject.get(), now + rule.lifeSpan);
             outdated.quit(rule.oldSubject);
         }
         return actual.get();
     }
 
-    @SuppressWarnings("DesignForExtension")
-    private static class Actual<T> {
+    private interface Actual<T> {
 
-        Actual() {
-        }
+        boolean isTimeout(final long now);
 
-        boolean isTimeout(final long now) {
-            return true;
-        }
+        void quit(final Consumer<? super T> method);
 
-        void quit(final Consumer<? super T> oldSubject) {
-            // nothing to do in initial state
-        }
-
-        T get() {
-            throw new IllegalStateException("not available in initial state");
-        }
-    }
-
-    private static class Definite<T> extends Actual<T> {
-
-        private final T subject;
-        private final long timeout;
-
-        Definite(final T subject, final long timeout) {
-            this.subject = subject;
-            this.timeout = timeout;
-        }
-
-        @Override
-        final boolean isTimeout(final long now) {
-            return now > timeout;
-        }
-
-        @Override
-        final void quit(final Consumer<? super T> oldSubject) {
-            oldSubject.accept(subject);
-        }
-
-        @Override
-        final T get() {
-            return subject;
-        }
+        T get();
     }
 
     /**
