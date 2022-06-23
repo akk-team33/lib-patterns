@@ -36,6 +36,10 @@ public class Recent<T> implements Supplier<T> {
 
     /**
      * Initializes a new instance given a {@link Rule}.
+     * <p>
+     * CAUTION: The life span given by the {@link Rule} should be significantly smaller than the actually expected
+     * life span of an instance to be handled, otherwise there may not be enough time to use a
+     * {@linkplain #get() provided} instance successfully!
      *
      * @see #rule(Supplier, long)
      * @see #rule(Supplier, Consumer, long)

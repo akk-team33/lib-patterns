@@ -19,11 +19,13 @@ public final class Report<R> {
 
     private final List<R> results;
     private final List<Throwable> throwables;
+    private final long duration;
 
     @SuppressWarnings("WeakerAccess")
     Report(final Builder<R> builder) {
         this.results = unmodifiableList(new ArrayList<>(builder.results));
         this.throwables = unmodifiableList(new ArrayList<>(builder.throwables));
+        this.duration = builder.duration;
     }
 
     /**
@@ -102,11 +104,16 @@ public final class Report<R> {
                    .reThrow(Exception.class);
     }
 
+    public final long getDuration() {
+        return duration;
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     static class Builder<R> {
 
         final List<Throwable> throwables = synchronizedList(new LinkedList<>());
         final List<R> results = synchronizedList(new LinkedList<>());
+        long duration;
 
         final Report<R> build() {
             return new Report<>(this);
@@ -119,6 +126,11 @@ public final class Report<R> {
 
         final Builder<R> add(final R result) {
             results.add(result);
+            return this;
+        }
+
+        final Builder<R> setDuration(final long duration) {
+            this.duration = duration;
             return this;
         }
     }
