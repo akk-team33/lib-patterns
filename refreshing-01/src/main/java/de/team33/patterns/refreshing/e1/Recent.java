@@ -1,28 +1,29 @@
+// TODO refreshing -> expiry
 package de.team33.patterns.refreshing.e1;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Defines a container type to handle instances that can in principle be used again and again but have to be renewed
- * after a certain period of time.
+ * Defines a container type for handling instances, which in principle can be defined globally and
+ * reused over and over again, but have to be updated after a certain time.
+ * <p>
+ * <b>Problem to solve:</b>
+ * <p>
+ * There are objects that, due to their technical properties, are predestined to be initialized and made available once
+ * throughout the application. In particular, they are state-free but relatively "expensive" to initialize. Due to
+ * their semantics, however, they have to be renewed from time to time. An example of such an object could be an
+ * authentication token.
+ * <p>
+ * This class serves to handle such objects and in particular their updating.
  *
  * @param <T> The type of instances to handle.
  */
 public class Recent<T> implements Supplier<T> {
-
-    private static final Consumer<Object> PLAIN_OLD_SUBJECT = subject -> {
-    };
     @SuppressWarnings("rawtypes")
     private static final Actual INITIAL = new Actual() {
         @Override
         public boolean isTimeout(final long now) {
             return true;
-        }
-
-        @Override
-        public void quit(final Consumer method) {
-            // nothing to do in initial state
         }
 
         @Override
@@ -42,38 +43,21 @@ public class Recent<T> implements Supplier<T> {
      * {@linkplain #get() provided} instance successfully!
      *
      * @see #rule(Supplier, long)
-     * @see #rule(Supplier, Consumer, long)
      */
     public Recent(final Rule<T> rule) {
         this.rule = rule;
     }
 
-    /**
-     * Returns a new {@link Rule} given a method for creating a new instance to handle and their respective life span
-     * in milliseconds.
-     * <p>
-     * This variant is intended for handleable instances that do not require special deinitialization if they are
-     * to be discarded.
-     *
-     * @see #rule(Supplier, Consumer, long)
-     */
-    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
-        return new Rule<>(newSubject, PLAIN_OLD_SUBJECT, lifeSpan);
+    public Recent(final Supplier<? extends T> newSubject, final long lifeSpan) {
+        this(rule(newSubject, lifeSpan));
     }
 
     /**
-     * Returns a new {@link Rule} given a method for creating a new and discarding an old instance to handle
-     * and their respective life span in milliseconds.
-     * <p>
-     * This variant is intended for handleable instances that require special deinitialization if they are to be
-     * discarded.
-     *
-     * @see #rule(Supplier, long)
+     * Returns a new {@link Rule} given a method for creating a new instance to handle and their respective life span
+     * in milliseconds.
      */
-    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject,
-                                   final Consumer<? super T> oldSubject,
-                                   final long lifeSpan) {
-        return new Rule<>(newSubject, oldSubject, lifeSpan);
+    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
+        return new Rule<>(newSubject, lifeSpan);
     }
 
     @SuppressWarnings("unchecked")
@@ -86,11 +70,6 @@ public class Recent<T> implements Supplier<T> {
             @Override
             public boolean isTimeout(final long now) {
                 return now > timeout;
-            }
-
-            @Override
-            public void quit(final Consumer<? super T> method) {
-                method.accept(subject);
             }
 
             @Override
@@ -112,7 +91,6 @@ public class Recent<T> implements Supplier<T> {
     private synchronized T updated(final Actual<? extends T> outdated, final long now) {
         if (outdated == actual) {
             actual = substantial(rule.newSubject.get(), now + rule.lifeSpan);
-            outdated.quit(rule.oldSubject);
         }
         return actual.get();
     }
@@ -121,8 +99,6 @@ public class Recent<T> implements Supplier<T> {
 
         boolean isTimeout(final long now);
 
-        void quit(final Consumer<? super T> method);
-
         T get();
     }
 
@@ -130,18 +106,15 @@ public class Recent<T> implements Supplier<T> {
      * Summarizes the immutable properties of a {@link Recent}.
      *
      * @param <T> The type of instances to be handled (of a {@link Recent}).
+     * @see #rule(Supplier, long)
      */
     public static final class Rule<T> {
 
-        final Supplier<? extends T> newSubject;
-        final Consumer<? super T> oldSubject;
-        final long lifeSpan;
+        private final Supplier<? extends T> newSubject;
+        private final long lifeSpan;
 
-        Rule(final Supplier<? extends T> newSubject,
-             final Consumer<? super T> oldSubject,
-             final long lifeSpan) {
+        private Rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
             this.newSubject = newSubject;
-            this.oldSubject = oldSubject;
             this.lifeSpan = lifeSpan;
         }
     }

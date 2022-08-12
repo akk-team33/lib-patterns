@@ -1,98 +1,86 @@
 package de.team33.test.patterns.refreshing.e1;
 
 import de.team33.patterns.refreshing.e1.Recent;
-import de.team33.patterns.refreshing.e1.Recent.Rule;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.time.Instant;
+import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
-import static de.team33.patterns.refreshing.e1.Recent.rule;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentTest {
 
-    private static final Logger LOG = Logger.getLogger(RecentTest.class.getCanonicalName());
-    private static final String DURATION_TOO_SHORT = "duration is too short in relation to life span," +
-                                                     " increase number of executions!";
-    private static final int LIFE_SPAN = 25;
-    private static final int MAX_LIFE_SPAN = LIFE_SPAN + 25;
+    private static final long LIFESPAN = 30; // milliseconds!
+    private static final long MAX_LIFESPAN = LIFESPAN + 30;
+
+    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, LIFESPAN);
 
     @Test
-    final void get_new_if_timeout() throws Exception {
-        final Supplier<Subject> recentSubject = new Recent<>(rule(() -> new Subject(MAX_LIFE_SPAN), LIFE_SPAN));
+    final void obsolencing() throws Exception {
+        final Obsolescing sample = new Obsolescing();
+        Thread.sleep(MAX_LIFESPAN);
+        assertThrows(IllegalStateException.class, () -> sample.getCreated());
+    }
+
+    @Test
+    final void simple() throws Exception {
         final long time0 = System.currentTimeMillis();
-        final Subject first = recentSubject.get();
-        Parallel.apply(100, i -> {
-                    for (Subject next = first; first == next; next = recentSubject.get()) {
-                        // LOG.info("same");
-                    }
-                    return System.currentTimeMillis() - time0;
-                })
-                .reThrowAny()
-                .getResults()
-                .forEach(delta -> assertTrue(delta > LIFE_SPAN, () -> "delta = " + delta));
-    }
-
-    @Test
-    final void get_duration_without_close() throws Exception {
-        final Supplier<Subject> recentSubject = new Recent<>(rule(() -> new Subject(MAX_LIFE_SPAN), LIFE_SPAN));
-        Subject.NEXT_ID.set(0);
-
-        final long duration = Parallel.invoke(1000000, 100, index -> recentSubject.get().getId())
-                                      .reThrowAny()
-                                      .getDuration();
-
-        final long nSubjects = Subject.NEXT_ID.get();
-        assertTrue(nSubjects > 3, DURATION_TOO_SHORT);
-        final long maxSubjects = (duration / LIFE_SPAN) + 1;
-        assertTrue(nSubjects <= maxSubjects, () -> "nSubjects = " + nSubjects + ", maxSubjects = " + maxSubjects);
-    }
-
-    @Test
-    final void get_duration_with_close() throws Exception {
-        final Rule<Subject> rule = rule(() -> new Subject(MAX_LIFE_SPAN), Subject::close, LIFE_SPAN);
-        final Supplier<Subject> recentSubject = new Recent<>(rule);
-        Subject.NEXT_ID.set(0);
-
-        final long duration = Parallel.invoke(1000000, 100, index -> recentSubject.get().getId())
-                                      .reThrowAny()
-                                      .getDuration();
-
-        final long nSubjects = Subject.NEXT_ID.get();
-        assertTrue(nSubjects > 3, DURATION_TOO_SHORT);
-        final long maxSubjects = (duration / LIFE_SPAN) + 1;
-        assertTrue(nSubjects <= maxSubjects, () -> "nSubjects = " + nSubjects + ", maxSubjects = " + maxSubjects);
-    }
-
-    static class Subject {
-
-        static final AtomicLong NEXT_ID = new AtomicLong(0);
-
-        private final long id = NEXT_ID.getAndIncrement();
-        private final long timeout;
-        private volatile boolean closed = false;
-
-        Subject(final long lifeSpan) {
-            timeout = System.currentTimeMillis() + lifeSpan;
-            LOG.info(() -> String.format("new Subject: id = %d, timeout = %d", id, timeout));
+        final Obsolescing first = subject.get();
+        long counter = 0;
+        while (first == subject.get()) {
+            counter += 1;
         }
 
-        final long getId() {
-            if (closed) {
-                throw new IllegalStateException("closed");
-            } else if (timeout < System.currentTimeMillis()) {
-                throw new IllegalStateException("timeout exceeded: " + timeout);
-            } else {
-                return id;
+        final long delta = System.currentTimeMillis() - time0;
+        assertTrue(delta > LIFESPAN, () -> "delta = " + delta);
+        final long finalCounter = counter;
+        assertTrue(finalCounter > 0, () -> "counter = " + finalCounter);
+        assertTrue(finalCounter > 1000000, () -> "counter = " + finalCounter); // may fail on a slow system
+    }
+
+    @Test
+    final void parallel() throws Exception {
+        final long time0 = System.currentTimeMillis();
+        final Obsolescing first = subject.get();
+
+        final List<Long> results = Parallel.apply(10, index -> {
+            long counter = 0;
+            while (first == subject.get()) {
+                counter += 1;
+                Thread.sleep(0); // ... to give another thread a chance
             }
+            return counter;
+        }).reThrowAny().getResults();
+
+        final long delta = System.currentTimeMillis() - time0;
+        assertTrue(delta > LIFESPAN, () -> "delta = " + delta);
+        results.forEach(counter -> {
+            assertTrue(counter > 0, () -> "counter = " + counter);
+            assertTrue(counter > 1000, () -> "counter = " + counter); // may fail on a slow system
+        });
+    }
+
+    static class Obsolescing {
+
+        private final Instant created;
+
+        Obsolescing() {
+            created = Instant.now();
         }
 
-        final void close() {
-            this.closed = true;
-            LOG.info(() -> String.format("closed Subject: id = %d", id));
+        final Instant getCreated() {
+            return ifAlive(() -> created);
+        }
+
+        private <R> R ifAlive(final Supplier<R> supplier) {
+            final Instant now = Instant.now();
+            if (created.plusMillis(MAX_LIFESPAN).isAfter(now)) {
+                return supplier.get();
+            }
+            throw new IllegalStateException("Instance is outdated - created = " + created + ", now = " + now);
         }
     }
 }
