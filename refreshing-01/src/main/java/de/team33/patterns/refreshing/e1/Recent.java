@@ -19,6 +19,7 @@ import java.util.function.Supplier;
  * @param <T> The type of instances to handle.
  */
 public class Recent<T> implements Supplier<T> {
+
     @SuppressWarnings("rawtypes")
     private static final Actual INITIAL = new Actual() {
         @Override
@@ -35,29 +36,23 @@ public class Recent<T> implements Supplier<T> {
     private final Rule<T> rule;
     private volatile Actual<T> actual = initial();
 
-    /**
-     * Initializes a new instance given a {@link Rule}.
-     * <p>
-     * CAUTION: The life span given by the {@link Rule} should be significantly smaller than the actually expected
-     * life span of an instance to be handled, otherwise there may not be enough time to use a
-     * {@linkplain #get() provided} instance successfully!
-     *
-     * @see #rule(Supplier, long)
-     */
-    public Recent(final Rule<T> rule) {
+    private Recent(final Rule<T> rule) {
         this.rule = rule;
     }
 
-    public Recent(final Supplier<? extends T> newSubject, final long lifeSpan) {
-        this(rule(newSubject, lifeSpan));
-    }
-
     /**
-     * Returns a new {@link Rule} given a method for creating a new instance to handle and their respective life span
-     * in milliseconds.
+     * Initializes a new instance of this container type given a {@link Supplier} for the type to be handled and
+     * an intended lifetime of such instances.
+     * <p>
+     * CAUTION: The given lifetime should be significantly smaller than the actually expected
+     * life span of an instance to be handled, otherwise there may not be enough time to use a
+     * {@linkplain #get() provided} instance successfully!
+     *
+     * @param newSubject the {@link Supplier} for the instances to handle
+     * @param lifetime   the lifetime in milliseconds
      */
-    public static <T> Rule<T> rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
-        return new Rule<>(newSubject, lifeSpan);
+    public Recent(final Supplier<? extends T> newSubject, final long lifetime) {
+        this(new Rule<>(newSubject, lifetime));
     }
 
     @SuppressWarnings("unchecked")
@@ -89,8 +84,8 @@ public class Recent<T> implements Supplier<T> {
     }
 
     private synchronized T updated(final Actual<? extends T> outdated, final long now) {
-        if (outdated == actual) {
-            actual = substantial(rule.newSubject.get(), now + rule.lifeSpan);
+        if (actual == outdated) {
+            actual = substantial(rule.newSubject.get(), now + rule.lifetime);
         }
         return actual.get();
     }
@@ -102,20 +97,14 @@ public class Recent<T> implements Supplier<T> {
         T get();
     }
 
-    /**
-     * Summarizes the immutable properties of a {@link Recent}.
-     *
-     * @param <T> The type of instances to be handled (of a {@link Recent}).
-     * @see #rule(Supplier, long)
-     */
-    public static final class Rule<T> {
+    private static final class Rule<T> {
 
         private final Supplier<? extends T> newSubject;
-        private final long lifeSpan;
+        private final long lifetime;
 
-        private Rule(final Supplier<? extends T> newSubject, final long lifeSpan) {
+        private Rule(final Supplier<? extends T> newSubject, final long lifetime) {
             this.newSubject = newSubject;
-            this.lifeSpan = lifeSpan;
+            this.lifetime = lifetime;
         }
     }
 }
