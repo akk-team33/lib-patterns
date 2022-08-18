@@ -3,4 +3,4 @@
  *
  * TODO: refreshing -&gt; expiry
  */
-package de.team33.patterns.refreshing.e1;
+package de.team33.patterns.expiry.e1;

@@ -1,6 +1,6 @@
-package de.team33.test.patterns.refreshing.e1;
+package de.team33.test.patterns.expiry.e1;
 
-import de.team33.patterns.refreshing.e1.Recent;
+import de.team33.patterns.expiry.e1.Recent;
 import de.team33.patterns.testing.e1.Parallel;
 import org.junit.jupiter.api.Test;
 
@@ -13,10 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentTest {
 
-    private static final long LIFESPAN = 30; // milliseconds!
-    private static final long MAX_LIFESPAN = LIFESPAN + 30;
+    private static final long LIFETIME = 100; // milliseconds!
+    private static final long MAX_LIFESPAN = LIFETIME + 30;
 
-    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, LIFESPAN);
+    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, LIFETIME);
 
     @Test
     final void obsolencing() throws Exception {
@@ -27,18 +27,22 @@ class RecentTest {
 
     @Test
     final void simple() throws Exception {
+        // given ...
         final long time0 = System.currentTimeMillis();
         final Obsolescing first = subject.get();
+
+        // when ...
         long counter = 0;
         while (first == subject.get()) {
             counter += 1;
         }
-
         final long delta = System.currentTimeMillis() - time0;
-        assertTrue(delta > LIFESPAN, () -> "delta = " + delta);
+
+        // then ...
+        assertTrue(delta > LIFETIME, () -> "delta = " + delta);
         final long finalCounter = counter;
         assertTrue(finalCounter > 0, () -> "counter = " + finalCounter);
-        assertTrue(finalCounter > 1000000, () -> "counter = " + finalCounter); // may fail on a slow system
+        assertTrue(finalCounter > 100000, () -> "counter = " + finalCounter); // may fail on a slow system
     }
 
     @Test
@@ -56,10 +60,10 @@ class RecentTest {
         }).reThrowAny().getResults();
 
         final long delta = System.currentTimeMillis() - time0;
-        assertTrue(delta > LIFESPAN, () -> "delta = " + delta);
+        assertTrue(delta > LIFETIME, () -> "delta = " + delta);
         results.forEach(counter -> {
             assertTrue(counter > 0, () -> "counter = " + counter);
-            assertTrue(counter > 1000, () -> "counter = " + counter); // may fail on a slow system
+            assertTrue(counter > 500, () -> "counter = " + counter); // may fail on a slow system
         });
     }
 
