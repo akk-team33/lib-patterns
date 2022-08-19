@@ -22,7 +22,7 @@ class RecentTest {
     final void obsolencing() throws Exception {
         final Obsolescing sample = new Obsolescing();
         Thread.sleep(MAX_LIFESPAN);
-        assertThrows(IllegalStateException.class, () -> sample.getCreated());
+        assertThrows(IllegalStateException.class, sample::getCreated);
     }
 
     @Test
@@ -47,9 +47,11 @@ class RecentTest {
 
     @Test
     final void parallel() throws Exception {
+        // given ...
         final long time0 = System.currentTimeMillis();
         final Obsolescing first = subject.get();
 
+        // when ...
         final List<Long> results = Parallel.apply(10, index -> {
             long counter = 0;
             while (first == subject.get()) {
@@ -58,11 +60,12 @@ class RecentTest {
             }
             return counter;
         }).reThrowAny().getResults();
-
         final long delta = System.currentTimeMillis() - time0;
+
+        // then ...
         assertTrue(delta > LIFETIME, () -> "delta = " + delta);
         results.forEach(counter -> {
-            assertTrue(counter > 0, () -> "counter = " + counter);
+            assertTrue(counter > 0, () -> "counter = " + counter); // may fail on a very slow system
             assertTrue(counter > 500, () -> "counter = " + counter); // may fail on a slow system
         });
     }
