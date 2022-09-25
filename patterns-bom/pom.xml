@@ -60,7 +60,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>refreshing-01</artifactId>
+                <artifactId>expiry-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

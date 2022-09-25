@@ -8,12 +8,12 @@
         <version>1.3.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>refreshing-01</artifactId>
+    <artifactId>expiry-01</artifactId>
     <packaging>jar</packaging>
 
     <name>Team33 Refreshing Library - Edition 1</name>
-    <description>Provides a simple refreshing of instances that are inherently reusable but become obsolete after a
-        period of time.</description>
+    <description>Provides a simple renewal mechanism for instances that are essentially reusable
+        but expire after a certain amount of time.</description>
 
     <dependencies>
         <dependency>

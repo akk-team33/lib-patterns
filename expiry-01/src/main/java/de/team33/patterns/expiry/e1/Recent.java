@@ -1,4 +1,4 @@
-// TODO refreshing -> expiry
+// TODO expiry -> expiry
 package de.team33.patterns.expiry.e1;
 
 import java.util.function.Supplier;
