@@ -1,6 +1,7 @@
 package de.team33.test.patterns.random.mimas;
 
 import de.team33.patterns.random.mimas.Extension;
+import de.team33.sample.patterns.random.mimas.XRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -10,27 +11,22 @@ import java.math.RoundingMode;
 import java.util.EnumMap;
 import java.util.IntSummaryStatistics;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import static java.math.BigInteger.ONE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("ConstantConditions")
 class ExtensionTest {
-
-    static class XRandom extends Random implements Extension {
-
-        @Override
-        public BigInteger nextBits(final int numBits) {
-            return new BigInteger(numBits, this);
-        }
-    }
 
     private static final BigInteger FIXED = new BigInteger("45619B2F8D02DD0BD545B8C8BD2CDBF86E8149DD7581925275C0", 16);
 
     private final XRandom random = new XRandom();
+    private final Extension fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})
@@ -39,7 +35,7 @@ class ExtensionTest {
         assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
 
-        final BigInteger limit = BigInteger.ONE.shiftLeft(numBits);
+        final BigInteger limit = ONE.shiftLeft(numBits);
         assertTrue(limit.compareTo(result) > 0,
                    () -> "result is expected to be less than " + limit + " but was " + result);
     }
@@ -47,21 +43,25 @@ class ExtensionTest {
     @Test
     final void nextBoolean() {
         assertInstanceOf(Boolean.class, random.nextBoolean());
+        assertFalse(fixed.nextBoolean());
     }
 
     @Test
     final void nextByte() {
         assertInstanceOf(Byte.class, random.nextByte());
+        assertEquals(BigInteger.valueOf(0xC0).byteValue(), fixed.nextByte());
     }
 
     @Test
     final void nextShort() {
         assertInstanceOf(Short.class, random.nextShort());
+        assertEquals(BigInteger.valueOf(0x75C0).shortValue(), fixed.nextShort());
     }
 
     @Test
     final void nextInt() {
         assertInstanceOf(Integer.class, random.nextInt());
+        assertEquals(0x925275C0, fixed.nextInt());
     }
 
     @ParameterizedTest
@@ -73,6 +73,7 @@ class ExtensionTest {
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bound > result,
                    () -> "result is expected to be less than " + bound + " but was " + result);
+        assertEquals(0x925275C0, fixed.nextInt());
     }
 
     @ParameterizedTest
@@ -88,6 +89,7 @@ class ExtensionTest {
     @Test
     final void nextLong() {
         assertInstanceOf(Long.class, random.nextLong());
+        assertEquals(0x49DD7581925275C0L, fixed.nextLong());
     }
 
     @ParameterizedTest
@@ -134,12 +136,23 @@ class ExtensionTest {
 
     @Test
     final void nextFloat() {
-        assertInstanceOf(Float.class, random.nextFloat());
+        final float result = assertInstanceOf(Float.class, random.nextFloat());
+        assertTrue(0.0f <= result,
+                   () -> "result is expected to be greater or equal to 0.0 but was " + result);
+        assertTrue(1.0f > result,
+                   () -> "result is expected to be less than 1.0 but was " + result);
+        assertEquals(Float.valueOf("0.32210922"), fixed.nextFloat());
     }
 
     @Test
     final void nextDouble() {
-        assertInstanceOf(Double.class, random.nextDouble());
+        final double result = random.nextDouble();
+        assertInstanceOf(Double.class, result);
+        assertTrue(0.0 <= result,
+                   () -> "result is expected to be greater or equal to 0.0 but was " + result);
+        assertTrue(1.0 > result,
+                   () -> "result is expected to be less than 1.0 but was " + result);
+        assertEquals(0.9205940111020752, fixed.nextDouble());
     }
 
     @ParameterizedTest
