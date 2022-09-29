@@ -35,12 +35,13 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <copyright.year>2021</copyright.year>
+        <copyright.year>2022</copyright.year>
         <skipHome>false</skipHome>
     </properties>
 
     <modules>
         <module>testing-01</module>
+        <module>random-mimas</module>
         <module>production-01</module>
         <module>random-01</module>
         <module>exceptional-01</module>
@@ -61,6 +62,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-mimas</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
