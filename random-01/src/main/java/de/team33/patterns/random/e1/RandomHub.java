@@ -15,7 +15,11 @@ import java.util.stream.Stream;
  * <p>
  * It is primarily intended as a random generator.
  * For certain purposes, however, there can also be deterministic or mixed implementations.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>random-mimas</em>.
  */
+@Deprecated
 public final class RandomHub implements XRandom {
 
     /**
@@ -91,16 +95,16 @@ public final class RandomHub implements XRandom {
      */
     public static Builder builder() {
         return new Builder().on(false).apply(XRandom::anyBoolean)
-                            .on(true).apply(XRandom::anyBoolean)
-                            .on(BYTE).apply(XRandom::anyByte)
-                            .on(SHORT).apply(XRandom::anyShort)
-                            .on(INTEGER).apply(XRandom::anyInt)
-                            .on(LONG).apply(XRandom::anyLong)
-                            .on(FLOAT).apply(XRandom::anyFloat)
-                            .on(DOUBLE).apply(XRandom::anyDouble)
-                            .on(CHARACTER).apply(rnd -> rnd.anyChar(rnd.stdCharacters))
-                            .on(STRING).apply(rnd -> rnd.anyString(rnd.anyInt(1 + rnd.anyInt(STRING.length())),
-                                                                   rnd.stdCharacters));
+                .on(true).apply(XRandom::anyBoolean)
+                .on(BYTE).apply(XRandom::anyByte)
+                .on(SHORT).apply(XRandom::anyShort)
+                .on(INTEGER).apply(XRandom::anyInt)
+                .on(LONG).apply(XRandom::anyLong)
+                .on(FLOAT).apply(XRandom::anyFloat)
+                .on(DOUBLE).apply(XRandom::anyDouble)
+                .on(CHARACTER).apply(rnd -> rnd.anyChar(rnd.stdCharacters))
+                .on(STRING).apply(rnd -> rnd.anyString(rnd.anyInt(1 + rnd.anyInt(STRING.length())),
+                        rnd.stdCharacters));
     }
 
     /**
@@ -166,7 +170,10 @@ public final class RandomHub implements XRandom {
      * A Builder implementation for new instances of {@link RandomHub} that is based on {@link FactoryHub.Collector}.
      *
      * @see #builder()
+     * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+     * Successor edition is the module <em>random-mimas</em>.
      */
+    @Deprecated
     @SuppressWarnings("FieldHasSetterButNoGetter")
     public static class Builder extends FactoryHub.Collector<RandomHub, Builder> {
 

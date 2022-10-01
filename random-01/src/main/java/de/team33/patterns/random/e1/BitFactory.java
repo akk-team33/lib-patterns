@@ -8,7 +8,11 @@ import java.util.Random;
  * <p>
  * It is primarily intended as a random generator.
  * For certain purposes, however, there can also be deterministic implementations.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>random-mimas</em>.
  */
+@Deprecated
 @FunctionalInterface
 public interface BitFactory {
 
