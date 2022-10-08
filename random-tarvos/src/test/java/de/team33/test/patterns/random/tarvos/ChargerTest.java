@@ -1,6 +1,6 @@
-package de.team33.test.patterns.production.narvi;
+package de.team33.test.patterns.random.tarvos;
 
-import de.team33.patterns.production.narvi.Charger;
+import de.team33.patterns.random.tarvos.Charger;
 import de.team33.samples.patterns.production.narvi.Buildable;
 import de.team33.samples.patterns.production.narvi.Sample;
 import org.junit.jupiter.api.Test;

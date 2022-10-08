@@ -1,6 +1,6 @@
 package de.team33.samples.patterns.production.narvi;
 
-import de.team33.patterns.production.narvi.Charger;
+import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Producer;
 
 import java.math.BigInteger;

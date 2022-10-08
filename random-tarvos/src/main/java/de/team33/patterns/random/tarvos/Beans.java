@@ -1,4 +1,4 @@
-package de.team33.patterns.production.narvi;
+package de.team33.patterns.random.tarvos;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -59,8 +59,8 @@ final class Beans {
             };
         }
 
-        private static Function<Object, Object> toFunction(final Implicit implicit) {
-            return origin -> implicit.value();
+        private static Function<Object, Object> toFunction(final DefaultValue defaultValue) {
+            return origin -> defaultValue.value();
         }
 
         private static BiConsumer<Object, Object> toBiConsumer(final Method method) {
@@ -80,7 +80,7 @@ final class Beans {
 
         final Function<Object, Object> boolGetterOf(final Class<?> templateClass) {
             return getter(templateClass, setterMethod, "is").map(Property::toFunction)
-                                                            .orElseGet(() -> toFunction(Implicit.of(type)));
+                                                            .orElseGet(() -> toFunction(DefaultValue.of(type)));
         }
     }
 }

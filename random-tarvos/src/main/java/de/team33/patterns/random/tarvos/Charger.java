@@ -1,4 +1,4 @@
-package de.team33.patterns.production.narvi;
+package de.team33.patterns.random.tarvos;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -110,8 +110,8 @@ public class Charger {
     public final <B> B initBean(final B bean, final Object template) {
         for (final Beans.Property property : Beans.getProperties(bean.getClass())) {
             final Object propertyTemplate = property.getterOf(template.getClass()).apply(template);
-            final Implicit implicit = Implicit.of(property.type);
-            final Object value = implicit.is(propertyTemplate) ? get(property.type) : get(propertyTemplate);
+            final DefaultValue defaultValue = DefaultValue.of(property.type);
+            final Object value = defaultValue.is(propertyTemplate) ? get(property.type) : get(propertyTemplate);
             property.setter.accept(bean, value);
         }
         return bean;
