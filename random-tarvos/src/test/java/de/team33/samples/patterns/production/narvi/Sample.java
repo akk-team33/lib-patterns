@@ -14,6 +14,10 @@ public class Sample {
     private List<String> stringList = Collections.emptyList();
     private List<Long> longList = Collections.emptyList();
 
+    public static void setNothing(final Object nothing) {
+        throw new UnsupportedOperationException("should not be called anyways");
+    }
+
     @SuppressWarnings("rawtypes")
     private static List asList(final Sample sample) {
         return Arrays.asList(
