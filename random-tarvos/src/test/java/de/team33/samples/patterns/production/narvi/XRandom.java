@@ -1,7 +1,7 @@
 package de.team33.samples.patterns.production.narvi;
 
 import de.team33.patterns.random.tarvos.Charger;
-import de.team33.patterns.random.tarvos.Producer;
+import de.team33.patterns.random.tarvos.Generator;
 
 import java.math.BigInteger;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class XRandom extends Random implements Producer {
+public class XRandom extends Random implements Generator {
 
     @SuppressWarnings("SpellCheckingInspection")
     private static final String CHARS = "abcdefghijklmnopqrstuvwxyz";

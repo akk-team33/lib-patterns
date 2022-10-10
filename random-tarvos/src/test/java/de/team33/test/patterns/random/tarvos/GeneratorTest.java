@@ -1,7 +1,7 @@
 package de.team33.test.patterns.random.tarvos;
 
-import de.team33.patterns.random.tarvos.Producer;
-import de.team33.sample.patterns.random.tarvos.XRandom;
+import de.team33.patterns.random.tarvos.Generator;
+import de.team33.sample.patterns.random.tarvos.Producer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -21,12 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SuppressWarnings("ConstantConditions")
-class ProducerTest {
+class GeneratorTest {
 
     private static final BigInteger FIXED = new BigInteger("45619B2F8D02DD0BD545B8C8BD2CDBF86E8149DD7581925275C0", 16);
 
-    private final XRandom random = new XRandom();
-    private final Producer fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
+    private final Producer random = new Producer();
+    private final Generator fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})

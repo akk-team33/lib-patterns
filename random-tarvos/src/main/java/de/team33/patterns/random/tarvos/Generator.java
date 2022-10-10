@@ -15,12 +15,12 @@ import java.util.stream.Stream;
  * <p>
  * This interface is primarily intended to extend a derivation of {@link java.util.Random} with basic methods, example:
  * <pre>
- * import de.team33.patterns.random.mimas.Producer;
+ * import de.team33.patterns.random.tarvos.Producer;
  *
  * import java.math.BigInteger;
  * import java.util.Random;
  *
- * public class XRandom extends Random implements Producer {
+ * public class Producer extends Random implements Generator {
  *
  *     &#64;Override
  *     public final BigInteger nextBits(final int numBits) {
@@ -33,9 +33,11 @@ import java.util.stream.Stream;
  * {@link java.util.Random}.
  * <p>
  * However, it can also be used in other ways. In particular, deterministic implementations are also conceivable.
+ *
+ * @see de.team33.patterns.random.tarvos package
  */
 @FunctionalInterface
-public interface Producer {
+public interface Generator {
 
     /**
      * Returns any non-negative {@link BigInteger} representing a sequence of significant bits of a given length.
