@@ -10,7 +10,7 @@
  * <pre>
  * public class Producer extends Random implements Generator {
  *
- *     private final Loader&lt;Producer&gt; loader = new Loader&lt;&gt;(Producer.class);
+ *     private final Charger&lt;Producer&gt; loader = new Charger&lt;&gt;(Producer.class);
  *
  *     &#64;Override
  *     public final BigInteger nextBits(final int numBits) {
@@ -31,7 +31,7 @@
  * }
  * </pre>
  * <p>
- * In this example, a {@link de.team33.patterns.random.tarvos.Loader} is used to fill the complex, contextual types
+ * In this example, a {@link de.team33.patterns.random.tarvos.Charger} is used to fill the complex, contextual types
  * (Person, Customer, Empoyee, ...) with random content.
  */
 package de.team33.patterns.random.tarvos;

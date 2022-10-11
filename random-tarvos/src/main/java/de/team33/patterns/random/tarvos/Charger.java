@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ import static java.lang.String.format;
  *
  * @param <S> The source type
  */
-public class Loader<S> {
+public class Charger<S> {
 
     private static final String CANNOT_GET = "fatal: cannot apply getter <%s> on source <%s>.%n%n" +
             "May be the source class is not public!?%n";
@@ -43,7 +42,7 @@ public class Loader<S> {
     private final Map<Class<?>, List<Method>> setters = new ConcurrentHashMap<>(0);
     private final Map<Type, Method> getters = new ConcurrentHashMap<>(0);
 
-    public Loader(final Class<S> sourceType) {
+    public Charger(final Class<S> sourceType) {
         this.sourceType = sourceType;
     }
 
@@ -80,8 +79,6 @@ public class Loader<S> {
 
     public final <T> T load(final T target, final S source) {
         final Class<?> targetClass = target.getClass();
-        if (targetClass.getTypeParameters().length > 0)
-            throw new IllegalArgumentException("cannot load an instance of a generic type (" + targetClass + ")");
         for (final Method setter : settersOf(targetClass)) {
             final Type type = setter.getGenericParameterTypes()[0];
             final Method getter = getterOf(type);
@@ -106,7 +103,7 @@ public class Loader<S> {
     }
 
     private Iterable<Method> settersOf(final Class<?> targetClass) {
-        return setters.computeIfAbsent(targetClass, Loader::newSettersOf);
+        return setters.computeIfAbsent(targetClass, Charger::newSettersOf);
     }
 
     private enum Naming {

@@ -1,6 +1,6 @@
 package de.team33.samples.patterns.production.narvi;
 
-import de.team33.patterns.random.tarvos.Loader;
+import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Generator;
 
 import java.math.BigInteger;
@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class XXRandom extends Random implements Generator {
 
-    private final Loader<XXRandom> loader = new Loader<>(XXRandom.class);
+    private final Charger<XXRandom> charger = new Charger<>(XXRandom.class);
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -16,11 +16,11 @@ public class XXRandom extends Random implements Generator {
     }
 
     public final Sample nextSample() {
-        return loader.load(new Sample(), this);
+        return charger.load(new Sample(), this);
     }
 
     public final Buildable nextBuildable() {
-        return loader.load(Buildable.builder(), this)
-                     .build();
+        return charger.load(Buildable.builder(), this)
+                      .build();
     }
 }

@@ -1,6 +1,6 @@
 package de.team33.test.patterns.random.tarvos;
 
-import de.team33.patterns.random.tarvos.Loader;
+import de.team33.patterns.random.tarvos.Charger;
 import de.team33.samples.patterns.production.narvi.Buildable;
 import de.team33.samples.patterns.production.narvi.Generic;
 import de.team33.samples.patterns.production.narvi.Sample;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LoaderTest /* extends Random implements Generator */ {
+public class ChargerTest /* extends Random implements Generator */ {
 
     private final Sample sample = new Sample().setBooleanValue(false)
                                               .setStringValue("ABC")
@@ -35,7 +35,7 @@ public class LoaderTest /* extends Random implements Generator */ {
                                                                         .setVValue(Collections.singletonMap(sample.getStringValue(), sample.getStringList()))
                                                                         .setTList(sample.getLongList())
                                                                         .setUvMap(Collections.emptyMap());
-    private final Loader<LoaderTest> loader = new Loader<>(LoaderTest.class);
+    private final Charger<ChargerTest> charger = new Charger<>(ChargerTest.class);
 
     public static String getNothing() {
         throw new UnsupportedOperationException("should not be called anyways");
@@ -43,20 +43,20 @@ public class LoaderTest /* extends Random implements Generator */ {
 
     @Test
     final void load_Sample() {
-        final Sample result = loader.load(new Sample(), this);
+        final Sample result = charger.load(new Sample(), this);
         assertEquals(sample, result);
     }
 
     @Test
     final void load_Buildable() {
-        final Buildable result = loader.load(Buildable.builder(), this).build();
+        final Buildable result = charger.load(Buildable.builder(), this).build();
         assertEquals(buildable, result);
     }
 
     @Test
     final void load_Generic() {
         final Generic<Long, List<String>, Map<String, List<String>>> result =
-                loader.load(new Generic<>(), this);
+                charger.load(new Generic<>(), this);
         assertEquals(generic, result);
     }
 

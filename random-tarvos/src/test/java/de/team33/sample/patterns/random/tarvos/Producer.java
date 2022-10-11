@@ -1,14 +1,14 @@
 package de.team33.sample.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Generator;
-import de.team33.patterns.random.tarvos.Loader;
+import de.team33.patterns.random.tarvos.Charger;
 
 import java.math.BigInteger;
 import java.util.Random;
 
 public class Producer extends Random implements Generator {
 
-    private final Loader<Producer> loader = new Loader<>(Producer.class);
+    private final Charger<Producer> charger = new Charger<>(Producer.class);
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -16,14 +16,14 @@ public class Producer extends Random implements Generator {
     }
 
     public final Person nextPerson() {
-        return loader.load(new Person(), this);
+        return charger.load(new Person(), this);
     }
 
     public final Customer nextCustomer() {
-        return loader.load(new Customer(), this);
+        return charger.load(new Customer(), this);
     }
 
     public final Employee nextEmployee() {
-        return loader.load(new Employee(), this);
+        return charger.load(new Employee(), this);
     }
 }
