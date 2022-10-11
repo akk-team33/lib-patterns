@@ -1,11 +1,15 @@
 package de.team33.test.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Loader;
+import de.team33.samples.patterns.production.narvi.Buildable;
+import de.team33.samples.patterns.production.narvi.Generic;
 import de.team33.samples.patterns.production.narvi.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,16 +21,43 @@ public class LoaderTest /* extends Random implements Generator */ {
                                               .setLongValue(Long.MAX_VALUE)
                                               .setStringList(Arrays.asList("abc", "def", "ghi"))
                                               .setLongList(Arrays.asList(4L, 69L, 345L));
+    private final Buildable buildable = Buildable.builder()
+                                                 .setStringValue("ABC")
+                                                 .setIntValue(278)
+                                                 .setLongValue(Long.MAX_VALUE)
+                                                 .setStringList(Arrays.asList("abc", "def", "ghi"))
+                                                 .setLongList(Arrays.asList(4L, 69L, 345L)).build();
+    private final Generic<Long, List<String>, Map<String, List<String>>> generic =
+            new Generic<Long, List<String>, Map<String, List<String>>>().setBooleanValue(true)
+                                                                        .setIntValue(278)
+                                                                        .setTValue(sample.getLongValue())
+                                                                        .setUValue(sample.getStringList())
+                                                                        .setVValue(Collections.singletonMap(sample.getStringValue(), sample.getStringList()))
+                                                                        .setTList(sample.getLongList())
+                                                                        .setUvMap(Collections.emptyMap());
+    private final Loader<LoaderTest> loader = new Loader<>(LoaderTest.class);
 
     public static String getNothing() {
         throw new UnsupportedOperationException("should not be called anyways");
     }
 
     @Test
-    final void load() {
-        final Loader<LoaderTest> loader = new Loader<>(LoaderTest.class);
+    final void load_Sample() {
         final Sample result = loader.load(new Sample(), this);
         assertEquals(sample, result);
+    }
+
+    @Test
+    final void load_Buildable() {
+        final Buildable result = loader.load(Buildable.builder(), this).build();
+        assertEquals(buildable, result);
+    }
+
+    @Test
+    final void load_Generic() {
+        final Generic<Long, List<String>, Map<String, List<String>>> result =
+                loader.load(new Generic<>(), this);
+        assertEquals(generic, result);
     }
 
 //    @Override

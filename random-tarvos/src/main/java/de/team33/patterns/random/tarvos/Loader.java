@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,12 @@ import static java.lang.String.format;
  */
 public class Loader<S> {
 
-    private static final String CANNOT_GET = "fatal: cannot apply getter <%s> on source <%s>";
-    private static final String CANNOT_SET = "fatal: cannot apply setter <%s> with value <%s> on target <%s>";
-    private static final String NO_GETTER = "No appropriate production method found for %s%n" +
-            "%n" +
-            "    Consider defining a method in the source type <%s> that looks something like this:%n" +
-            "%n" +
+    private static final String CANNOT_GET = "fatal: cannot apply getter <%s> on source <%s>.%n%n" +
+            "May be the source class is not public!?%n";
+    private static final String CANNOT_SET = "fatal: cannot apply setter <%s> with value <%s> on target <%s>.%n%n" +
+            "May be the target class is not public!?%n";
+    private static final String NO_GETTER = "No appropriate production method found for %s%n%n" +
+            "    Consider defining a method in the source type <%s> that looks something like this:%n%n" +
             "    public final %s next%s() {%n" +
             "        return ...;%n" +
             "    }%n";
@@ -78,7 +79,10 @@ public class Loader<S> {
     }
 
     public final <T> T load(final T target, final S source) {
-        for (final Method setter : settersOf(target.getClass())) {
+        final Class<?> targetClass = target.getClass();
+        if (targetClass.getTypeParameters().length > 0)
+            throw new IllegalArgumentException("cannot load an instance of a generic type (" + targetClass + ")");
+        for (final Method setter : settersOf(targetClass)) {
             final Type type = setter.getGenericParameterTypes()[0];
             final Method getter = getterOf(type);
             final Object value = invoke(getter, source);
@@ -136,10 +140,12 @@ public class Loader<S> {
         }
 
         static Naming of(final Type type) {
+            final Class<? extends Type> typeClass = type.getClass();
             return Stream.of(values())
-                         .filter(value -> value.typeClass.isAssignableFrom(type.getClass()))
+                         .filter(value -> value.typeClass.isAssignableFrom(typeClass))
                          .findAny()
-                         .orElseThrow(() -> new NoSuchElementException(format("No entry found for type <%s>", type.getClass())));
+                         .orElseThrow(() -> new NoSuchElementException(format("No entry found for type <%s>",
+                                                                              typeClass)));
         }
 
         final String simpleName(final Type type) {
