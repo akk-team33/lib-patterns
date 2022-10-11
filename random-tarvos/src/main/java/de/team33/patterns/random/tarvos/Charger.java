@@ -11,7 +11,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,47 +27,22 @@ import static java.lang.String.format;
  */
 public class Charger<S> {
 
-    private static final String CANNOT_GET = "fatal: cannot apply getter <%s> on source <%s>.%n%n" +
-            "May be the source class is not public!?%n";
-    private static final String CANNOT_SET = "fatal: cannot apply setter <%s> with value <%s> on target <%s>.%n%n" +
-            "May be the target class is not public!?%n";
-    private static final String NO_GETTER = "No appropriate production method found for %s%n%n" +
+    private static final Logger LOG = Logger.getLogger(Charger.class.getCanonicalName());
+    private static final String NO_SUPPLIER = "No appropriate supplier method found for %s%n%n" +
             "    Consider defining a method in the source type <%s> that looks something like this:%n%n" +
             "    public final %s next%s() {%n" +
             "        return ...;%n" +
             "    }%n";
+    public static final String INIT_FAILED = "Initialization failed:%n%n" +
+            "    setter:   %s%n" +
+            "    supplier: %s%n";
 
     private final Class<S> sourceType;
     private final Map<Class<?>, List<Method>> setters = new ConcurrentHashMap<>(0);
-    private final Map<Type, Method> getters = new ConcurrentHashMap<>(0);
+    private final Map<Type, Method> suppliers = new ConcurrentHashMap<>(0);
 
     public Charger(final Class<S> sourceType) {
         this.sourceType = sourceType;
-    }
-
-    private static Object invoke(final Method getter, final Object source) {
-        try {
-            return getter.invoke(source);
-        } catch (final IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException(format(CANNOT_GET, getter, source), e);
-        }
-    }
-
-    private static void invoke(final Method setter, final Object target, final Object value) {
-        try {
-            setter.invoke(target, value);
-        } catch (final IllegalAccessException | InvocationTargetException e) {
-            throw new IllegalArgumentException(format(CANNOT_SET, setter, value, target), e);
-        }
-    }
-
-    private Supplier<RuntimeException> noGetterOf(final Type type) {
-        final Naming naming = Naming.of(type);
-        return () -> {
-            final String name1 = naming.parameterizedName(type);
-            final String name2 = naming.simpleName(type);
-            return new NoSuchElementException(format(NO_GETTER, type, sourceType.getSimpleName(), name1, name2));
-        };
     }
 
     private static List<Method> newSettersOf(final Class<?> targetClass) {
@@ -75,29 +51,60 @@ public class Charger<S> {
                      .collect(Collectors.toList());
     }
 
+    /**
+     * Initializes the properties of a given {@code target} instance with values from a given {@code source} instance
+     * and returns the initialized {@code target}.
+     * <p>
+     * In order for a property to be initialized, the {@code target}'s class must provide a corresponding setter
+     * that is actually accessible from this {@link Charger}. In addition, the class of the {@code source} must
+     * provide a parameterless method that can return an appropriate value for the property in question.
+     */
     public final <T> T charge(final T target, final S source) {
         final Class<?> targetClass = target.getClass();
         for (final Method setter : settersOf(targetClass)) {
             final Type type = setter.getGenericParameterTypes()[0];
-            final Method getter = getterOf(type);
-            final Object value = invoke(getter, source);
-            invoke(setter, target, value);
+            final Method supplier = supplierOf(type);
+            if (null == supplier) {
+                logMissing(type);
+            } else {
+                invoke(target, source, setter, supplier);
+            }
         }
         return target;
     }
 
-    private Method getterOf(final Type type) {
-        return getters.computeIfAbsent(type, this::findGetterOf);
+    @SuppressWarnings("OverlyBroadCatchBlock")
+    private <T> void invoke(final T target, final S source, final Method setter, final Method supplier) {
+        try {
+            final Object value = supplier.invoke(source);
+            setter.invoke(target, value);
+        } catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
+            LOG.log(Level.WARNING, e, () -> format(INIT_FAILED,
+                                                   setter.toGenericString(),
+                                                   supplier.toGenericString()));
+        }
     }
 
-    private Method findGetterOf(final Type type) {
+    private void logMissing(final Type type) {
+        final Naming naming = Naming.of(type);
+        LOG.warning(() -> {
+            final String name1 = naming.parameterizedName(type);
+            final String name2 = naming.simpleName(type);
+            return format(NO_SUPPLIER, type, sourceType.getSimpleName(), name1, name2);
+        });
+    }
+
+    private Method supplierOf(final Type type) {
+        return suppliers.computeIfAbsent(type, this::findSupplierOf);
+    }
+
+    private Method findSupplierOf(final Type type) {
         return Stream.of(sourceType.getMethods())
                      .filter(method -> !Object.class.equals(method.getDeclaringClass()))
-                     .filter(Methods::isGetter)
-                     //.peek(out::println)
+                     .filter(Methods::isSupplier)
                      .filter(method -> type.equals(method.getGenericReturnType()))
                      .findAny()
-                     .orElseThrow(noGetterOf(type));
+                     .orElse(null);
     }
 
     private Iterable<Method> settersOf(final Class<?> targetClass) {
@@ -107,7 +114,8 @@ public class Charger<S> {
     private enum Naming {
 
         CLASS(Class.class, Class::getSimpleName, type -> ""),
-        PARAMETERIZED(ParameterizedType.class, Naming::toSimpleName, Naming::toParameters);
+        PARAMETERIZED(ParameterizedType.class, Naming::toSimpleName, Naming::toParameters),
+        OTHER(Type.class, Type::getTypeName, type -> "");
 
         private static String toParameters(final ParameterizedType type) {
             return Arrays.stream(type.getActualTypeArguments())
@@ -171,7 +179,7 @@ public class Charger<S> {
             return isInstance(method) && method.getName().startsWith("set") && (1 == method.getParameterCount());
         }
 
-        static boolean isGetter(final Method method) {
+        static boolean isSupplier(final Method method) {
             return isInstance(method) && (0 == method.getParameterCount());
         }
     }
