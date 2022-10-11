@@ -21,8 +21,6 @@ import static java.lang.String.format;
  * A utility for the blanket initialization of instances composed of properties that can be set using typical setters.
  * <p>
  * The values for this are supplied by a source instance of a specific type.
- * <p>
- * TODO: rename to Charger
  *
  * @param <S> The source type
  */
@@ -77,7 +75,7 @@ public class Charger<S> {
                      .collect(Collectors.toList());
     }
 
-    public final <T> T load(final T target, final S source) {
+    public final <T> T charge(final T target, final S source) {
         final Class<?> targetClass = target.getClass();
         for (final Method setter : settersOf(targetClass)) {
             final Type type = setter.getGenericParameterTypes()[0];

@@ -2,7 +2,7 @@
  * This module, consisting of this package and the classes defined in it, provides tools to generate random data
  * of virtually any type, mainly for testing purpose.
  * <p>
- * In a typical application, a producer class is defined in the "test area" of a project, which is intended to
+ * In a typical use case, a producer class is defined in the "test area" of a project, which is intended to
  * generate the data required in the tests, including complex ones, with random values.
  * The class can simply be derived from {@link java.util.Random}, for example, and also implements the
  * {@link de.team33.patterns.random.tarvos.Generator} interface, which makes other basic methods available.
@@ -10,7 +10,7 @@
  * <pre>
  * public class Producer extends Random implements Generator {
  *
- *     private final Charger&lt;Producer&gt; loader = new Charger&lt;&gt;(Producer.class);
+ *     private final Charger&lt;Producer&gt; charger = new Charger&lt;&gt;(Producer.class);
  *
  *     &#64;Override
  *     public final BigInteger nextBits(final int numBits) {
@@ -18,15 +18,15 @@
  *     }
  *
  *     public final Person nextPerson() {
- *         return loader.load(new Person(), this);
+ *         return charger.charge(new Person(), this);
  *     }
  *
  *     public final Customer nextCustomer() {
- *         return loader.load(new Customer(), this);
+ *         return charger.charge(new Customer(), this);
  *     }
  *
  *     public final Employee nextEmployee() {
- *         return loader.load(new Employee(), this);
+ *         return charger.charge(new Employee(), this);
  *     }
  * }
  * </pre>

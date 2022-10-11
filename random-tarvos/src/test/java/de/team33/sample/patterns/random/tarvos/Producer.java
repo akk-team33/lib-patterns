@@ -16,14 +16,14 @@ public class Producer extends Random implements Generator {
     }
 
     public final Person nextPerson() {
-        return charger.load(new Person(), this);
+        return charger.charge(new Person(), this);
     }
 
     public final Customer nextCustomer() {
-        return charger.load(new Customer(), this);
+        return charger.charge(new Customer(), this);
     }
 
     public final Employee nextEmployee() {
-        return charger.load(new Employee(), this);
+        return charger.charge(new Employee(), this);
     }
 }

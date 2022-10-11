@@ -201,7 +201,7 @@ public interface Generator {
     }
 
     /**
-     * Returns a {@link BigInteger} value between ZERO (incl.) and {@code bound} (excl.).
+     * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      */

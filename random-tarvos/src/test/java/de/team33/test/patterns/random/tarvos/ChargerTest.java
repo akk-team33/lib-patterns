@@ -43,20 +43,20 @@ public class ChargerTest /* extends Random implements Generator */ {
 
     @Test
     final void load_Sample() {
-        final Sample result = charger.load(new Sample(), this);
+        final Sample result = charger.charge(new Sample(), this);
         assertEquals(sample, result);
     }
 
     @Test
     final void load_Buildable() {
-        final Buildable result = charger.load(Buildable.builder(), this).build();
+        final Buildable result = charger.charge(Buildable.builder(), this).build();
         assertEquals(buildable, result);
     }
 
     @Test
     final void load_Generic() {
         final Generic<Long, List<String>, Map<String, List<String>>> result =
-                charger.load(new Generic<>(), this);
+                charger.charge(new Generic<>(), this);
         assertEquals(generic, result);
     }
 

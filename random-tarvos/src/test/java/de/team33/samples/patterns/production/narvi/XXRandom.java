@@ -16,11 +16,11 @@ public class XXRandom extends Random implements Generator {
     }
 
     public final Sample nextSample() {
-        return charger.load(new Sample(), this);
+        return charger.charge(new Sample(), this);
     }
 
     public final Buildable nextBuildable() {
-        return charger.load(Buildable.builder(), this)
+        return charger.charge(Buildable.builder(), this)
                       .build();
     }
 }
