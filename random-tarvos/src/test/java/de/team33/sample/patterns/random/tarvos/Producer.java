@@ -6,9 +6,7 @@ import de.team33.patterns.random.tarvos.Charger;
 import java.math.BigInteger;
 import java.util.Random;
 
-public class Producer extends Random implements Generator {
-
-    private final Charger<Producer> charger = new Charger<>(Producer.class);
+public class Producer extends Random implements Generator, Charger {
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -16,14 +14,14 @@ public class Producer extends Random implements Generator {
     }
 
     public final Person nextPerson() {
-        return charger.charge(new Person(), this);
+        return charge(new Person());
     }
 
     public final Customer nextCustomer() {
-        return charger.charge(new Customer(), this);
+        return charge(new Customer());
     }
 
     public final Employee nextEmployee() {
-        return charger.charge(new Employee(), this);
+        return charge(new Employee());
     }
 }

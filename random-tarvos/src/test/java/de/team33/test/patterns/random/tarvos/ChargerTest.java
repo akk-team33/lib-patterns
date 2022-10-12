@@ -1,8 +1,9 @@
 package de.team33.test.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Charger;
-import de.team33.samples.patterns.production.narvi.Buildable;
-import de.team33.samples.patterns.production.narvi.Sample;
+import de.team33.test.patterns.random.shared.Buildable;
+import de.team33.test.patterns.random.shared.Generic;
+import de.team33.test.patterns.random.shared.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -10,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ChargerTest /* extends Random implements Generator */ {
+public class ChargerTest implements Charger {
 
     private final Sample sample = new Sample().setBooleanValue(false)
                                               .setStringValue("ABC")
@@ -24,28 +25,28 @@ public class ChargerTest /* extends Random implements Generator */ {
                                                  .setLongValue(Long.MAX_VALUE)
                                                  .setStringList(Arrays.asList("abc", "def", "ghi"))
                                                  .setLongList(Arrays.asList(4L, 69L, 345L)).build();
-    private final Charger<ChargerTest> charger = new Charger<>(ChargerTest.class);
 
     public static String getNothing() {
         throw new UnsupportedOperationException("should not be called anyways");
     }
 
     @Test
-    final void load_Sample() {
-        final Sample result = charger.charge(new Sample(), this);
+    final void charge_Sample() {
+        final Sample result = charge(new Sample());
         assertEquals(sample, result);
     }
 
     @Test
-    final void load_Buildable() {
-        final Buildable result = charger.charge(Buildable.builder(), this).build();
+    final void charge_Buildable() {
+        final Buildable result = charge(Buildable.builder()).build();
         assertEquals(buildable, result);
     }
 
-//    @Override
-//    public final BigInteger nextBits(final int numBits) {
-//        return new BigInteger(numBits, this);
-//    }
+    @Test
+    final void charge_Generic() {
+        final Generic<String> result = charge(new Generic<>(), "setTValue");
+        assertEquals(new Generic<String>(), result);
+    }
 
     public final boolean nextBoolean() {
         return sample.isBooleanValue();

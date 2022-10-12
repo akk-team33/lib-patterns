@@ -1,4 +1,4 @@
-package de.team33.samples.patterns.production.narvi;
+package de.team33.test.patterns.random.shared;
 
 import java.util.ArrayList;
 import java.util.Arrays;
