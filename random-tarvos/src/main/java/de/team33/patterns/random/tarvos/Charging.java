@@ -6,11 +6,16 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -18,21 +23,25 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-final class Chargers {
+final class Charging {
 
-    private static final Logger LOG = Logger.getLogger(Chargers.class.getCanonicalName());
-    private static final String NO_SUPPLIER = "No appropriate supplier method found for %s%n%n" +
-            "    Consider defining a method in the source type <%s> that looks something like this:%n%n" +
+    private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
+    private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
+            "    target type: %s%n" +
+            "    setter:      %s%n" +
+            "    type:        %s%n" +
+            "    source type: %s%n%n" +
+            "    Consider defining a method in the source type that looks something like this:%n%n" +
             "    public final %s next%s() {%n" +
             "        return ...;%n" +
             "    }%n";
-    public static final String INIT_FAILED = "Initialization failed:%n%n" +
+    private static final String INIT_FAILED = "Initialization failed:%n%n" +
             "    setter:   %s%n" +
             "    supplier: %s%n";
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
-    private Chargers() {
+    private Charging() {
     }
 
     private static List<Method> newSettersOf(final Class<?> targetClass) {
@@ -53,13 +62,13 @@ final class Chargers {
         }
     }
 
-    static void logMissing(final Class<?> sourceType, final Type resultType) {
+    static Supplier<String> missingMessage(final Class<?> sourceType, final Method setter, final Type resultType) {
         final Naming naming = Naming.of(resultType);
-        LOG.warning(() -> {
+        return () -> {
             final String name1 = naming.parameterizedName(resultType);
             final String name2 = naming.simpleName(resultType);
-            return format(NO_SUPPLIER, resultType, sourceType.getSimpleName(), name1, name2);
-        });
+            return format(NO_SUPPLIER, setter.getDeclaringClass(), setter, resultType, sourceType, name1, name2);
+        };
     }
 
     static Method supplierOf(final Class<?> sourceType, final Type resultType) {
@@ -72,8 +81,31 @@ final class Chargers {
     }
 
     static Stream<Method> settersOf(final Class<?> targetClass) {
-        return SETTERS.computeIfAbsent(targetClass, Chargers::newSettersOf)
+        return SETTERS.computeIfAbsent(targetClass, Charging::newSettersOf)
                       .stream();
+    }
+
+    static void log(final Supplier<String> message, final Exception cause) {
+        LOG.log(Level.WARNING, cause, message);
+    }
+
+    static <T> T charge(final T target, final Charger source, final Collection<String> ignorable) {
+        settersOf(target.getClass())
+                .filter(ignore(new HashSet<>(ignorable)))
+                .forEach(setter -> {
+                    final Type type = setter.getGenericParameterTypes()[0];
+                    final Method supplier = supplierOf(source.getClass(), type);
+                    if (null == supplier) {
+                        source.chargerLog(missingMessage(source.getClass(), setter, type), null);
+                    } else {
+                        invoke(target, source, setter, supplier);
+                    }
+                });
+        return target;
+    }
+
+    private static Predicate<Method> ignore(final Set<String> ignorable) {
+        return method -> !ignorable.contains(method.getName());
     }
 
     private enum Naming {
