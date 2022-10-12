@@ -31,7 +31,7 @@ final class Charging {
             "    setter:      %s%n" +
             "    type:        %s%n" +
             "    source type: %s%n%n" +
-            "    Consider defining a method in the source type that looks something like this:%n%n" +
+            "    Consider ignoring \"%s\" or defining a method in the source type that looks something like this:%n%n" +
             "    public final %s next%s() {%n" +
             "        return ...;%n" +
             "    }%n";
@@ -67,15 +67,17 @@ final class Charging {
         return () -> {
             final String name1 = naming.parameterizedName(resultType);
             final String name2 = naming.simpleName(resultType);
-            return format(NO_SUPPLIER, setter.getDeclaringClass(), setter, resultType, sourceType, name1, name2);
+            return format(NO_SUPPLIER, setter.getDeclaringClass(), setter.toGenericString(), resultType, sourceType,
+                          setter.getName(), name1, name2);
         };
     }
 
-    static Method supplierOf(final Class<?> sourceType, final Type resultType) {
+    static Method supplierOf(final Class<?> sourceType, final Type resultType, Predicate<Method> ignoring) {
         return Stream.of(sourceType.getMethods())
                      .filter(method -> !Object.class.equals(method.getDeclaringClass()))
                      .filter(Methods::isSupplier)
                      .filter(method -> resultType.equals(method.getGenericReturnType()))
+                     .filter(ignoring)
                      .findAny()
                      .orElse(null);
     }
@@ -90,11 +92,12 @@ final class Charging {
     }
 
     static <T> T charge(final T target, final Charger source, final Collection<String> ignorable) {
+        final Predicate<Method> ignoring = ignoring(new HashSet<>(ignorable));
         settersOf(target.getClass())
-                .filter(ignore(new HashSet<>(ignorable)))
+                .filter(ignoring)
                 .forEach(setter -> {
                     final Type type = setter.getGenericParameterTypes()[0];
-                    final Method supplier = supplierOf(source.getClass(), type);
+                    final Method supplier = supplierOf(source.getClass(), type, ignoring);
                     if (null == supplier) {
                         source.chargerLog(missingMessage(source.getClass(), setter, type), null);
                     } else {
@@ -104,7 +107,7 @@ final class Charging {
         return target;
     }
 
-    private static Predicate<Method> ignore(final Set<String> ignorable) {
+    private static Predicate<Method> ignoring(final Set<String> ignorable) {
         return method -> !ignorable.contains(method.getName());
     }
 

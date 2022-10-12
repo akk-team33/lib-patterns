@@ -44,7 +44,7 @@ public class ChargerTest implements Charger {
 
     @Test
     final void charge_Generic() {
-        final Generic<String> result = charge(new Generic<>(), "setTValue_");
+        final Generic<String> result = charge(new Generic<>(), "setTValue");
         assertEquals(new Generic<String>(), result);
     }
 
