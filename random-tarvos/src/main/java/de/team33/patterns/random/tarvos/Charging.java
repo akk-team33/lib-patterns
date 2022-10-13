@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-final class Charging<T> {
+final class Charging<C extends Charger, T> {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -41,13 +41,13 @@ final class Charging<T> {
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
-    private final Charger source;
+    private final C source;
     private final Class<?> sourceType;
     private final T target;
     private final Class<?> targetType;
     private final Predicate<Method> desired;
 
-    Charging(final Charger source, final T target, final Collection<String> ignore) {
+    Charging(final C source, final T target, final Collection<String> ignore) {
         this.source = source;
         this.sourceType = source.getClass();
         this.target = target;
@@ -62,18 +62,18 @@ final class Charging<T> {
     }
 
     @SuppressWarnings("OverlyBroadCatchBlock")
-    static <T, S> void invoke(final T target, final S source, final Method setter, final Method supplier) {
+    private void invoke(final Method setter, final Method supplier) {
         try {
             final Object value = supplier.invoke(source);
             setter.invoke(target, value);
         } catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
-            LOG.log(Level.WARNING, e, () -> format(INIT_FAILED,
-                                                   setter.toGenericString(),
-                                                   supplier.toGenericString()));
+            source.chargerLog(() -> format(INIT_FAILED,
+                                           setter.toGenericString(),
+                                           supplier.toGenericString()), e);
         }
     }
 
-    static Supplier<String> missingMessage(final Class<?> sourceType, final Method setter, final Type resultType) {
+    private Supplier<String> missingMessage(final Method setter, final Type resultType) {
         final Naming naming = Naming.of(resultType);
         return () -> {
             final String name1 = naming.parameterizedName(resultType);
@@ -83,19 +83,20 @@ final class Charging<T> {
         };
     }
 
-    static Method supplierOf(final Class<?> sourceType, final Type resultType, Predicate<Method> ignoring) {
+    private Method desiredSupplier(final Type resultType) {
         return Stream.of(sourceType.getMethods())
                      .filter(method -> !Object.class.equals(method.getDeclaringClass()))
                      .filter(Methods::isSupplier)
                      .filter(method -> resultType.equals(method.getGenericReturnType()))
-                     .filter(ignoring)
+                     .filter(desired)
                      .findAny()
                      .orElse(null);
     }
 
-    static Stream<Method> settersOf(final Class<?> targetClass) {
-        return SETTERS.computeIfAbsent(targetClass, Charging::newSettersOf)
-                      .stream();
+    private Stream<Method> desiredSetters() {
+        return SETTERS.computeIfAbsent(targetType, Charging::newSettersOf)
+                      .stream()
+                      .filter(desired);
     }
 
     static void log(final Supplier<String> message, final Exception cause) {
@@ -111,17 +112,15 @@ final class Charging<T> {
     }
 
     final T result() {
-        settersOf(targetType)
-                .filter(desired)
-                .forEach(setter -> {
-                    final Type type = setter.getGenericParameterTypes()[0];
-                    final Method supplier = supplierOf(sourceType, type, desired);
-                    if (null == supplier) {
-                        source.chargerLog(missingMessage(sourceType, setter, type), null);
-                    } else {
-                        invoke(target, source, setter, supplier);
-                    }
-                });
+        desiredSetters().forEach(setter -> {
+            final Type valueType = setter.getGenericParameterTypes()[0];
+            final Method supplier = desiredSupplier(valueType);
+            if (null == supplier) {
+                source.chargerLog(missingMessage(setter, valueType), null);
+            } else {
+                invoke(setter, supplier);
+            }
+        });
         return target;
     }
 

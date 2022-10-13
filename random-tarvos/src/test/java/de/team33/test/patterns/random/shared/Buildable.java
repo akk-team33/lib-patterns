@@ -7,11 +7,11 @@ import java.util.List;
 
 public class Buildable {
 
-    private String stringValue;
-    private int intValue;
-    private Long longValue;
-    private List<String> stringList;
-    private List<Long> longList;
+    private final String stringValue;
+    private final int intValue;
+    private final Long longValue;
+    private final List<String> stringList;
+    private final List<Long> longList;
 
     private Buildable(final Builder builder) {
         stringValue = builder.stringValue;
@@ -39,11 +39,6 @@ public class Buildable {
         return stringValue;
     }
 
-    public final Buildable setStringValue(final String stringValue) {
-        this.stringValue = stringValue;
-        return this;
-    }
-
     @Override
     public final boolean equals(final Object o) {
         return (this == o) || ((o instanceof Buildable) && asList(this).equals(asList((Buildable) o)));
@@ -63,36 +58,16 @@ public class Buildable {
         return intValue;
     }
 
-    public final Buildable setIntValue(final int intValue) {
-        this.intValue = intValue;
-        return this;
-    }
-
     public final Long getLongValue() {
         return longValue;
-    }
-
-    public final Buildable setLongValue(final Long longValue) {
-        this.longValue = longValue;
-        return this;
     }
 
     public final List<String> getStringList() {
         return Collections.unmodifiableList(stringList);
     }
 
-    public final Buildable setStringList(final List<String> stringList) {
-        this.stringList = new ArrayList<>(stringList);
-        return this;
-    }
-
     public final List<Long> getLongList() {
         return Collections.unmodifiableList(longList);
-    }
-
-    public final Buildable setLongList(final List<Long> longList) {
-        this.longList = new ArrayList<>(longList);
-        return this;
     }
 
     @SuppressWarnings("FieldHasSetterButNoGetter")
