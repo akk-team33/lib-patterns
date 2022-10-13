@@ -23,6 +23,6 @@ public interface Charger {
     }
 
     default void chargerLog(final Supplier<String> message, final Exception cause) {
-        Charging.log(message, cause);
+        Charging.defaultLog(message, cause);
     }
 }

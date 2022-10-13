@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-final class Charging<C extends Charger, T> {
+final class Charging<S extends Charger, T> {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -40,14 +40,15 @@ final class Charging<C extends Charger, T> {
             "    supplier: %s%n";
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
+    private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
 
-    private final C source;
+    private final S source;
     private final Class<?> sourceType;
     private final T target;
     private final Class<?> targetType;
     private final Predicate<Method> desired;
 
-    Charging(final C source, final T target, final Collection<String> ignore) {
+    Charging(final S source, final T target, final Collection<String> ignore) {
         this.source = source;
         this.sourceType = source.getClass();
         this.target = target;
@@ -55,10 +56,25 @@ final class Charging<C extends Charger, T> {
         this.desired = nameFilter(new HashSet<>(ignore)).negate();
     }
 
-    private static List<Method> newSettersOf(final Class<?> targetClass) {
-        return Stream.of(targetClass.getMethods())
+    private static List<Method> newSettersOf(final Class<?> targetType) {
+        return Stream.of(targetType.getMethods())
                      .filter(Methods::isSetter)
                      .collect(Collectors.toList());
+    }
+
+    private static List<Method> newSuppliersOf(final Class<?> sourceType) {
+        return Stream.of(sourceType.getMethods())
+                     .filter(method -> !Object.class.equals(method.getDeclaringClass()))
+                     .filter(Methods::isSupplier)
+                     .collect(Collectors.toList());
+    }
+
+    private static Predicate<Method> nameFilter(final Set<String> names) {
+        return method -> names.contains(method.getName());
+    }
+
+    static void defaultLog(final Supplier<String> message, final Exception cause) {
+        LOG.log(Level.WARNING, cause, message);
     }
 
     @SuppressWarnings("OverlyBroadCatchBlock")
@@ -84,31 +100,18 @@ final class Charging<C extends Charger, T> {
     }
 
     private Method desiredSupplier(final Type resultType) {
-        return Stream.of(sourceType.getMethods())
-                     .filter(method -> !Object.class.equals(method.getDeclaringClass()))
-                     .filter(Methods::isSupplier)
-                     .filter(method -> resultType.equals(method.getGenericReturnType()))
-                     .filter(desired)
-                     .findAny()
-                     .orElse(null);
+        return SUPPLIERS.computeIfAbsent(sourceType, Charging::newSuppliersOf)
+                        .stream()
+                        .filter(method -> resultType.equals(method.getGenericReturnType()))
+                        .filter(desired)
+                        .findAny()
+                        .orElse(null);
     }
 
     private Stream<Method> desiredSetters() {
         return SETTERS.computeIfAbsent(targetType, Charging::newSettersOf)
                       .stream()
                       .filter(desired);
-    }
-
-    static void log(final Supplier<String> message, final Exception cause) {
-        LOG.log(Level.WARNING, cause, message);
-    }
-
-    private static Predicate<Method> nameFilter(final Set<String> names) {
-        return method -> names.contains(method.getName());
-    }
-
-    private static Predicate<Method> ignoring(final Set<String> ignorable) {
-        return method -> !ignorable.contains(method.getName());
     }
 
     final T result() {
