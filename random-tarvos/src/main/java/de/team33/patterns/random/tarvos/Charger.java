@@ -19,7 +19,7 @@ public interface Charger {
      * provide a parameterless method that can return an appropriate value for the property in question.
      */
     default <T> T charge(final T target, final String... ignore) {
-        return Charging.charge(target, this, Arrays.asList(ignore));
+        return new Charging<>(this, target, Arrays.asList(ignore)).result();
     }
 
     default void chargerLog(final Supplier<String> message, final Exception cause) {

@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
-final class Charging {
+final class Charging<T> {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -41,7 +41,18 @@ final class Charging {
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
-    private Charging() {
+    private final Charger source;
+    private final Class<?> sourceType;
+    private final T target;
+    private final Class<?> targetType;
+    private final Predicate<Method> desired;
+
+    Charging(final Charger source, final T target, final Collection<String> ignore) {
+        this.source = source;
+        this.sourceType = source.getClass();
+        this.target = target;
+        this.targetType = target.getClass();
+        this.desired = nameFilter(new HashSet<>(ignore)).negate();
     }
 
     private static List<Method> newSettersOf(final Class<?> targetClass) {
@@ -91,15 +102,22 @@ final class Charging {
         LOG.log(Level.WARNING, cause, message);
     }
 
-    static <T> T charge(final T target, final Charger source, final Collection<String> ignorable) {
-        final Predicate<Method> ignoring = ignoring(new HashSet<>(ignorable));
-        settersOf(target.getClass())
-                .filter(ignoring)
+    private static Predicate<Method> nameFilter(final Set<String> names) {
+        return method -> names.contains(method.getName());
+    }
+
+    private static Predicate<Method> ignoring(final Set<String> ignorable) {
+        return method -> !ignorable.contains(method.getName());
+    }
+
+    final T result() {
+        settersOf(targetType)
+                .filter(desired)
                 .forEach(setter -> {
                     final Type type = setter.getGenericParameterTypes()[0];
-                    final Method supplier = supplierOf(source.getClass(), type, ignoring);
+                    final Method supplier = supplierOf(sourceType, type, desired);
                     if (null == supplier) {
-                        source.chargerLog(missingMessage(source.getClass(), setter, type), null);
+                        source.chargerLog(missingMessage(sourceType, setter, type), null);
                     } else {
                         invoke(target, source, setter, supplier);
                     }
@@ -107,26 +125,11 @@ final class Charging {
         return target;
     }
 
-    private static Predicate<Method> ignoring(final Set<String> ignorable) {
-        return method -> !ignorable.contains(method.getName());
-    }
-
     private enum Naming {
 
         CLASS(Class.class, Class::getSimpleName, type -> ""),
         PARAMETERIZED(ParameterizedType.class, Naming::toSimpleName, Naming::toParameters),
         OTHER(Type.class, Type::getTypeName, type -> "");
-
-        private static String toParameters(final ParameterizedType type) {
-            return Arrays.stream(type.getActualTypeArguments())
-                         .map(pType -> of(pType).simpleName(pType))
-                         .collect(Collectors.joining(", ", "<", ">"));
-        }
-
-        private static String toSimpleName(final ParameterizedType type) {
-            final Type rawType = type.getRawType();
-            return of(rawType).simpleName(rawType);
-        }
 
         private final Class<?> typeClass;
         @SuppressWarnings("rawtypes")
@@ -140,6 +143,17 @@ final class Charging {
             this.typeClass = typeClass;
             this.toSimpleName = toSimpleName;
             this.toParameters = toParameters;
+        }
+
+        private static String toParameters(final ParameterizedType type) {
+            return Arrays.stream(type.getActualTypeArguments())
+                         .map(pType -> of(pType).simpleName(pType))
+                         .collect(Collectors.joining(", ", "<", ">"));
+        }
+
+        private static String toSimpleName(final ParameterizedType type) {
+            final Type rawType = type.getRawType();
+            return of(rawType).simpleName(rawType);
         }
 
         static Naming of(final Type type) {
