@@ -39,7 +39,8 @@ final class Charging<S extends Charger, T> {
             "    target type: %s%n" +
             "    setter:      %s%n" +
             "    source type: %s%n" +
-            "    supplier: %s%n";
+            "    supplier: %s%n%n" +
+            "    Consider ignoring the causing method.";
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
     private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
