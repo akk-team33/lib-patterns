@@ -10,7 +10,7 @@ import java.util.Random;
  * For certain purposes, however, there can also be deterministic implementations.
  *
  * @deprecated Further development is discontinued and this package/module may be removed in a future release.
- * Successor edition is the module <em>random-mimas</em>.
+ * Successor edition is the module <em>random-tarvos</em>.
  */
 @Deprecated
 @FunctionalInterface

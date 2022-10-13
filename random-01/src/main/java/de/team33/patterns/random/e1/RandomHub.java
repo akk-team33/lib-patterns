@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * For certain purposes, however, there can also be deterministic or mixed implementations.
  *
  * @deprecated Further development is discontinued and this package/module may be removed in a future release.
- * Successor edition is the module <em>random-mimas</em>.
+ * Successor edition is the module <em>random-tarvos</em>.
  */
 @Deprecated
 public final class RandomHub implements XRandom {
@@ -171,7 +171,7 @@ public final class RandomHub implements XRandom {
      *
      * @see #builder()
      * @deprecated Further development is discontinued and this package/module may be removed in a future release.
-     * Successor edition is the module <em>random-mimas</em>.
+     * Successor edition is the module <em>random-tarvos</em>.
      */
     @Deprecated
     @SuppressWarnings("FieldHasSetterButNoGetter")

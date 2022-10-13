@@ -33,7 +33,11 @@ import java.util.stream.Stream;
  * {@link java.util.Random}.
  * <p>
  * However, it can also be used in other ways. In particular, deterministic implementations are also conceivable.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>random-tarvos</em>.
  */
+@Deprecated
 @FunctionalInterface
 public interface Extension {
 
