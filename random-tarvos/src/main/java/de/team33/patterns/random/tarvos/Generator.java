@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * <p>
  * This interface is primarily intended to extend a derivation of {@link java.util.Random} with basic methods, example:
  * <pre>
- * import de.team33.patterns.random.tarvos.Producer;
+ * import de.team33.patterns.random.tarvos.Generator;
  *
  * import java.math.BigInteger;
  * import java.util.Random;

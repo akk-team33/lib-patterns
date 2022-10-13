@@ -9,8 +9,8 @@ import java.util.function.Supplier;
  * <p>
  * *A POJO (plain old java object) is an instance consisting (essentially) of properties that can be accessed using
  * appropriate getters and setters.
- * <p>
- * The values for this are supplied by a source instance of a specific type.
+ *
+ * @see de.team33.patterns.random.tarvos package
  */
 public interface Charger {
 
