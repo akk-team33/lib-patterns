@@ -36,7 +36,9 @@ final class Charging<S extends Charger, T> {
             "        return ...;%n" +
             "    }%n";
     private static final String INIT_FAILED = "Initialization failed:%n%n" +
-            "    setter:   %s%n" +
+            "    target type: %s%n" +
+            "    setter:      %s%n" +
+            "    source type: %s%n" +
             "    supplier: %s%n";
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
@@ -84,7 +86,9 @@ final class Charging<S extends Charger, T> {
             setter.invoke(target, value);
         } catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
             source.chargerLog(() -> format(INIT_FAILED,
+                                           targetType,
                                            setter.toGenericString(),
+                                           sourceType,
                                            supplier.toGenericString()), e);
         }
     }

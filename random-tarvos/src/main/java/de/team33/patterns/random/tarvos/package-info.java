@@ -1,6 +1,6 @@
 /**
- * This module, consisting of this package and the classes defined in it, provides tools to generate random data
- * of virtually any type, mainly for testing purpose.
+ * This module, consisting of this package and the classes/interfaces defined in it, provides tools to generate
+ * random data of virtually any type, mainly for testing purpose.
  * <p>
  * In a typical use case, a producer class is defined in the "test area" of a project, which is intended to
  * generate the data required in the tests, including complex ones, with random values.
@@ -8,9 +8,7 @@
  * {@link de.team33.patterns.random.tarvos.Generator} interface, which makes other basic methods available.
  * Based on this, methods are then defined there in order to generate data of context-specific types. Example:
  * <pre>
- * public class Producer extends Random implements Generator {
- *
- *     private final Charger&lt;Producer&gt; charger = new Charger&lt;&gt;(Producer.class);
+ * public class Producer extends Random implements Generator, Charger {
  *
  *     &#64;Override
  *     public final BigInteger nextBits(final int numBits) {
@@ -18,20 +16,20 @@
  *     }
  *
  *     public final Person nextPerson() {
- *         return charger.charge(new Person(), this);
+ *         return charge(new Person());
  *     }
  *
  *     public final Customer nextCustomer() {
- *         return charger.charge(new Customer(), this);
+ *         return charge(new Customer());
  *     }
  *
  *     public final Employee nextEmployee() {
- *         return charger.charge(new Employee(), this);
+ *         return charge(new Employee());
  *     }
  * }
  * </pre>
  * <p>
- * In this example, a {@link de.team33.patterns.random.tarvos.Charger} is used to fill the complex, contextual types
- * (Person, Customer, Empoyee, ...) with random content.
+ * In this example, the {@link de.team33.patterns.random.tarvos.Charger} interface is used to fill the complex,
+ * contextual types (Person, Customer, Employee, ...) with random content.
  */
 package de.team33.patterns.random.tarvos;
