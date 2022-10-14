@@ -1,4 +1,4 @@
-package de.team33.draft.patterns.random.tarvos;
+package de.team33.patterns.random.tarvos;
 
 /**
  * A utility interface. Can create instances of types composed (essentially) of properties and constructed like a
@@ -12,6 +12,6 @@ package de.team33.draft.patterns.random.tarvos;
 public interface Initiator {
 
     default <T> T initiate(final Class<T> targetType) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return new Initiating<>(this, targetType).result();
     }
 }
