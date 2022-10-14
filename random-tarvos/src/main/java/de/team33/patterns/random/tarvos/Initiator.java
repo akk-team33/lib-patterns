@@ -1,8 +1,8 @@
 package de.team33.patterns.random.tarvos;
 
 /**
- * A utility interface. Can create instances of types composed (essentially) of properties and constructed like a
- * <b><i>record</i></b> (as defined with Java 17).
+ * A utility interface. Can extend generator classes with the functionality to create instances of types composed
+ * (essentially) of properties and constructed like a <b><i>record</i></b> (as defined with Java 17).
  * This means that the type in question must provide a public constructor that takes all properties as parameters.
  * It may or may not actually be a <b><i>record</i></b>.
  * <p>

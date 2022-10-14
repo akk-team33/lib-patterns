@@ -2,6 +2,7 @@ package de.team33.test.patterns.random.shared;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
@@ -24,6 +25,14 @@ public final class Record {
         this.longValue = longValue;
         this.stringList = (null == stringList) ? null : unmodifiableList(new ArrayList<>(stringList));
         this.longList = (null == longList) ? null : unmodifiableList(new ArrayList<>(longList));
+    }
+
+    public Record(final boolean booleanValue, final String stringValue, final int intValue, final Long longValue) {
+        this(booleanValue, stringValue, intValue, longValue, null, null);
+    }
+
+    public Record() {
+        this(false, null, 0, null, null, null);
     }
 
     public boolean booleanValue() {
