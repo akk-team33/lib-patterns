@@ -4,7 +4,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -13,7 +12,7 @@ import java.util.stream.Stream;
 import static de.team33.patterns.random.tarvos.Types.naming;
 import static java.lang.String.format;
 
-final class Initiating<S extends Initiator, T> extends Supplying {
+final class Initiating<S extends Initiator, T> extends Supplying<S> {
 
     private static final Logger LOG = Logger.getLogger(Initiating.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -26,16 +25,12 @@ final class Initiating<S extends Initiator, T> extends Supplying {
             "        return ...;%n" +
             "    }%n";
 
-    private final S source;
-    private final Class<?> sourceType;
     private final Class<T> targetType;
     private final Constructor<T> constructor;
     private final Type[] parameterTypes;
 
     Initiating(final S source, final Class<T> targetType) {
-        super(source.getClass());
-        this.source = source;
-        this.sourceType = source.getClass();
+        super(source);
         this.targetType = targetType;
         this.constructor = constructor(targetType);
         this.parameterTypes = constructor.getGenericParameterTypes();

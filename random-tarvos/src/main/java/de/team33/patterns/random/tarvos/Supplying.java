@@ -9,14 +9,20 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class Supplying {
+@SuppressWarnings("PackageVisibleField")
+class Supplying<S> {
 
     private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
     private static final Predicate<Object> ANY_METHOD = method -> true;
 
+    final S source;
+    final Class<?> sourceType;
+
     private final List<Method> suppliers;
 
-    Supplying(final Class<?> sourceType) {
+    Supplying(final S source) {
+        this.source = source;
+        this.sourceType = source.getClass();
         this.suppliers = SUPPLIERS.computeIfAbsent(sourceType, Supplying::suppliersOf);
     }
 

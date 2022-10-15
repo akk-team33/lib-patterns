@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import static de.team33.patterns.random.tarvos.Types.naming;
 import static java.lang.String.format;
 
-final class Charging<S extends Charger, T> extends Supplying {
+final class Charging<S extends Charger, T> extends Supplying<S> {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -42,16 +42,12 @@ final class Charging<S extends Charger, T> extends Supplying {
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
-    private final S source;
-    private final Class<?> sourceType;
     private final T target;
     private final Class<?> targetType;
     private final Predicate<Method> desired;
 
     Charging(final S source, final T target, final Collection<String> ignore) {
-        super(source.getClass());
-        this.source = source;
-        this.sourceType = source.getClass();
+        super(source);
         this.target = target;
         this.targetType = target.getClass();
         this.desired = nameFilter(new HashSet<>(ignore)).negate();
