@@ -2,44 +2,37 @@ package de.team33.patterns.random.tarvos;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class Suppliers {
+class Supplying {
 
     private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
+    private static final Predicate<Object> ANY_METHOD = method -> true;
 
-    final Object source;
-    final Class<?> sourceType;
-    private final Predicate<Method> desired;
+    private final List<Method> suppliers;
 
-    Suppliers(final Object source, final Collection<String> ignore) {
-        this.source = source;
-        this.sourceType = source.getClass();
-        this.desired = nameFilter(new HashSet<>(ignore)).negate();
+    Supplying(final Class<?> sourceType) {
+        this.suppliers = SUPPLIERS.computeIfAbsent(sourceType, Supplying::suppliersOf);
     }
 
-    private static List<Method> newSuppliersOf(final Class<?> sourceType) {
+    private static List<Method> suppliersOf(final Class<?> sourceType) {
         return Stream.of(sourceType.getMethods())
                      .filter(method -> !Object.class.equals(method.getDeclaringClass()))
                      .filter(Methods::isSupplier)
                      .collect(Collectors.toList());
     }
 
-    private static Predicate<Method> nameFilter(final Set<String> names) {
-        return method -> names.contains(method.getName());
+    final Method desiredSupplier(final Type resultType) {
+        return desiredSupplier(resultType, ANY_METHOD);
     }
 
-    Method desiredSupplier(final Type resultType) {
-        return SUPPLIERS.computeIfAbsent(sourceType, Suppliers::newSuppliersOf)
-                        .stream()
+    final Method desiredSupplier(final Type resultType, final Predicate<? super Method> desired) {
+        return suppliers.stream()
                         .filter(method -> resultType.equals(method.getGenericReturnType()))
                         .filter(desired)
                         .findAny()

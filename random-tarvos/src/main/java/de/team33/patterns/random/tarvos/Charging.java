@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 import static de.team33.patterns.random.tarvos.Types.naming;
 import static java.lang.String.format;
 
-final class Charging<S extends Charger, T> {
+final class Charging<S extends Charger, T> extends Supplying {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
@@ -41,7 +41,6 @@ final class Charging<S extends Charger, T> {
             "    Consider ignoring the causing method.";
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
-    private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
 
     private final S source;
     private final Class<?> sourceType;
@@ -50,6 +49,7 @@ final class Charging<S extends Charger, T> {
     private final Predicate<Method> desired;
 
     Charging(final S source, final T target, final Collection<String> ignore) {
+        super(source.getClass());
         this.source = source;
         this.sourceType = source.getClass();
         this.target = target;
@@ -60,13 +60,6 @@ final class Charging<S extends Charger, T> {
     private static List<Method> newSettersOf(final Class<?> targetType) {
         return Stream.of(targetType.getMethods())
                      .filter(Methods::isSetter)
-                     .collect(Collectors.toList());
-    }
-
-    private static List<Method> newSuppliersOf(final Class<?> sourceType) {
-        return Stream.of(sourceType.getMethods())
-                     .filter(method -> !Object.class.equals(method.getDeclaringClass()))
-                     .filter(Methods::isSupplier)
                      .collect(Collectors.toList());
     }
 
@@ -102,15 +95,6 @@ final class Charging<S extends Charger, T> {
         };
     }
 
-    private Method desiredSupplier(final Type resultType) {
-        return SUPPLIERS.computeIfAbsent(sourceType, Charging::newSuppliersOf)
-                        .stream()
-                        .filter(method -> resultType.equals(method.getGenericReturnType()))
-                        .filter(desired)
-                        .findAny()
-                        .orElse(null);
-    }
-
     private Stream<Method> desiredSetters() {
         return SETTERS.computeIfAbsent(targetType, Charging::newSettersOf)
                       .stream()
@@ -120,7 +104,7 @@ final class Charging<S extends Charger, T> {
     final T result() {
         desiredSetters().forEach(setter -> {
             final Type valueType = setter.getGenericParameterTypes()[0];
-            final Method supplier = desiredSupplier(valueType);
+            final Method supplier = desiredSupplier(valueType, desired);
             if (null == supplier) {
                 source.chargerLog(missingMessage(setter, valueType), null);
             } else {
