@@ -2,7 +2,6 @@ package de.team33.patterns.random.tarvos;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -72,16 +71,12 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
         final Object[] result = new Object[length];
         for (int i = 0; i < length; i++) {
             final Type parameterType = parameterTypes[i];
-            final Method supplier = desiredSupplier(parameterType);
+            final Supplier<?> supplier = desiredSupplier(parameterType);
             if (null == supplier) {
                 defaultLog(missingMessage(i, parameterType), null);
                 result[i] = Types.defaultValue(parameterType);
             } else {
-                try {
-                    result[i] = supplier.invoke(source);
-                } catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
-                    throw new IllegalStateException(e.getMessage(), e);
-                }
+                result[i] = supplier.get();
             }
         }
         return result;

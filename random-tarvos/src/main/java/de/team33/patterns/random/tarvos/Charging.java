@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -24,6 +25,7 @@ import static java.lang.String.format;
 final class Charging<S extends Charger, T> extends Supplying<S> {
 
     private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
+    private static final String METHOD_NOT_APPLICABLE = Util.load(Supplying.class, "setterMethodNotApplicable.txt");
     private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
             "    target type: %s%n" +
             "    setter:      %s%n" +
@@ -67,20 +69,6 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         LOG.log(Level.WARNING, cause, message);
     }
 
-    @SuppressWarnings("OverlyBroadCatchBlock")
-    private void invoke(final Method setter, final Method supplier) {
-        try {
-            final Object value = supplier.invoke(source);
-            setter.invoke(target, value);
-        } catch (final IllegalAccessException | InvocationTargetException | RuntimeException e) {
-            source.chargerLog(() -> format(INIT_FAILED,
-                                           targetType,
-                                           setter.toGenericString(),
-                                           sourceType,
-                                           supplier.toGenericString()), e);
-        }
-    }
-
     private Supplier<String> missingMessage(final Method setter, final Type resultType) {
         final Naming naming = naming(resultType);
         return () -> {
@@ -97,14 +85,27 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
                       .filter(desired);
     }
 
+    private final Consumer<Object> setter(final Method setter) {
+        return value -> {
+            try {
+                setter.invoke(target, value);
+            } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+                throw new IllegalStateException(format(METHOD_NOT_APPLICABLE,
+                                                       targetType,
+                                                       setter.toGenericString(),
+                                                       setter.getName()), e);
+            }
+        };
+    }
+
     final T result() {
         desiredSetters().forEach(setter -> {
             final Type valueType = setter.getGenericParameterTypes()[0];
-            final Method supplier = desiredSupplier(valueType, desired);
+            final Supplier<?> supplier = desiredSupplier(valueType, desired);
             if (null == supplier) {
                 source.chargerLog(missingMessage(setter, valueType), null);
             } else {
-                invoke(setter, supplier);
+                setter(setter).accept(supplier.get());
             }
         });
         return target;
