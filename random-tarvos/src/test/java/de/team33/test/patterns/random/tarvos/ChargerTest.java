@@ -4,6 +4,7 @@ import de.team33.patterns.random.tarvos.Charger;
 import de.team33.test.patterns.random.shared.Buildable;
 import de.team33.test.patterns.random.shared.Generic;
 import de.team33.test.patterns.random.shared.Sample;
+import de.team33.test.patterns.random.shared.SampleEx;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -33,6 +34,12 @@ public class ChargerTest implements Charger {
     @Test
     final void charge_Sample() {
         final Sample result = charge(new Sample());
+        assertEquals(sample, result);
+    }
+
+    @Test
+    final void charge_SampleEx() {
+        final Sample result = charge(new SampleEx(), "setDateValue");
         assertEquals(sample, result);
     }
 

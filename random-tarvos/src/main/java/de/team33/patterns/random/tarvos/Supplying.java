@@ -26,14 +26,27 @@ class Supplying<S> {
     Supplying(final S source) {
         this.source = source;
         this.sourceType = source.getClass();
-        this.suppliers = SUPPLIERS.computeIfAbsent(sourceType, Supplying::suppliersOf);
+        this.suppliers = SUPPLIERS.computeIfAbsent(sourceType, Supplying::suppliers);
     }
 
-    private static List<Method> suppliersOf(final Class<?> sourceType) {
+    private static List<Method> suppliers(final Class<?> sourceType) {
         return Stream.of(sourceType.getMethods())
                      .filter(method -> !Object.class.equals(method.getDeclaringClass()))
                      .filter(Methods::isSupplier)
                      .collect(Collectors.toList());
+    }
+
+    private Supplier<?> supplier(final Method method) {
+        return () -> {
+            try {
+                return method.invoke(source);
+            } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+                throw new IllegalStateException(String.format(METHOD_NOT_APPLICABLE,
+                                                              sourceType,
+                                                              method.toGenericString(),
+                                                              method.getName()), e);
+            }
+        };
     }
 
     final Supplier<?> desiredSupplier(final Type resultType) {
@@ -47,17 +60,5 @@ class Supplying<S> {
                         .findAny()
                         .map(this::supplier)
                         .orElse(null);
-    }
-
-    private Supplier<?> supplier(final Method method) {
-        return () -> {
-            try {
-                return method.invoke(source);
-            } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                throw new IllegalStateException(String.format(METHOD_NOT_APPLICABLE,
-                                                              sourceType,
-                                                              method.toGenericString()), e);
-            }
-        };
     }
 }

@@ -35,12 +35,10 @@ public interface Charger {
     }
 
     /**
-     * The logging method used by this {@link Charger}. It is used if errors or discrepancies occur during
-     * {@linkplain Charger#charge(Object, String...) charging}.
-     * <p>
-     * The default implementation uses java logging. It can and should be overwritten if no java logging is desired.
+     * @deprecated This method is not used anymore and maybe removed in a future version.
      */
+    @Deprecated
     default void chargerLog(final Supplier<String> message, final Exception cause) {
-        Charging.defaultLog(message, cause);
+        throw new UnsupportedOperationException("not yet implemented");
     }
 }

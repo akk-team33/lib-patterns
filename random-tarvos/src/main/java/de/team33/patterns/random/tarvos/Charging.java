@@ -14,8 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,23 +22,8 @@ import static java.lang.String.format;
 
 final class Charging<S extends Charger, T> extends Supplying<S> {
 
-    private static final Logger LOG = Logger.getLogger(Charging.class.getCanonicalName());
-    private static final String METHOD_NOT_APPLICABLE = Util.load(Supplying.class, "setterMethodNotApplicable.txt");
-    private static final String NO_SUPPLIER = "No appropriate supplier method found ...%n%n" +
-            "    target type: %s%n" +
-            "    setter:      %s%n" +
-            "    type:        %s%n" +
-            "    source type: %s%n%n" +
-            "    Consider ignoring \"%s\" or defining a method in the source type that looks something like this:%n%n" +
-            "    public final %s next%s() {%n" +
-            "        return ...;%n" +
-            "    }%n";
-    private static final String INIT_FAILED = "Initialization failed:%n%n" +
-            "    target type: %s%n" +
-            "    setter:      %s%n" +
-            "    source type: %s%n" +
-            "    supplier: %s%n%n" +
-            "    Consider ignoring the causing method.";
+    private static final String METHOD_NOT_APPLICABLE = Util.load(Charging.class, "setterMethodNotApplicable.txt");
+    private static final String NO_SUPPLIER = Util.load(Charging.class, "noSupplierMethodFound.txt");
 
     private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
@@ -65,35 +48,21 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         return method -> names.contains(method.getName());
     }
 
-    static void defaultLog(final Supplier<String> message, final Exception cause) {
-        LOG.log(Level.WARNING, cause, message);
-    }
-
-    private Supplier<String> missingMessage(final Method setter, final Type resultType) {
-        final Naming naming = naming(resultType);
-        return () -> {
-            final String name1 = naming.parameterizedName(resultType);
-            final String name2 = naming.simpleName(resultType);
-            return format(NO_SUPPLIER, setter.getDeclaringClass(), setter.toGenericString(), resultType, sourceType,
-                          setter.getName(), name1, name2);
-        };
-    }
-
     private Stream<Method> desiredSetters() {
         return SETTERS.computeIfAbsent(targetType, Charging::newSettersOf)
                       .stream()
                       .filter(desired);
     }
 
-    private final Consumer<Object> setter(final Method setter) {
+    private Consumer<Object> setter(final Method setter) {
         return value -> {
             try {
                 setter.invoke(target, value);
             } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                throw new IllegalStateException(format(METHOD_NOT_APPLICABLE,
-                                                       targetType,
-                                                       setter.toGenericString(),
-                                                       setter.getName()), e);
+                throw new ChargingException(format(METHOD_NOT_APPLICABLE,
+                                                   targetType,
+                                                   setter.toGenericString(),
+                                                   setter.getName()), e);
             }
         };
     }
@@ -103,11 +72,30 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             final Type valueType = setter.getGenericParameterTypes()[0];
             final Supplier<?> supplier = desiredSupplier(valueType, desired);
             if (null == supplier) {
-                source.chargerLog(missingMessage(setter, valueType), null);
+                throw new ChargingException(this, setter, valueType);
             } else {
                 setter(setter).accept(supplier.get());
             }
         });
         return target;
+    }
+
+    private static final class ChargingException extends RuntimeException {
+
+        ChargingException(final String message, final Throwable cause) {
+            super(message, cause);
+        }
+
+        ChargingException(final Charging<?, ?> charging, final Method setter, final Type valueType) {
+            this(missingMessage(charging, setter, valueType), null);
+        }
+
+        private static String missingMessage(final Charging<?, ?> charging, final Method setter, final Type valueType) {
+            final Naming naming = naming(valueType);
+            final String name1 = naming.parameterizedName(valueType);
+            final String name2 = naming.simpleName(valueType);
+            return format(NO_SUPPLIER, charging.sourceType, charging.targetType,
+                          setter.toGenericString(), setter.getName(), name1, name2);
+        }
     }
 }
