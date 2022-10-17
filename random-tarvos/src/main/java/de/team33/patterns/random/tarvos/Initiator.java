@@ -1,5 +1,7 @@
 package de.team33.patterns.random.tarvos;
 
+import java.util.Arrays;
+
 /**
  * A utility interface. Can extend generator classes with the functionality to create instances of types composed
  * (essentially) of properties and constructed like a <b><i>record</i></b> (as defined with Java 17).
@@ -11,7 +13,7 @@ package de.team33.patterns.random.tarvos;
  */
 public interface Initiator {
 
-    default <T> T initiate(final Class<T> targetType) {
-        return new Initiating<>(this, targetType).result();
+    default <T> T initiate(final Class<T> targetType, final String... ignore) {
+        return new Initiating<>(this, targetType, Arrays.asList(ignore)).result();
     }
 }

@@ -6,13 +6,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,23 +26,17 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
 
     private final T target;
     private final Class<?> targetType;
-    private final Predicate<Method> desired;
 
     Charging(final S source, final T target, final Collection<String> ignore) {
-        super(source);
+        super(source, ignore);
         this.target = target;
         this.targetType = target.getClass();
-        this.desired = nameFilter(new HashSet<>(ignore)).negate();
     }
 
     private static List<Method> newSettersOf(final Class<?> targetType) {
         return Stream.of(targetType.getMethods())
                      .filter(Methods::isSetter)
                      .collect(Collectors.toList());
-    }
-
-    private static Predicate<Method> nameFilter(final Set<String> names) {
-        return method -> names.contains(method.getName());
     }
 
     private Stream<Method> desiredSetters() {
@@ -59,10 +50,10 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             try {
                 setter.invoke(target, value);
             } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                throw new ChargingException(format(METHOD_NOT_APPLICABLE,
-                                                   targetType,
-                                                   setter.toGenericString(),
-                                                   setter.getName()), e);
+                throw new Exception(format(METHOD_NOT_APPLICABLE,
+                                           targetType,
+                                           setter.toGenericString(),
+                                           setter.getName()), e);
             }
         };
     }
@@ -70,9 +61,9 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
     final T result() {
         desiredSetters().forEach(setter -> {
             final Type valueType = setter.getGenericParameterTypes()[0];
-            final Supplier<?> supplier = desiredSupplier(valueType, desired);
+            final Supplier<?> supplier = desiredSupplier(valueType);
             if (null == supplier) {
-                throw new ChargingException(this, setter, valueType);
+                throw new Exception(this, setter, valueType);
             } else {
                 setter(setter).accept(supplier.get());
             }
@@ -80,13 +71,14 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         return target;
     }
 
-    private static final class ChargingException extends RuntimeException {
+    @SuppressWarnings("ClassNameSameAsAncestorName")
+    private static final class Exception extends RuntimeException {
 
-        ChargingException(final String message, final Throwable cause) {
+        Exception(final String message, final Throwable cause) {
             super(message, cause);
         }
 
-        ChargingException(final Charging<?, ?> charging, final Method setter, final Type valueType) {
+        Exception(final Charging<?, ?> charging, final Method setter, final Type valueType) {
             this(missingMessage(charging, setter, valueType), null);
         }
 

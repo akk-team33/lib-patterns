@@ -13,7 +13,7 @@ public class InitiatorTest implements Initiator {
 
     private final Record expected = new Record(true,
                                                "ABC",
-                                               278,
+                                               0,
                                                Long.MAX_VALUE,
                                                Arrays.asList("abc", "def", "ghi"),
                                                Arrays.asList(4L, 69L, 345L));
@@ -33,7 +33,7 @@ public class InitiatorTest implements Initiator {
 
     @Test
     final void initiate() {
-        final Record result = initiate(Record.class);
+        final Record result = initiate(Record.class, "next_Int", "arg2");
         assertEquals(expected, result);
     }
 
@@ -46,7 +46,7 @@ public class InitiatorTest implements Initiator {
     }
 
     public final int nextInt() {
-        return expected.intValue();
+        return expected.intValue() + 1;
     }
 
     public final Long nextLong() {
