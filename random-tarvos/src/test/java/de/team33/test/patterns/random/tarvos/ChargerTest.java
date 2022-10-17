@@ -1,16 +1,20 @@
 package de.team33.test.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Charger;
+import de.team33.patterns.random.tarvos.UnfitConditionException;
 import de.team33.test.patterns.random.shared.Buildable;
 import de.team33.test.patterns.random.shared.Generic;
 import de.team33.test.patterns.random.shared.Sample;
-import de.team33.test.patterns.random.shared.SampleEx;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class ChargerTest implements Charger {
 
@@ -29,6 +33,18 @@ public class ChargerTest implements Charger {
 
     public static String getNothing() {
         throw new UnsupportedOperationException("should not be called anyways");
+    }
+
+    @Test
+    final void setterNotApplicable() {
+        try {
+            final Sample result = charge(new SampleEx());
+            fail("should fail but was <" + result + ">");
+        } catch (final UnfitConditionException e) {
+            e.printStackTrace();
+            assertEquals("Method not applicable as setter!", e.getMessage().substring(0, 32));
+            assertTrue(e.getMessage().contains(SampleEx.class.getSimpleName() + ".setDateValue"));
+        }
     }
 
     @Test
@@ -78,4 +94,9 @@ public class ChargerTest implements Charger {
     public final List<Long> nextLongs() {
         return sample.getLongList();
     }
+
+    public final Date nextDate() {
+        return new Date();
+    }
 }
+

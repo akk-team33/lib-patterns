@@ -51,10 +51,10 @@ class Supplying<S> {
             try {
                 return method.invoke(source);
             } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                throw new IllegalStateException(String.format(METHOD_NOT_APPLICABLE,
-                                                              sourceType,
-                                                              method.toGenericString(),
-                                                              method.getName()), e);
+                throw new UnfitConditionException(String.format(METHOD_NOT_APPLICABLE,
+                                                                sourceType,
+                                                                method.toGenericString(),
+                                                                method.getName()), e);
             }
         };
     }

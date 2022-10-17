@@ -50,10 +50,10 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             try {
                 setter.invoke(target, value);
             } catch (final IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
-                throw new Exception(format(METHOD_NOT_APPLICABLE,
-                                           targetType,
-                                           setter.toGenericString(),
-                                           setter.getName()), e);
+                throw new LocalException(format(METHOD_NOT_APPLICABLE,
+                                                targetType,
+                                                setter.toGenericString(),
+                                                setter.getName()), e);
             }
         };
     }
@@ -63,7 +63,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             final Type valueType = setter.getGenericParameterTypes()[0];
             final Supplier<?> supplier = desiredSupplier(valueType);
             if (null == supplier) {
-                throw new Exception(this, setter, valueType);
+                throw new LocalException(this, setter, valueType);
             } else {
                 setter(setter).accept(supplier.get());
             }
@@ -71,15 +71,14 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         return target;
     }
 
-    @SuppressWarnings("ClassNameSameAsAncestorName")
-    private static final class Exception extends RuntimeException {
+    private static final class LocalException extends UnfitConditionException {
 
-        Exception(final String message, final Throwable cause) {
+        LocalException(final String message, final Throwable cause) {
             super(message, cause);
         }
 
-        Exception(final Charging<?, ?> charging, final Method setter, final Type valueType) {
-            this(missingMessage(charging, setter, valueType), null);
+        LocalException(final Charging<?, ?> charging, final Method setter, final Type valueType) {
+            super(missingMessage(charging, setter, valueType), null);
         }
 
         private static String missingMessage(final Charging<?, ?> charging, final Method setter, final Type valueType) {
