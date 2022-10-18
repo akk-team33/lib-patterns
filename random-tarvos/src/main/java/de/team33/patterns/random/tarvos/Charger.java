@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
- * A utility interface. Can extend generator classes with the functionality to fill POJO* instances with (typically)
+ * A utility interface: can extend producer classes with the functionality to fill POJO* instances with (typically)
  * random values. Within certain limits, this also works with instances according to the builder pattern.
  * <p>
  * *A POJO (plain old java object) is an instance consisting (essentially) of properties that can be accessed using

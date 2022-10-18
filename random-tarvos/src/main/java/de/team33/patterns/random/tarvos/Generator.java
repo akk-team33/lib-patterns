@@ -7,7 +7,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Represents a basic interface of a random generator that defines methods for primitive values as well as
+ * A utility interface:
+ * represents an interface of a basic random generator that defines methods for primitive values as well as
  * values of some other basic types, including {@code enum} types, {@link String} and {@link BigInteger}.
  * <p>
  * Most methods provide a default implementation that (directly or indirectly) uses {@link #nextBits(int)}.
@@ -29,7 +30,7 @@ import java.util.stream.Stream;
  * }
  * </pre>
  * <p>
- * In such a use case, some of the default implementations will be overwritten by existing implementations from
+ * In such a use case, some default implementations will be overwritten by existing implementations from
  * {@link java.util.Random}.
  * <p>
  * However, it can also be used in other ways. In particular, deterministic implementations are also conceivable.

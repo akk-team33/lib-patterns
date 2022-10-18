@@ -8,7 +8,7 @@
  * {@link de.team33.patterns.random.tarvos.Generator} interface, which makes other basic methods available.
  * Based on this, methods are then defined there in order to generate data of context-specific types. Example:
  * <pre>
- * public class Producer extends Random implements Generator, Charger {
+ * public class Producer extends Random implements Generator, Charger, Initiator {
  *
  *     &#64;Override
  *     public final BigInteger nextBits(final int numBits) {
@@ -16,7 +16,7 @@
  *     }
  *
  *     public final Person nextPerson() {
- *         return charge(new Person());
+ *         return initiate(Person.class);
  *     }
  *
  *     public final Customer nextCustomer() {
@@ -29,7 +29,8 @@
  * }
  * </pre>
  * <p>
- * In this example, the {@link de.team33.patterns.random.tarvos.Charger} interface is used to fill the complex,
+ * In this example, the {@link de.team33.patterns.random.tarvos.Charger} and
+ * {@link de.team33.patterns.random.tarvos.Initiator} interfaces are used to charge/initiate the complex,
  * contextual types (Person, Customer, Employee, ...) with random content.
  */
 package de.team33.patterns.random.tarvos;
