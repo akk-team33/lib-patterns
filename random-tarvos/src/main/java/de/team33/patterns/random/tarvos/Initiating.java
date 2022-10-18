@@ -14,6 +14,7 @@ import static java.lang.String.format;
 final class Initiating<S extends Initiator, T> extends Supplying<S> {
 
     private static final String NO_SUPPLIER = Util.load(Initiating.class, "noSupplierMethodFound4Parameter.txt");
+    private static final String UNFIT_CONSTRUCTOR = Util.load(Initiating.class, "constructorNotApplicable.txt");
 
     private final Class<T> targetType;
     private final Constructor<T> constructor;
@@ -32,10 +33,10 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
                                            .reduce(Initiating::largest)
                                            .map(Constructor::getParameterTypes)
                                            .orElseThrow(() -> new NoSuchMethodException(
-                                                   "no public constructor: " + targetType));
+                                                   "no public constructor found in " + targetType));
             return targetType.getConstructor(types);
         } catch (final NoSuchMethodException e) {
-            throw new Exception(e.getMessage(), e);
+            throw new LocalException(e.getMessage(), e);
         }
     }
 
@@ -53,7 +54,7 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
                          } else if (null != supplier) {
                              return supplier.get();
                          } else {
-                             throw new Exception(this, parameter.getName(), parameterType);
+                             throw new LocalException(this, parameter.getName(), parameterType);
                          }
                      })
                      .toArray(Object[]::new);
@@ -64,18 +65,17 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
             return constructor.newInstance(arguments());
         } catch (final InstantiationException | IllegalAccessException |
                 InvocationTargetException | IllegalArgumentException e) {
-            throw new Exception(e.getMessage(), e);
+            throw new LocalException(format(UNFIT_CONSTRUCTOR, targetType, constructor.toGenericString()), e);
         }
     }
 
-    @SuppressWarnings("ClassNameSameAsAncestorName")
-    private static final class Exception extends RuntimeException {
+    private static final class LocalException extends UnfitConditionException {
 
-        Exception(final String message, final Throwable cause) {
+        LocalException(final String message, final Throwable cause) {
             super(message, cause);
         }
 
-        Exception(final Initiating<?, ?> initiating, final String parameterName, final Type parameterType) {
+        LocalException(final Initiating<?, ?> initiating, final String parameterName, final Type parameterType) {
             this(missingMessage(initiating, parameterName, parameterType), null);
         }
 

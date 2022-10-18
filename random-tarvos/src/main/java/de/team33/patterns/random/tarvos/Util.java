@@ -14,6 +14,8 @@ final class Util {
     static final int FLOAT_RESOLUTION = Float.SIZE - 8;
 
     private static final String NEWLINE = String.format("%n");
+    private static final String NO_RESOURCE = "Should not happen:" +
+            " <%s> is not a valid resource or is not accessible in the context <%s>";
 
     private Util() {
     }
@@ -21,8 +23,8 @@ final class Util {
     static String load(final Class<?> context, final String resource) {
         try (final InputStream in = context.getResourceAsStream(resource)) {
             return load(in);
-        } catch (final IOException e) {
-            throw new IllegalStateException(e.getMessage(), e);
+        } catch (final IOException | RuntimeException e) {
+            throw new UnfitConditionException(String.format(NO_RESOURCE, resource, context), e);
         }
     }
 

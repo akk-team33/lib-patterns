@@ -1,6 +1,7 @@
 package de.team33.test.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Initiator;
+import de.team33.patterns.random.tarvos.UnfitConditionException;
 import de.team33.test.patterns.random.shared.Record;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class InitiatorTest implements Initiator {
 
@@ -35,6 +38,19 @@ public class InitiatorTest implements Initiator {
     final void initiate() {
         final Record result = initiate(Record.class, "next_Int", "arg2");
         assertEquals(expected, result);
+    }
+
+    @Test
+    final void unfitConstructor() {
+        final Record result;
+        try {
+            result = initiate(RecordEx.class, "next_Int", "arg2");
+            fail("should fail but was <" + result + ">");
+        } catch (final UnfitConditionException e) {
+            e.printStackTrace();
+            assertEquals("Constructor not applicable!", e.getMessage().substring(0, 27));
+            assertTrue(e.getMessage().contains(RecordEx.class.getSimpleName() + "("));
+        }
     }
 
     public final boolean nextBoolean() {

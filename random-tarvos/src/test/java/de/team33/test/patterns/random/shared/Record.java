@@ -8,7 +8,7 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 @SuppressWarnings({"unused", "BooleanParameter", "ConstructorWithTooManyParameters"})
-public final class Record {
+public class Record {
 
     private final boolean booleanValue;
     private final String stringValue;

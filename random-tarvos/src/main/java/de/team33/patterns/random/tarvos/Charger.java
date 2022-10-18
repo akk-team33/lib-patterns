@@ -39,6 +39,6 @@ public interface Charger {
      */
     @Deprecated
     default void chargerLog(final Supplier<String> message, final Exception cause) {
-        throw new UnsupportedOperationException("not yet implemented");
+        throw new UnsupportedOperationException("this method is deprecated and should not be called");
     }
 }
