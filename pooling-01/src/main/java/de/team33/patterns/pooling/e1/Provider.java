@@ -43,7 +43,7 @@ public class Provider<S> extends Mutual<S, RuntimeException> {
      * "hijacked" from the context of the execution or the executing thread!
      */
     public final void run(final Consumer<? super S> consumer) {
-        apply(xFunction(consumer::accept));
+        accept(consumer::accept);
     }
 
     /**
@@ -56,7 +56,7 @@ public class Provider<S> extends Mutual<S, RuntimeException> {
      * @throws X if the execution of the given {@link XConsumer} causes one.
      */
     public final <X extends Exception> void runEx(final XConsumer<? super S, X> xConsumer) throws X {
-        apply(xFunction(xConsumer));
+        accept(xConsumer);
     }
 
     /**

@@ -46,7 +46,7 @@ public class XProvider<S, E extends Exception> extends Mutual<S, E> {
      * @throws E if the initialization of a new <em>subject</em> causes one.
      */
     public final void run(final Consumer<? super S> consumer) throws E {
-        apply(xFunction(consumer::accept));
+        accept(consumer::accept);
     }
 
     /**
@@ -60,7 +60,7 @@ public class XProvider<S, E extends Exception> extends Mutual<S, E> {
      * @throws X if the execution of the given {@link XConsumer} causes one.
      */
     public final <X extends Exception> void runEx(final XConsumer<? super S, X> xConsumer) throws E, X {
-        apply(xFunction(xConsumer));
+        accept(xConsumer);
     }
 
     /**

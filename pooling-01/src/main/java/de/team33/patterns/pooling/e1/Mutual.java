@@ -18,11 +18,11 @@ class Mutual<S, E extends Exception> {
         this.newItem = newItem;
     }
 
-    final <X extends Exception> XFunction<S, Void, X> xFunction(final XConsumer<? super S, X> consumer) {
-        return subject -> {
-            consumer.accept(subject);
+    final <X extends Exception> void accept(final XConsumer<? super S, X> xConsumer) throws E, X {
+        apply(subject -> {
+            xConsumer.accept(subject);
             return VOID;
-        };
+        });
     }
 
     final <R, X extends Exception> R apply(final XFunction<? super S, R, X> function) throws E, X {
