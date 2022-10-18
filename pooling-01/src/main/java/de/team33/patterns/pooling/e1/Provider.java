@@ -37,6 +37,16 @@ public class Provider<S> extends Mutual<S, RuntimeException> {
     }
 
     /**
+     * Runs a given {@link Consumer} with a parameter provided for it. The parameter is kept for future use.
+     * <p>
+     * While the {@link Consumer} is being executed, the parameter is exclusively available to it, but must not be
+     * "hijacked" from the context of the execution or the executing thread!
+     */
+    public final void run(final Consumer<? super S> consumer) {
+        apply(xFunction(consumer::accept));
+    }
+
+    /**
      * Runs a given {@link XConsumer} with a parameter provided for it. The parameter is kept for future use.
      * <p>
      * While the {@link XConsumer} is being executed, the parameter is exclusively available to it, but must not be
@@ -45,33 +55,8 @@ public class Provider<S> extends Mutual<S, RuntimeException> {
      * @param <X> A type of exception that may be caused by the given {@link XConsumer}.
      * @throws X if the execution of the given {@link XConsumer} causes one.
      */
-    public final <X extends Exception> void runEx(final XConsumer<? super S, X> consumer) throws X {
-        call(consumer);
-    }
-
-    /**
-     * Runs a given {@link Consumer} with a parameter provided for it. The parameter is kept for future use.
-     * <p>
-     * While the {@link Consumer} is being executed, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the execution or the executing thread!
-     */
-    public final void run(final Consumer<? super S> consumer) {
-        call(consumer::accept);
-    }
-
-    /**
-     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
-     * The parameter is kept for future use.
-     * <p>
-     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the call or the executing thread!
-     *
-     * @param <R> The result type of the given {@link XFunction}
-     * @param <X> A type of exception that may be caused by the given {@link XFunction}.
-     * @throws X if the execution of the given {@link XFunction} causes one.
-     */
-    public final <R, X extends Exception> R getEx(final XFunction<? super S, R, X> function) throws X {
-        return apply(function);
+    public final <X extends Exception> void runEx(final XConsumer<? super S, X> xConsumer) throws X {
+        apply(xFunction(xConsumer));
     }
 
     /**
@@ -85,5 +70,20 @@ public class Provider<S> extends Mutual<S, RuntimeException> {
      */
     public final <R> R get(final Function<? super S, R> function) {
         return apply(function::apply);
+    }
+
+    /**
+     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
+     * The parameter is kept for future use.
+     * <p>
+     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
+     * "hijacked" from the context of the call or the executing thread!
+     *
+     * @param <R> The result type of the given {@link XFunction}
+     * @param <X> A type of exception that may be caused by the given {@link XFunction}.
+     * @throws X if the execution of the given {@link XFunction} causes one.
+     */
+    public final <R, X extends Exception> R getEx(final XFunction<? super S, R, X> xFunction) throws X {
+        return apply(xFunction);
     }
 }
