@@ -3,6 +3,7 @@ package de.team33.test.patterns.random.tarvos;
 import de.team33.patterns.random.tarvos.Initiator;
 import de.team33.patterns.random.tarvos.UnfitConditionException;
 import de.team33.test.patterns.random.shared.Record;
+import de.team33.test.patterns.random.shared.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -41,13 +42,36 @@ public class InitiatorTest implements Initiator {
     }
 
     @Test
-    final void unfitConstructor() {
-        final Record result;
+    final void no_supplier() {
         try {
-            result = initiate(RecordEx.class, "next_Int", "arg2");
+            final Record result = initiate(Record.class);
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            assertEquals("No appropriate supplier method found!", e.getMessage().substring(0, 37));
+            assertTrue(e.getMessage().contains(Record.class.getSimpleName() + "("));
+        }
+    }
+
+    @Test
+    final void no_constructor() {
+        try {
+            final Sample result = initiate(SampleEx.class);
+            fail("should fail but was <" + result + ">");
+        } catch (final UnfitConditionException e) {
+            // e.printStackTrace();
+            assertEquals("No public constructor found in", e.getMessage().substring(0, 30));
+            assertTrue(e.getMessage().contains(SampleEx.class.getSimpleName()));
+        }
+    }
+
+    @Test
+    final void unfitConstructor() {
+        try {
+            final Record result = initiate(RecordEx.class, "next_Int", "arg2");
+            fail("should fail but was <" + result + ">");
+        } catch (final UnfitConditionException e) {
+            // e.printStackTrace();
             assertEquals("Constructor not applicable!", e.getMessage().substring(0, 27));
             assertTrue(e.getMessage().contains(RecordEx.class.getSimpleName() + "("));
         }
@@ -59,10 +83,6 @@ public class InitiatorTest implements Initiator {
 
     public final String nextString() {
         return expected.stringValue();
-    }
-
-    public final int nextInt() {
-        return expected.intValue() + 1;
     }
 
     public final Long nextLong() {

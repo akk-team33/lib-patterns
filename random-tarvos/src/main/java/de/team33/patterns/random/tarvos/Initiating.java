@@ -33,7 +33,7 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
                                            .reduce(Initiating::largest)
                                            .map(Constructor::getParameterTypes)
                                            .orElseThrow(() -> new NoSuchMethodException(
-                                                   "no public constructor found in " + targetType));
+                                                   "No public constructor found in " + targetType));
             return targetType.getConstructor(types);
         } catch (final NoSuchMethodException e) {
             throw new LocalException(e.getMessage(), e);
@@ -76,15 +76,15 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
         }
 
         LocalException(final Initiating<?, ?> initiating, final String parameterName, final Type parameterType) {
-            this(missingMessage(initiating, parameterName, parameterType), null);
+            super(missingMessage(initiating, parameterName, parameterType), null);
         }
 
         private static String missingMessage(final Initiating<?, ?> initiating, final String name, final Type type) {
             final Types.Naming naming = naming(type);
             final String name1 = naming.parameterizedName(type);
             final String name2 = naming.simpleName(type);
-            return format(NO_SUPPLIER, initiating.sourceType, initiating.targetType, initiating.constructor,
-                          name, name1, name2);
+            return format(NO_SUPPLIER, initiating.sourceType, initiating.targetType,
+                          initiating.constructor.toGenericString(), name, name1, name2);
         }
     }
 }

@@ -12,6 +12,7 @@ import java.util.EnumMap;
 import java.util.IntSummaryStatistics;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigInteger.ONE;
@@ -19,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@SuppressWarnings("ConstantConditions")
 class GeneratorTest {
 
     private static final BigInteger FIXED = new BigInteger("45619B2F8D02DD0BD545B8C8BD2CDBF86E8149DD7581925275C0", 16);
@@ -68,12 +69,15 @@ class GeneratorTest {
     @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
     final void nextInt_bound(final int bound) {
         final int result = random.nextInt(bound);
-        //noinspection ConstantConditions
         assertTrue(0 <= result,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bound > result,
                    () -> "result is expected to be less than " + bound + " but was " + result);
-        assertEquals(0x925275C0, fixed.nextInt());
+        final int mask = IntStream.of(1, 2, 4, 8, 16, 32, 64, 128)
+                                  .filter(i -> i > bound)
+                                  .findFirst()
+                                  .orElse(256) - 1;
+        assertEquals(0x925275C0 & mask, fixed.nextInt(bound));
     }
 
     @ParameterizedTest
@@ -100,6 +104,18 @@ class GeneratorTest {
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bound > result,
                    () -> "result is expected to be less than " + bound + " but was " + result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {0, -1, -3, -5, -11, -19, -29, -97})
+    final void nextLong_subzero(final long bound) {
+        try {
+            final long result = random.nextLong(bound);
+            fail("should fail but was <" + result + ">");
+        } catch (final IllegalArgumentException e) {
+            // e.printStackTrace();
+            assertEquals("<bound> must be greater than ZERO but was " + bound, e.getMessage());
+        }
     }
 
     @ParameterizedTest
@@ -131,6 +147,18 @@ class GeneratorTest {
                        () -> "result(c) is expected to be greater or equal to '0' but was '" + result + "'");
             assertTrue('9' >= c,
                        () -> "result(c) is expected to be less or equal to '9' but was '" + result + "'");
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, -3, -7, -17, -29, -97})
+    final void nextString_subzero(final int length) {
+        try {
+            final String result = random.nextString(length, "0123456789");
+            fail("should fail but was <" + result + ">");
+        } catch (final IllegalArgumentException e) {
+            // e.printStackTrace();
+            assertEquals("<length> must be greater than or equal to zero but was " + length, e.getMessage());
         }
     }
 

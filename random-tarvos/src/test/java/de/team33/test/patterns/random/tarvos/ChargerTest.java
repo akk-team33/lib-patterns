@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -40,9 +41,22 @@ public class ChargerTest implements Charger {
             final Sample result = charge(new SampleEx());
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             assertEquals("Method not applicable as setter!", e.getMessage().substring(0, 32));
             assertTrue(e.getMessage().contains(SampleEx.class.getSimpleName() + ".setDateValue"));
+        }
+    }
+
+    @Test
+    final void supplierNotFound() {
+        try {
+            final Sample result = charge(new Sample(), "nextStrings");
+            fail("should fail but was <" + result + ">");
+        } catch (final UnfitConditionException e) {
+            // e.printStackTrace();
+            assertEquals("No appropriate supplier method found!", e.getMessage().substring(0, 37));
+            assertTrue(e.getMessage().contains(getClass().getSimpleName()));
+            assertTrue(e.getMessage().contains(Sample.class.getSimpleName()));
         }
     }
 
@@ -68,6 +82,12 @@ public class ChargerTest implements Charger {
     final void charge_Generic() {
         final Generic<String> result = charge(new Generic<>(), "setTValue");
         assertEquals(new Generic<String>(), result);
+    }
+
+    @Deprecated
+    @Test
+    final void chargerLog() {
+        assertThrows(UnsupportedOperationException.class, () -> chargerLog(null, null));
     }
 
     public final boolean nextBoolean() {
