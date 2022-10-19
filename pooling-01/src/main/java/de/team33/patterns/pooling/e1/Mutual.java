@@ -34,4 +34,11 @@ class Mutual<S, E extends Exception> {
             stock.add(item);
         }
     }
+
+    /**
+     * Returns the number of currently unused subjects in stock.
+     */
+    public final int size() {
+        return stock.size();
+    }
 }
