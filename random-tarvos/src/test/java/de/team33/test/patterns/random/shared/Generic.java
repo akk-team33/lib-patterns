@@ -1,7 +1,9 @@
 package de.team33.test.patterns.random.shared;
 
+import java.util.Objects;
 import java.util.Optional;
 
+@SuppressWarnings({"NonFinalFieldReferencedInHashCode", "NonFinalFieldReferenceInEquals", "unused"})
 public class Generic<T> {
 
     private T tValue;
@@ -16,20 +18,21 @@ public class Generic<T> {
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return tValue.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(final Object obj) {
         return (this == obj) || Optional.ofNullable(obj)
+                                        .filter(Generic.class::isInstance)
                                         .map(Generic.class::cast)
-                                        .map(Generic.class::isInstance)
+                                        .map(other -> Objects.equals(tValue, other.tValue))
                                         .orElse(false);
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         return tValue.toString();
     }
 }
