@@ -94,7 +94,7 @@ public class ChargerTest implements Charger {
         return sample.isBooleanValue();
     }
 
-    public final int nextInt() {
+    public final Integer nextInt() {
         return sample.getIntValue();
     }
 
@@ -102,7 +102,7 @@ public class ChargerTest implements Charger {
         return sample.getStringValue();
     }
 
-    public final Long nextBoxedLong() {
+    public final long nextLong() {
         return sample.getLongValue();
     }
 

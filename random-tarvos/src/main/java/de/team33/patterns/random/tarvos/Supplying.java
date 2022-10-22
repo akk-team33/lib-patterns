@@ -61,7 +61,7 @@ class Supplying<S> {
 
     final Supplier<?> desiredSupplier(final Type resultType) {
         return suppliers.stream()
-                        .filter(method -> resultType.equals(method.getGenericReturnType()))
+                        .filter(supplier -> Types.isMatching(resultType, supplier.getGenericReturnType()))
                         .filter(desired)
                         .findAny()
                         .map(this::supplier)

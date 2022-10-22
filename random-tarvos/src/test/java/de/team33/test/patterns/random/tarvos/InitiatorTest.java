@@ -85,7 +85,7 @@ public class InitiatorTest implements Initiator {
         return expected.stringValue();
     }
 
-    public final Long nextLong() {
+    public final long nextLong() {
         return expected.longValue();
     }
 

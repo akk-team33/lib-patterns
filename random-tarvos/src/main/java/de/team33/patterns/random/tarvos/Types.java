@@ -3,7 +3,13 @@ package de.team33.patterns.random.tarvos;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -11,6 +17,8 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 final class Types {
+
+    private static final Map<Type, Collection<Type>> MATCHING = new ConcurrentHashMap<>(0);
 
     private Types() {
     }
@@ -25,28 +33,46 @@ final class Types {
     }
 
     static Object defaultValue(final Type valueType) {
-        return Stream.of(DefaultValue.values())
-                     .filter(v -> valueType.equals(v.type))
+        return Stream.of(Primary.values())
+                     .filter(primary -> valueType.equals(primary.type))
                      .findAny()
-                     .orElse(DefaultValue.OBJECT).value;
+                     .orElse(Primary.OBJECT).value;
     }
 
-    enum DefaultValue {
-        BOOLEAN(boolean.class, false),
-        BYTE(byte.class, (byte) 0),
-        SHORT(short.class, (short) 0),
-        INT(int.class, 0),
-        LONG(long.class, 0L),
-        FLOAT(float.class, 0.0f),
-        DOUBLE(double.class, 0.0),
-        CHAR(char.class, '\0'),
-        OBJECT(Object.class, null);
+    private static Set<Type> matchingWith(final Type found) {
+        return Stream.of(Primary.values())
+                     .map(primary -> Arrays.asList(primary.type, primary.boxed))
+                     .filter(matching -> matching.contains(found))
+                     .findAny()
+                     .map(HashSet::new)
+                     .map(Collections::unmodifiableSet)
+                     .orElseGet(() -> Collections.singleton(found));
+    }
 
-        private final Class<?> type;
-        private final Object value;
+    static boolean isMatching(final Type desired, final Type found) {
+        return MATCHING.computeIfAbsent(found, Types::matchingWith)
+                       .contains(desired);
+    }
 
-        <T> DefaultValue(final Class<T> type, final T value) {
+    private enum Primary {
+
+        BOOLEAN(boolean.class, Boolean.class, false),
+        BYTE(byte.class, Byte.class, (byte) 0),
+        SHORT(short.class, Short.class, (short) 0),
+        INT(int.class, Integer.class, 0),
+        LONG(long.class, Long.class, 0L),
+        FLOAT(float.class, Float.class, 0.0f),
+        DOUBLE(double.class, Double.class, 0.0),
+        CHAR(char.class, Character.class, '\0'),
+        OBJECT(Object.class, Object.class, null);
+
+        final Type type;
+        final Type boxed;
+        final Object value;
+
+        <T> Primary(final Class<T> type, final Class<T> boxed, final T value) {
             this.type = type;
+            this.boxed = boxed;
             this.value = value;
         }
     }
