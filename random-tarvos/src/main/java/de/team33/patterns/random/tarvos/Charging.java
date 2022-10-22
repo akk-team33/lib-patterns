@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -61,7 +62,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
     final T result() {
         desiredSetters().forEach(setter -> {
             final Type valueType = setter.getGenericParameterTypes()[0];
-            final Supplier<?> supplier = desiredSupplier(valueType);
+            final Supplier<?> supplier = desiredSupplier(valueType, preference(setter));
             if (null == supplier) {
                 throw new LocalException(this, setter, valueType);
             } else {
@@ -69,6 +70,21 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             }
         });
         return target;
+    }
+
+    private static BinaryOperator<Method> preference(final Method setter) {
+        final String setterName = Methods.normalName(setter);
+        return (left, right) -> {
+            final String leftName = Methods.normalName(left);
+            final String rightName = Methods.normalName(right);
+            if (leftName.equals(setterName)) {
+                return left;
+            } else if (rightName.equals(setterName)) {
+                return right;
+            } else {
+                return left;
+            }
+        };
     }
 
     private static final class LocalException extends UnfitConditionException {
@@ -84,7 +100,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         private static String missingMessage(final Charging<?, ?> charging, final Method setter, final Type valueType) {
             final Naming naming = naming(valueType);
             final String name1 = naming.parameterizedName(valueType);
-            final String name2 = naming.simpleName(valueType);
+            final String name2 = Methods.normalName(setter);
             return format(NO_SUPPLIER, charging.sourceType, charging.targetType,
                           setter.toGenericString(), setter.getName(), name1, name2);
         }

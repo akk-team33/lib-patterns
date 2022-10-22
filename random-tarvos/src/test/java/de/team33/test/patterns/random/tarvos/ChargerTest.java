@@ -102,7 +102,11 @@ public class ChargerTest implements Charger {
         return sample.getStringValue();
     }
 
-    public final long nextLong() {
+    public final Long nextLong() {
+        return sample.getLongValue();
+    }
+
+    public final long nextLongValue() {
         return sample.getLongValue();
     }
 
