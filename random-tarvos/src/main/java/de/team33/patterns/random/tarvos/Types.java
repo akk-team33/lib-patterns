@@ -4,23 +4,34 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.unmodifiableMap;
 
 final class Types {
 
-    private static final Map<Type, Collection<Type>> MATCHING = new ConcurrentHashMap<>(0);
+    private static final Map<Type, Collection<Type>> MATCHING = newMatching();
 
     private Types() {
+    }
+
+    private static Map<Type, Collection<Type>> newMatching() {
+        final Map<Type, Collection<Type>> result = new HashMap<>();
+        for (final Primary primary : Primary.values()) {
+            result.put(primary.type, primary.matching);
+            result.put(primary.boxed, primary.matching);
+        }
+        return unmodifiableMap(result);
     }
 
     static Naming naming(final Type type) {
@@ -32,28 +43,21 @@ final class Types {
                                                                           typeClass)));
     }
 
-    static Object defaultValue(final Type valueType) {
+    static Object defaultValue(final Type type) {
         return Stream.of(Primary.values())
-                     .filter(primary -> valueType.equals(primary.type))
+                     .filter(primary -> type.equals(primary.type))
                      .findAny()
-                     .orElse(Primary.OBJECT).value;
-    }
-
-    private static Set<Type> matchingWith(final Type found) {
-        return Stream.of(Primary.values())
-                     .map(primary -> Arrays.asList(primary.type, primary.boxed))
-                     .filter(matching -> matching.contains(found))
-                     .findAny()
-                     .map(HashSet::new)
-                     .map(Collections::unmodifiableSet)
-                     .orElseGet(() -> Collections.singleton(found));
+                     .map(primary -> primary.value)
+                     .orElse(null);
     }
 
     static boolean isMatching(final Type desired, final Type found) {
-        return MATCHING.computeIfAbsent(found, Types::matchingWith)
+        return Optional.ofNullable(MATCHING.get(found))
+                       .orElseGet(() -> singleton(found))
                        .contains(desired);
     }
 
+    @SuppressWarnings("PackageVisibleField")
     private enum Primary {
 
         BOOLEAN(boolean.class, Boolean.class, false),
@@ -63,17 +67,18 @@ final class Types {
         LONG(long.class, Long.class, 0L),
         FLOAT(float.class, Float.class, 0.0f),
         DOUBLE(double.class, Double.class, 0.0),
-        CHAR(char.class, Character.class, '\0'),
-        OBJECT(Object.class, Object.class, null);
+        CHAR(char.class, Character.class, '\0');
 
         final Type type;
         final Type boxed;
+        final List<Type> matching;
         final Object value;
 
         <T> Primary(final Class<T> type, final Class<T> boxed, final T value) {
             this.type = type;
             this.boxed = boxed;
             this.value = value;
+            this.matching = asList(type, boxed);
         }
     }
 
