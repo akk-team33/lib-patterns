@@ -35,9 +35,8 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
     }
 
     private static List<Method> newSettersOf(final Class<?> targetType) {
-        return Stream.of(targetType.getMethods())
-                     .filter(Methods::isSetter)
-                     .collect(Collectors.toList());
+        return Methods.publicSetters(targetType)
+                      .collect(Collectors.toList());
     }
 
     private Stream<Method> desiredSetters() {

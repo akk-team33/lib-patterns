@@ -3,14 +3,61 @@ package de.team33.patterns.random.tarvos;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Stream;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.unmodifiableSet;
 
 final class Methods {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NON_INSTANCE = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
+    private static final Set<String> IGNORABLE = unmodifiableSet(new TreeSet<>(asList(
+            "hashCode",
+            "toString"
+    )));
 
     private Methods() {
+    }
+
+    static Stream<Method> publicGetters(final Class<?> targetClass) {
+        return Stream.of(targetClass.getMethods())
+                     .filter(Methods::isNotIgnorable)
+                     .filter(Methods::isInstance)
+                     .filter(Methods::isGetterParameters)
+                     .filter(method -> isGetterResult(method, targetClass));
+    }
+
+    static Stream<Method> publicSetters(final Class<?> targetClass) {
+        return Stream.of(targetClass.getMethods())
+                     .filter(Methods::isInstance)
+                     .filter(Methods::isSetterParameters)
+                     .filter(method -> isSetterResult(method, targetClass));
+    }
+
+    private static boolean isGetterParameters(final Method method) {
+        return 0 == method.getParameterCount();
+    }
+
+    private static boolean isSetterParameters(final Method method) {
+        return 1 == method.getParameterCount();
+    }
+
+    private static boolean isGetterResult(final Method method, final Class<?> targetClass) {
+        return !isSetterResult(method, targetClass);
+    }
+
+    private static boolean isSetterResult(final Method method, final Class<?> targetClass) {
+        final Class<?> returnType = method.getReturnType();
+        return void.class.equals(returnType)
+                || targetClass.equals(returnType)
+                || method.getDeclaringClass().equals(returnType);
+    }
+
+    private static boolean isNotIgnorable(final Method method) {
+        return !IGNORABLE.contains(method.getName());
     }
 
     private static boolean isInstance(final Method method) {
@@ -19,14 +66,6 @@ final class Methods {
 
     private static boolean isInstance(final int modifiers) {
         return 0 == (modifiers & NON_INSTANCE);
-    }
-
-    static boolean isSetter(final Method method) {
-        return isInstance(method) && method.getName().startsWith("set") && (1 == method.getParameterCount());
-    }
-
-    static boolean isSupplier(final Method method) {
-        return isInstance(method) && (0 == method.getParameterCount());
     }
 
     static String normalName(final Method method) {

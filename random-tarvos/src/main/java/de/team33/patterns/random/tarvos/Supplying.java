@@ -41,10 +41,8 @@ class Supplying<S> {
     }
 
     private static List<Method> suppliers(final Class<?> sourceType) {
-        return Stream.of(sourceType.getMethods())
-                     .filter(method -> !Object.class.equals(method.getDeclaringClass()))
-                     .filter(Methods::isSupplier)
-                     .collect(Collectors.toList());
+        return Methods.publicGetters(sourceType)
+                      .collect(Collectors.toList());
     }
 
     private Supplier<?> supplier(final Method method) {
