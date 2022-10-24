@@ -29,8 +29,7 @@ class MethodsTest {
                                           .map(Method::toGenericString)
                                           .map(string -> string.replace(c.subject.getName(), c.subject.getSimpleName()))
                                           .collect(Collectors.toCollection(TreeSet::new));
-        result.removeAll(expected);
-        assertEquals(Collections.emptySet(), result);
+        assertEquals(expected, result);
     }
 
     @ParameterizedTest
@@ -41,8 +40,7 @@ class MethodsTest {
                                           .map(Method::toGenericString)
                                           .map(string -> string.replace(c.subject.getName(), c.subject.getSimpleName()))
                                           .collect(Collectors.toCollection(TreeSet::new));
-        result.removeAll(expected);
-        assertEquals(Collections.emptySet(), result);
+        assertEquals(expected, result);
     }
 
     enum Case {

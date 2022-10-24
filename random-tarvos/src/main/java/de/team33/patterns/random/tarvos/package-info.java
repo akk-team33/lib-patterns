@@ -32,5 +32,7 @@
  * In this example, the {@link de.team33.patterns.random.tarvos.Charger} and
  * {@link de.team33.patterns.random.tarvos.Initiator} interfaces are used to charge/initiate the complex,
  * contextual types (Person, Customer, Employee, ...) with random content.
+ *
+ * @see <a href="https://de.wikipedia.org/wiki/Tarvos_(Mond)">Tarvos</a>
  */
 package de.team33.patterns.random.tarvos;
