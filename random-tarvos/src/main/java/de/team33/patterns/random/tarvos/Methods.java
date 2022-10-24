@@ -88,6 +88,7 @@ final class Methods {
         NEW,
         SET,
         IS,
+        AS,
         TO,
         NONE("");
 
