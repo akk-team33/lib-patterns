@@ -49,6 +49,7 @@
         <module>lazy-01</module>
         <module>pooling-01</module>
         <module>properties-01</module>
+        <module>generics-atlas</module>
         <module>patterns-bom</module>
     </modules>
 
@@ -93,6 +94,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>properties-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>generics-atlas</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

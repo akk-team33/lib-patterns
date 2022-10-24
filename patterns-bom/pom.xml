@@ -75,6 +75,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>generics-atlas</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
