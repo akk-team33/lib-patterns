@@ -3,12 +3,16 @@ package de.team33.test.patterns.generics.atlas;
 import de.team33.patterns.generics.atlas.Type;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TypeTest {
@@ -32,6 +36,17 @@ class TypeTest {
     final void getSuperType() {
         assertEquals(Optional.of(Type.of(Object.class)), STRING_TYPE.getSuperType());
         assertEquals(Optional.empty(), MAP_TYPE.getSuperType());
+    }
+
+    @Test
+    final void getSuperTypes() {
+        assertEquals(new HashSet<>(Arrays.asList(
+                Type.of(Object.class),
+                Type.of(Serializable.class),
+                new Type<Comparable<String>>() {},
+                Type.of(CharSequence.class)
+        )), new HashSet<>(STRING_TYPE.getSuperTypes()));
+        assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")

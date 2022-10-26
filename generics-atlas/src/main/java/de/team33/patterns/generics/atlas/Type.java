@@ -19,14 +19,14 @@ import java.util.stream.Stream;
 /**
  * <p>
  * Represents a definite type description that can be based on a generic as well as a non-generic class. Examples:
- * </p><ul>
+ * <ul>
  * <li>an instance of <strong>{@code Type<Map<String, List<String>>>}</strong> represents the type
  * <strong>{@code Map<String, List<String>>}</strong>.</li>
  * <li>an instance of <strong>{@code Type<String>}</strong> represents the type <strong>{@code String}</strong>.</li>
  * </ul><p>
  * To get an instance of Type, you need to create a definite derivative of Type.
  * The easiest way to achieve this is to use an anonymous derivation with simultaneous instantiation. Examples:
- * </p><pre>
+ * <pre>
  * final Type&lt;Map&lt;String, List&lt;String&gt;&gt;&gt; mapStringToListOfStringType
  *         = new Type&lt;Map&lt;String, List&lt;String&gt;&gt;&gt;() { };
  * </pre><pre>
@@ -35,10 +35,10 @@ import java.util.stream.Stream;
  * </pre><p>
  * If, as in the last case, a simple class already fully defines the type concerned, there is a convenience method to
  * get a corresponding Type instance. Example:
- * </p><pre>
+ * <pre>
  * final Type&lt;String&gt; stringType
  *         = Type.of(String.class);
- * </pre><p>
+ * </pre>
  *
  * @see #Type()
  * @see #of(Class)
@@ -120,9 +120,9 @@ public abstract class Type<T> {
     }
 
     /**
-     * <p>Returns the actual type parameters defining this Type.</p>
+     * <p>Returns the actual type parameters defining this Type.
      * <p>The result may be empty even if the formal parameter list is not. Otherwise the formal
-     * and actual parameter list are of the same size and order.</p>
+     * and actual parameter list are of the same size and order.
      *
      * @see #getFormalParameters()
      */
@@ -158,13 +158,22 @@ public abstract class Type<T> {
                        .map(this::getMemberType);
     }
 
+    private Stream<Type<?>> streamSuperType() {
+        return getSuperType().map(Stream::<Type<?>>of)
+                             .orElseGet(Stream::empty);
+    }
+
     /**
      * Returns the interfaces from which this type are derived (if so).
      *
      * @see Class#getInterfaces()
      * @see Class#getGenericInterfaces()
      */
-    public final Stream<Type<?>> getInterfaces() {
+    public final List<Type<?>> getInterfaces() {
+        return streamInterfaces().collect(Collectors.toList());
+    }
+
+    private Stream<Type<?>> streamInterfaces() {
         return Stream.of(asClass().getGenericInterfaces())
                      .map(this::getMemberType);
     }
@@ -175,11 +184,12 @@ public abstract class Type<T> {
      * @see #getSuperType()
      * @see #getInterfaces()
      */
-    public final Stream<Type<?>> getSuperTypes() {
-        return Stream.concat(
-                getSuperType().map(Stream::of).orElseGet(Stream::empty),
-                getInterfaces()
-        );
+    public final List<Type<?>> getSuperTypes() {
+        return streamSuperTypes().collect(Collectors.toList());
+    }
+
+    private Stream<Type<?>> streamSuperTypes() {
+        return Stream.concat(streamSuperType(), streamInterfaces());
     }
 
     /**
@@ -209,11 +219,10 @@ public abstract class Type<T> {
         if (asClass().equals(member.getDeclaringClass())) {
             return getMemberType(toGenericType.apply(member));
         } else {
-            return getSuperTypes()
-                    .map(st -> st.nullableTypeOf(member, toGenericType))
-                    .filter(Objects::nonNull)
-                    .findAny()
-                    .orElse(null);
+            return streamSuperTypes().map(st -> st.nullableTypeOf(member, toGenericType))
+                                     .filter(Objects::nonNull)
+                                     .findAny()
+                                     .orElse(null);
         }
     }
 
@@ -246,11 +255,10 @@ public abstract class Type<T> {
                          .map(this::getMemberType)
                          .collect(Collectors.toList());
         } else {
-            return getSuperTypes()
-                    .map(st -> st.nullableTypesOf(member, toGenericTypes))
-                    .filter(Objects::nonNull)
-                    .findAny()
-                    .orElse(null);
+            return streamSuperTypes().map(st -> st.nullableTypesOf(member, toGenericTypes))
+                                     .filter(Objects::nonNull)
+                                     .findAny()
+                                     .orElse(null);
         }
     }
 
@@ -259,7 +267,6 @@ public abstract class Type<T> {
      * <p>
      * Two instances of Type are equal if they are {@linkplain #asClass() based} on the same class
      * and defined by the same {@linkplain #getActualParameters() actual parameters}.
-     * </p>
      */
     @Override
     public final boolean equals(final Object obj) {
