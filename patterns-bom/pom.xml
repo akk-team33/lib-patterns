@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-bom</artifactId>
-    <version>1.3.3-SNAPSHOT</version>
+    <version>1.5.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library BOM</name>
@@ -41,6 +41,16 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-mimas</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-tarvos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

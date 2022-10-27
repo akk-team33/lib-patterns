@@ -1,5 +1,6 @@
 package de.team33.patterns.random.e1;
 
+@Deprecated
 final class RandomUtil {
 
     static final int FLOAT_RESOLUTION = Float.SIZE;
