@@ -1,6 +1,6 @@
-// TODO expiry -> expiry
 package de.team33.patterns.expiry.e1;
 
+import java.time.Instant;
 import java.util.function.Supplier;
 
 /**
@@ -23,7 +23,7 @@ public class Recent<T> implements Supplier<T> {
     @SuppressWarnings("rawtypes")
     private static final Actual INITIAL = new Actual() {
         @Override
-        public boolean isTimeout(final long now) {
+        public boolean isTimeout(final Instant now) {
             return true;
         }
 
@@ -33,10 +33,10 @@ public class Recent<T> implements Supplier<T> {
         }
     };
 
-    private final Rule<T> rule;
+    private final Rule<? extends T> rule;
     private volatile Actual<T> actual = initial();
 
-    private Recent(final Rule<T> rule) {
+    private Recent(final Rule<? extends T> rule) {
         this.rule = rule;
     }
 
@@ -60,11 +60,11 @@ public class Recent<T> implements Supplier<T> {
         return INITIAL;
     }
 
-    private static <T> Actual<T> substantial(final T subject, final long timeout) {
+    private static <T> Actual<T> substantial(final T subject, final Instant timeout) {
         return new Actual<T>() {
             @Override
-            public boolean isTimeout(final long now) {
-                return now > timeout;
+            public boolean isTimeout(final Instant now) {
+                return now.compareTo(timeout) > 0;
             }
 
             @Override
@@ -76,23 +76,23 @@ public class Recent<T> implements Supplier<T> {
 
     @Override
     public final T get() {
-        return approved(actual, System.currentTimeMillis());
+        return approved(actual, Instant.now());
     }
 
-    private T approved(final Actual<? extends T> candidate, final long now) {
+    private T approved(final Actual<? extends T> candidate, final Instant now) {
         return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get();
     }
 
-    private synchronized T updated(final Actual<? extends T> outdated, final long now) {
+    private synchronized T updated(final Actual<? extends T> outdated, final Instant now) {
         if (actual == outdated) {
-            actual = substantial(rule.newSubject.get(), now + rule.lifetime);
+            actual = substantial(rule.newSubject.get(), now.plusMillis(rule.lifetime));
         }
         return actual.get();
     }
 
     private interface Actual<T> {
 
-        boolean isTimeout(final long now);
+        boolean isTimeout(final Instant now);
 
         T get();
     }

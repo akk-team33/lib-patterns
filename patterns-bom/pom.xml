@@ -70,7 +70,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>expiry-01</artifactId>
+                <artifactId>expiry-tethys</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
