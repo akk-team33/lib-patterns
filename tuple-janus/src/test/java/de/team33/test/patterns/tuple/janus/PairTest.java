@@ -16,21 +16,21 @@ class PairTest extends TupleTestBase {
     @Test
     final void of() {
         final Pair<Integer, Long> result = Pair.of(nextInt(), nextLong());
-        assertInstanceOf(Integer.class, result.getLeft());
-        assertInstanceOf(Long.class, result.getRight());
+        assertInstanceOf(Integer.class, result.left());
+        assertInstanceOf(Long.class, result.right());
     }
 
     @Test
     final void testEquals() {
         final Pair<String, Long> expected = Pair.of(nextString(), nextLong());
-        final Pair<String, Long> result = new Pair<>(expected.getLeft(), expected.getRight());
+        final Pair<String, Long> result = new Pair<>(expected.left(), expected.right());
         assertEquals(expected, result);
     }
 
     @Test
     final void testHashCode() {
         final Pair<Instant, String> expected = Pair.of(nextInstant(), nextString());
-        final Pair<Instant, String> result = new Pair<>(expected.getLeft(), expected.getRight());
+        final Pair<Instant, String> result = new Pair<>(expected.left(), expected.right());
         assertEquals(expected.hashCode(), result.hashCode());
     }
 
@@ -38,7 +38,7 @@ class PairTest extends TupleTestBase {
     final void testToString() {
         final Pair<Set<String>, List<Instant>> expected = Pair.of(nextSet(this::nextString),
                                                                   nextList(this::nextInstant));
-        final Pair<Set<String>, List<Instant>> result = new Pair<>(expected.getLeft(), expected.getRight());
+        final Pair<Set<String>, List<Instant>> result = new Pair<>(expected.left(), expected.right());
         assertEquals(expected.toString(), result.toString());
     }
 
@@ -51,7 +51,7 @@ class PairTest extends TupleTestBase {
     final void testToList() {
         final Pair<List<String>, Set<Instant>> expected = Pair.of(nextList(this::nextString),
                                                                   nextSet(this::nextInstant));
-        assertEquals(Arrays.asList(expected.getLeft(), expected.getRight()), expected.toList());
+        assertEquals(Arrays.asList(expected.left(), expected.right()), expected.toList());
     }
 
     @Test

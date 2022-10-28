@@ -3,7 +3,7 @@ package de.team33.patterns.tuple.janus;
 import java.util.Arrays;
 import java.util.List;
 
-public class Pair<L, R> extends Listable {
+public class Pair<L, R> extends Tuple {
 
     private final L left;
     private final R right;
@@ -17,11 +17,11 @@ public class Pair<L, R> extends Listable {
         return new Pair<>(left, right);
     }
 
-    public final L getLeft() {
+    public final L left() {
         return left;
     }
 
-    public final R getRight() {
+    public final R right() {
         return right;
     }
 

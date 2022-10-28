@@ -2,11 +2,11 @@ package de.team33.patterns.tuple.janus;
 
 import java.util.List;
 
-abstract class Listable {
+abstract class Tuple {
 
     @Override
     public final boolean equals(final Object obj) {
-        return this == obj || (obj instanceof Listable && toList().equals(((Listable) obj).toList()));
+        return this == obj || (obj instanceof Tuple && toList().equals(((Tuple) obj).toList()));
     }
 
     @Override
