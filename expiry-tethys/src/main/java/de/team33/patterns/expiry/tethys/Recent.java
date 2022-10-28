@@ -1,4 +1,4 @@
-package de.team33.patterns.expiry.e1;
+package de.team33.patterns.expiry.tethys;
 
 import java.time.Instant;
 import java.util.function.Supplier;

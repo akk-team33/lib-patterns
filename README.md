@@ -11,6 +11,7 @@ Team33 Patterns Library Collection
 * exceptional-01 (Team33 Exceptional Library - Edition 1)
 * lazy-01 (Team33 Lazy Initialization Library - Edition 1)
 * pooling-01 (Team33 Pooling Library - Edition 1)
+* tuple-janus (Team33 Tuple Library - Edition "janus")
 * expiry-tethys (Team33 Expiration Library - Edition "tethys")
 * properties-01 (Team33 Properties Library - Edition 1)
 * patterns-bom (Team33 Patterns Library BOM)

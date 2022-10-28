@@ -1,12 +1,11 @@
 package de.team33.test.patterns.expiry.tethys;
 
-import de.team33.patterns.expiry.e1.Recent;
+import de.team33.patterns.expiry.tethys.Recent;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
