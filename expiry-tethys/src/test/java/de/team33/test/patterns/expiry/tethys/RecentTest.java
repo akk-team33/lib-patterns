@@ -16,10 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentTest {
 
+    private static final long IDLETIME = 30; // milliseconds!
     private static final long LIFETIME = 100; // milliseconds!
     private static final long MAX_LIFESPAN = LIFETIME + 30;
 
-    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, LIFETIME);
+    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, IDLETIME, LIFETIME);
 
     private static void sleep(final long millis) {
         try {
@@ -41,6 +42,7 @@ class RecentTest {
                                                   final int firstIndex = first.getIndex();
 
                                                   Obsolescing next = subject.get();
+                                                  // noinspection ObjectEquality
                                                   while (next == first) {
                                                       next = subject.get();
                                                   }

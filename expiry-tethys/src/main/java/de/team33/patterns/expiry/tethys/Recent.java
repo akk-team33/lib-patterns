@@ -28,7 +28,7 @@ public class Recent<T> implements Supplier<T> {
         }
 
         @Override
-        public Object get() {
+        public Object get(final Instant now) {
             throw new IllegalStateException("not available in initial state");
         }
     };
@@ -49,29 +49,16 @@ public class Recent<T> implements Supplier<T> {
      * {@linkplain #get() provided} instance successfully!
      *
      * @param newSubject the {@link Supplier} for the instances to handle
-     * @param lifetime   the lifetime in milliseconds
+     * @param maxIdle    the maximum idle time in milliseconds
+     * @param maxLiving  the maximum lifetime in milliseconds
      */
-    public Recent(final Supplier<? extends T> newSubject, final long lifetime) {
-        this(new Rule<>(newSubject, lifetime));
+    public Recent(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLiving) {
+        this(new Rule<>(newSubject, maxIdle, maxLiving));
     }
 
     @SuppressWarnings("unchecked")
     private static <T> Actual<T> initial() {
         return INITIAL;
-    }
-
-    private static <T> Actual<T> substantial(final T subject, final Instant timeout) {
-        return new Actual<T>() {
-            @Override
-            public boolean isTimeout(final Instant now) {
-                return now.compareTo(timeout) > 0;
-            }
-
-            @Override
-            public T get() {
-                return subject;
-            }
-        };
     }
 
     @Override
@@ -80,31 +67,60 @@ public class Recent<T> implements Supplier<T> {
     }
 
     private T approved(final Actual<? extends T> candidate, final Instant now) {
-        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get();
+        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get(now);
     }
 
+    @SuppressWarnings("ObjectEquality")
     private synchronized T updated(final Actual<? extends T> outdated, final Instant now) {
         if (actual == outdated) {
-            actual = substantial(rule.newSubject.get(), now.plusMillis(rule.lifetime));
+            actual = new Substantial(rule.newSubject.get(),
+                                     now.plusMillis(rule.maxIdle),
+                                     now.plusMillis(rule.maxLiving));
         }
-        return actual.get();
+        return actual.get(now);
     }
 
     private interface Actual<T> {
 
         boolean isTimeout(final Instant now);
 
-        T get();
+        T get(final Instant now);
+    }
+
+    private class Substantial implements Actual<T> {
+
+        private final T subject;
+        private final Instant lifeTimeout;
+        private volatile Instant idleTimeout;
+
+        private Substantial(final T subject, final Instant idleTimeout, final Instant lifeTimeout) {
+            this.subject = subject;
+            this.idleTimeout = idleTimeout;
+            this.lifeTimeout = lifeTimeout;
+        }
+
+        @Override
+        public final boolean isTimeout(final Instant now) {
+            return (now.compareTo(lifeTimeout) > 0) || (now.compareTo(idleTimeout) > 0);
+        }
+
+        @Override
+        public final T get(final Instant now) {
+            idleTimeout = now.plusMillis(rule.maxIdle);
+            return subject;
+        }
     }
 
     private static final class Rule<T> {
 
         private final Supplier<? extends T> newSubject;
-        private final long lifetime;
+        private final long maxLiving;
+        private final long maxIdle;
 
-        private Rule(final Supplier<? extends T> newSubject, final long lifetime) {
+        private Rule(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLiving) {
             this.newSubject = newSubject;
-            this.lifetime = lifetime;
+            this.maxIdle = maxIdle;
+            this.maxLiving = maxLiving;
         }
     }
 }
