@@ -102,19 +102,11 @@ class RecentTest {
         }
 
         final Instant getCreated() {
-            return ifAlive(() -> created);
+            return created;
         }
 
         final int getIndex() {
-            return ifAlive(() -> index);
-        }
-
-        private <R> R ifAlive(final Supplier<R> supplier) {
-            final Instant now = Instant.now();
-            if (created.plusMillis(MAX_LIFESPAN).compareTo(now) > 0) {
-                return supplier.get();
-            }
-            throw new IllegalStateException("Instance is outdated - created = " + created + ", now = " + now);
+            return index;
         }
     }
 }
