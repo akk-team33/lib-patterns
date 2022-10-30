@@ -22,15 +22,6 @@ public class Recent<T> implements Supplier<T> {
 
     @SuppressWarnings("rawtypes")
     private static final Actual INITIAL = new Actual() {
-        @Override
-        public boolean isTimeout(final Instant now) {
-            return true;
-        }
-
-        @Override
-        public Object get(final Instant now) {
-            throw new IllegalStateException("not available in initial state");
-        }
     };
 
     private final Rule<? extends T> rule;
@@ -67,36 +58,40 @@ public class Recent<T> implements Supplier<T> {
     }
 
     private T approved(final Actual<? extends T> candidate, final Instant now) {
-        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get(now);
+        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get();
     }
 
     @SuppressWarnings("ObjectEquality")
-    private synchronized T updated(final Actual<? extends T> outdated, final Instant now) {
-        if (actual == outdated) {
-            actual = new Substantial(rule.newSubject.get(),
-                                     now.plusMillis(rule.maxIdle),
-                                     now.plusMillis(rule.maxLiving));
+    private T updated(final Actual<? extends T> outdated, final Instant now) {
+        synchronized (rule) {
+            if (actual == outdated) {
+                actual = new Substantial(rule.newSubject.get());
+            }
+            return actual.get();
         }
-        return actual.get(now);
     }
 
     private interface Actual<T> {
 
-        boolean isTimeout(final Instant now);
+        default boolean isTimeout(final Instant now) {
+            return true;
+        }
 
-        T get(final Instant now);
+        default T get() {
+            throw new UnsupportedOperationException("method not supported");
+        }
     }
 
     private class Substantial implements Actual<T> {
 
         private final T subject;
         private final Instant lifeTimeout;
-        private volatile Instant idleTimeout;
+        private volatile Instant idleTimeout = Instant.MAX;
 
-        private Substantial(final T subject, final Instant idleTimeout, final Instant lifeTimeout) {
+        private Substantial(final T subject) {
+            final Instant now = Instant.now();
+            this.lifeTimeout = now.plusMillis(rule.maxLiving);
             this.subject = subject;
-            this.idleTimeout = idleTimeout;
-            this.lifeTimeout = lifeTimeout;
         }
 
         @Override
@@ -105,8 +100,8 @@ public class Recent<T> implements Supplier<T> {
         }
 
         @Override
-        public final T get(final Instant now) {
-            idleTimeout = now.plusMillis(rule.maxIdle);
+        public final T get() {
+            idleTimeout = Instant.now().plusMillis(rule.maxIdle);
             return subject;
         }
     }
