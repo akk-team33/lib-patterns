@@ -1,6 +1,5 @@
 package de.team33.patterns.expiry.tethys;
 
-import java.time.Instant;
 import java.util.function.Supplier;
 
 /**
@@ -54,18 +53,18 @@ public class Recent<T> implements Supplier<T> {
 
     @Override
     public final T get() {
-        return approved(actual, Instant.now());
+        return approved(actual);
     }
 
-    private T approved(final Actual<? extends T> candidate, final Instant now) {
-        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get();
+    private T approved(final Actual<? extends T> candidate) {
+        return candidate.isTimeout(System.currentTimeMillis()) ? updated(candidate) : candidate.get();
     }
 
     @SuppressWarnings("ObjectEquality")
-    private T updated(final Actual<? extends T> outdated, final Instant now) {
+    private T updated(final Actual<? extends T> outdated) {
         synchronized (rule) {
             if (actual == outdated) {
-                actual = new Substantial(rule.newSubject.get());
+                actual = new Substantial();
             }
             return actual.get();
         }
@@ -73,7 +72,7 @@ public class Recent<T> implements Supplier<T> {
 
     private interface Actual<T> {
 
-        default boolean isTimeout(final Instant now) {
+        default boolean isTimeout(final long now) {
             return true;
         }
 
@@ -85,23 +84,22 @@ public class Recent<T> implements Supplier<T> {
     private class Substantial implements Actual<T> {
 
         private final T subject;
-        private final Instant lifeTimeout;
-        private volatile Instant idleTimeout = Instant.MAX;
+        private final long lifeTimeout;
+        private volatile long idleTimeout = Long.MAX_VALUE;
 
-        private Substantial(final T subject) {
-            final Instant now = Instant.now();
-            this.lifeTimeout = now.plusMillis(rule.maxLiving);
-            this.subject = subject;
+        Substantial() {
+            this.lifeTimeout = System.currentTimeMillis() + rule.maxLiving;
+            this.subject = rule.newSubject.get();
         }
 
         @Override
-        public final boolean isTimeout(final Instant now) {
-            return (now.compareTo(lifeTimeout) > 0) || (now.compareTo(idleTimeout) > 0);
+        public final boolean isTimeout(final long now) {
+            return (now > lifeTimeout) || (now > idleTimeout);
         }
 
         @Override
         public final T get() {
-            idleTimeout = Instant.now().plusMillis(rule.maxIdle);
+            idleTimeout = System.currentTimeMillis() + rule.maxIdle;
             return subject;
         }
     }
