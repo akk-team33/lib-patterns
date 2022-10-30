@@ -1,26 +1,31 @@
 package de.team33.test.patterns.expiry.tethys;
 
 import de.team33.patterns.expiry.tethys.Recent;
-import de.team33.patterns.tuple.janus.Trip;
+import de.team33.patterns.testing.e1.Parallel;
+import de.team33.patterns.tuple.janus.Pair;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class RecentTest {
 
-    private static final long IDLETIME = 30; // milliseconds!
+    private static final long IDLETIME = 10; // milliseconds!
     private static final long LIFETIME = 100; // milliseconds!
-    private static final long MAX_LIFESPAN = LIFETIME + 30;
 
-    private final Recent<Obsolescing> subject = new Recent<>(Obsolescing::new, IDLETIME, LIFETIME);
+    private Recent<Obsolescing> recent;
+
+    @BeforeEach
+    final void beforeEach() {
+        recent = new Recent<>(Obsolescing::new, IDLETIME, LIFETIME);
+    }
 
     private static void sleep(final long millis) {
         try {
@@ -32,118 +37,90 @@ class RecentTest {
     }
 
     @Test
-    final void sequential() {
-        final int limit = 10;
-        final Instant time00 = Instant.now();
-        final List<Result> results = IntStream.range(0, limit)
-                                              .mapToObj(index -> {
-                                                  final Obsolescing first = subject.get();
-                                                  final Instant time0 = first.getCreated();
-                                                  final int firstIndex = first.getIndex();
-
-                                                  Obsolescing next = subject.get();
-                                                  // noinspection ObjectEquality
-                                                  while (next == first) {
-                                                      next = subject.get();
-                                                  }
-                                                  final long delta = next.getCreated().toEpochMilli()
-                                                                     - time0.toEpochMilli();
-                                                  return new Result(index, firstIndex, delta);
-                                              })
-                                              .collect(Collectors.toList());
-        final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
-        final long minExpected = limit * LIFETIME;
-        assertTrue(delta >= minExpected,
-                   () -> format("<delta> is expected to be geater than or equal to <minExpected> (%d) - but was %d",
-                                minExpected, delta));
-        final long matchingIndices = results.stream()
-                                            .filter(result -> result.red().equals(result.green()))
-                                            .count();
-        assertEquals(limit, matchingIndices,
-                     () -> format("<matchingIndices> is expected to be equal to <limit> (%d) - but was %d",
-                                  limit, matchingIndices));
-        results.forEach(result -> assertTrue(result.blue() >= LIFETIME,
-                                             () -> format("[index: %d] " +
-                                                          "<delta> is expected to be geater than or equal to " +
-                                                          "<LIFETIME> (%d) - but was %d",
-                                                          result.red(), LIFETIME, result.blue())));
+    final void get_IDLETIME() {
+        final Obsolescing first = recent.get();
+        sleep(IDLETIME + 1);
+        final Obsolescing second = recent.get();
+        assertNotSame(first, second, "after <IDLETIME> it is not expected to get the same instance twice");
     }
 
     @Test
-    final void parallel() {
-        final int limit = 20;
-        final Instant time00 = Instant.now();
-        final List<Result> results = IntStream.range(0, limit)
-                                              .parallel()
-                                              .mapToObj(index -> {
-                                                  final Obsolescing first = subject.get();
-                                                  final Instant time0 = first.getCreated();
-                                                  final int firstIndex = first.getIndex();
+    final void get_LIFETIME() {
+        final Obsolescing first = recent.get();
+        final Instant created = first.getCreated();
+        Obsolescing second = first;
+        //noinspection ObjectEquality
+        while (second == first) {
+            sleep(1); // significantly less than IDLETIME
+            second = recent.get();
+        }
+        final long delta = second.getCreated().toEpochMilli() - created.toEpochMilli();
+        assertTrue(delta > LIFETIME,
+                   () -> format("<delta> is expected to be greater than <LIFETIME> (%d) - but was %d",
+                                LIFETIME, delta));
+    }
 
-                                                  Obsolescing next = subject.get();
-                                                  while (next == first) {
-                                                      next = subject.get();
-                                                      sleep(0);
-                                                  }
-                                                  final long delta = next.getCreated().toEpochMilli()
-                                                                     - time0.toEpochMilli();
-                                                  return new Result(index, firstIndex, delta);
-                                              })
-                                              .collect(Collectors.toList());
+    @Test
+    final void get_parallel() throws Exception {
+        // there must always be enough threads to be executed while others are sleeping ...
+        final int limit = 1000;
+        final Instant time00 = Instant.now();
+        final List<Result> results = Parallel.apply(limit, index -> {
+                                                 final Obsolescing first = recent.get();
+                                                 final Instant created = first.getCreated();
+                                                 Obsolescing second = first;
+                                                 //noinspection ObjectEquality
+                                                 while (second == first) {
+                                                     sleep(IDLETIME + 1); // sic!
+                                                     second = recent.get();
+                                                 }
+                                                 final long delta =
+                                                         second.getCreated().toEpochMilli() -
+                                                                 created.toEpochMilli();
+                                                 return new Result(index, delta);
+                                             })
+                                             .reThrowAny()
+                                             .getResults();
         final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
         final long maxExpected = limit * LIFETIME;
         assertTrue(delta < maxExpected, () -> format(" <delta> is expected to be less than" +
-                                                     " <maxExpected> (%d) - but was %d", maxExpected, delta));
-        final long matchingIndices = results.stream()
-                                            .filter(result -> result.index() == result.instanceIndex())
-                                            .count();
-        assertTrue(matchingIndices < limit,
-                   () -> format("<matchingIndices> is expected to be less than <limit> (%d) - but was %d",
-                                limit, matchingIndices));
-        results.forEach(result -> assertTrue(result.delta() >= LIFETIME,
-                                             () -> format("[index: %d] " +
-                                                          "<delta> is expected to be geater than or equal to " +
-                                                          "<LIFETIME> (%d) - but was %d",
-                                                          result.index(), LIFETIME, result.delta())));
+                                                             " <maxExpected> (%d) - but was %d", maxExpected, delta));
+        final String unexpected = results.stream()
+                                         .filter(result -> result.delta() < LIFETIME)
+                                         .map(result -> format("[index: %02d] " +
+                                                                       "<delta> is expected to be greater than or " +
+                                                                       "equal to <LIFETIME> (%d) - but was %d",
+                                                               result.index(), LIFETIME, result.delta()))
+                                         .collect(joining(format("%n")));
+        assertEquals("", unexpected);
     }
 
-    static class Result extends Trip<Integer, Integer, Long> {
+    @SuppressWarnings("ClassTooDeepInInheritanceTree")
+    static class Result extends Pair<Integer, Long> {
 
-        Result(final int index, final int instanceIndex, final long delta) {
-            super(index, instanceIndex, delta);
+        Result(final int index, final long delta) {
+            super(index, delta);
         }
 
         final int index() {
-            return red();
-        }
-
-        final int instanceIndex() {
-            return green();
+            return left();
         }
 
         final long delta() {
-            return blue();
+            return right();
         }
     }
 
     static class Obsolescing {
 
-        private static final AtomicInteger NEXT_INDEX = new AtomicInteger(0);
-
         private final Instant created;
-        private final int index;
 
         Obsolescing() {
             created = Instant.now();
-            index = NEXT_INDEX.getAndIncrement();
         }
 
         final Instant getCreated() {
             return created;
-        }
-
-        final int getIndex() {
-            return index;
         }
     }
 }
