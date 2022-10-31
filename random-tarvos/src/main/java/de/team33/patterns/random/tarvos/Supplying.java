@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BinaryOperator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -40,10 +41,8 @@ class Supplying<S> {
     }
 
     private static List<Method> suppliers(final Class<?> sourceType) {
-        return Stream.of(sourceType.getMethods())
-                     .filter(method -> !Object.class.equals(method.getDeclaringClass()))
-                     .filter(Methods::isSupplier)
-                     .collect(Collectors.toList());
+        return Methods.publicGetters(sourceType)
+                      .collect(Collectors.toList());
     }
 
     private Supplier<?> supplier(final Method method) {
@@ -59,11 +58,11 @@ class Supplying<S> {
         };
     }
 
-    final Supplier<?> desiredSupplier(final Type resultType) {
+    final Supplier<?> desiredSupplier(final Type resultType, final BinaryOperator<Method> preference) {
         return suppliers.stream()
-                        .filter(method -> resultType.equals(method.getGenericReturnType()))
+                        .filter(supplier -> Types.isMatching(resultType, supplier.getGenericReturnType()))
                         .filter(desired)
-                        .findAny()
+                        .reduce(preference)
                         .map(this::supplier)
                         .orElse(null);
     }

@@ -2,9 +2,11 @@ package de.team33.patterns.random.tarvos;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.function.BinaryOperator;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -48,7 +50,7 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
         return Stream.of(parameters)
                      .map(parameter -> {
                          final Type parameterType = parameter.getParameterizedType();
-                         final Supplier<?> supplier = desiredSupplier(parameterType);
+                         final Supplier<?> supplier = desiredSupplier(parameterType, preference(parameter));
                          if (ignorable.contains(parameter.getName())) {
                              return Types.defaultValue(parameterType);
                          } else if (null != supplier) {
@@ -58,6 +60,11 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
                          }
                      })
                      .toArray(Object[]::new);
+    }
+
+    private BinaryOperator<Method> preference(final Parameter parameter) {
+        // TODO?
+        return (left, right) -> left;
     }
 
     final T result() {

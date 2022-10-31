@@ -4,11 +4,28 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 
 /**
- * A utility interface: can extend producer classes with the functionality to fill POJO* instances with (typically)
- * random values. Within certain limits, this also works with instances according to the builder pattern.
+ * A utility interface:
+ * can extend producer classes with the functionality to fill classic mutable Java data objects* with (typically)
+ * random values.
  * <p>
- * *A POJO (plain old java object) is an instance consisting (essentially) of properties that can be accessed using
- * appropriate getters and setters.
+ * In more general terms, all target instances can be filled with values via reflection if they have suitable
+ * methods for receiving these values: so-called setters**.
+ * Within certain limits, this can also apply, for example, to target instances according to the builder pattern.
+ * <p>
+ * The producer class that implements this interface must provide appropriate getters*** to supply the values
+ * that can be passed to the target instance's setters.
+ * <p>
+ * Static, synthetic and native methods are generally ignored.
+ * <p>
+ * *<em>Classic Java data objects</em> in this context means objects that are (essentially) made up of properties
+ * and whose property values can be determined or set using so-called getters and setters**.
+ * <p>
+ * **<em>Setters</em> in this context are public instance methods that take exactly one argument as a parameter
+ * and return nothing (void) or, according to the builder pattern, the target instance itself as the result.
+ * <p>
+ * ***<em>Getters</em> in this context are public instance methods that take no parameters and return a result
+ * of a specific type (not void). The {@link Object#hashCode() hashCode()} and {@link Object#toString() toString()}
+ * methods are ignored.
  *
  * @see de.team33.patterns.random.tarvos package
  */

@@ -2,11 +2,12 @@ package de.team33.sample.patterns.random.tarvos;
 
 import de.team33.patterns.random.tarvos.Generator;
 import de.team33.patterns.random.tarvos.Charger;
+import de.team33.patterns.random.tarvos.Initiator;
 
 import java.math.BigInteger;
 import java.util.Random;
 
-public class Producer extends Random implements Generator, Charger {
+public class Producer extends Random implements Generator, Charger, Initiator {
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -14,7 +15,7 @@ public class Producer extends Random implements Generator, Charger {
     }
 
     public final Person nextPerson() {
-        return charge(new Person());
+        return initiate(Person.class);
     }
 
     public final Customer nextCustomer() {
