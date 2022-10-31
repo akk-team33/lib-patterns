@@ -34,6 +34,13 @@ public final class Report<R> {
     }
 
     /**
+     * Returns a limited {@link Stream} of all results that have accumulated during reporting.
+     */
+    public Stream<R> stream() {
+        return results.stream();
+    }
+
+    /**
      * Returns a {@link List} of all {@linkplain Throwable exceptions} that occurred during reporting.
      */
     public final List<Throwable> getThrowables() {

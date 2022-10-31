@@ -1,12 +1,11 @@
 package de.team33.patterns.testing.titan;
 
-import de.team33.patterns.exceptional.e1.XConsumer;
-import de.team33.patterns.exceptional.e1.XFunction;
-
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -14,115 +13,102 @@ import static java.util.stream.Collectors.toList;
  */
 public final class Parallel<R> {
 
+    private final int minNumberOfOperations;
     private final List<Thread> threads;
     private final Report.Builder<R> report = new Report.Builder<>();
+    private final AtomicInteger operationCounter = new AtomicInteger(0);
     private final AtomicInteger executionCounter = new AtomicInteger(0);
-    private final int numberOfExecutions;
 
-    private Parallel(final int numberOfExecutions, final int numberOfThreads, final XFunction<Integer, R, ?> method) {
-        this.numberOfExecutions = numberOfExecutions;
-        this.threads = IntStream.range(0, numberOfThreads)
-                                .mapToObj(threadIndex -> newThread(threadIndex, method))
-                                .collect(toList());
+    private Parallel(final int minNumberOfOperations, final int numberOfThreads, final Operation<R> operation) {
+        this.minNumberOfOperations = minNumberOfOperations;
+        this.threads = unmodifiableList(IntStream.range(0, numberOfThreads)
+                                                 .mapToObj(threadIndex -> newThread(threadIndex, operation))
+                                                 .collect(toList()));
     }
 
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
-     * @param numberOfExecutions The total number of times the operation should be performed.
-     * @param numberOfThreads    The number of parallel threads in which the operation should be performed.
-     * @param operation          The operation to be performed.
-     * @param <R>                The type of result of the operation to be performed.
-     * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #apply(int, XFunction)
-     * @see #invoke(int, int, XConsumer)
-     * @see #invoke(int, XConsumer)
+     * @param minNumberOfOperations The minimum number of times the operation should be performed.
+     * @param numberOfThreads       The number of parallel threads in which the operation should be performed.
+     * @param operation             The operation to be performed.
+     * @param <R>                   The type of result of the operation to be performed.
+     * @see #report(int, Operation)
      */
-    public static <R> Report<R> apply(final int numberOfExecutions,
-                                      final int numberOfThreads,
-                                      final XFunction<Integer, R, ?> operation) throws InterruptedException {
-        return new Parallel<R>(numberOfExecutions, numberOfThreads, operation).startThreads()
-                                                                              .joinThreads()
-                                                                              .report();
+    public static <R> Report<R> report(final int minNumberOfOperations,
+                                       final int numberOfThreads,
+                                       final Operation<R> operation) {
+        return new Parallel<R>(minNumberOfOperations, numberOfThreads, operation).startThreads()
+                                                                                 .joinThreads()
+                                                                                 .report();
     }
 
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
      *
-     * @param numberOfExecutionsInSeparateThreads The total number of operations to be performed each on its own
-     *                                            parallel thread.
-     * @param operation                           The operation to be performed.
-     * @param <R>                                 The type of result of the operation to be performed.
-     * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #apply(int, int, XFunction)
-     * @see #invoke(int, int, XConsumer)
-     * @see #invoke(int, XConsumer)
+     * @param numberOfThreads The number of parallel threads in which the operation should be performed.
+     * @param operation       The operation to be performed.
+     * @param <R>             The type of result of the operation to be performed.
+     * @see #report(int, int, Operation)
      */
-    public static <R> Report<R> apply(final int numberOfExecutionsInSeparateThreads,
-                                      final XFunction<Integer, R, ?> operation) throws InterruptedException {
-        return apply(numberOfExecutionsInSeparateThreads, numberOfExecutionsInSeparateThreads, operation);
+    public static <R> Report<R> report(final int numberOfThreads, final Operation<R> operation) {
+        return report(0, numberOfThreads, operation);
     }
 
     /**
-     * Returns a {@link Report} after executing a particular operation multiple times in parallel.
+     * Returns a {@link Stream} of results after executing a particular operation multiple times in parallel.
      *
-     * @param numberOfExecutions The total number of times the operation should be performed.
-     * @param numberOfThreads    The number of parallel threads in which the operation should be performed.
-     * @param operation          The operation to be performed.
-     * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #invoke(int, XConsumer)
-     * @see #apply(int, int, XFunction)
-     * @see #apply(int, XFunction)
+     * @param minNumberOfOperations The minimum number of times the operation should be performed.
+     * @param numberOfThreads       The number of parallel threads in which the operation should be performed.
+     * @param operation             The operation to be performed.
+     * @param <R>                   The type of result of the operation to be performed.
+     * @throws Exception If any Exception occurs while executing the Operation
      */
-    public static Report<Void> invoke(final int numberOfExecutions,
-                                      final int numberOfThreads,
-                                      final XConsumer<Integer, ?> operation) throws InterruptedException {
-        return apply(numberOfExecutions, numberOfThreads, toXFunction(operation));
+    @SuppressWarnings("ProhibitedExceptionDeclared")
+    public static <R> Stream<R> stream(final int minNumberOfOperations,
+                                       final int numberOfThreads,
+                                       final Operation<R> operation) throws Exception {
+        return report(minNumberOfOperations, numberOfThreads, operation).reThrow(Error.class)
+                                                                        .reThrow(Exception.class)
+                                                                        .stream();
     }
 
     /**
-     * Returns a {@link Report} after executing a particular operation multiple times in parallel.
+     * Returns a {@link Stream} of results after executing a particular operation multiple times in parallel.
      *
-     * @param numberOfExecutionsInSeparateThreads The total number of operations to be performed each on its own
-     *                                            parallel thread.
-     * @param operation                           The operation to be performed.
-     * @throws InterruptedException When the current thread is interrupted while waiting for the executing threads.
-     * @see #invoke(int, int, XConsumer)
-     * @see #apply(int, int, XFunction)
-     * @see #apply(int, XFunction)
+     * @param numberOfThreads       The number of parallel threads in which the operation should be performed.
+     * @param operation             The operation to be performed.
+     * @param <R>                   The type of result of the operation to be performed.
+     * @throws Exception If any Exception occurs while executing the Operation
      */
-    public static Report<Void> invoke(final int numberOfExecutionsInSeparateThreads,
-                                      final XConsumer<Integer, ?> operation) throws InterruptedException {
-        return apply(numberOfExecutionsInSeparateThreads, toXFunction(operation));
+    @SuppressWarnings("ProhibitedExceptionDeclared")
+    public static <R> Stream<R> stream(final int numberOfThreads, final Operation<R> operation) throws Exception {
+        return stream(0, numberOfThreads, operation);
     }
 
-    @SuppressWarnings("BoundedWildcard")
-    private static <X extends Exception>
-    XFunction<Integer, Void, X> toXFunction(final XConsumer<Integer, X> operation) {
-        return index -> {
-            operation.accept(index);
-            return null;
-        };
-    }
-
-    private Thread newThread(final int threadIndex, final XFunction<Integer, R, ?> method) {
+    private Thread newThread(final int threadIndex, final Operation<R> operation) {
         //noinspection ObjectToString
-        return new Thread(newRunnable(method), this + ":" + threadIndex);
+        return new Thread(newRunnable(threadIndex, operation), this + ":" + threadIndex);
     }
 
     @SuppressWarnings({"BoundedWildcard", "OverlyBroadCatchBlock"})
-    private Runnable newRunnable(final XFunction<Integer, R, ?> method) {
+    private Runnable newRunnable(final int threadIndex, final Operation<R> operation) {
         return () -> {
-            int executionIndex = executionCounter.getAndIncrement();
-            while (executionIndex < numberOfExecutions) {
+            final int executionIndex = executionCounter.getAndIncrement();
+            do {
                 try {
-                    report.add(method.apply(executionIndex));
+                    report.add(operation.operate(new Indices(threadIndex,
+                                                             executionIndex,
+                                                             operationCounter.getAndIncrement())));
                 } catch (final Throwable e) {
                     report.add(e);
                 }
-                executionIndex = executionCounter.getAndIncrement();
-            }
+            } while (unfinished());
         };
+    }
+
+    private boolean unfinished() {
+        return (executionCounter.get() < threads.size()) || (operationCounter.get() < minNumberOfOperations);
     }
 
     private Parallel<R> startThreads() {
@@ -132,9 +118,14 @@ public final class Parallel<R> {
         return this;
     }
 
-    private Parallel<R> joinThreads() throws InterruptedException {
+    private Parallel<R> joinThreads() {
         for (final Thread thread : threads) {
-            thread.join();
+            try {
+                thread.join();
+            } catch (final InterruptedException caught) {
+                Thread.currentThread().interrupt();
+                report.add(caught);
+            }
         }
         return this;
     }
