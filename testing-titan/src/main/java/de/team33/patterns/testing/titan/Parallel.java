@@ -97,9 +97,9 @@ public final class Parallel<R> {
             final int executionIndex = executionCounter.getAndIncrement();
             do {
                 try {
-                    report.add(operation.operate(new Indices(threadIndex,
-                                                             executionIndex,
-                                                             operationCounter.getAndIncrement())));
+                    report.add(operation.operate(new Input(threadIndex,
+                                                           executionIndex,
+                                                           operationCounter.getAndIncrement())));
                 } catch (final Throwable e) {
                     report.add(e);
                 }

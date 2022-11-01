@@ -3,7 +3,6 @@ package de.team33.patterns.testing.titan;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,7 +42,7 @@ public final class Report<R> {
     /**
      * Returns a {@link List} of all {@linkplain Throwable exceptions} that occurred during reporting.
      */
-    public final List<Throwable> getThrowables() {
+    public final List<Throwable> getCaught() {
         return throwables;
     }
 
@@ -55,21 +54,14 @@ public final class Report<R> {
      */
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
-    public final <X extends Throwable> List<X> getThrowables(final Class<X> xClass,
-                                                             final Class<? extends X> ... ignorable) {
-        return streamThrowables(xClass, ignorable).collect(Collectors.toList());
+    public final <X extends Throwable> List<X> getCaught(final Class<X> xClass,
+                                                         final Class<? extends X>... ignorable) {
+        return stream(xClass, ignorable).collect(Collectors.toList());
     }
 
-    /**
-     * Returns a {@link Stream} of all {@linkplain Throwable exceptions} of a certain type that occurred during
-     * reporting. Certain derived types can be excluded from the resulting {@link Stream}.
-     *
-     * @param <X> The type of {@linkplain Throwable exceptions} to be streamed.
-     */
-    @SuppressWarnings("WeakerAccess")
     @SafeVarargs
-    public final <X extends Throwable> Stream<X> streamThrowables(final Class<X> xClass,
-                                                                  final Class<? extends X> ... ignorable) {
+    private final <X extends Throwable> Stream<X> stream(final Class<X> xClass,
+                                                         final Class<? extends X>... ignorable) {
         return throwables.stream()
                          .filter(xClass::isInstance)
                          .map(xClass::cast)
@@ -87,15 +79,20 @@ public final class Report<R> {
      */
     @SafeVarargs
     public final <X extends Throwable> Report<R> reThrow(final Class<X> xClass,
-                                                         final Class<? extends X> ... ignorable) throws X {
-        final Optional<X> caught = streamThrowables(xClass, ignorable).reduce((head, tail) -> {
-            head.addSuppressed(tail);
-            return head;
-        });
-        if (caught.isPresent()) {
-            throw caught.get();
+                                                         final Class<? extends X>... ignorable) throws X {
+        // First ...
+        final X caught = stream(xClass, ignorable).findAny().orElse(null);
+        if (null != caught) {
+            // Add the rest ...
+            stream(Throwable.class).filter(more -> more != caught)
+                                   .forEach(caught::addSuppressed);
+            throw caught;
         }
         return this;
+    }
+
+    public final Report<R> reThrowAny() throws Throwable {
+        return reThrow(Error.class).reThrow(Exception.class);
     }
 
     @SuppressWarnings("UnusedReturnValue")
