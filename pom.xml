@@ -51,7 +51,7 @@
         <module>expiry-tethys</module>
         <module>tuple-janus</module>
         <module>properties-01</module>
-        <module>features-01</module>
+        <module>features-rhea</module>
         <module>patterns-bom</module>
     </modules>
 
@@ -110,7 +110,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>features-01</artifactId>
+                <artifactId>features-rhea</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

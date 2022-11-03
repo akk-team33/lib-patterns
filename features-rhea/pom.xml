@@ -8,7 +8,7 @@
         <version>1.6.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>features-01</artifactId>
+    <artifactId>features-rhea</artifactId>
     <packaging>jar</packaging>
 
     <name>Team33 Features Library - Edition 1</name>
