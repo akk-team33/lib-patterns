@@ -65,7 +65,7 @@ class TypeTest {
 
     @Test
     final void testToString() {
-        assertEquals("String", STRING_TYPE.toString());
-        assertEquals("Map<String, List<String>>", MAP_TYPE.toString());
+        assertEquals("java.lang.String", STRING_TYPE.toString());
+        assertEquals("java.util.Map<java.lang.String, java.util.List<java.lang.String>>", MAP_TYPE.toString());
     }
 }

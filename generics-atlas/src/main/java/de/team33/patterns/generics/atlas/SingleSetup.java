@@ -22,7 +22,7 @@ abstract class SingleSetup extends Setup {
     @Override
     public final String toString() {
         final List<Setup> actual = getActualParameters();
-        return asClass().getSimpleName() + (
+        return asClass().getCanonicalName() + (
                 actual.isEmpty() ? "" : actual.stream()
                                               .map(Setup::toString)
                                               .collect(joining(", ", "<", ">")));
