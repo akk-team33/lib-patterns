@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-parent</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.6.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Parent</name>
@@ -48,6 +48,8 @@
         <module>exceptional-01</module>
         <module>lazy-01</module>
         <module>pooling-01</module>
+        <module>expiry-tethys</module>
+        <module>tuple-janus</module>
         <module>properties-01</module>
         <module>generics-atlas</module>
         <module>patterns-bom</module>
@@ -89,6 +91,16 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>tuple-janus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>expiry-tethys</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
