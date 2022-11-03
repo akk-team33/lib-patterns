@@ -11,7 +11,7 @@
     <artifactId>features-rhea</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Features Library - Edition 1</name>
+    <name>Team33 Features Library - Edition "rhea"</name>
     <description>Provides classes and mechanisms for assigning any feature
         to appropriately prepared objects.</description>
 

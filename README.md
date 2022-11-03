@@ -14,17 +14,8 @@ Team33 Patterns Library Collection
 * tuple-janus (Team33 Tuple Library - Edition "janus")
 * expiry-tethys (Team33 Expiration Library - Edition "tethys")
 * properties-01 (Team33 Properties Library - Edition 1)
-* features-01 (Team33 Features Library - Edition 1)
+* features-rhea (Team33 Features Library - Edition "rhea")
 * patterns-bom (Team33 Patterns Library BOM)
-
-<module>production-01</module>
-<module>random-01</module>
-<module>exceptional-01</module>
-<module>lazy-01</module>
-<module>pooling-01</module>
-<module>properties-01</module>
-<module>features-01</module>
-<module>patterns-bom</module>
 
 ## Home
 

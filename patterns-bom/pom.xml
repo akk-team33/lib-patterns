@@ -90,7 +90,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>features-01</artifactId>
+                <artifactId>features-rhea</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
