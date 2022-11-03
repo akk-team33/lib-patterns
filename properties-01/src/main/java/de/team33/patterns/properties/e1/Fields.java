@@ -18,51 +18,11 @@ import static java.util.stream.Collectors.toMap;
  */
 public final class Fields {
 
-    private static final int SYNTHETIC = 0x00001000;
-    private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
-    private static final Converter CONVERTER =
-            Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
-
     private Fields() {
     }
 
-    private static Stream<Field> streamDeclared(final Class<?> cls) {
-        return Stream.of(cls.getDeclaredFields());
-    }
-
-    private static Stream<Field> streamDeclaredDeep(final Class<?> cls) {
-        return Stream.concat(superStreamOf(cls), streamDeclared(cls));
-    }
-
-    private static Stream<Field> superStreamOf(final Class<?> cls) {
-        return Optional.ofNullable(cls.getSuperclass())
-                       .map(Fields::streamDeclaredDeep)
-                       .orElseGet(Stream::empty);
-    }
-
-    private static boolean isSignificant(final Field field) {
-        return isSignificant(field.getModifiers());
-    }
-
-    private static boolean isSignificant(final int modifiers) {
-        return 0 == (modifiers & NOT_SIGNIFICANT);
-    }
-
-    private static Field setAccessible(final Field field) {
-        field.setAccessible(true);
-        return field;
-    }
-
-    private static String prefixed(final Class<?> context, final Field field) {
-        if (field.getDeclaringClass().equals(context)) {
-            return field.getName();
-        } else {
-            return "." + prefixed(context.getSuperclass(), field);
-        }
-    }
-
     private static <T> Accessor<T, Object> newAccessor(final Field field) {
-        return Accessor.combine(CONVERTER.function(field::get), CONVERTER.biConsumer(field::set));
+        return Accessor.combine(Mutual.CONVERTER.function(field::get), Mutual.CONVERTER.biConsumer(field::set));
     }
 
     /**
@@ -86,19 +46,19 @@ public final class Fields {
          * In this mode, all fields are taken into account that were defined directly with the relevant class
          * and that are not static, transient or synthetic.
          */
-        FLAT(type -> streamDeclared(type).filter(Fields::isSignificant)
-                                         .map(Fields::setAccessible),
+        FLAT(type -> Mutual.streamDeclared(type).filter(Mutual::isSignificant)
+                           .map(Mutual::setAccessible),
              type -> Field::getName),
 
         /**
          * In this mode, all fields are taken into account that were defined with the relevant class or one of its
          * superclasses and that are not static, transient or synthetic.
          */
-        DEEP(type -> streamDeclaredDeep(type).filter(Fields::isSignificant)
-                                             .map(Fields::setAccessible),
-             type -> field -> prefixed(type, field));
+        DEEP(type -> Mutual.streamDeclaredDeep(type).filter(Mutual::isSignificant)
+                           .map(Mutual::setAccessible),
+             type -> field -> Mutual.prefixed(type, field));
 
-        private final Function<Class<?>, Stream<Field>> streaming;
+        final Function<Class<?>, Stream<Field>> streaming;
         private final Function<Class<?>, ? extends Function<Field, String>> naming;
 
         @SuppressWarnings("BoundedWildcard")
@@ -108,8 +68,51 @@ public final class Fields {
             this.naming = naming;
         }
 
-        private Function<Field, String> namingOf(final Class<?> context) {
+        Function<Field, String> namingOf(final Class<?> context) {
             return naming.apply(context);
+        }
+    }
+
+    private static final class Mutual {
+
+        static final int SYNTHETIC = 0x00001000;
+        static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
+        static final Converter CONVERTER =
+                Converter.using(cause -> new IllegalArgumentException(cause.getMessage(), cause));
+
+        static boolean isSignificant(final Field field) {
+            return isSignificant(field.getModifiers());
+        }
+
+        static boolean isSignificant(final int modifiers) {
+            return 0 == (modifiers & NOT_SIGNIFICANT);
+        }
+
+        static Stream<Field> streamDeclared(final Class<?> cls) {
+            return Stream.of(cls.getDeclaredFields());
+        }
+
+        static Stream<Field> streamDeclaredDeep(final Class<?> cls) {
+            return Stream.concat(superStreamOf(cls), streamDeclared(cls));
+        }
+
+        static Stream<Field> superStreamOf(final Class<?> cls) {
+            return Optional.ofNullable(cls.getSuperclass())
+                           .map(Mutual::streamDeclaredDeep)
+                           .orElseGet(Stream::empty);
+        }
+
+        static Field setAccessible(final Field field) {
+            field.setAccessible(true);
+            return field;
+        }
+
+        static String prefixed(final Class<?> context, final Field field) {
+            if (field.getDeclaringClass().equals(context)) {
+                return field.getName();
+            } else {
+                return "." + prefixed(context.getSuperclass(), field);
+            }
         }
     }
 }

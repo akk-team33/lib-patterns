@@ -4,8 +4,6 @@ import de.team33.patterns.exceptional.e1.XConsumer;
 import de.team33.patterns.exceptional.e1.XFunction;
 import de.team33.patterns.exceptional.e1.XSupplier;
 
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -22,33 +20,21 @@ import java.util.function.Function;
  * <p>
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>subject</em> could be made available.
+ * <p>
+ * This implementation supports checked exceptions to occur while creating new <em>subject</em> instances.
  *
  * @param <S> The type of provided instances <em>(subjects)</em>
- * @param <X> A type of exception that may be caused by the creation of new <em>subject</em> instances.
+ * @param <E> A type of exception that may be caused by the creation of new <em>subject</em> instances.
  * @see Provider
  */
-public class XProvider<S, X extends Exception> {
-
-    private static final Void IRRELEVANT = null;
-
-    private final Queue<S> stock = new ConcurrentLinkedQueue<>();
-    private final XSupplier<S, X> newItem;
-
-    public XProvider(final XSupplier<S, X> newItem) {
-        this.newItem = newItem;
-    }
+public class XProvider<S, E extends Exception> extends Mutual<S, E> {
 
     /**
-     * Runs a given {@link XConsumer} with a parameter provided for it. The parameter is kept for future use.
-     * <p>
-     * While the {@link XConsumer} is being executed, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the execution or the executing thread!
+     * Initializes a new instance giving an {@link XSupplier} that defines the intended initialization of a
+     * new <em>subject</em>.
      */
-    public final <EX extends Exception> void runEx(final XConsumer<? super S, EX> consumer) throws X, EX {
-        getEx(parameter -> {
-            consumer.accept(parameter);
-            return IRRELEVANT;
-        });
+    public XProvider(final XSupplier<S, E> newItem) {
+        super(newItem);
     }
 
     /**
@@ -56,28 +42,25 @@ public class XProvider<S, X extends Exception> {
      * <p>
      * While the {@link Consumer} is being executed, the parameter is exclusively available to it, but must not be
      * "hijacked" from the context of the execution or the executing thread!
+     *
+     * @throws E if the initialization of a new <em>subject</em> causes one.
      */
-    public final void run(final Consumer<? super S> consumer) throws X {
-        runEx(consumer::accept);
+    public final void run(final Consumer<? super S> consumer) throws E {
+        accept(consumer::accept);
     }
 
     /**
-     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
-     * The parameter is kept for future use.
+     * Runs a given {@link XConsumer} with a parameter provided for it. The parameter is kept for future use.
      * <p>
-     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the call or the executing thread!
+     * While the {@link XConsumer} is being executed, the parameter is exclusively available to it, but must not be
+     * "hijacked" from the context of the execution or the executing thread!
      *
-     * @param <R> The result type of the given {@link Function}
+     * @param <X> A type of exception that may be caused by the given {@link XConsumer}.
+     * @throws E if the initialization of a new <em>subject</em> causes one.
+     * @throws X if the execution of the given {@link XConsumer} causes one.
      */
-    public final <R, EX extends Exception> R getEx(final XFunction<? super S, R, EX> function) throws X, EX {
-        final S stocked = stock.poll();
-        final S item = (null == stocked) ? newItem.get() : stocked;
-        try {
-            return function.apply(item);
-        } finally {
-            stock.add(item);
-        }
+    public final <X extends Exception> void runEx(final XConsumer<? super S, X> xConsumer) throws E, X {
+        accept(xConsumer);
     }
 
     /**
@@ -88,8 +71,25 @@ public class XProvider<S, X extends Exception> {
      * "hijacked" from the context of the call or the executing thread!
      *
      * @param <R> The result type of the given {@link Function}
+     * @throws E if the initialization of a new <em>subject</em> causes one.
      */
-    public final <R> R get(final Function<? super S, R> function) throws X {
-        return getEx(function::apply);
+    public final <R> R get(final Function<? super S, R> function) throws E {
+        return apply(function::apply);
+    }
+
+    /**
+     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
+     * The parameter is kept for future use.
+     * <p>
+     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
+     * "hijacked" from the context of the call or the executing thread!
+     *
+     * @param <R> The result type of the given {@link XFunction}
+     * @param <X> A type of exception that may be caused by the given {@link XFunction}.
+     * @throws E if the initialization of a new <em>subject</em> causes one.
+     * @throws X if the execution of the given {@link XFunction} causes one.
+     */
+    public final <R, X extends Exception> R getEx(final XFunction<? super S, R, X> xFunction) throws E, X {
+        return apply(xFunction);
     }
 }

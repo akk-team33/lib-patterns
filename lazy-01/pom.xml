@@ -4,8 +4,8 @@
 
     <parent>
         <groupId>de.team33.patterns</groupId>
-        <artifactId>patterns</artifactId>
-        <version>1.2.2-SNAPSHOT</version>
+        <artifactId>patterns-parent</artifactId>
+        <version>1.6.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>lazy-01</artifactId>
@@ -20,8 +20,13 @@
             <artifactId>exceptional-01</artifactId>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-01</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

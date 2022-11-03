@@ -15,7 +15,7 @@ public class ReviewExample<R> {
                           .reThrow(IOException.class)
                           .reThrow(SQLException.class)
                           .reThrow(URISyntaxException.class)
-                          .finish(ExpectationException::new);
+                          .close(ExpectationException::new);
         }
     }
 

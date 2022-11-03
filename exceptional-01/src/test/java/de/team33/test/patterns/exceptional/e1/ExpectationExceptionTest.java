@@ -1,18 +1,19 @@
 package de.team33.test.patterns.exceptional.e1;
 
 import de.team33.patterns.exceptional.e1.ExpectationException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class ExpectationExceptionTest {
+class ExpectationExceptionTest {
 
     @Test
-    public final void noParameters() {
+    final void noParameters() {
         final ExpectationException case1 = new ExpectationException((String) null);
         final ExpectationException case2 = new ExpectationException((Throwable) null);
         final ExpectationException case3 = new ExpectationException(null, null);
@@ -27,7 +28,7 @@ public class ExpectationExceptionTest {
     }
 
     @Test
-    public final void noMessageAlsoInCause() {
+    final void noMessageAlsoInCause() {
         final Throwable cause = new IOException(null, null);
         final ExpectationException case1 = new ExpectationException(cause);
         final ExpectationException case2 = new ExpectationException(null, cause);
@@ -40,7 +41,7 @@ public class ExpectationExceptionTest {
     }
 
     @Test
-    public final void noMessageButInCause() {
+    final void noMessageButInCause() {
         final String message = UUID.randomUUID().toString();
         final Throwable cause = new SQLException(message, (Throwable) null);
         final ExpectationException case3a = new ExpectationException(cause);
@@ -54,7 +55,7 @@ public class ExpectationExceptionTest {
     }
 
     @Test
-    public final void noCause() {
+    final void noCause() {
         final String message = UUID.randomUUID().toString();
         final ExpectationException case1 = new ExpectationException(message);
         final ExpectationException case2 = new ExpectationException(message, null);
@@ -67,7 +68,7 @@ public class ExpectationExceptionTest {
     }
 
     @Test
-    public final void allParameters() {
+    final void allParameters() {
         final String message = UUID.randomUUID().toString();
         final Throwable cause1 = new IOException((String) null);
         final Throwable cause2 = new IOException(UUID.randomUUID().toString());

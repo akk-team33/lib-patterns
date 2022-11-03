@@ -1,19 +1,19 @@
 package de.team33.test.patterns.exceptional.e1;
 
 import de.team33.patterns.exceptional.e1.XBiConsumer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test to demonstrate how to treat a BiConsumer as XBiConsumer.
  * <p>
  * BiConsumer/XBiConsumer were chosen as an example for all functional constructs defined in this library.
  */
-public class XBiConsumerTest {
+class XBiConsumerTest {
 
     private static final BiConsumer<AtomicInteger, int[]> CONSUMER = (p1, p2) -> p2[0] = p1.incrementAndGet();
 
@@ -23,18 +23,18 @@ public class XBiConsumerTest {
     }
 
     @Test
-    public final void treatBiConsumerAsXBiConsumer() {
+    final void treatBiConsumerAsXBiConsumer() {
         final AtomicInteger atomic = new AtomicInteger(0);
         final int[] array = {0};
 
         // treat BiConsumer as is ...
         CONSUMER.accept(atomic, array);
-        assertEquals("<atomic> is expected to be incremented (0 -> 1)", 1, atomic.get());
-        assertEquals("<array[0]> is expected to be incremented (0 -> 1)", 1, array[0]);
+        assertEquals(1, atomic.get(), "<atomic> is expected to be incremented (0 -> 1)");
+        assertEquals(1, array[0], "<array[0]> is expected to be incremented (0 -> 1)");
 
         // treat BiConsumer as XBiConsumer ...
         perform(CONSUMER::accept, atomic, array);
-        assertEquals("<atomic> is expected to be incremented (1 -> 2)", 2, atomic.get());
-        assertEquals("<array[0]> is expected to be incremented (1 -> 2)", 2, array[0]);
+        assertEquals(2, atomic.get(), "<atomic> is expected to be incremented (1 -> 2)");
+        assertEquals(2, array[0], "<array[0]> is expected to be incremented (1 -> 2)");
     }
 }
