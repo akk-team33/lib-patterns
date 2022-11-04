@@ -1,4 +1,4 @@
-package de.team33.patterns.math.e1;
+package de.team33.patterns.math.phoebe;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a rational number, the size and accuracy of which is generally not limited or only limited by the
- * available memory.
+ * Represents a rational number, the size and accuracy of which is generally not limited or only limited by
+ * the available memory.
  */
 public class BigRational extends Number {
 

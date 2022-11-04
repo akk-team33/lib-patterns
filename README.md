@@ -14,7 +14,7 @@ Team33 Patterns Library Collection
 * tuple-janus (Team33 Tuple Library - Edition "janus")
 * expiry-tethys (Team33 Expiration Library - Edition "tethys")
 * properties-01 (Team33 Properties Library - Edition 1)
-* math-01 (Team33 Math Library - Edition 1)
+* math-phoebe (Team33 Math Library - Edition "phoebe")
 * patterns-bom (Team33 Patterns Library BOM)
 
 ## Home

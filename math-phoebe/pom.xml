@@ -4,14 +4,14 @@
 
     <parent>
         <groupId>de.team33.patterns</groupId>
-        <artifactId>patterns</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <artifactId>patterns-parent</artifactId>
+        <version>1.6.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>math-01</artifactId>
+    <artifactId>math-phoebe</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Math Library - Edition 1</name>
+    <name>Team33 Math Library - Edition "phoebe"</name>
     <description>Provides math types and operations</description>
 
     <dependencies>

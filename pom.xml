@@ -51,7 +51,7 @@
         <module>expiry-tethys</module>
         <module>tuple-janus</module>
         <module>properties-01</module>
-        <module>math-01</module>
+        <module>math-phoebe</module>
         <module>patterns-bom</module>
     </modules>
 
@@ -110,7 +110,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>math-01</artifactId>
+                <artifactId>math-phoebe</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

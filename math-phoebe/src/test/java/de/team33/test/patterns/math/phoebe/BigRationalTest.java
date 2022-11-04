@@ -1,6 +1,6 @@
-package de.team33.test.patterns.math.e1;
+package de.team33.test.patterns.math.phoebe;
 
-import de.team33.patterns.math.e1.BigRational;
+import de.team33.patterns.math.phoebe.BigRational;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
