@@ -19,10 +19,13 @@ public final class Report<R> {
 
     private final List<R> results;
     private final List<Throwable> throwables;
+    private final long duration;
 
-    private Report(final Builder<R> builder) {
+    @SuppressWarnings("WeakerAccess")
+    Report(final Builder<R> builder) {
         this.results = unmodifiableList(new ArrayList<>(builder.results));
         this.throwables = unmodifiableList(new ArrayList<>(builder.throwables));
+        this.duration = builder.duration;
     }
 
     /**
@@ -45,6 +48,7 @@ public final class Report<R> {
      *
      * @param <X> The type of {@linkplain Throwable exceptions} to be listed.
      */
+    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final <X extends Throwable> List<X> getThrowables(final Class<X> xClass,
                                                              final Class<? extends X> ... ignorable) {
@@ -57,6 +61,7 @@ public final class Report<R> {
      *
      * @param <X> The type of {@linkplain Throwable exceptions} to be streamed.
      */
+    @SuppressWarnings("WeakerAccess")
     @SafeVarargs
     public final <X extends Throwable> Stream<X> streamThrowables(final Class<X> xClass,
                                                                   final Class<? extends X> ... ignorable) {
@@ -64,13 +69,13 @@ public final class Report<R> {
                          .filter(xClass::isInstance)
                          .map(xClass::cast)
                          .filter(throwable -> Stream.of(ignorable)
-                                                    .noneMatch(clss -> clss.isInstance(throwable)));
+                                                    .noneMatch(iClass -> iClass.isInstance(throwable)));
     }
 
     /**
      * Re-throws the first {@linkplain Throwable exception} of a certain type that occurred during
      * reporting after all further {@linkplain Throwable exceptions} of that type have been
-     * {@linkplain Throwable#addSuppressed(Throwable) added to it as suppressed}.
+     * {@linkplain Throwable#addSuppressed(Throwable) added as suppressed}.
      * Certain derived types can be excluded from processing.
      *
      * @param <X> The type of {@linkplain Throwable exceptions} to be processed.
@@ -88,11 +93,27 @@ public final class Report<R> {
         return this;
     }
 
+    /**
+     * Re-throws the first {@link Error} if any, or else the first {@link Exception} that occurred during
+     * reporting after all further {@linkplain Throwable exceptions} of that type have been
+     * {@linkplain Throwable#addSuppressed(Throwable) added as suppressed}.
+     */
+    @SuppressWarnings({"ProhibitedExceptionDeclared", "UnnecessaryThis"})
+    public final Report<R> reThrowAny() throws Exception {
+        return this.reThrow(Error.class)
+                   .reThrow(Exception.class);
+    }
+
+    public final long getDuration() {
+        return duration;
+    }
+
     @SuppressWarnings("UnusedReturnValue")
     static class Builder<R> {
 
-        private final List<Throwable> throwables = synchronizedList(new LinkedList<>());
-        private final List<R> results = synchronizedList(new LinkedList<>());
+        final List<Throwable> throwables = synchronizedList(new LinkedList<>());
+        final List<R> results = synchronizedList(new LinkedList<>());
+        long duration;
 
         final Report<R> build() {
             return new Report<>(this);
@@ -105,6 +126,11 @@ public final class Report<R> {
 
         final Builder<R> add(final R result) {
             results.add(result);
+            return this;
+        }
+
+        final Builder<R> setDuration(final long duration) {
+            this.duration = duration;
             return this;
         }
     }

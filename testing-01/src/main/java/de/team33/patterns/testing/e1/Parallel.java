@@ -18,6 +18,7 @@ public final class Parallel<R> {
     private final Report.Builder<R> report = new Report.Builder<>();
     private final AtomicInteger executionCounter = new AtomicInteger(0);
     private final int numberOfExecutions;
+    private long time0;
 
     private Parallel(final int numberOfExecutions, final int numberOfThreads, final XFunction<Integer, R, ?> method) {
         this.numberOfExecutions = numberOfExecutions;
@@ -106,6 +107,7 @@ public final class Parallel<R> {
     }
 
     private Thread newThread(final int threadIndex, final XFunction<Integer, R, ?> method) {
+        //noinspection ObjectToString
         return new Thread(newRunnable(method), this + ":" + threadIndex);
     }
 
@@ -125,6 +127,7 @@ public final class Parallel<R> {
     }
 
     private Parallel<R> startThreads() {
+        this.time0 = System.currentTimeMillis();
         for (final Thread thread : threads) {
             thread.start();
         }
@@ -135,6 +138,7 @@ public final class Parallel<R> {
         for (final Thread thread : threads) {
             thread.join();
         }
+        report.setDuration(System.currentTimeMillis() - time0);
         return this;
     }
 

@@ -5,10 +5,10 @@ import java.util.TreeMap;
 
 class ComboMapping<T> implements BiMapping<T> {
 
-    private final Mapping<T> mapping;
+    private final Mapping<? super T> mapping;
     private final ReMapping<T> reMapping;
 
-    ComboMapping(final Mapping<T> mapping, final ReMapping<T> reMapping) {
+    ComboMapping(final Mapping<? super T> mapping, final ReMapping<T> reMapping) {
         this.mapping = mapping;
         this.reMapping = reMapping;
     }
@@ -31,7 +31,7 @@ class ComboMapping<T> implements BiMapping<T> {
     private final class Operation implements TargetOperation<T> {
         private final T origin;
 
-        private Operation(final T origin) {
+        Operation(final T origin) {
             this.origin = origin;
         }
 

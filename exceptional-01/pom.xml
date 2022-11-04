@@ -4,15 +4,17 @@
 
     <parent>
         <groupId>de.team33.patterns</groupId>
-        <artifactId>patterns</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <artifactId>patterns-parent</artifactId>
+        <version>1.6.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>exceptional-01</artifactId>
     <packaging>jar</packaging>
 
     <name>Team33 Exceptional Library - Edition 1</name>
-    <description>Contains variants of basic functional constructs that can throw checked exceptions</description>
+    <description>Contains variants of basic functional constructs that can throw checked exceptions,
+        tools for converting them to their more manageable counterparts, exception types useful for this,
+        and some tools for exception handling.</description>
 
     <dependencies>
         <dependency>

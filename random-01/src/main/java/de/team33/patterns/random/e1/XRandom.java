@@ -11,7 +11,11 @@ import java.util.stream.Stream;
  * <p>
  * It is primarily intended as a random generator.
  * For certain purposes, however, there can also be deterministic implementations.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>random-tarvos</em>.
  */
+@Deprecated
 @FunctionalInterface
 public interface XRandom extends BitFactory {
 
@@ -165,11 +169,11 @@ public interface XRandom extends BitFactory {
     default String anyString(final int length, final Supplier<Character> supplier) {
         if (0 <= length) {
             return Stream.generate(supplier)
-                         .limit(length)
-                         .collect(StringBuilder::new,
-                                  StringBuilder::append,
-                                  StringBuilder::append)
-                         .toString();
+                    .limit(length)
+                    .collect(StringBuilder::new,
+                            StringBuilder::append,
+                            StringBuilder::append)
+                    .toString();
         }
         throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
     }

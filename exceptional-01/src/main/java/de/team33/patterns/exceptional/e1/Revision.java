@@ -25,13 +25,13 @@ import java.util.function.Predicate;
  *                           .reThrow(IOException.class)
  *                           .reThrow(SQLException.class)
  *                           .reThrow(URISyntaxException.class)
- *                           .finish(ExpectationException::new);
+ *                           .close(ExpectationException::new);
  *         }
  * </pre>
  *
  * @see #of(Throwable)
  * @see #reThrow(Class)
- * @see #finish(Function)
+ * @see #close(Function)
  */
 public final class Revision<T extends Throwable> {
 
@@ -52,8 +52,8 @@ public final class Revision<T extends Throwable> {
     }
 
     /**
-     * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} and throws the
-     * result if the given {@link Predicate condition} applies. Otherwise this {@link Revision} will be returned.
+     * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} if the given
+     * {@link Predicate condition} applies and throws the result, otherwise this {@link Revision} will be returned.
      *
      * @param condition A {@link Predicate} that is used to check the {@linkplain #of(Throwable) associated exception}
      *                  for applicability.
@@ -66,16 +66,37 @@ public final class Revision<T extends Throwable> {
      */
     public final <X extends Throwable> Revision<T> throwIf(final Predicate<? super T> condition,
                                                            final Function<? super T, X> mapping) throws X {
+        return throwIf(condition, mapping, this);
+    }
+
+    /**
+     * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} if the given
+     * {@link Predicate condition} applies and throws the result, otherwise a given result will be returned.
+     *
+     * @param condition A {@link Predicate} that is used to check the {@linkplain #of(Throwable) associated exception}
+     *                  for applicability.
+     * @param mapping   A {@link Function} that converts the {@linkplain #of(Throwable) associated exception} to a
+     *                  specific type of exception to be thrown at that point.
+     * @param result    A predefined regular result in case the condition is not true.
+     * @param <R>       The result type in case of a regular result.
+     * @param <X>       The exception type that is intended as a result of the given mapping and that is thrown by this
+     *                  method, if applicable.
+     * @return The predefined result.
+     * @throws X The converted exception, if present.
+     */
+    public final <R, X extends Throwable> R throwIf(final Predicate<? super T> condition,
+                                                    final Function<? super T, X> mapping,
+                                                    final R result) throws X {
         if (condition.test(subject)) {
             throw mapping.apply(subject);
         } else {
-            return this;
+            return result;
         }
     }
 
     /**
      * Rethrows the {@linkplain #of(Throwable) associated exception} if it matches the given exception type.
-     * Otherwise this {@link Revision} will be returned. Example:
+     * Otherwise, this {@link Revision} will be returned. Example:
      * <pre>
      *         try {
      *             return somethingThatMayCauseAWrappedException();
@@ -84,7 +105,7 @@ public final class Revision<T extends Throwable> {
      *                           .reThrow(IOException.class)
      *                           .reThrow(SQLException.class)
      *                           .reThrow(URISyntaxException.class)
-     *                           .finish(ExpectationException::new);
+     *                           .close(ExpectationException::new);
      *         }
      * </pre>
      *
@@ -93,24 +114,55 @@ public final class Revision<T extends Throwable> {
      * @return This {@link Revision}, which can be continued if no exception has been thrown.
      * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
      * @see #of(Throwable)
-     * @see #finish(Function)
+     * @see #close(Function)
      */
     public final <X extends Throwable> Revision<T> reThrow(final Class<X> xClass) throws X {
-        return throwIf(xClass::isInstance, xClass::cast);
+        return reThrow(xClass, this);
     }
 
     /**
-     * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} and returns the
-     * result.
+     * Rethrows the {@linkplain #of(Throwable) associated exception} if it matches the given exception type,
+     * otherwise a given result will be returned.
+     *
+     * @param xClass The {@link Class} that represents the type of exception that is expected.
+     * @param result A predefined regular result in case the exception is not of that type.
+     * @param <R>    The result type in case of a regular result.
+     * @param <X>    The type of exception that is expected and, if applicable, thrown by this method.
+     * @return The predefined result.
+     * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
      */
-    public final <R> R finish(final Function<? super T, R> mapping) {
+    public final <R, X extends Throwable> R reThrow(final Class<X> xClass, final R result) throws X {
+        return throwIf(xClass::isInstance, xClass::cast, result);
+    }
+
+    /**
+     * Completes this revision, applies a given {@link Function mapping} to the
+     * {@linkplain #of(Throwable) associated exception}, and returns its result.
+     */
+    public final <R> R close(final Function<? super T, R> mapping) {
         return mapping.apply(subject);
     }
 
     /**
-     * Returns the {@linkplain #of(Throwable) associated exception}.
+     * Completes this revision and returns the {@linkplain #of(Throwable) associated exception} unchanged.
      */
-    public final T finish() {
+    public final T close() {
         return subject;
+    }
+
+    /**
+     * @deprecated use {@link #close(Function)} instead!
+     */
+    @Deprecated
+    public final <R> R finish(final Function<? super T, R> mapping) {
+        return close(mapping);
+    }
+
+    /**
+     * @deprecated use {@link #close()} instead!
+     */
+    @Deprecated
+    public final T finish() {
+        return close();
     }
 }
