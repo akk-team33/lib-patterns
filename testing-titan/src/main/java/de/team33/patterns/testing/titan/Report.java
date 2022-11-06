@@ -91,8 +91,13 @@ public final class Report<R> {
         return this;
     }
 
-    public final Report<R> reThrowAny() throws Throwable {
+    @SuppressWarnings("ProhibitedExceptionDeclared")
+    public final Report<R> reThrowAny() throws Exception {
         return reThrow(Error.class).reThrow(Exception.class);
+    }
+
+    public final int size() {
+        return results.size();
     }
 
     @SuppressWarnings("UnusedReturnValue")

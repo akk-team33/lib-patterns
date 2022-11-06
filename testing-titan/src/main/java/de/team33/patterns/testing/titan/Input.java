@@ -25,9 +25,15 @@ public class Input {
      */
     public final int operationIndex;
 
-    public Input(final int threadIndex, final int executionIndex, final int operationIndex) {
+    /**
+     * The index of the operation loop within one execution;
+     */
+    public final int loopIndex;
+
+    public Input(final int threadIndex, final int executionIndex, final int operationIndex, final int loopIndex) {
         this.threadIndex = threadIndex;
         this.executionIndex = executionIndex;
         this.operationIndex = operationIndex;
+        this.loopIndex = loopIndex;
     }
 }
