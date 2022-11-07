@@ -12,6 +12,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -20,95 +23,94 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ParallelTest extends Random {
 
     private static final Operation<Input> OPERATION = input -> {
-        System.out.printf("threadIndex: %d, executionIndex: %d, operationIndex: %d, loopIndex: %d%n",
-                          input.threadIndex, input.executionIndex, input.operationIndex, input.loopIndex);
+        System.out.printf("threadIndex: %d, operationIndex: %d, loopIndex: %d%n",
+                          input.threadIndex, input.operationIndex, input.loopIndex);
         return input;
     };
 
-    private static class Maxima {
-
-        private int threadIndex = Integer.MIN_VALUE;
-        private int executionIndex = Integer.MIN_VALUE;
-        private int operationIndex = Integer.MIN_VALUE;
-        private int loopIndex = Integer.MIN_VALUE;
-
-        final void add(final Input input) {
-            threadIndex = Math.max(threadIndex, input.threadIndex);
-            executionIndex = Math.max(executionIndex, input.executionIndex);
-            operationIndex = Math.max(operationIndex, input.operationIndex);
-            loopIndex = Math.max(loopIndex, input.loopIndex);
-        }
-
-        final void add(final Maxima other) {
-            threadIndex = Math.max(threadIndex, other.threadIndex);
-            executionIndex = Math.max(executionIndex, other.executionIndex);
-            operationIndex = Math.max(operationIndex, other.operationIndex);
-            loopIndex = Math.max(loopIndex, other.loopIndex);
-        }
-    }
-
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144})
-    final void byThreads(final int numberOfThreads) throws Throwable {
+    final void byThreads(final int numberOfThreads) throws Exception {
+        final Set<Integer> expectedThreadIndices = IntStream.range(0, numberOfThreads)
+                                                            .boxed()
+                                                            .collect(Collectors.toSet());
         final Report<Input> report = Parallel.report(numberOfThreads, OPERATION)
                                              .reThrowAny();
-//        assertEquals(numberOfThreads, report.stream().mapToInt(input -> input.threadIndex).distinct().count());
-//        assertEquals(numberOfThreads, report.stream().mapToInt(input -> input.executionIndex).distinct().count());
-        assertEquals(report.size(), report.stream().mapToInt(input -> input.operationIndex).distinct().count());
-        final Maxima maxima = report.stream()
-                                    .collect(Maxima::new, Maxima::add, Maxima::add);
-        assertEquals(numberOfThreads - 1, maxima.threadIndex);
-        assertEquals(numberOfThreads - 1, maxima.executionIndex);
-        assertTrue((numberOfThreads - 1) <= maxima.operationIndex);
-        assertTrue(0 <= maxima.loopIndex);
+        assertEquals(expectedThreadIndices,
+                     report.stream().map(input -> input.threadIndex).collect(Collectors.toSet()),
+                     "Each started thread is expected to have performed the given operation at least once, " +
+                             "so the number of different thread indices included in the result must exactly " +
+                             "match the number of started threads.");
+
+        final Set<Integer> expectedOperationIndices = IntStream.range(0, report.size())
+                                                               .boxed()
+                                                               .collect(Collectors.toSet());
+        assertEquals(expectedOperationIndices,
+                     report.stream().map(result -> result.operationIndex).collect(Collectors.toSet()),
+                     "It is expected that each performed operation has been assigned a unique index, " +
+                             "so the number of operation indices contained in the result must exactly match the " +
+                             "number of individual results.");
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144})
     final void byThreads_minNumberOfOperations(final int numberOfThreads) throws Exception {
-        final int minNumberOfOperations = numberOfThreads + nextInt(100);
+        final int minNumberOfOperations = numberOfThreads + nextInt(1000);
+        final Set<Integer> expectedThreadIndices = IntStream.range(0, numberOfThreads)
+                                                            .boxed()
+                                                            .collect(Collectors.toSet());
         final Condition condition = Condition.byThreads(numberOfThreads, minNumberOfOperations);
-        final Maxima maxima = Parallel.stream(condition, OPERATION)
-                                      .collect(Maxima::new, Maxima::add, Maxima::add);
-        assertEquals(numberOfThreads - 1, maxima.threadIndex);
-        assertEquals(numberOfThreads - 1, maxima.executionIndex);
-        assertTrue((minNumberOfOperations - 1) <= maxima.operationIndex);
+        final Report<Input> report = Parallel.report(condition, OPERATION)
+                                             .reThrowAny();
+        assertEquals(expectedThreadIndices,
+                     report.stream().map(input -> input.threadIndex).collect(Collectors.toSet()),
+                     "Each started thread is expected to have performed the given operation at least once, " +
+                             "so the number of different thread indices included in the result must exactly " +
+                             "match the number of started threads.");
+
+        final Set<Integer> expectedOperationIndices = IntStream.range(0, report.size())
+                                                               .boxed()
+                                                               .collect(Collectors.toSet());
+        assertEquals(expectedOperationIndices,
+                     report.stream().map(input -> input.operationIndex).collect(Collectors.toSet()),
+                     "It is expected that each performed operation has been assigned a unique index, " +
+                             "so the number of operation indices contained in the result must exactly match the " +
+                             "number of individual results.");
+        assertTrue(minNumberOfOperations <= expectedOperationIndices.size(),
+                   () -> String.format("The operation is expected to have been performed at least the specified " +
+                                               "number of times (%d) - but was %d",
+                                       minNumberOfOperations, expectedOperationIndices.size()));
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144})
-    final void byThreads_maxNumberOfOperations(final int numberOfThreads) throws Exception {
-        final Condition condition = Condition.byOperations(numberOfThreads, numberOfThreads);
-        final Maxima maxima = Parallel.stream(condition, OPERATION)
-                                      .collect(Maxima::new, Maxima::add, Maxima::add);
-        assertTrue(numberOfThreads >= maxima.threadIndex);
-        assertTrue(numberOfThreads >= maxima.executionIndex);
-        assertEquals(numberOfThreads - 1, maxima.operationIndex);
-    }
+    @ValueSource(ints = {0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144})
+    final void byOperations(final int numberOfOperations) throws Exception {
+        final int numberOfThreads = 1 + nextInt(1 + numberOfOperations);
+        final Condition condition = Condition.byOperations(numberOfOperations, numberOfThreads);
+        final Report<Input> report = Parallel.report(condition, OPERATION)
+                                             .reThrowAny();
+        assertEquals(numberOfOperations, report.size(),
+                     "The operation is expected to have been performed the specified number of times, " +
+                             "so there should be as many results in the end.");
+        final Set<Integer> expectedOperationIndices = IntStream.range(0, numberOfOperations)
+                                                               .boxed()
+                                                               .collect(Collectors.toSet());
+        assertEquals(expectedOperationIndices,
+                     report.stream().map(input -> input.operationIndex).collect(Collectors.toSet()),
+                     "It is expected that each performed operation has been assigned a unique index, " +
+                             "so the number of operation indices contained in the result must exactly match the " +
+                             "number of individual results.");
+        assertEquals(numberOfOperations, expectedOperationIndices.size());
 
-    @RepeatedTest(16)
-    final void report_minNumberOfOperations() {
-        final int minNumberOfOperations = 1 + nextInt(100);
-        final Report<Input> report = Parallel.report(Condition.byThreads(1, minNumberOfOperations), OPERATION);
-        final int maxIndexOfOperations = report.stream()
-                                               .mapToInt(input -> input.operationIndex)
-                                               .reduce(Integer.MIN_VALUE, Math::max);
-        assertEquals(minNumberOfOperations - 1, maxIndexOfOperations);
-
-        report.stream()
-              .forEach(input -> {
-                  assertEquals(0, input.threadIndex);
-                  assertEquals(0, input.executionIndex);
-              });
-    }
-
-    @RepeatedTest(16)
-    final void stream_numberOfThreads() throws Exception {
-        final int numberOfThreads = 1 + nextInt(100);
-        final int maxExecutionIndex = Parallel.stream(numberOfThreads, OPERATION)
-                                              .mapToInt(input -> input.executionIndex)
-                                              .reduce(Integer.MIN_VALUE, Math::max);
-        assertEquals(numberOfThreads - 1, maxExecutionIndex);
+        final Set<Integer> expectedThreadIndices = IntStream.range(0, numberOfThreads)
+                                                            .boxed()
+                                                            .collect(Collectors.toSet());
+        final Set<Integer> threadsThatOperated = report.stream()
+                                                       .map(result -> result.threadIndex)
+                                                       .collect(Collectors.toSet());
+        assertTrue(expectedThreadIndices.containsAll(threadsThatOperated),
+                   () -> "");
+        assertTrue(threadsThatOperated.size() <= numberOfOperations);
     }
 
     @Test

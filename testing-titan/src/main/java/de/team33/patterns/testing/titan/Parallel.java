@@ -18,7 +18,6 @@ public final class Parallel<R> {
     private final List<Thread> threads;
     private final Report.Builder<R> report = new Report.Builder<>();
     private final AtomicInteger operationCounter = new AtomicInteger(0);
-    private final AtomicInteger executionCounter = new AtomicInteger(0);
 
     private Parallel(final Condition condition, final Operation<R> operation) {
         this.minNumberOfOperations = condition.getMinNumberOfOperations();
@@ -87,21 +86,17 @@ public final class Parallel<R> {
         return new Thread(newRunnable(threadIndex, operation), this + ":" + threadIndex);
     }
 
-    private int nextOpIndex() {
-        return operationCounter.getAndIncrement();
-    }
-
-    private boolean maintain(final int opIndex, final int loopIndex) {
+    private boolean maintain(final int loopIndex) {
+        final int opIndex = operationCounter.get();
         return (opIndex < maxNumberOfOperations) && ((0 == loopIndex) || (opIndex < minNumberOfOperations));
     }
 
     @SuppressWarnings({"BoundedWildcard", "OverlyBroadCatchBlock"})
     private Runnable newRunnable(final int threadIndex, final Operation<R> operation) {
         return () -> {
-            final int executionIndex = executionCounter.getAndIncrement();
-            for (int i = nextOpIndex(), k = 0; maintain(i, k); i = nextOpIndex(), ++k) {
+            for (int i = 0; maintain(i); ++i) {
                 try {
-                    report.add(operation.operate(new Input(threadIndex, executionIndex, i, k)));
+                    report.add(operation.operate(new Input(threadIndex, operationCounter.getAndIncrement(), i)));
                 } catch (final Throwable e) {
                     report.add(e);
                 }
