@@ -31,6 +31,7 @@ public class Trip<R, G, B> extends Tuple {
         return blue;
     }
 
+    @Override
     public final List<Object> toList() {
         return Arrays.asList(red, green, blue);
     }
