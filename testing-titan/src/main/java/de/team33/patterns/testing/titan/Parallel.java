@@ -9,36 +9,24 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 /**
- * A tool/utility to execute an {@link Operation} multiple times in parallel for test purposes.
+ * A tool/utility used to perform a given operation multiple times in parallel threads, with a fixed number
+ * of executing threads. Each thread performs the operation at least once and repeats it until all intended
+ * threads have effectively started.
+ * <p>
+ * The operation is given unique context information each time it is executed, showing an assignment to the
+ * executing thread, the absolute start order, and repetition within the executing thread.
  */
 public final class Parallel<R> {
 
-    private final int minNumberOfOperations;
-    private final int maxNumberOfOperations;
-    private final List<Thread> threads;
     private final Report.Builder<R> report = new Report.Builder<>();
+    private final AtomicInteger threadCounter = new AtomicInteger(0);
     private final AtomicInteger operationCounter = new AtomicInteger(0);
+    private final List<Thread> threads;
 
-    private Parallel(final Condition condition, final Operation<R> operation) {
-        this.minNumberOfOperations = condition.getMinNumberOfOperations();
-        this.maxNumberOfOperations = condition.getMaxNumberOfOperations();
-        this.threads = unmodifiableList(IntStream.range(0, condition.getNumberOfThreads())
+    private Parallel(final int numberOfThreads, final Operation<R> operation) {
+        this.threads = unmodifiableList(IntStream.range(0, numberOfThreads)
                                                  .mapToObj(threadIndex -> newThread(threadIndex, operation))
                                                  .collect(toList()));
-    }
-
-    /**
-     * Returns a {@link Report} after executing a particular operation multiple times in parallel.
-     *
-     * @param condition The {@link Condition} under which the operation should be performed.
-     * @param operation The operation to be performed.
-     * @param <R>       The type of result of the operation to be performed.
-     * @see #report(int, Operation)
-     */
-    public static <R> Report<R> report(final Condition condition, final Operation<R> operation) {
-        return new Parallel<R>(condition, operation).startThreads()
-                                                    .joinThreads()
-                                                    .report();
     }
 
     /**
@@ -47,25 +35,11 @@ public final class Parallel<R> {
      * @param numberOfThreads The number of parallel threads in which the operation should be performed.
      * @param operation       The operation to be performed.
      * @param <R>             The type of result of the operation to be performed.
-     * @see #report(Condition, Operation)
      */
     public static <R> Report<R> report(final int numberOfThreads, final Operation<R> operation) {
-        return report(Condition.byThreads(numberOfThreads), operation);
-    }
-
-    /**
-     * Returns a {@link Stream} of results after executing a particular operation multiple times in parallel.
-     *
-     * @param condition The number of parallel threads in which the operation should be performed.
-     * @param operation The operation to be performed.
-     * @param <R>       The type of result of the operation to be performed.
-     * @throws Exception If any Exception occurs while executing the Operation
-     */
-    @SuppressWarnings("ProhibitedExceptionDeclared")
-    public static <R> Stream<R> stream(final Condition condition, final Operation<R> operation) throws Exception {
-        return report(condition, operation).reThrow(Error.class)
-                                           .reThrow(Exception.class)
-                                           .stream();
+        return new Parallel<R>(numberOfThreads, operation).startThreads()
+                                                          .joinThreads()
+                                                          .report();
     }
 
     /**
@@ -78,25 +52,23 @@ public final class Parallel<R> {
      */
     @SuppressWarnings("ProhibitedExceptionDeclared")
     public static <R> Stream<R> stream(final int numberOfThreads, final Operation<R> operation) throws Exception {
-        return stream(Condition.byThreads(numberOfThreads), operation);
+        return report(numberOfThreads, operation).reThrow(Error.class)
+                                                 .reThrow(Exception.class)
+                                                 .stream();
     }
 
     private Thread newThread(final int threadIndex, final Operation<R> operation) {
         //noinspection ObjectToString
-        return new Thread(newRunnable(threadIndex, operation), this + ":" + threadIndex);
-    }
-
-    private boolean maintain(final int loopIndex) {
-        final int opIndex = operationCounter.get();
-        return (opIndex < maxNumberOfOperations) && ((0 == loopIndex) || (opIndex < minNumberOfOperations));
+        return new Thread(newRunnable(operation), this + ":" + threadIndex);
     }
 
     @SuppressWarnings({"BoundedWildcard", "OverlyBroadCatchBlock"})
-    private Runnable newRunnable(final int threadIndex, final Operation<R> operation) {
+    private Runnable newRunnable(final Operation<R> operation) {
         return () -> {
-            for (int i = 0; maintain(i); ++i) {
+            final int threadIndex = threadCounter.getAndIncrement();
+            for (int loop = 0; (loop == 0) || (threadCounter.get() < threads.size()); ++loop) {
                 try {
-                    report.add(operation.operate(new Input(threadIndex, operationCounter.getAndIncrement(), i)));
+                    report.add(operation.operate(new Context(threadIndex, operationCounter.getAndIncrement(), loop)));
                 } catch (final Throwable e) {
                     report.add(e);
                 }
