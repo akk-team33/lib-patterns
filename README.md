@@ -3,7 +3,8 @@ Team33 Patterns Library Collection
 
 ## Artifacts
 
-* testing-01 (Team33 Testing Library - Edition 1)
+* testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
+* testing-titan (Team33 Testing Library - Edition "titan")
 * production-01 (Team33 Production Library - Edition 1)
 * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
 * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
