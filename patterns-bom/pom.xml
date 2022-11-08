@@ -65,6 +65,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-narvi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>
                 <version>${project.version}</version>
             </dependency>

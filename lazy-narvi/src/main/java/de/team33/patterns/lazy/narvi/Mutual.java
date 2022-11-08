@@ -2,17 +2,16 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.e1.XSupplier;
 
-@SuppressWarnings("BoundedWildcard")
 class Mutual<T, X extends Exception> {
 
     @SuppressWarnings("PackageVisibleField")
-    volatile XSupplier<T, X> backing;
+    volatile XSupplier<? extends T, ? extends X> backing;
 
-    Mutual(final XSupplier<T, X> initial) {
+    Mutual(final XSupplier<? extends T, ? extends X> initial) {
         this.backing = initiation(initial);
     }
 
-    private XSupplier<T, X> initiation(final XSupplier<T, X> initial) {
+    private XSupplier<T, X> initiation(final XSupplier<? extends T, ? extends X> initial) {
         return new XSupplier<T, X>() {
             private final Object monitor = new Object();
 
