@@ -5,6 +5,8 @@ import de.team33.patterns.testing.titan.Parallel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -33,6 +35,18 @@ class XLazyTest {
     final void getSame() throws InterruptedException {
         assertSame(lazy.get(), lazy.get(),
                    "If <lazy> is evaluated several times, the result must always be the same.");
+    }
+
+    @Test
+    final void getSame_parallel() throws Exception {
+        final List<Date> results = Parallel.stream(16, ignored -> lazy.get())
+                                           .collect(Collectors.toList());
+        results.forEach(left -> {
+            results.forEach(right -> {
+                assertSame(left, right,
+                           "If <lazy> is evaluated several times in parallel, the result must always be the same.");
+            });
+        });
     }
 
     @Test
