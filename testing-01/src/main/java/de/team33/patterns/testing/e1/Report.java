@@ -14,7 +14,11 @@ import static java.util.Collections.unmodifiableList;
  * A report of multiple executions of a method.
  *
  * @param <R> The type of result of the method to be run.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>testing-titan</em>.
  */
+@Deprecated
 public final class Report<R> {
 
     private final List<R> results;

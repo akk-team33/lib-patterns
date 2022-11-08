@@ -26,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>testing-01</artifactId>
+            <artifactId>testing-titan</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
