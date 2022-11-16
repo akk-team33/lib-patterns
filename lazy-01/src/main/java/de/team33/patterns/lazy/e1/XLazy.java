@@ -11,7 +11,11 @@ import de.team33.patterns.exceptional.e1.XSupplier;
  * initialization attempt causes an exception.
  * <p>
  * Once the value is established, unnecessary effort to synchronize competing accesses is avoided.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>lazy-narvi</em>.
  */
+@Deprecated
 public class XLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
 
     /**

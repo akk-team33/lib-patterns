@@ -14,14 +14,16 @@ import java.util.function.Supplier;
  * <p>
  * *Pure read accesses are of course not really competing.
  */
-public class Lazy<T> extends Mutual<T, RuntimeException> {
+public class Lazy<T> {
+
+    private volatile Supplier<T> backing;
 
     /**
      * Initializes a new instance giving a supplier that defines the intended initialization of the
      * represented value.
      */
     public Lazy(final Supplier<? extends T> initial) {
-        super(initial::get);
+        this.backing = new Initial(initial);
     }
 
     /**
@@ -30,5 +32,25 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
      */
     public final T get() {
         return backing.get();
+    }
+
+    private class Initial implements Supplier<T> {
+
+        private final Supplier<? extends T> initial;
+
+        private Initial(final Supplier<? extends T> initial) {
+            this.initial = initial;
+        }
+
+        @Override
+        public final T get() {
+            synchronized (this) {
+                if (backing == this) {
+                    final T result = initial.get();
+                    backing = () -> result;
+                }
+            }
+            return backing.get();
+        }
     }
 }

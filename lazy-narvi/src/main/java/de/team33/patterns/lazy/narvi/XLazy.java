@@ -2,6 +2,8 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.e1.XSupplier;
 
+import java.util.function.Supplier;
+
 /**
  * Implements a kind of supplier that provides a virtually fixed value.
  * That value is only actually determined when it is accessed for the first time.
@@ -14,14 +16,16 @@ import de.team33.patterns.exceptional.e1.XSupplier;
  * <p>
  * *Pure read accesses are of course not really competing.
  */
-public class XLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
+public class XLazy<T, X extends Exception> {
+
+    private volatile XSupplier<T, X> backing;
 
     /**
      * Initializes a new instance giving a supplier that defines the intended initialization of the
      * represented value.
      */
     public XLazy(final XSupplier<? extends T, ? extends X> initial) {
-        super(initial);
+        this.backing = new Initial(initial);
     }
 
     /**
@@ -30,8 +34,27 @@ public class XLazy<T, X extends Exception> extends Mutual<T, X> implements XSupp
      *
      * @throws X if the {@linkplain #XLazy(XSupplier) originally defined initialization code} throws one.
      */
-    @Override
     public final T get() throws X {
         return backing.get();
+    }
+
+    private class Initial implements XSupplier<T, X> {
+
+        private final XSupplier<? extends T, ? extends X> initial;
+
+        private Initial(final XSupplier<? extends T, ? extends X> initial) {
+            this.initial = initial;
+        }
+
+        @Override
+        public final T get() throws X {
+            synchronized (this) {
+                if (backing == this) {
+                    final T result = initial.get();
+                    backing = () -> result;
+                }
+            }
+            return backing.get();
+        }
     }
 }
