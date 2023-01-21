@@ -52,6 +52,7 @@
         <module>expiry-tethys</module>
         <module>tuple-janus</module>
         <module>properties-01</module>
+        <module>building-elara</module>
         <module>patterns-bom</module>
     </modules>
 
@@ -106,6 +107,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>properties-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>building-elara</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
