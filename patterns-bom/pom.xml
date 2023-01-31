@@ -75,6 +75,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>reflect-luna</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>expiry-tethys</artifactId>
                 <version>${project.version}</version>
             </dependency>
