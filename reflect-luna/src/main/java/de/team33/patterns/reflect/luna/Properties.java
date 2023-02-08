@@ -32,12 +32,12 @@ public interface Properties<T> {
     /**
      * Returns a {@link Stream} of the values of all significant properties of an instance of the associated type.
      */
-    Stream<Object> stream(T origin);
+    Stream<Object> stream(T source);
 
     /**
      * Returns a {@link List} of the values of all significant properties of an instance of the associated type.
      */
-    default List<Object> list(T origin) {
-        return stream(origin).collect(Collectors.toList());
+    default List<Object> list(final T source) {
+        return stream(source).collect(Collectors.toList());
     }
 }

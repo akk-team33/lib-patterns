@@ -97,8 +97,8 @@ public final class Fields {
         }
 
         @Override
-        public final Stream<Object> stream(final T origin) {
-            return fields.stream().map(CNV.function(field -> getter.get(field, origin)));
+        public final Stream<Object> stream(final T source) {
+            return fields.stream().map(CNV.function(field -> getter.get(field, source)));
         }
     }
 
