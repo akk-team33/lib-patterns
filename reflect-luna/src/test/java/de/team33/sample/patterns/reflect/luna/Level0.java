@@ -1,5 +1,9 @@
 package de.team33.sample.patterns.reflect.luna;
 
+import de.team33.patterns.reflect.luna.Fields;
+import de.team33.patterns.reflect.luna.Properties;
+
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,6 +11,10 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("unused")
 public class Level0 {
+
+    private static final Fields.Getter<Level0> GETTER = (field, source) -> field.get(source);
+    private static final Fields.Setter<Level0> SETTER = (field, target, value) -> field.set(target, value);
+    private static final Properties<Level0> PROPS = Fields.properties(Level0.class, GETTER, SETTER);
 
     private int intValue;
     private Double doubleValue;
@@ -17,10 +25,7 @@ public class Level0 {
     }
 
     public Level0(final Level0 origin) {
-        this.intValue = origin.intValue;
-        this.doubleValue = origin.doubleValue;
-        this.instantValue = origin.instantValue;
-        this.stringValue = origin.stringValue;
+        PROPS.copy(origin, this);
     }
 
     public final int getIntValue() {
@@ -61,7 +66,7 @@ public class Level0 {
 
     @SuppressWarnings("DesignForExtension")
     protected Stream<Object> stream() {
-        return Stream.of(intValue, doubleValue, instantValue, stringValue);
+        return PROPS.stream(this);
     }
 
     public final List<Object> toList() {

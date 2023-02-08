@@ -1,5 +1,8 @@
 package de.team33.patterns.reflect.luna;
 
+import de.team33.patterns.exceptional.e1.Converter;
+import de.team33.patterns.exceptional.e1.Wrapping;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
@@ -13,18 +16,25 @@ import java.util.stream.Stream;
 
 public final class Fields {
 
+    private static final Converter CNV = Converter.using(Wrapping.method(IllegalStateException::new));
     private static final String DUPLICATED_NAME = "" +
-            "Two fields are not expected to have the same name!%n" +
-            "Affected are:%n" +
-            "   - %s%n" +
-            "   - %s%n";
+                                                  "Two fields are not expected to have the same name!%n" +
+                                                  "Affected are:%n" +
+                                                  "   - %s%n" +
+                                                  "   - %s%n";
     private static final BinaryOperator<Field> DENY_DUPLICATED = (left, right) -> {
         throw new IllegalStateException(String.format(DUPLICATED_NAME, left, right));
     };
+    private static final Collector<Field, ?, TreeMap<String, Field>> TO_MAP =
+            Collectors.toMap(Field::getName, Function.identity(), DENY_DUPLICATED, TreeMap::new);
     private static final Collector<Field, ?, List<Field>> TO_LIST =
             Collectors.toList();
-    public static final Collector<Field, ?, TreeMap<String, Field>> TO_MAP =
-            Collectors.toMap(Field::getName, Function.identity(), DENY_DUPLICATED, TreeMap::new);
+
+    public static <T> Properties<T> properties(final Class<T> subjectClass,
+                                               final Getter<T> getter,
+                                               final Setter<T> setter) {
+        return new PropertiesImpl<>(subjectClass, getter, setter);
+    }
 
     /**
      * Returns a {@link List} of all significant instance fields declared by a given class.
@@ -59,6 +69,39 @@ public final class Fields {
                      .filter(Filter::isSignificant);
     }
 
+    @FunctionalInterface
+    public interface Getter<T> {
+        Object get(Field field, T source) throws IllegalAccessException;
+    }
+
+    @FunctionalInterface
+    public interface Setter<T> {
+        void set(Field field, T target, Object value) throws IllegalAccessException;
+    }
+
+    private static class PropertiesImpl<T> implements Properties<T> {
+
+        private final List<Field> fields;
+        private final Getter<T> getter;
+        private final Setter<T> setter;
+
+        private PropertiesImpl(final Class<T> subjectClass, final Getter<T> getter, final Setter<T> setter) {
+            this.fields = listOf(subjectClass);
+            this.getter = getter;
+            this.setter = setter;
+        }
+
+        @Override
+        public final void copy(final T source, final T target, final Cloning cloning) {
+            fields.forEach(CNV.consumer(field -> setter.set(field, target, getter.get(field, source))));
+        }
+
+        @Override
+        public final Stream<Object> stream(final T origin) {
+            return fields.stream().map(CNV.function(field -> getter.get(field, origin)));
+        }
+    }
+
     private static final class Streaming {
 
         private static Stream<Field> flat(final Class<?> subjectClass) {
@@ -79,11 +122,14 @@ public final class Fields {
         private static final int SYNTHETIC = 0x00001000;
         private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
 
-        public static boolean isSignificant(Field field) {
+        private Filter() {
+        }
+
+        public static boolean isSignificant(final Field field) {
             return isSignificant(field.getModifiers());
         }
 
-        private static boolean isSignificant(int modifiers) {
+        private static boolean isSignificant(final int modifiers) {
             return 0 == (modifiers & NOT_SIGNIFICANT);
         }
     }

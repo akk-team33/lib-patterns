@@ -9,6 +9,8 @@ import java.util.function.UnaryOperator;
 
 public class Cloning {
 
+    public static final Cloning NOTHING = builder().build();
+
     private static final UnaryOperator<Object> IDENTITY = UnaryOperator.identity();
 
     @SuppressWarnings("rawtypes")

@@ -1,9 +1,16 @@
 package de.team33.sample.patterns.reflect.luna;
 
+import de.team33.patterns.reflect.luna.Fields;
+import de.team33.patterns.reflect.luna.Properties;
+
 import java.time.Instant;
 import java.util.stream.Stream;
 
 public class Level2 extends Level1 {
+
+    private static final Properties<Level2> PROPS = Fields.properties(Level2.class,
+                                                                      (field, source) -> field.get(source),
+                                                                      (field, target, value) -> field.set(target, value));
 
     private int intValue2;
     private Double doubleValue2;
@@ -16,10 +23,7 @@ public class Level2 extends Level1 {
     public Level2(final Level0 origin) {
         super(origin);
         if (origin instanceof Level2) {
-            this.intValue2 = ((Level2)origin).intValue2;
-            this.doubleValue2 = ((Level2)origin).doubleValue2;
-            this.instantValue2 = ((Level2)origin).instantValue2;
-            this.stringValue2 = ((Level2)origin).stringValue2;
+            PROPS.copy((Level2) origin, this);
         }
     }
 
@@ -62,6 +66,6 @@ public class Level2 extends Level1 {
     @SuppressWarnings("DesignForExtension")
     @Override
     protected Stream<Object> stream() {
-        return Stream.concat(super.stream(), Stream.of(intValue2, doubleValue2, instantValue2, stringValue2));
+        return Stream.concat(super.stream(), PROPS.stream(this));
     }
 }
