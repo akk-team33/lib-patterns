@@ -3,6 +3,7 @@ package de.team33.sample.patterns.reflect.luna;
 import de.team33.patterns.reflect.luna.Fields;
 import de.team33.patterns.reflect.luna.Properties;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,9 +12,7 @@ import java.util.stream.Stream;
 @SuppressWarnings("unused")
 public class Level0 {
 
-    private static final Fields.Getter<Level0> GETTER = (source, field) -> field.get(source);
-    private static final Fields.Setter<Level0> SETTER = (target, field, value) -> field.set(target, value);
-    private static final Properties<Level0> PROPS = Fields.properties(Level0.class, GETTER, SETTER);
+    private static final Properties<Level0> PROPS = Fields.properties(Level0.class, Level0::get0, Level0::set0);
 
     private int intValue;
     private Double doubleValue;
@@ -25,6 +24,14 @@ public class Level0 {
 
     public Level0(final Level0 origin) {
         PROPS.copy(origin, this);
+    }
+
+    private Object get0(final Field field) throws IllegalAccessException {
+        return field.get(this);
+    }
+
+    private void set0(final Field field, final Object value) throws IllegalAccessException {
+        field.set(this, value);
     }
 
     public final int getIntValue() {

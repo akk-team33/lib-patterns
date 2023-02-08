@@ -3,14 +3,13 @@ package de.team33.sample.patterns.reflect.luna;
 import de.team33.patterns.reflect.luna.Fields;
 import de.team33.patterns.reflect.luna.Properties;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.stream.Stream;
 
 public class Level2 extends Level1 {
 
-    private static final Properties<Level2> PROPS = Fields.properties(Level2.class,
-                                                                      (source, field) -> field.get(source),
-                                                                      (target, field, value) -> field.set(target, value));
+    private static final Properties<Level2> PROPS = Fields.properties(Level2.class, Level2::get2, Level2::set2);
 
     private int intValue2;
     private Double doubleValue2;
@@ -25,6 +24,14 @@ public class Level2 extends Level1 {
         if (origin instanceof Level2) {
             PROPS.copy((Level2) origin, this);
         }
+    }
+
+    private Object get2(final Field field) throws IllegalAccessException {
+        return field.get(this);
+    }
+
+    private void set2(final Field field, final Object value) throws IllegalAccessException {
+        field.set(this, value);
     }
 
     public final int getIntValue2() {
