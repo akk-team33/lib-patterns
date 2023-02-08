@@ -71,12 +71,12 @@ public final class Fields {
 
     @FunctionalInterface
     public interface Getter<T> {
-        Object get(Field field, T source) throws IllegalAccessException;
+        Object get(T source, Field field) throws IllegalAccessException;
     }
 
     @FunctionalInterface
     public interface Setter<T> {
-        void set(Field field, T target, Object value) throws IllegalAccessException;
+        void set(T target, Field field, Object value) throws IllegalAccessException;
     }
 
     private static class PropertiesImpl<T> implements Properties<T> {
@@ -93,12 +93,12 @@ public final class Fields {
 
         @Override
         public final void copy(final T source, final T target, final Cloning cloning) {
-            fields.forEach(CNV.consumer(field -> setter.set(field, target, getter.get(field, source))));
+            fields.forEach(CNV.consumer(field -> setter.set(target, field, getter.get(source, field))));
         }
 
         @Override
         public final Stream<Object> stream(final T source) {
-            return fields.stream().map(CNV.function(field -> getter.get(field, source)));
+            return fields.stream().map(CNV.function(field -> getter.get(source, field)));
         }
     }
 

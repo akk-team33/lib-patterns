@@ -9,8 +9,8 @@ import java.util.stream.Stream;
 public class Level2 extends Level1 {
 
     private static final Properties<Level2> PROPS = Fields.properties(Level2.class,
-                                                                      (field, source) -> field.get(source),
-                                                                      (field, target, value) -> field.set(target, value));
+                                                                      (source, field) -> field.get(source),
+                                                                      (target, field, value) -> field.set(target, value));
 
     private int intValue2;
     private Double doubleValue2;
