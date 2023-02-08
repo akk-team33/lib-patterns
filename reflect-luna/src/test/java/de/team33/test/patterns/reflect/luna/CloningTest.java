@@ -1,10 +1,7 @@
 package de.team33.test.patterns.reflect.luna;
 
 import de.team33.patterns.random.tarvos.Generator;
-import de.team33.sample.patterns.reflect.luna.CloneMapSample;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -14,10 +11,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static de.team33.sample.patterns.reflect.luna.CloneMapSample.*;
+import static de.team33.sample.patterns.reflect.luna.CloningSample.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-class CloneMapTest extends Random implements Generator {
+class CloningTest extends Random implements Generator {
 
     @Test
     final void testString() {

@@ -7,14 +7,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 
-public class CloneMap {
+public class Cloning {
 
     private static final UnaryOperator<Object> IDENTITY = UnaryOperator.identity();
 
     @SuppressWarnings("rawtypes")
     private final Map<Class, UnaryOperator> backing;
 
-    private CloneMap(final Builder builder) {
+    private Cloning(final Builder builder) {
         this.backing = Collections.unmodifiableMap(new HashMap<>(builder.backing));
     }
 
@@ -39,8 +39,8 @@ public class CloneMap {
             };
         }
 
-        public final CloneMap build() {
-            return new CloneMap(this);
+        public final Cloning build() {
+            return new Cloning(this);
         }
     }
 }
