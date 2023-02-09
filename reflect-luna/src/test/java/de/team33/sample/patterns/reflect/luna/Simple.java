@@ -1,28 +1,25 @@
 package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
-import de.team33.patterns.reflect.luna.Properties;
 
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
 
 @SuppressWarnings("unused")
-public class Level0 {
+public class Simple {
 
-    private static final Fields FIELDS = Fields.of(Level0.class);
+    private static final Fields FIELDS = Fields.of(Simple.class);
 
     private int intValue;
     private Double doubleValue;
     private Instant instantValue;
     private String stringValue;
 
-    public Level0() {
+    public Simple() {
     }
 
-    public Level0(final Level0 source) {
+    public Simple(final Simple source) {
         FIELDS.forEach(field -> field.set(this, field.get(source)));
     }
 
@@ -30,7 +27,7 @@ public class Level0 {
         return intValue;
     }
 
-    public final Level0 setIntValue(final int intValue) {
+    public final Simple setIntValue(final int intValue) {
         this.intValue = intValue;
         return this;
     }
@@ -39,7 +36,7 @@ public class Level0 {
         return doubleValue;
     }
 
-    public final Level0 setDoubleValue(final Double doubleValue) {
+    public final Simple setDoubleValue(final Double doubleValue) {
         this.doubleValue = doubleValue;
         return this;
     }
@@ -48,7 +45,7 @@ public class Level0 {
         return instantValue;
     }
 
-    public final Level0 setInstantValue(final Instant instantValue) {
+    public final Simple setInstantValue(final Instant instantValue) {
         this.instantValue = instantValue;
         return this;
     }
@@ -57,23 +54,22 @@ public class Level0 {
         return stringValue;
     }
 
-    public final Level0 setStringValue(final String stringValue) {
+    public final Simple setStringValue(final String stringValue) {
         this.stringValue = stringValue;
         return this;
     }
 
-    @SuppressWarnings("DesignForExtension")
-    protected Stream<Object> stream() {
-        return FIELDS.map(field -> field.get(this));
+    public final List<Object> toList() {
+        return FIELDS.mapToList(field -> field.get(this));
     }
 
-    public final List<Object> toList() {
-        return stream().collect(Collectors.toList());
+    public final Map<String, Object> toMap() {
+        return FIELDS.mapToMap(field -> field.get(this));
     }
 
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Level0) && toList().equals(((Level0) obj).toList()));
+        return (this == obj) || ((obj instanceof Simple) && toList().equals(((Simple) obj).toList()));
     }
 
     @Override
