@@ -1,8 +1,8 @@
-package de.team33.test.patterns.reflect.beta;
+package de.team33.test.patterns.reflect.luna;
 
 import de.team33.patterns.random.tarvos.Generator;
-import de.team33.patterns.reflect.beta.Fields;
-import de.team33.sample.patterns.reflect.beta.Simple;
+import de.team33.patterns.reflect.luna.Fields;
+import de.team33.sample.patterns.reflect.luna.Simple;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class SimpleTest extends Random implements Generator {
 
-    private static final Fields<Simple> FAILING = Fields.of(Simple.class, (simple, field) -> field.get(simple));
+    private static final Fields FOREIGN_FIELDS = Fields.of(Simple.class);
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -40,15 +40,13 @@ class SimpleTest extends Random implements Generator {
         final Simple source = nextSimple();
         final Simple result = new Simple();
         assertThrows(Fields.AccessException.class,
-                     () -> FAILING.forEach(field -> field.set(result, field.get(source))));
+                     () -> FOREIGN_FIELDS.forEach(field -> field.set(result, field.get(source))));
     }
 
     @Test
     final void readAccess_failing() {
         final Simple origin = nextSimple();
-        assertThrows(Fields.AccessException.class, () -> FAILING.map(field -> field.get(origin)).count());
-        assertThrows(Fields.AccessException.class, () -> FAILING.toList(origin));
-        assertThrows(Fields.AccessException.class, () -> FAILING.toMap(origin));
+        assertThrows(Fields.AccessException.class, () -> FOREIGN_FIELDS.map(field -> field.get(origin)).count());
     }
 
     @Test

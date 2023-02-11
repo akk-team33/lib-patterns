@@ -2,11 +2,14 @@ package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"FieldNotUsedInToString", "CopyConstructorMissesField"})
 public class Simple {
 
     private static final Fields FIELDS = Fields.of(Simple.class);
@@ -60,11 +63,16 @@ public class Simple {
     }
 
     public final List<Object> toList() {
-        return FIELDS.mapToList(field -> field.get(this));
+        return FIELDS.map(field -> field.get(this)).collect(Collectors.toList());
     }
 
     public final Map<String, Object> toMap() {
-        return FIELDS.mapToMap(field -> field.get(this));
+        return FIELDS.map(this::newEntry)
+                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private Map.Entry<String, Object> newEntry(final Field field) throws IllegalAccessException {
+        return new AbstractMap.SimpleEntry<>(field.getName(), field.get(this));
     }
 
     @Override

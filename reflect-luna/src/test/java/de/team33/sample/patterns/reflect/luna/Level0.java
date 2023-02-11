@@ -1,9 +1,7 @@
 package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
-import de.team33.patterns.reflect.luna.Properties;
 
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
