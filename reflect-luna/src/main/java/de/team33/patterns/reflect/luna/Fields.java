@@ -66,7 +66,7 @@ public class Fields {
      *     // declare some instance fields ...
      *
      *     public DataObject(final DataObject source) {
-     *         FIELDS.forEach(field -> field.set(this, field.get(source)));
+     *         FIELDS.forEach(field -&gt; field.set(this, field.get(source)));
      *     }
      *
      *     // ...
