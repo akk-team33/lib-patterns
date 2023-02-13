@@ -74,16 +74,14 @@ public class Fields {
      * </pre>
      * <p>
      * Note: Access to the value of a field using {@link Field#get(Object)} and {@link Field#set(Object, Object)}
-     * is also possible without any problems for non-public or private fields if the accessing code resides in the
-     * context of the field's declaring class.
+     * is also possible without any problems for non-public fields if the accessing code resides in the context
+     * of the field's declaring class.
      *
-     * @return {@code this} itself, which can mostly be ignored.
-     * @throws AccessException If an {@link IllegalAccessException} is thrown during the operation.
+     * @throws AccessException If an {@link IllegalAccessException} is thrown during the given operation.
      */
-    public final Fields forEach(final XConsumer<? super Field, IllegalAccessException> operation)
+    public final void forEach(final XConsumer<? super Field, IllegalAccessException> operation)
             throws AccessException {
         fields.forEach(CNV.consumer(operation));
-        return this;
     }
 
 
