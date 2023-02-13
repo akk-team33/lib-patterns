@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-parent</artifactId>
-    <version>1.7.1-SNAPSHOT</version>
+    <version>1.8.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Parent</name>
@@ -51,6 +51,7 @@
         <module>pooling-01</module>
         <module>expiry-tethys</module>
         <module>tuple-janus</module>
+        <module>reflect-luna</module>
         <module>properties-01</module>
         <module>building-elara</module>
         <module>patterns-bom</module>
@@ -97,6 +98,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>tuple-janus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>reflect-luna</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

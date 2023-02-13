@@ -13,6 +13,7 @@ Team33 Patterns Library Collection
 * lazy-01 (Team33 Lazy Initialization Library - Edition 1)
 * pooling-01 (Team33 Pooling Library - Edition 1)
 * tuple-janus (Team33 Tuple Library - Edition "janus")
+* reflect-luna (Team33 Reflection Library - Edition "luna")
 * expiry-tethys (Team33 Expiration Library - Edition "tethys")
 * properties-01 (Team33 Properties Library - Edition 1)
 * building-elara (Team33 Building Library - Edition "elara")
