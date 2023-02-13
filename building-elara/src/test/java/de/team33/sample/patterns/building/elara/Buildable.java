@@ -1,39 +1,30 @@
 package de.team33.sample.patterns.building.elara;
 
 import de.team33.patterns.building.elara.Mutable;
-import de.team33.patterns.exceptional.e1.Converter;
-import de.team33.patterns.exceptional.e1.Wrapping;
+import de.team33.patterns.reflect.luna.Fields;
 
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Buildable {
 
-    private static final Converter CONVERTER = Converter.using(Wrapping.method(IllegalStateException::new));
-    private static final List<Field> FIELDS = Stream.of(Buildable.class.getDeclaredFields())
-                                                    .filter(Fields::significant)
-                                                    .collect(Collectors.toList());
+    private static final Fields FIELDS = Fields.of(Buildable.class);
 
     private int intValue;
     private Double doubleValue;
     private Instant instantValue;
     private String stringValue;
 
-    public Buildable(final int intValue,
-                     final Double doubleValue,
-                     final Instant instantValue,
-                     final String stringValue) {
-        this.intValue = intValue;
-        this.doubleValue = doubleValue;
-        this.instantValue = instantValue;
-        this.stringValue = stringValue;
+    @SuppressWarnings("CopyConstructorMissesField")
+    private Buildable(final Buildable origin) {
+        if (null != origin) {
+            FIELDS.forEach(field -> field.set(this, field.get(origin)));
+        }
     }
 
-    public Buildable(final Buildable origin) {
-        FIELDS.forEach(CONVERTER.consumer(field -> field.set(this, field.get(origin))));
+    public static Builder builder() {
+        return new Builder(null);
     }
 
     public final int getIntValue() {
@@ -53,8 +44,7 @@ public class Buildable {
     }
 
     public final List<Object> toList() {
-        return FIELDS.stream()
-                     .map(CONVERTER.function(field -> field.get(this)))
+        return FIELDS.map(field -> field.get(this))
                      .collect(Collectors.toList());
     }
 
@@ -73,10 +63,14 @@ public class Buildable {
         return toList().toString();
     }
 
+    public Builder toBuilder() {
+        return new Builder(this);
+    }
+
     public static final class Builder extends Mutable.Builder<Buildable, Builder> {
 
-        private Builder() {
-            super(new Buildable(0, null, null, null), Builder.class);
+        private Builder(final Buildable origin) {
+            super(new Buildable(origin), Builder.class);
         }
 
         public final Builder setIntValue(final int value) {

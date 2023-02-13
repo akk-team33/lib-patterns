@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-parent</artifactId>
-        <version>1.7.1-SNAPSHOT</version>
+        <version>1.8.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>building-elara</artifactId>
@@ -15,15 +15,20 @@
     <description>Classes and utilities for implementing and handling builders.</description>
 
     <!-- test wise ... -->
-    <properties>
+    <!--properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-    </properties>
+    </properties-->
 
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>reflect-luna</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
