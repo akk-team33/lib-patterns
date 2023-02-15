@@ -4,13 +4,12 @@ import de.team33.patterns.lazy.narvi.Lazy;
 import de.team33.patterns.testing.titan.Parallel;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LazyTest {
 
@@ -65,5 +64,13 @@ class LazyTest {
         Parallel.report(100, ignored -> lazy.get())
                 .reThrowAny();
         assertEquals(1, counter);
+    }
+
+    @Test
+    final void exceptional() throws Exception {
+        final Lazy<Object> lazy = Lazy.init(Lazy.supplier(() -> {
+            throw new SQLException("this is a test");
+        }));
+        assertThrows(Lazy.InitException.class, () -> lazy.get());
     }
 }

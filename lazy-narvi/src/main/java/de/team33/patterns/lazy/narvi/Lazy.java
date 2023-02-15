@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  */
 public class Lazy<T> {
 
-    private static final Converter CNV = Converter.using(LazyException::new);
+    private static final Converter CNV = Converter.using(InitException::new);
 
     private volatile Supplier<T> backing;
 
@@ -39,9 +39,9 @@ public class Lazy<T> {
 
     /**
      * Wrappes an initialization code that may throw a checked exception into a normal {@link Supplier}
-     *
+     * <p>
      * Wraps initialization code that might throw a checked exception in a 'normal' {@link Supplier},
-     * which in turn wraps such an exception in a {@link LazyException} (an unchecked exception).
+     * which in turn wraps such an exception in a {@link InitException} (an unchecked exception).
      *
      * @param <T> The result type of the initialisation code.
      */
@@ -74,6 +74,17 @@ public class Lazy<T> {
                 }
             }
             return backing.get();
+        }
+    }
+
+    /**
+     * An unchecked exception type that may be thrown, when the initialization code of a {@link Lazy} instance
+     * causes a checked exception.
+     */
+    public static class InitException extends RuntimeException {
+
+        private InitException(Throwable cause) {
+            super(cause.getMessage(), cause);
         }
     }
 }
