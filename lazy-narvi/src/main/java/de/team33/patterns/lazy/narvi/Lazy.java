@@ -1,5 +1,8 @@
 package de.team33.patterns.lazy.narvi;
 
+import de.team33.patterns.exceptional.e1.Converter;
+import de.team33.patterns.exceptional.e1.XSupplier;
+
 import java.util.function.Supplier;
 
 /**
@@ -16,14 +19,34 @@ import java.util.function.Supplier;
  */
 public class Lazy<T> {
 
+    private static final Converter CNV = Converter.using(LazyException::new);
+
     private volatile Supplier<T> backing;
 
-    /**
-     * Initializes a new instance giving a supplier that defines the intended initialization of the
-     * represented value.
-     */
-    public Lazy(final Supplier<? extends T> initial) {
+    private Lazy(final Supplier<? extends T> initial) {
         this.backing = new Initial(initial);
+    }
+
+    /**
+     * Returns a new {@link Lazy} instance giving a supplier that defines the intended initialization of the
+     * represented value.
+     *
+     * @param <T> The result type of the initialisation code.
+     */
+    public static <T> Lazy<T> init(final Supplier<? extends T> initial) {
+        return new Lazy<>(initial);
+    }
+
+    /**
+     * Wrappes an initialization code that may throw a checked exception into a normal {@link Supplier}
+     *
+     * Wraps initialization code that might throw a checked exception in a 'normal' {@link Supplier},
+     * which in turn wraps such an exception in a {@link LazyException} (an unchecked exception).
+     *
+     * @param <T> The result type of the initialisation code.
+     */
+    public static <T> Supplier<T> supplier(final XSupplier<T, ?> xSupplier) {
+        return CNV.supplier(xSupplier);
     }
 
     /**

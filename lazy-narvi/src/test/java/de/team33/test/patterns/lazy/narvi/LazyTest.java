@@ -5,6 +5,8 @@ import de.team33.patterns.testing.titan.Parallel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -16,16 +18,11 @@ class LazyTest {
             "Although <lazy> already exists, the date <zero> must be smaller than the (first) evaluation of <lazy>";
 
     private int counter = 0;
-    private final Lazy<Date> lazy = new Lazy<>(() -> {
-        try {
-            counter += 1;
-            Thread.sleep(1);
-            return new Date();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-    });
+    private final Lazy<Date> lazy = Lazy.init(Lazy.supplier(() -> {
+        counter += 1;
+        Thread.sleep(1);
+        return new Date();
+    }));
 
     @Test
     final void getFirst() throws InterruptedException {
@@ -38,6 +35,19 @@ class LazyTest {
     final void getSame() {
         assertSame(lazy.get(), lazy.get(),
                    "If <lazy> is evaluated several times, the result must always be the same.");
+    }
+
+    @SuppressWarnings("CodeBlock2Expr")
+    @Test
+    final void getSame_parallel() throws Exception {
+        final List<Date> results = Parallel.stream(16, ignored -> lazy.get())
+                                           .collect(Collectors.toList());
+        results.forEach(left -> {
+            results.forEach(right -> {
+                assertSame(left, right,
+                           "If <lazy> is evaluated several times in parallel, the result must always be the same.");
+            });
+        });
     }
 
     @Test
