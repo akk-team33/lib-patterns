@@ -5,6 +5,7 @@ import de.team33.patterns.reflect.luna.Fields;
 import java.time.Instant;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class Level1 extends Level0 {
 
     private static final Fields FIELDS = Fields.of(Level1.class);

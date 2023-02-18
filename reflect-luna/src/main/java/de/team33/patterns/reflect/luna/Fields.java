@@ -38,13 +38,14 @@ public class Fields {
     }
 
     /**
-     * Returns a new instance that includes all significant {@link Field}s declared by the given class.
+     * Returns a new instance that includes all significant* {@link Field}s declared by the given class.
      * <p>
-     * Fields that are not declared static, transient or synthetic* are considered significant.
+     * *Significant fields are those fields that are not declared <em>static</em>, <em>transient</em>,
+     * or <em>synthetic</em>**.
      * These are typically the fields that make up the "value" of a data object and as such should be considered when
      * implementing {@code equals()}, {@code hashCode()} and {@code toString()}.
      * <p>
-     * *A synthetically declared field can, for example, appear in a non-static inner class,
+     * **A synthetically declared field, for example, appears in a non-static inner class,
      * namely a reference to the instance of the outer class.
      */
     public static Fields of(final Class<?> subjectClass) {
@@ -53,8 +54,8 @@ public class Fields {
 
     /**
      * Performs a given operation on all contained fields.
-     * If the operation throws an {@link IllegalAccessException}, it's caught, wrapped as an {@link AccessException}
-     * (an unchecked exception), and rethrown.
+     * If the operation causes an {@link IllegalAccessException}, it's caught, wrapped as an unchecked
+     * {@link AccessException}, and rethrown.
      * <p>
      * In particular, this can be used to implement a copy operation or a copy constructor of a data object class,
      * example:
