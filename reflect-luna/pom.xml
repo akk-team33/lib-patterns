@@ -8,16 +8,21 @@
         <version>1.8.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>random-01</artifactId>
+    <artifactId>reflect-luna</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Randomization Library - Edition 1</name>
-    <description>Provides classes that support the random generation / initialization of virtually any type.</description>
+    <name>Team33 Reflection Library - Edition "luna"</name>
+    <description>Provides tools and utilities for reflections.</description>
 
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>production-01</artifactId>
+            <artifactId>exceptional-01</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>random-tarvos</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
