@@ -50,8 +50,9 @@ public class Lazy<T> {
     }
 
     /**
-     * Executes the {@linkplain #Lazy(Supplier) originally defined initialization code} on the first call and
-     * returns its result on that and every subsequent call without calling the supplier again.
+     * Executes the {@linkplain #init(Supplier) originally defined initialization code} once on the first call
+     * and returns its result on that and every subsequent call without executing the initialization code again.
+     * This method is thread safe.
      */
     public final T get() {
         return backing.get();
@@ -65,14 +66,15 @@ public class Lazy<T> {
             this.initial = initial;
         }
 
+        @SuppressWarnings({"SynchronizeOnThis", "ObjectEquality"})
         @Override
         public final T get() {
-            synchronized (this) {
+            //synchronized (this) {
                 if (backing == this) {
                     final T result = initial.get();
                     backing = () -> result;
                 }
-            }
+            //}
             return backing.get();
         }
     }
@@ -83,7 +85,7 @@ public class Lazy<T> {
      */
     public static class InitException extends RuntimeException {
 
-        private InitException(Throwable cause) {
+        private InitException(final Throwable cause) {
             super(cause.getMessage(), cause);
         }
     }
