@@ -15,7 +15,7 @@ class BuildableTest implements Generator {
     private final Random random = new Random();
 
     @Test
-    final void getIntValue() {
+    final void copyBuildable() {
         final Buildable expected = Buildable.builder()
                                             .setIntValue(nextInt())
                                             .setDoubleValue(nextDouble())

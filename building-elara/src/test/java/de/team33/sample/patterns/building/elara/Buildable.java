@@ -1,5 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
+import de.team33.patterns.building.elara.BuilderFrame;
 import de.team33.patterns.building.elara.Mutable;
 import de.team33.patterns.reflect.luna.Fields;
 
@@ -67,7 +68,7 @@ public class Buildable {
         return new Builder(this);
     }
 
-    public static final class Builder extends Mutable.Builder<Buildable, Builder> {
+    public static final class Builder extends BuilderFrame<Buildable, Builder> {
 
         private Builder(final Buildable origin) {
             super(new Buildable(origin), Builder.class);
@@ -90,7 +91,7 @@ public class Buildable {
         }
 
         public final Buildable build() {
-            return new Buildable(subject());
+            return build(Buildable::new);
         }
     }
 }

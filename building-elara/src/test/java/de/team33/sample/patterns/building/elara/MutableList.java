@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 
 @SuppressWarnings("unused")
-public final class MutableListSample {
+public final class MutableList {
 
-    private MutableListSample() {
+    private MutableList() {
     }
 
     public static <E, L extends List<E>> Builder<E, L, ?> builder(final L subject) {
@@ -17,7 +17,7 @@ public final class MutableListSample {
     }
 
     public static <E> Builder<E, List<E>, ?> add(final E element) {
-        return builder(MutableListSample.<E>newList()).add(element);
+        return builder(MutableList.<E>newList()).add(element);
     }
 
     private static <E> List<E> newList() {
@@ -26,7 +26,7 @@ public final class MutableListSample {
 
     @SuppressWarnings("ClassTooDeepInInheritanceTree")
     public static class Builder<E, L extends List<E>, B extends Builder<E, L, B>>
-            extends MutableCollectionSample.Builder<E, L, B> {
+            extends MutableCollection.Builder<E, L, B> {
 
         protected Builder(final L subject, final Class<B> builderClass) {
             super(subject, builderClass);

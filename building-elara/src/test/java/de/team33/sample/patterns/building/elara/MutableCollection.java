@@ -1,23 +1,25 @@
 package de.team33.sample.patterns.building.elara;
 
+import de.team33.patterns.building.elara.BuilderFrame;
 import de.team33.patterns.building.elara.Mutable;
 
 import java.util.Collection;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 @SuppressWarnings("unused")
-public final class MutableCollectionSample {
+public final class MutableCollection {
 
-    private MutableCollectionSample() {
+    private MutableCollection() {
     }
 
-    public static <E, L extends Collection<E>> Builder<E, L, ?> builder(final L subject) {
+    public static <E, C extends Collection<E>> Builder<E, C, ?> builder(final C subject) {
         return new Builder<>(subject, Builder.class);
     }
 
-    public static class Builder<E, L extends Collection<E>, B extends Builder<E, L, B>> extends Mutable.Builder<L, B> {
+    public static class Builder<E, C extends Collection<E>, B extends Builder<E, C, B>> extends BuilderFrame<C, B> {
 
-        protected Builder(final L subject, final Class<B> builderClass) {
+        protected Builder(final C subject, final Class<B> builderClass) {
             super(subject, builderClass);
         }
 
@@ -47,6 +49,10 @@ public final class MutableCollectionSample {
 
         public final B clear() {
             return setup(Collection::clear);
+        }
+
+        public final C build() {
+            return build(Function.identity());
         }
     }
 }
