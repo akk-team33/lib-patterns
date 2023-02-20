@@ -7,23 +7,35 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LazyTest {
 
 
     private final AtomicInteger counter = new AtomicInteger(0);
-    private final Lazy<Integer> lazy = Lazy.init(Lazy.supplier(() -> {
+    private final Supplier<Integer> initial = Lazy.supplier(() -> {
         // This operation should take a little time and give other threads a chance ...
         Thread.sleep(1);
         return counter.incrementAndGet();
-    }));
+    });
+    private final Lazy<Integer> lazy = Lazy.init(initial);
+    private final Supplier<Integer> badLazy = new Supplier<Integer>() {
+
+        private Integer value = null;
+        @Override
+        public Integer get() {
+            if (null == value) {
+                value = initial.get();
+            }
+            return value;
+        }
+    };
 
     /**
      * Ensures that the initial code associated with a {@link Lazy} instance is not executed until the
@@ -60,6 +72,16 @@ class LazyTest {
                                               .collect(Collectors.toList());
         final Integer expected = results.get(0);
         results.forEach(result -> assertSame(expected, result));
+    }
+
+    /**
+     * Cross-checking {@link #get_same_parallel()} using a bad lazy implementation.
+     */
+    @Test
+    final void get_same_parallel_badLazy() throws Exception {
+        final Set<Integer> results = Parallel.stream(100, ignored -> badLazy.get())
+                                             .collect(Collectors.toSet());
+        assertNotEquals(1, results.size());
     }
 
     /**
