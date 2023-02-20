@@ -28,6 +28,7 @@ class LazyTest {
     private final Supplier<Integer> badLazy = new Supplier<Integer>() {
 
         private Integer value = null;
+
         @Override
         public Integer get() {
             if (null == value) {
@@ -68,7 +69,7 @@ class LazyTest {
      */
     @Test
     final void get_same_parallel() throws Exception {
-        final List<Integer> results = Parallel.stream(100, ignored -> lazy.get())
+        final List<Integer> results = Parallel.stream(100, context -> lazy.get())
                                               .collect(Collectors.toList());
         final Integer expected = results.get(0);
         results.forEach(result -> assertSame(expected, result));
@@ -79,7 +80,7 @@ class LazyTest {
      */
     @Test
     final void get_same_parallel_badLazy() throws Exception {
-        final Set<Integer> results = Parallel.stream(100, ignored -> badLazy.get())
+        final Set<Integer> results = Parallel.stream(100, context -> badLazy.get())
                                              .collect(Collectors.toSet());
         assertNotEquals(1, results.size());
     }
