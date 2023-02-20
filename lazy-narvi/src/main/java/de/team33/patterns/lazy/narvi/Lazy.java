@@ -69,12 +69,12 @@ public class Lazy<T> {
         @SuppressWarnings({"SynchronizeOnThis", "ObjectEquality"})
         @Override
         public final T get() {
-            //synchronized (this) {
+            synchronized (this) {
                 if (backing == this) {
                     final T result = initial.get();
                     backing = () -> result;
                 }
-            //}
+            }
             return backing.get();
         }
     }
