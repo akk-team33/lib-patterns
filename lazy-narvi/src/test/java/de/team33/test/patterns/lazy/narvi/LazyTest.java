@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -19,18 +18,18 @@ class LazyTest {
 
 
     private final AtomicInteger counter = new AtomicInteger(0);
-    private final Supplier<Integer> initial = Lazy.supplier(() -> {
+    private final XSupplier<Integer, ?> initial = () -> {
         // This operation should take a little time and give other threads a chance ...
         Thread.sleep(1);
         return counter.incrementAndGet();
-    });
-    private final Lazy<Integer> lazy = Lazy.init(initial);
-    private final Supplier<Integer> badLazy = new Supplier<Integer>() {
+    };
+    private final Lazy<Integer> lazy = Lazy.initEx(initial);
+    private final XSupplier<Integer, ?> badLazy = new XSupplier<Integer, Exception>() {
 
         private Integer value = null;
 
         @Override
-        public Integer get() {
+        public Integer get() throws Exception {
             if (null == value) {
                 value = initial.get();
             }
@@ -79,21 +78,21 @@ class LazyTest {
      * Cross-checking {@link #get_same_parallel()} using a bad lazy implementation.
      */
     @Test
-    final void get_same_parallel_badLazy() throws Exception {
+    final void get_same_parallel_crossChecking_with_badLazy() throws Exception {
         final Set<Integer> results = Parallel.stream(100, context -> badLazy.get())
                                              .collect(Collectors.toSet());
         assertNotEquals(1, results.size());
     }
 
     /**
-     * Ensures that {@link Lazy#supplier(XSupplier)} encapsulates code so that any checked exception
+     * Ensures that {@link Lazy#initEx(XSupplier)} encapsulates code so that any checked exception
      * that is thrown is wrapped in an (unchecked) {@link Lazy.InitException}.
      */
     @Test
     final void exceptional() {
-        final Lazy<?> lazy = Lazy.init(Lazy.supplier(() -> {
+        final Lazy<?> lazy = Lazy.initEx(() -> {
             throw new SQLException("this is a test");
-        }));
+        });
         assertThrows(Lazy.InitException.class, lazy::get);
     }
 }

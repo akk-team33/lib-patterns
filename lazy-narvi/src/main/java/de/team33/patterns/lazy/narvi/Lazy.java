@@ -28,25 +28,26 @@ public class Lazy<T> {
     }
 
     /**
-     * Returns a new {@link Lazy} instance giving a supplier that defines the intended initialization of the
+     * Returns a new {@link Lazy} instance giving a {@link Supplier} that defines the intended initialization of the
      * represented value.
      *
      * @param <T> The result type of the initialisation code.
+     * @see #initEx(XSupplier)
      */
     public static <T> Lazy<T> init(final Supplier<? extends T> initial) {
         return new Lazy<>(initial);
     }
 
     /**
-     * Wrappes an initialization code that may throw a checked exception into a normal {@link Supplier}
-     * <p>
-     * Wraps initialization code that might throw a checked exception in a 'normal' {@link Supplier},
-     * which in turn wraps such an exception in a {@link InitException} (an unchecked exception).
+     * Returns a new {@link Lazy} instance giving an {@link XSupplier} that defines the intended initialization of the
+     * represented value. The initialization code may throw a checked exception. If so, it is caught, wrapped in an
+     * {@link InitException}, and rethrown.
      *
      * @param <T> The result type of the initialisation code.
+     * @see #init(Supplier)
      */
-    public static <T> Supplier<T> supplier(final XSupplier<T, ?> xSupplier) {
-        return CNV.supplier(xSupplier);
+    public static <T> Lazy<T> initEx(final XSupplier<? extends T, ?> initial) {
+        return init(CNV.supplier(initial));
     }
 
     /**
