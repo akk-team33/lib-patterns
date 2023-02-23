@@ -1,7 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
 import de.team33.patterns.building.elara.BuilderFrame;
-import de.team33.patterns.building.elara.Mutable;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -13,13 +12,32 @@ public final class MutableCollection {
     private MutableCollection() {
     }
 
-    public static <E, C extends Collection<E>> Builder<E, C, ?> builder(final C subject) {
-        return new Builder<>(subject, Builder.class);
+    public static <E, R extends Collection<E>> Builder<E, R, ?> builder(final Collection<E> subject,
+                                                                        final Function<Collection<E>, R> mapping) {
+        return new Builder<>(subject, mapping, Builder.class);
     }
 
-    public static class Builder<E, C extends Collection<E>, B extends Builder<E, C, B>> extends BuilderFrame<C, B> {
+    public static class Builder<E, R extends Collection<E>, B extends Builder<E, R, B>>
+            extends BuilderBase<E, Collection<E>, B> {
 
-        protected Builder(final C subject, final Class<B> builderClass) {
+        private final Function<Collection<E>, R> mapping;
+
+        protected Builder(final Collection<E> container,
+                          final Function<Collection<E>, R> mapping,
+                          final Class<B> builderClass) {
+            super(container, builderClass);
+            this.mapping = mapping;
+        }
+
+        public final R build() {
+            return build(mapping);
+        }
+    }
+
+    public static class BuilderBase<E, C extends Collection<E>, B extends BuilderBase<E, C, B>>
+            extends BuilderFrame<C, B> {
+
+        protected BuilderBase(final C subject, final Class<B> builderClass) {
             super(subject, builderClass);
         }
 
@@ -49,10 +67,6 @@ public final class MutableCollection {
 
         public final B clear() {
             return setup(Collection::clear);
-        }
-
-        public final C build() {
-            return build(Function.identity());
         }
     }
 }

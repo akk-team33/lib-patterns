@@ -26,7 +26,7 @@ public final class MutableList {
 
     @SuppressWarnings("ClassTooDeepInInheritanceTree")
     public static class Builder<E, L extends List<E>, B extends Builder<E, L, B>>
-            extends MutableCollection.Builder<E, L, B> {
+            extends MutableCollection.BuilderBase<E, L, B> {
 
         protected Builder(final L subject, final Class<B> builderClass) {
             super(subject, builderClass);
