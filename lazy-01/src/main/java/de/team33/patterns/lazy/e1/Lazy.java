@@ -11,7 +11,11 @@ import java.util.function.Supplier;
  * initialization attempt causes a {@link RuntimeException}.
  * <p>
  * Once the value is established, unnecessary effort to synchronize competing accesses is avoided.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>lazy-narvi</em>.
  */
+@Deprecated
 public class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
     /**

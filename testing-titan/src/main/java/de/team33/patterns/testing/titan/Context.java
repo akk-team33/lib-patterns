@@ -14,7 +14,7 @@ public class Context {
     public final int threadIndex;
 
     /**
-     * The index of the operation in the order of the effective beginning of its execution.
+     * The index of the operation in the order of the actual beginning of its execution.
      */
     public final int operationIndex;
 

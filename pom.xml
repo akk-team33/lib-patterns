@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-parent</artifactId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.9.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Parent</name>
@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <copyright.year>2022</copyright.year>
+        <copyright.year>2023</copyright.year>
         <skipHome>false</skipHome>
     </properties>
 
@@ -48,6 +48,7 @@
         <module>production-01</module>
         <module>random-01</module>
         <module>lazy-01</module>
+        <module>lazy-narvi</module>
         <module>pooling-01</module>
         <module>expiry-tethys</module>
         <module>tuple-janus</module>
@@ -88,6 +89,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>lazy-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-narvi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

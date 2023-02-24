@@ -8,11 +8,11 @@
         <version>1.9.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>pooling-01</artifactId>
+    <artifactId>lazy-narvi</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Pooling Library - Edition 1</name>
-    <description>Provides a simple pooling of "expensive", reusable but thread-sensitive instances.</description>
+    <name>Team33 Lazy Initialization Library - Edition "narvi"</name>
+    <description>Provides generic envelope classes that support lazy initialization</description>
 
     <dependencies>
         <dependency>
@@ -22,6 +22,11 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-titan</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

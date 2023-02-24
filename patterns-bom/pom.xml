@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-bom</artifactId>
-    <version>1.8.1-SNAPSHOT</version>
+    <version>1.9.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library BOM</name>
@@ -61,6 +61,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>lazy-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-narvi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

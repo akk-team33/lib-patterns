@@ -31,6 +31,9 @@ public final class Parallel<R> {
 
     /**
      * Returns a {@link Report} after executing a particular operation multiple times in parallel.
+     * <p>
+     * The operation is executed at least once by each of the designated threads and is repeated until all threads
+     * have actually started.
      *
      * @param numberOfThreads The number of parallel threads in which the operation should be performed.
      * @param operation       The operation to be performed.
@@ -44,6 +47,9 @@ public final class Parallel<R> {
 
     /**
      * Returns a {@link Stream} of results after executing a particular operation multiple times in parallel.
+     * <p>
+     * The operation is executed at least once by each of the designated threads and is repeated until all threads
+     * have actually started.
      *
      * @param numberOfThreads The number of parallel threads in which the operation should be performed.
      * @param operation       The operation to be performed.
