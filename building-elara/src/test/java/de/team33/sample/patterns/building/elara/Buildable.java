@@ -1,7 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
 import de.team33.patterns.building.elara.BuilderFrame;
-import de.team33.patterns.building.elara.Mutable;
 import de.team33.patterns.reflect.luna.Fields;
 
 import java.time.Instant;

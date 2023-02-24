@@ -13,7 +13,7 @@ import java.util.function.Function;
  * @param <B> The builder type: the effective type of the derived builder implementation,
  *            at least this type itself.
  */
-public abstract class BuilderFrame<C, B extends BuilderFrame<C, B>> {
+public class BuilderFrame<C, B extends BuilderFrame<C, B>> {
 
     private static final String ILLEGAL_BUILDER_CLASS =
             "<builderClass> is expected to represent <this> (%s) - but was %s";

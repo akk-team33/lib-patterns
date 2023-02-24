@@ -1,5 +1,5 @@
 /**
- * Classes and utilities for implementing and handling builders.
+ * Basic classes and concepts for builder implementations.
  *
  * @see <a href="https://de.wikipedia.org/wiki/Elara_(Mond)">Elara</a>
  */

@@ -15,7 +15,7 @@ class MutableCollectionTest {
     @Test
     void identity() {
         final List<String> original = new ArrayList<>();
-        final List<String> result = MutableCollection.builder(original)
+        final List<String> result = MutableCollection.builder(original, ArrayList::new)
                                                      .build();
         assertSame(original, result);
     }
@@ -23,7 +23,7 @@ class MutableCollectionTest {
     @Test
     void add() {
         final List<String> expected = Arrays.asList("a", "b", "c");
-        final List<String> result = MutableCollection.builder(new ArrayList<String>())
+        final List<String> result = MutableCollection.builder(new ArrayList<String>(), ArrayList::new)
                                                      .add(expected.get(0))
                                                      .add(expected.get(1))
                                                      .add(expected.get(2))
@@ -34,7 +34,7 @@ class MutableCollectionTest {
     @Test
     void remove() {
         final List<String> unexpected = Arrays.asList("a", "b", "c");
-        final List<String> result = MutableCollection.builder(new ArrayList<String>())
+        final List<String> result = MutableCollection.builder(new ArrayList<String>(), ArrayList::new)
                                                      .addAll(unexpected)
                                                      .remove(unexpected.get(0))
                                                      .remove(unexpected.get(1))
@@ -46,7 +46,7 @@ class MutableCollectionTest {
     @Test
     void addAll() {
         final List<String> expected = Arrays.asList("a", "b", "c");
-        final List<String> result = MutableCollection.builder(new ArrayList<String>())
+        final List<String> result = MutableCollection.builder(new ArrayList<String>(), ArrayList::new)
                                                      .addAll(expected)
                                                      .build();
         assertEquals(expected, result);
@@ -55,7 +55,7 @@ class MutableCollectionTest {
     @Test
     void removeAll() {
         final List<String> unexpected = Arrays.asList("a", "b", "c");
-        final List<String> result = MutableCollection.builder(new ArrayList<String>())
+        final List<String> result = MutableCollection.builder(new ArrayList<String>(), ArrayList::new)
                                                      .addAll(unexpected)
                                                      .addAll(unexpected)
                                                      .removeAll(unexpected)
