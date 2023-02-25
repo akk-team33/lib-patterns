@@ -40,8 +40,8 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> {
     /**
      * Applies the associated <em>container</em> to a given {@link Consumer} and returns {@code this}.
      */
-    @SuppressWarnings({"DesignForExtension", "unchecked"})
-    protected B setup(final Consumer<C> consumer) {
+    @SuppressWarnings("unchecked") // is actually checked in constructor
+    protected final B setup(final Consumer<C> consumer) {
         consumer.accept(container);
         return (B) this;
     }
@@ -54,8 +54,7 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> {
      *
      * @param <R> The result type.
      */
-    @SuppressWarnings("DesignForExtension")
-    protected <R> R build(final Function<C, R> function) {
+    protected final <R> R build(final Function<C, R> function) {
         return function.apply(container);
     }
 }

@@ -45,10 +45,11 @@ public final class Collecting {
             return setup(container -> container.addAll(elements));
         }
 
+        @SuppressWarnings("unchecked")
         public final B addAll(final Iterable<? extends E> elements) {
             return Optional.of(elements)
-                           .filter(Collection.class::isInstance)
-                           .map(Collection.class::cast)
+                           .filter(iterable -> iterable instanceof Collection)
+                           .map(iterable -> (Collection<E>) iterable)
                            .map(this::addAll)
                            .orElseGet(() -> addAll(StreamSupport.stream(elements.spliterator(), false)));
         }
