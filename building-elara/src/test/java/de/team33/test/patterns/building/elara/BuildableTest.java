@@ -1,35 +1,35 @@
 package de.team33.test.patterns.building.elara;
 
-import de.team33.patterns.random.tarvos.Generator;
 import de.team33.sample.patterns.building.elara.Buildable;
+import de.team33.sample.patterns.building.elara.Supply;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigInteger;
-import java.time.Instant;
-import java.util.Random;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 
-import static org.junit.jupiter.api.Assertions.*;
+class BuildableTest {
 
-class BuildableTest implements Generator {
-
-    private final Random random = new Random();
+    private static final Supply SUPPLY = new Supply();
 
     @Test
-    final void copyBuildable() {
-        final Buildable expected = Buildable.builder()
-                                            .setIntValue(nextInt())
-                                            .setDoubleValue(nextDouble())
-                                            .setInstantValue(Instant.now().plusSeconds(nextLong(-100000L, 100000L)))
-                                            .setStringValue(nextString(nextInt(24), "abc"))
-                                            .build();
-        final Buildable result = expected.toBuilder()
-                                         .build();
-        assertNotSame(expected, result);
-        assertEquals(expected, result);
+    final void toList() {
+        final Buildable sample = Buildable.builder().build();
+        assertEquals(4, sample.toList().size());
     }
 
-    @Override
-    public final BigInteger nextBits(final int numBits) {
-        return new BigInteger(numBits, random);
+    @Test
+    final void isolation() {
+        final Buildable origin = SUPPLY.nextBuildable();
+        final Buildable stage = origin.toBuilder()
+                                      .build();
+        assertNotSame(origin, stage, "<stage> is expected not to be the same instance as <origin>.");
+        assertEquals(origin, stage, "<stage> is still expected to be equal to <origin>.");
+
+        final Buildable result = stage.toBuilder()
+                                      .setStringValue(SUPPLY.nextString())
+                                      .build();
+        assertEquals(origin, stage, "<stage> is still expected to be equal to <origin>.");
+        assertNotEquals(stage, result, "<result> is not expected to be equal to <stage>.");
     }
 }
