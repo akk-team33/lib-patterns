@@ -1,6 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
-import de.team33.patterns.building.elara.BuilderFrame;
+import de.team33.patterns.building.elara.ProtoBuilder;
 
 import java.util.Collection;
 import java.util.function.Function;
@@ -35,7 +35,7 @@ public final class MutableCollection {
     }
 
     public static class BuilderBase<E, C extends Collection<E>, B extends BuilderBase<E, C, B>>
-            extends BuilderFrame<C, B> {
+            extends ProtoBuilder<C, B> {
 
         protected BuilderBase(final C subject, final Class<B> builderClass) {
             super(subject, builderClass);

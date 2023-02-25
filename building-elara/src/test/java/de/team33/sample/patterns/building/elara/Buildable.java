@@ -1,6 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
-import de.team33.patterns.building.elara.BuilderFrame;
+import de.team33.patterns.building.elara.ProtoBuilder;
 import de.team33.patterns.reflect.luna.Fields;
 
 import java.time.Instant;
@@ -67,7 +67,7 @@ public class Buildable {
         return new Builder(this);
     }
 
-    public static final class Builder extends BuilderFrame<Buildable, Builder> {
+    public static final class Builder extends ProtoBuilder<Buildable, Builder> {
 
         private Builder(final Buildable origin) {
             super(new Buildable(origin), Builder.class);
