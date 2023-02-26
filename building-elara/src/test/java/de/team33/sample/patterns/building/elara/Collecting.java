@@ -1,10 +1,12 @@
 package de.team33.sample.patterns.building.elara;
 
+import de.team33.patterns.building.elara.MutaBuilder;
 import de.team33.patterns.building.elara.ProtoBuilder;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -13,40 +15,31 @@ public final class Collecting {
     private Collecting() {
     }
 
-    public static <E, C extends Collection<E>> ReBuilder<E, C, ?> reBuilder(final C subject) {
-        return new ReBuilder<>(subject, ReBuilder.class);
-    }
+    public interface Setup<E, C extends Collection<E>, B>
+            extends de.team33.patterns.building.elara.Setup<C, B> {
 
-    public static class BuilderBase<E, C extends Collection<E>, B extends BuilderBase<E, C, B>>
-            extends ProtoBuilder<C, B> {
-
-        protected BuilderBase(final C container, final Class<B> builderClass) {
-            super(container, builderClass);
-        }
-
-        public final B add(final E element) {
+        default B add(final E element) {
             return setup(container -> container.add(element));
         }
 
-        @SafeVarargs
-        public final B add(final E first, final E second, final E... more) {
+        default B add(final E first, final E second, final E... more) {
             return addAll(Stream.concat(Stream.of(first, second), Stream.of(more)));
         }
 
-        public final B addAll(final Stream<? extends E> elements) {
+        default B addAll(final Stream<? extends E> elements) {
             return setup(container -> elements.forEach(container::add));
         }
 
-        public final B addAll(final E[] elements) {
+        default B addAll(final E[] elements) {
             return addAll(Stream.of(elements));
         }
 
-        public final B addAll(final Collection<? extends E> elements) {
+        default B addAll(final Collection<? extends E> elements) {
             return setup(container -> container.addAll(elements));
         }
 
         @SuppressWarnings("unchecked")
-        public final B addAll(final Iterable<? extends E> elements) {
+        default B addAll(final Iterable<? extends E> elements) {
             return Optional.of(elements)
                            .filter(iterable -> iterable instanceof Collection)
                            .map(iterable -> (Collection<E>) iterable)
@@ -54,20 +47,36 @@ public final class Collecting {
                            .orElseGet(() -> addAll(StreamSupport.stream(elements.spliterator(), false)));
         }
 
-        public final B clear() {
+        default B clear() {
             return setup(Collection::clear);
         }
     }
 
-    public static final class ReBuilder<E, C extends Collection<E>, B extends ReBuilder<E, C, B>>
-            extends BuilderBase<E, C, B> {
+    public static <E, S extends Collection<E>> Charger<E, S, ?> charger(final S subject) {
+        return new Charger<>(subject, Charger.class);
+    }
 
-        private ReBuilder(final C container, final Class<B> builderClass) {
-            super(container, builderClass);
+    public static class Charger<E, S extends Collection<E>, B extends Charger<E, S, B>>
+            extends ProtoBuilder<S, B> implements Setup<E, S, B> {
+
+        protected Charger(final S subject, final Class<B> builderClass) {
+            super(subject, builderClass);
         }
 
-        public final C build() {
+        public final S release() {
             return build(Function.identity());
+        }
+    }
+
+    public static <E, S extends Collection<E>> Builder<E, S, ?> builder(final Supplier<S> newResult) {
+        return new Builder<>(newResult, Builder.class);
+    }
+
+    public static class Builder<E, R extends Collection<E>, B extends Builder<E, R, B>>
+            extends MutaBuilder<R, B> implements Setup<E, R, B> {
+
+        protected Builder(final Supplier<R> newResult, final Class<B> builderClass) {
+            super(newResult, builderClass);
         }
     }
 }

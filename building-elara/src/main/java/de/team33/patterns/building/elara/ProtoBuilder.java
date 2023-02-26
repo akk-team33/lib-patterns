@@ -13,10 +13,7 @@ import java.util.function.Function;
  * @param <B> The builder type: the effective type of the derived builder implementation,
  *            at least this type itself.
  */
-public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> {
-
-    private static final String ILLEGAL_BUILDER_CLASS =
-            "<builderClass> is expected to represent <this> (%s) - but was %s";
+public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> implements Setup<C, B> {
 
     private final C container;
 
@@ -30,18 +27,17 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> {
      * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
      */
     protected ProtoBuilder(final C container, final Class<B> builderClass) {
-        if (builderClass.isAssignableFrom(getClass())) {
-            this.container = container;
-        } else {
-            throw new IllegalArgumentException(String.format(ILLEGAL_BUILDER_CLASS, getClass(), builderClass));
-        }
+        Building.ensureAssignable(builderClass, getClass());
+        this.container = container;
     }
 
     /**
-     * Applies the associated <em>container</em> to a given {@link Consumer} and returns {@code this}.
+     * Accepts a {@link Consumer} as modifying operation to be performed on the associated container instance
+     * and returns {@code this}.
      */
+    @Override
     @SuppressWarnings("unchecked") // is actually checked in constructor
-    protected final B setup(final Consumer<C> consumer) {
+    public final B setup(final Consumer<C> consumer) {
         consumer.accept(container);
         return (B) this;
     }
@@ -49,7 +45,7 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> {
     /**
      * Returns the result of the given {@code function} on which the associated container was applied.
      * <p>
-     * Be careful with the {@linkplain Function#identity() identity function} if the builder doesn't have a typical,
+     * Be careful with the {@linkplain Function#identity() identity function} if the builder doesn't have a
      * narrowly defined lifecycle.
      *
      * @param <R> The result type.
