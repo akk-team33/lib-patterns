@@ -17,7 +17,7 @@ import java.util.function.Supplier;
  *            That type is expected to be mutable.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-public class MutaBuilder<T, B extends MutaBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
+public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
 
     private final List<Consumer<T>> setups;
     private final Supplier<T> newResult;
@@ -29,7 +29,7 @@ public class MutaBuilder<T, B extends MutaBuilder<T, B>> extends BuilderBase<B> 
      * @param builderClass The {@link Class} representation of the intended effective builder type.
      * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
      */
-    protected MutaBuilder(final Supplier<T> newResult, final Class<B> builderClass) {
+    protected LateBuilder(final Supplier<T> newResult, final Class<B> builderClass) {
         super(builderClass);
         this.setups = new LinkedList<>();
         this.newResult = newResult;

@@ -1,12 +1,9 @@
 package de.team33.sample.patterns.building.elara;
 
-import de.team33.patterns.building.elara.Charger;
-import de.team33.patterns.building.elara.MutaBuilder;
-import de.team33.patterns.building.elara.ProtoBuilder;
+import de.team33.patterns.building.elara.LateBuilder;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -70,7 +67,7 @@ public final class Collecting {
     }
 
     public static class Builder<E, R extends Collection<E>, B extends Builder<E, R, B>>
-            extends MutaBuilder<R, B> implements Setup<E, R, B> {
+            extends LateBuilder<R, B> implements Setup<E, R, B> {
 
         protected Builder(final Supplier<R> newResult, final Class<B> builderClass) {
             super(newResult, builderClass);
