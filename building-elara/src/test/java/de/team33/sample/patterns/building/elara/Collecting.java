@@ -1,5 +1,6 @@
 package de.team33.sample.patterns.building.elara;
 
+import de.team33.patterns.building.elara.Charger;
 import de.team33.patterns.building.elara.MutaBuilder;
 import de.team33.patterns.building.elara.ProtoBuilder;
 
@@ -57,14 +58,10 @@ public final class Collecting {
     }
 
     public static class Charger<E, S extends Collection<E>, B extends Charger<E, S, B>>
-            extends ProtoBuilder<S, B> implements Setup<E, S, B> {
+            extends de.team33.patterns.building.elara.Charger<S, B> implements Setup<E, S, B> {
 
         protected Charger(final S subject, final Class<B> builderClass) {
             super(subject, builderClass);
-        }
-
-        public final S release() {
-            return build(Function.identity());
         }
     }
 

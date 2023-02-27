@@ -5,16 +5,23 @@ import de.team33.sample.patterns.building.elara.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CollectingTest {
 
     private static final Supply SUPPLY = new Supply();
+
+    @Test
+    final void lifecycle_Charger() {
+        final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.nextStringList(3));
+        charger.release();
+        assertThrows(IllegalStateException.class, () -> charger.add(SUPPLY.nextString()));
+    }
 
     @Test
     final void identity_Charger() {

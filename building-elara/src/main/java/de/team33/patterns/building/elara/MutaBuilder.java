@@ -3,57 +3,59 @@ package de.team33.patterns.building.elara;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
  * Serves as a base class for builder implementations {@code <B>} and as such provides a model that separates basic
- * builder concepts from the resulting data model {@code <R>}.
+ * builder concepts from the target data model {@code <T>}.
+ * <p>
+ * This implementation can be used as a base if instances of a target type are to be built that is itself mutable
+ * but does not itself implement a builder pattern. The builder initially only collects the modifying operations
+ * and only applies them to a newly created target instance with build().
  *
- * @param <R> The result type: an instance of that type is finally built.
+ * @param <T> The target type: an instance of that type is finally built.
  *            That type is expected to be mutable.
- * @param <B> The builder type: the effective type of the derived builder implementation,
- *            at least this type itself.
+ * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-public class MutaBuilder<R, B extends MutaBuilder<R, B>> implements Setup<R, B> {
+public class MutaBuilder<T, B extends MutaBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
 
-    private final List<Consumer<R>> consumers;
-    private final Supplier<R> newResult;
+    private final List<Consumer<T>> setups;
+    private final Supplier<T> newResult;
 
     /**
      * Initializes a new instance.
      *
      * @param newResult    A {@link Supplier} method to retrieve a new instance of the result type.
-     * @param builderClass The {@linkplain Class class representation} of the final builder type.
-     * @throws IllegalArgumentException if the specified builder class representation does not represent
-     *                                  the instance to be created.
+     * @param builderClass The {@link Class} representation of the intended effective builder type.
+     * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
      */
-    protected MutaBuilder(final Supplier<R> newResult, final Class<B> builderClass) {
-        Building.ensureAssignable(builderClass, getClass());
-        this.consumers = new LinkedList<>();
+    protected MutaBuilder(final Supplier<T> newResult, final Class<B> builderClass) {
+        super(builderClass);
+        this.setups = new LinkedList<>();
         this.newResult = newResult;
     }
 
     /**
-     * Accepts a {@link Consumer} as modifying operation to be performed on a new result instance
-     * while {@link #build()} and returns {@code this} builder itself.
+     * {@inheritDoc}
+     * <p>
+     * This implementation stores the given consumer in order to apply it to a newly created target during
+     * {@link #build()}.
      */
     @Override
-    @SuppressWarnings("unchecked") // is actually checked in constructor
-    public final B setup(final Consumer<R> consumer) {
-        consumers.add(consumer);
-        return (B) this;
+    public final B setup(final Consumer<T> consumer) {
+        setups.add(consumer);
+        return THIS();
     }
 
     /**
      * Returns the build result.
      */
-    public final R build() {
+    public final T build() {
         return build(newResult.get());
     }
 
-    private R build(final R result) {
-        for (final Consumer<R> consumer : consumers) {
+    private T build(final T result) {
+        for (final Consumer<T> consumer : setups) {
             consumer.accept(result);
         }
         return result;
