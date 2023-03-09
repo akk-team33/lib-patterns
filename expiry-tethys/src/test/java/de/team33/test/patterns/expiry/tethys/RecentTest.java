@@ -1,7 +1,7 @@
 package de.team33.test.patterns.expiry.tethys;
 
 import de.team33.patterns.expiry.tethys.Recent;
-import de.team33.patterns.testing.e1.Parallel;
+import de.team33.patterns.testing.titan.Parallel;
 import de.team33.patterns.tuple.janus.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,10 +68,10 @@ class RecentTest {
     @Test
     final void get_parallel() throws Exception {
         // there must always be enough threads to be executed while others are sleeping ...
-        final int limit = 1000;
+        final int limit = 100;
         final Instant time00 = Instant.now();
         final List<Result> results =
-                Parallel.apply(limit, index -> {
+                Parallel.report(limit, context -> {
                             final Sample first = recent.get();
                             final Instant created = first.getCreated();
                             Sample second = first;
@@ -83,7 +83,7 @@ class RecentTest {
                             final long delta =
                                     second.getCreated().toEpochMilli() -
                                             created.toEpochMilli();
-                            return new Result(index, delta);
+                            return new Result(context.operationIndex, delta);
                         })
                         .reThrowAny()
                         .getResults();

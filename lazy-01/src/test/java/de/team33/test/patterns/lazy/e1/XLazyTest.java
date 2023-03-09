@@ -1,7 +1,7 @@
 package de.team33.test.patterns.lazy.e1;
 
 import de.team33.patterns.lazy.e1.XLazy;
-import de.team33.patterns.testing.e1.Parallel;
+import de.team33.patterns.testing.titan.Parallel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -36,18 +36,19 @@ class XLazyTest {
     }
 
     @Test
-    final void getSequential() throws Throwable {
+    final void getSequential() throws Exception {
         assertEquals(0, counter);
-        Parallel.apply(100, 1, ignored -> lazy.get())
-                .reThrow(Throwable.class);
+        for (int i = 0; i < 100; i++) {
+            lazy.get();
+        }
         assertEquals(1, counter);
     }
 
     @Test
-    final void getParallel() throws Throwable {
+    final void getParallel() throws Exception {
         assertEquals(0, counter);
-        Parallel.apply(100, ignored -> lazy.get())
-                .reThrow(Throwable.class);
+        Parallel.report(100, ignored -> lazy.get())
+                .reThrowAny();
         assertEquals(1, counter);
     }
 }

@@ -1,0 +1,33 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-parent</artifactId>
+        <version>1.10.2-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>lazy-narvi</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Team33 Lazy Initialization Library - Edition "narvi"</name>
+    <description>Provides generic envelope classes that support lazy initialization</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>exceptional-01</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-titan</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

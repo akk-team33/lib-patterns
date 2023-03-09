@@ -11,7 +11,11 @@ import static java.util.stream.Collectors.toList;
 
 /**
  * A tool/utility to execute operations multiple times in parallel for test purposes.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>testing-titan</em>.
  */
+@Deprecated
 public final class Parallel<R> {
 
     private final List<Thread> threads;

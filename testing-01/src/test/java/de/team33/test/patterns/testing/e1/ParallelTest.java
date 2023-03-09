@@ -15,6 +15,11 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+/**
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor edition is the module <em>testing-titan</em>.
+ */
+@Deprecated
 class ParallelTest {
 
     @Test

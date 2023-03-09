@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-bom</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <version>1.10.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library BOM</name>
@@ -65,12 +65,22 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-narvi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>tuple-janus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>reflect-luna</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -85,7 +95,17 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>building-elara</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-titan</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

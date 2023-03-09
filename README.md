@@ -3,17 +3,21 @@ Team33 Patterns Library Collection
 
 ## Artifacts
 
-* testing-01 (Team33 Testing Library - Edition 1)
+* testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
+* testing-titan (Team33 Testing Library - Edition "titan")
 * production-01 (Team33 Production Library - Edition 1)
 * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
 * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
 * random-tarvos (Team33 Randomization Library - Edition "tarvos")
 * exceptional-01 (Team33 Exceptional Library - Edition 1)
-* lazy-01 (Team33 Lazy Initialization Library - Edition 1)
+* lazy-01 (Team33 Lazy Initialization Library - Edition 1) - **deprecated**
+* lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
 * pooling-01 (Team33 Pooling Library - Edition 1)
 * tuple-janus (Team33 Tuple Library - Edition "janus")
+* reflect-luna (Team33 Reflection Library - Edition "luna")
 * expiry-tethys (Team33 Expiration Library - Edition "tethys")
 * properties-01 (Team33 Properties Library - Edition 1)
+* building-elara (Team33 Building Library - Edition "elara")
 * features-rhea (Team33 Features Library - Edition "rhea")
 * patterns-bom (Team33 Patterns Library BOM)
 

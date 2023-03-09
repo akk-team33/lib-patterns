@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class WrappedExceptionTest {
 
@@ -18,6 +16,32 @@ class WrappedExceptionTest {
 
     private static String anyMessage() {
         return UUID.randomUUID().toString();
+    }
+
+    @Test
+    final void reThrowCauseIf() {
+        final Throwable cause = new IOException((String) null);
+        final WrappedException caught = new WrappedException(cause);
+
+        try {
+            caught.reThrowCauseIf(c -> c instanceof IOException, Function.identity());
+            fail("expected to fail");
+        } catch (final Throwable e) {
+            assertInstanceOf(IOException.class, e);
+        }
+    }
+
+    @Test
+    final void reThrowCauseAs() {
+        final Throwable cause = new IOException((String) null);
+        final WrappedException caught = new WrappedException(cause);
+
+        try {
+            caught.reThrowCauseAs(IOException.class);
+            fail("expected to fail");
+        } catch (final Throwable e) {
+            assertInstanceOf(IOException.class, e);
+        }
     }
 
     @Test
