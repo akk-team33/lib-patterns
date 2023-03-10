@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>patterns-home</artifactId>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <name>Team33 Patterns Library Home</name>
     <description>Team33 patterns library collection - documents home</description>
@@ -18,4 +18,17 @@
         <skipHome>true</skipHome>
         <skipDeploy>true</skipDeploy>
     </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/generated</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
+    </build>
 </project>

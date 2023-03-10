@@ -55,6 +55,50 @@
     </dependencyManagement>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-resources-home</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/../../patterns-home/src/main/generated/${project.artifactId}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${basedir}/../../patterns-home/src/main/template/module</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                                <skip>${skipHome}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>apidoc-resources-home</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/../../patterns-home/src/main/generated/${project.artifactId}/apidocs</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.directory}/apidocs</directory>
+                                        <filtering>false</filtering>
+                                    </resource>
+                                </resources>
+                                <skip>${skipHome}</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
