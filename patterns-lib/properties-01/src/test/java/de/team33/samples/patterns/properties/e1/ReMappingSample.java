@@ -34,7 +34,7 @@ public class ReMappingSample {
         return intProperty;
     }
 
-    public ReMappingSample setIntProperty(final int intProperty) {
+    public final ReMappingSample setIntProperty(final int intProperty) {
         this.intProperty = intProperty;
         return this;
     }
@@ -43,7 +43,7 @@ public class ReMappingSample {
         return stringProperty;
     }
 
-    public ReMappingSample setStringProperty(final String stringProperty) {
+    public final ReMappingSample setStringProperty(final String stringProperty) {
         this.stringProperty = stringProperty;
         return this;
     }
@@ -52,7 +52,7 @@ public class ReMappingSample {
         return Collections.unmodifiableList(listProperty);
     }
 
-    public ReMappingSample setListProperty(final List<Double> listProperty) {
+    public final ReMappingSample setListProperty(final List<Double> listProperty) {
         this.listProperty = listProperty;
         return this;
     }

@@ -6,7 +6,7 @@ public class Example {
 
     private static final Provider<Random> RANDOM = new Provider<>(Random::new);
 
-    public void apply() {
+    public final void apply() {
         final int anyInt = RANDOM.get(Random::nextInt);
         System.out.append("anyInt = ")
                   .println(anyInt);

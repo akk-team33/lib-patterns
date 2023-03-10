@@ -1,7 +1,5 @@
 package de.team33.patterns.building.elara;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 /**
@@ -12,7 +10,8 @@ import java.util.function.Consumer;
  * instance from the start and also be used as the result of the build process.
  * <p>
  * An instance of this builder type is limited to single use.
- * Once the terminating {@link #release} method has been used, subsequent calls to setup() throw an IllegalStateException.
+ * Once the terminating {@link #release} method has been used, subsequent calls to setup() throw an
+ * IllegalStateException.
  *
  * @param <T> The target type: an instance of that type is associated with the builder instance
  *            to hold the data to be collected during the build process.

@@ -14,32 +14,32 @@ import java.util.Random;
 public class Supply extends Random implements Generator, Charger {
 
     @Override
-    public BigInteger nextBits(int numBits) {
+    public final BigInteger nextBits(int numBits) {
         return new BigInteger(numBits, this);
     }
 
-    public Instant nextInstant() {
+    public final Instant nextInstant() {
         return Instant.now()
                       .plusSeconds(nextLong(-100000L, 100000L));
     }
 
-    public String nextString() {
+    public final String nextString() {
         return nextString(nextInt(0, 24), "abc");
     }
 
-    public Simple nextSimple() {
+    public final Simple nextSimple() {
         return charge(new Simple());
     }
 
-    public Level0 nextLevel0() {
+    public final Level0 nextLevel0() {
         return charge(new Level0());
     }
 
-    public Level1 nextLevel1() {
+    public final Level1 nextLevel1() {
         return charge(new Level1());
     }
 
-    public Level2 nextLevel2() {
+    public final Level2 nextLevel2() {
         return new Level2(nextLevel1()).setIntValue2(nextInt())
                                        .setDoubleValue2(nextDouble())
                                        .setInstantValue2(nextInstant())

@@ -6,7 +6,6 @@ import de.team33.patterns.properties.e1.Fields;
 import de.team33.patterns.properties.e1.Methods;
 import de.team33.patterns.properties.e1.ReMapping;
 import de.team33.test.patterns.properties.shared.AnyClass;
-import de.team33.test.patterns.properties.shared.MapMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 

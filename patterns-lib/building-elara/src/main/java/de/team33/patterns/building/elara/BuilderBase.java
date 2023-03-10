@@ -33,7 +33,7 @@ public class BuilderBase<B extends BuilderBase<B>> {
      * Returns <em>this</em> as an instance of the effective builder type {@code <B>}.
      */
     @SuppressWarnings("unchecked")
-    protected B THIS() {
+    protected final B THIS() {
         return (B) this;
     }
 }

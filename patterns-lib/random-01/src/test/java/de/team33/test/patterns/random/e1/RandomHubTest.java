@@ -79,7 +79,7 @@ class RandomHubTest {
     }
 
     @Test
-    void map() {
+    final void map() {
         final Map<String, Double> result = defaultHub.map(KEY_TOKEN, VALUE_TOKEN, 5);
         assertEquals(5, result.size());
         result.forEach((key, value) -> {

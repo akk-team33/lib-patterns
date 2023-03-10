@@ -63,7 +63,7 @@ public class Buildable {
         return toList().toString();
     }
 
-    public Builder toBuilder() {
+    public final Builder toBuilder() {
         return new Builder(this);
     }
 

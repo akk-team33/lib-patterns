@@ -8,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -27,7 +26,7 @@ class MethodsTest {
         final Set<String> expected = c.setters;
         final Set<String> result = Methods.publicSetters(c.subject)
                                           .map(Method::toGenericString)
-                                          .map(string -> string.replace(c.subject.getName(), c.subject.getSimpleName()))
+                                          .map(s -> s.replace(c.subject.getName(), c.subject.getSimpleName()))
                                           .collect(Collectors.toCollection(TreeSet::new));
         assertEquals(expected, result);
     }
@@ -38,7 +37,7 @@ class MethodsTest {
         final Set<String> expected = c.getters;
         final Set<String> result = Methods.publicGetters(c.subject)
                                           .map(Method::toGenericString)
-                                          .map(string -> string.replace(c.subject.getName(), c.subject.getSimpleName()))
+                                          .map(s -> s.replace(c.subject.getName(), c.subject.getSimpleName()))
                                           .collect(Collectors.toCollection(TreeSet::new));
         assertEquals(expected, result);
     }
@@ -86,13 +85,13 @@ class MethodsTest {
         )),
 
         RECORD(Record.class, emptyList(), asList(
-                "public boolean Record.booleanValue()",
+                "public final boolean Record.booleanValue()",
                 "public final java.util.List<java.lang.Object> Record.toList()",
-                "public int Record.intValue()",
-                "public java.lang.Long Record.longValue()",
-                "public java.lang.String Record.stringValue()",
-                "public java.util.List<java.lang.Long> Record.longList()",
-                "public java.util.List<java.lang.String> Record.stringList()"
+                "public final int Record.intValue()",
+                "public final java.lang.Long Record.longValue()",
+                "public final java.lang.String Record.stringValue()",
+                "public final java.util.List<java.lang.Long> Record.longList()",
+                "public final java.util.List<java.lang.String> Record.stringList()"
         ));
 
         private final Class<?> subject;

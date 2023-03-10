@@ -1,7 +1,5 @@
 package de.team33.test.patterns.reflect.luna;
 
-import de.team33.patterns.exceptional.e1.Conversion;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 

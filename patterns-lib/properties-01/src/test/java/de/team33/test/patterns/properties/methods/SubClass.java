@@ -31,26 +31,26 @@ public class SubClass extends BaseClass implements X2, X3 {
     }
 
     @Override
-    public String getSecond() {
+    public final String getSecond() {
         return second;
     }
 
     @Override
-    public void setSecond(final String value) {
+    public final void setSecond(final String value) {
         second = value;
     }
 
-    public BigDecimal getThird() {
+    public final BigDecimal getThird() {
         return BigDecimal.valueOf(3.141592654);
     }
 
     @Override
-    public void setThird(final Serializable value) {
+    public final void setThird(final Serializable value) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public void setThird(final Number value) {
+    public final void setThird(final Number value) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 }

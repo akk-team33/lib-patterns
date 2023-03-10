@@ -1,7 +1,6 @@
 package de.team33.patterns.production.e1;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import static java.lang.String.format;

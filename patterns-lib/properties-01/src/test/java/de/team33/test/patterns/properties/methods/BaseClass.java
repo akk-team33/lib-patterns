@@ -18,36 +18,40 @@ public class BaseClass implements X1 {
         return first;
     }
 
+    @SuppressWarnings("DesignForExtension")
     public BaseClass setFirst(final AbstractCollection<String> value) {
         first = new HashSet<>(value);
         return this;
     }
 
     @Override
-    public X1 setFirst(final Object value) {
+    public final X1 setFirst(final Object value) {
         //noinspection unchecked
         return setFirst((AbstractCollection<String>) value);
     }
 
+    @SuppressWarnings("DesignForExtension")
     @Override
     public String getSecond() {
         return second;
     }
 
+    @SuppressWarnings("DesignForExtension")
     public void setSecond(final String value) {
         second = value;
     }
 
+    @SuppressWarnings("DesignForExtension")
     public Comparable<?> getThird() {
         return CLASS_NAME;
     }
 
     @Override
-    public void setThird(final Object value) {
+    public final void setThird(final Object value) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 
-    public void setThird(final Comparable<?> value) {
+    public final void setThird(final Comparable<?> value) {
         throw new UnsupportedOperationException("not yet implemented");
     }
 }
