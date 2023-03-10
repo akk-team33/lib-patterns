@@ -68,7 +68,7 @@
                                 <goal>copy-resources</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>${basedir}/../../patterns-home/src/main/generated/${project.artifactId}</outputDirectory>
+                                <outputDirectory>${basedir}/../../target/home-collected/patterns-lib/${project.artifactId}</outputDirectory>
                                 <resources>
                                     <resource>
                                         <directory>${basedir}/../../patterns-home/src/main/template/module</directory>
@@ -85,7 +85,7 @@
                                 <goal>copy-resources</goal>
                             </goals>
                             <configuration>
-                                <outputDirectory>${basedir}/../../patterns-home/src/main/generated/${project.artifactId}/apidocs</outputDirectory>
+                                <outputDirectory>${basedir}/../../target/home-collected/patterns-lib/${project.artifactId}/apidocs</outputDirectory>
                                 <resources>
                                     <resource>
                                         <directory>${project.build.directory}/apidocs</directory>
