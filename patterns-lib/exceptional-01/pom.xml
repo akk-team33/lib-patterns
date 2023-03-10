@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.11.0-SNAPSHOT</version>
+        <version>1.11.0</version>
     </parent>
 
     <artifactId>exceptional-01</artifactId>
