@@ -67,12 +67,7 @@ public class Simple {
     }
 
     public final Map<String, Object> toMap() {
-        return FIELDS.map(this::newEntry)
-                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-    }
-
-    private Map.Entry<String, Object> newEntry(final Field field) throws IllegalAccessException {
-        return new AbstractMap.SimpleEntry<>(field.getName(), field.get(this));
+        return FIELDS.toMap(field -> field.get(this));
     }
 
     @Override
@@ -87,6 +82,6 @@ public class Simple {
 
     @Override
     public final String toString() {
-        return toList().toString();
+        return toMap().toString();
     }
 }

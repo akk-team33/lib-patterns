@@ -8,6 +8,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.BiConsumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -52,6 +56,10 @@ public class Fields {
         return new Fields(subjectClass);
     }
 
+    private static <V> BiConsumer<Map<String, V>, ? super Field> put(final Function<? super Field, V> function) {
+        return (map, field) -> map.put(field.getName(), function.apply(field));
+    }
+
     /**
      * Performs a given operation on all contained fields.
      * If the operation causes an {@link IllegalAccessException}, it's caught, wrapped as an unchecked
@@ -85,7 +93,6 @@ public class Fields {
         fields.forEach(CNV.consumer(operation));
     }
 
-
     /**
      * Returns a {@link Stream} of the results of a given mapping operation performed on each contained field.
      * If the operation throws an {@link IllegalAccessException}, it's caught, wrapped as an {@link AccessException}
@@ -97,6 +104,19 @@ public class Fields {
     public final <R> Stream<R> map(final XFunction<? super Field, R, IllegalAccessException> operation)
             throws AccessException {
         return fields.stream().map(CNV.function(operation));
+    }
+
+    /**
+     * Returns a {@link Map} composed of the names of the fields involved as keys and the results of the given
+     * mapping operation performed on each of the fields as values.
+     * If the operation throws an {@link IllegalAccessException}, it's caught, wrapped as an {@link AccessException}
+     * (an unchecked exception), and rethrown.
+     *
+     * @throws AccessException If an {@link IllegalAccessException} is thrown during the operation.
+     */
+    public final <V> Map<String, V> toMap(final XFunction<? super Field, V, IllegalAccessException> operation)
+            throws AccessException {
+        return fields.stream().collect(TreeMap::new, put(CNV.function(operation)), Map::putAll);
     }
 
     public static class AccessException extends IllegalStateException {
