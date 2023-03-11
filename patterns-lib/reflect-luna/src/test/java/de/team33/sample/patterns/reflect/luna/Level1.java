@@ -2,6 +2,7 @@ package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.stream.Stream;
 
@@ -21,8 +22,16 @@ public class Level1 extends Level0 {
     public Level1(final Level0 source) {
         super(source);
         if (source instanceof Level1) {
-            FIELDS.forEach(field -> field.set(this, field.get(source)));
+            FIELDS.forEach(field -> set(field, ((Level1) source).get(field)));
         }
+    }
+
+    private Object get(final Field field) throws IllegalAccessException {
+        return field.get(this);
+    }
+
+    private void set(final Field field, final Object value) throws IllegalAccessException {
+        field.set(this, value);
     }
 
     public final int getIntValue1() {
@@ -64,6 +73,6 @@ public class Level1 extends Level0 {
     @SuppressWarnings("DesignForExtension")
     @Override
     protected Stream<Object> stream() {
-        return Stream.concat(super.stream(), FIELDS.map(field -> field.get(this)));
+        return Stream.concat(super.stream(), FIELDS.map(this::get));
     }
 }

@@ -2,12 +2,13 @@ package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
 
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CopyConstructorMissesField"})
 public class Level0 {
 
     private static final Fields FIELDS = Fields.of(Level0.class);
@@ -21,7 +22,15 @@ public class Level0 {
     }
 
     public Level0(final Level0 source) {
-        FIELDS.forEach(field -> field.set(this, field.get(source)));
+        FIELDS.forEach(field -> set(field, source.get(field)));
+    }
+
+    private Object get(final Field field) throws IllegalAccessException {
+        return field.get(this);
+    }
+
+    private void set(final Field field, final Object value) throws IllegalAccessException {
+        field.set(this, value);
     }
 
     public final int getIntValue() {
@@ -62,7 +71,7 @@ public class Level0 {
 
     @SuppressWarnings("DesignForExtension")
     protected Stream<Object> stream() {
-        return FIELDS.map(field -> field.get(this));
+        return FIELDS.map(this::get);
     }
 
     public final List<Object> toList() {
