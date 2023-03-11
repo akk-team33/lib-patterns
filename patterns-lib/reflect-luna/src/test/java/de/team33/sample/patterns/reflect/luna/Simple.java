@@ -2,9 +2,7 @@ package de.team33.sample.patterns.reflect.luna;
 
 import de.team33.patterns.reflect.luna.Fields;
 
-import java.lang.reflect.Field;
 import java.time.Instant;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
