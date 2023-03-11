@@ -94,6 +94,14 @@ public class Fields {
     }
 
     /**
+     * Returns a {@link Stream} of the contained fields.
+     */
+    @SuppressWarnings("BoundedWildcard")
+    public final Stream<Field> stream() {
+        return fields.stream();
+    }
+
+    /**
      * Returns a {@link Stream} of the results of a given mapping operation performed on each contained field.
      * If the operation throws an {@link IllegalAccessException}, it's caught, wrapped as an {@link AccessException}
      * (an unchecked exception), and rethrown.
@@ -103,7 +111,7 @@ public class Fields {
     @SuppressWarnings("BoundedWildcard")
     public final <R> Stream<R> map(final XFunction<? super Field, R, IllegalAccessException> operation)
             throws AccessException {
-        return fields.stream().map(CNV.function(operation));
+        return stream().map(CNV.function(operation));
     }
 
     /**
@@ -116,7 +124,7 @@ public class Fields {
      */
     public final <V> Map<String, V> toMap(final XFunction<? super Field, V, IllegalAccessException> operation)
             throws AccessException {
-        return fields.stream().collect(TreeMap::new, put(CNV.function(operation)), Map::putAll);
+        return stream().collect(TreeMap::new, put(CNV.function(operation)), Map::putAll);
     }
 
     public static class AccessException extends IllegalStateException {
