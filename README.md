@@ -10,21 +10,21 @@ http://www.team33.de/dev/patterns/
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
-  * testing-titan (Team33 Testing Library - Edition "titan")
+  * exceptional-01 (Team33 Exceptional Library - Edition 1)
   * production-01 (Team33 Production Library - Edition 1)
   * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
   * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
-  * exceptional-01 (Team33 Exceptional Library - Edition 1)
   * lazy-01 (Team33 Lazy Initialization Library - Edition 1) - **deprecated**
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * pooling-01 (Team33 Pooling Library - Edition 1)
+  * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
-  * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * properties-01 (Team33 Properties Library - Edition 1)
   * building-elara (Team33 Building Library - Edition "elara")
+  * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
+  * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
 
@@ -39,14 +39,6 @@ http://www.team33.de/dev/patterns/
 ### 1.11.0
 
 * Refactored project structure
-
-
-    patterns-parent              patterns-root
-    +-- exceptional-01           +-- patterns-bom
-    +-- ...                      +-- patterns-lib
-    :                                +-- exceptional-01
-    +-- building-elara               :
-    +-- patterns-bom                 +-- building-elara
 
 ### 1.10.1
 
