@@ -9,9 +9,9 @@ import java.util.function.Supplier;
  * Implements a kind of supplier that provides a virtually fixed value.
  * That value is only actually determined when it is accessed for the first time.
  * <p>
- * This implementation ensures that the {@linkplain #Lazy(Supplier) originally defined initialization code}
+ * This implementation ensures that the {@linkplain #init(Supplier)}  originally defined initialization code}
  * is called at most once, even if there is concurrent access from multiple threads, unless the
- * initialization attempt causes a {@link RuntimeException}.
+ * initialization attempt causes an (unchecked) exception.
  * <p>
  * Once the value is established, unnecessary effort to synchronize competing* read accesses is avoided.
  * <p>
