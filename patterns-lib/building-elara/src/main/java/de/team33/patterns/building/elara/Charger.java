@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implements Setup<T, B> {
 
     private final T target;
-    private boolean released = false;
+    private boolean isCharged = false;
 
     /**
      * Initializes a new instance.
@@ -44,7 +44,7 @@ public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implemen
      */
     @Override
     public final B setup(final Consumer<T> consumer) {
-        if (released) {
+        if (isCharged) {
             throw new IllegalStateException("the associated target is already released");
         }
         consumer.accept(target);
@@ -56,8 +56,16 @@ public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implemen
      * <p>
      * Subsequent calls of {@link #setup(Consumer)} will lead to an {@link IllegalStateException}.
      */
-    public final T release() {
-        released = true;
+    public final T charged() {
+        isCharged = true;
         return target;
+    }
+
+    /**
+     * @deprecated use {@link #charged()} instead.
+     */
+    @Deprecated()
+    public final T release() {
+        return charged();
     }
 }

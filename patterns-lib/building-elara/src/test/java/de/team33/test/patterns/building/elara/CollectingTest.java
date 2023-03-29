@@ -19,7 +19,7 @@ class CollectingTest {
     @Test
     final void lifecycle_Charger() {
         final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.nextStringList(3));
-        charger.release();
+        charger.charged();
         assertThrows(IllegalStateException.class, () -> charger.add(SUPPLY.nextString()));
     }
 
