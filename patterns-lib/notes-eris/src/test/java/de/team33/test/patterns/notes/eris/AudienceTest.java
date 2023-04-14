@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class AudienceTest {
 
@@ -31,6 +32,17 @@ class AudienceTest {
         audience.send(Channel.SET_INSTANT, data.instantValue);
 
         assertEquals(data, listened);
+    }
+
+    @Test
+    final void noListener_and_fire() {
+        final Data listened = new Data();
+
+        audience.send(Channel.SET_INTEGER, data.intValue);
+        audience.send(Channel.SET_DOUBLE, data.doubleValue);
+        audience.send(Channel.SET_INSTANT, data.instantValue);
+
+        assertNotEquals(data, listened);
     }
 
     static class Data {
