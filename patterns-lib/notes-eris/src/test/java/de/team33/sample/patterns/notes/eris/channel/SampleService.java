@@ -1,4 +1,4 @@
-package de.team33.sample.patterns.notes.eris;
+package de.team33.sample.patterns.notes.eris.channel;
 
 import java.nio.file.Path;
 import java.time.Instant;
