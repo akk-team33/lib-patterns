@@ -11,7 +11,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 /**
- * Abstracts the audience for messages triggered by events in a specific context.
+ * Implementation of a registry with the additional option to send messages to the registered listeners.
  */
 public class Audience implements Registry {
 
@@ -20,14 +20,16 @@ public class Audience implements Registry {
     private final Executor executor;
 
     /**
-     * Initializes a new instance that synchronously relays messages to the registered listeners.
+     * Initializes a new instance that synchronously {@linkplain #send(Channel, Object) sends} messages to the
+     * {@linkplain #add(Channel, Consumer) registered} listeners.
      */
     public Audience() {
         this(Runnable::run);
     }
 
     /**
-     * Initializes a new instance that relays messages to the registered listeners using a given {@link Executor}.
+     * Initializes a new instance that {@linkplain #send(Channel, Object) sends} messages to the
+     * {@linkplain #add(Channel, Consumer) registered} listeners using a given {@link Executor}.
      */
     public Audience(final Executor executor) {
         this.executor = executor;
