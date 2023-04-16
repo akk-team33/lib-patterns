@@ -8,22 +8,13 @@
         <version>1.12.0</version>
     </parent>
 
-    <artifactId>properties-01</artifactId>
+    <artifactId>execution-metis</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Properties Library - Edition 1</name>
-    <description>Provides handling of properties of complex types</description>
+    <name>Team33 Execution Library - Edition "metis"</name>
+    <description>Provides simple Executor and ExecutorService implementations.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-01</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>pooling-01</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
