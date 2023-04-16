@@ -23,10 +23,15 @@ http://www.team33.de/dev/patterns/
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * properties-01 (Team33 Properties Library - Edition 1)
   * building-elara (Team33 Building Library - Edition "elara")
+  * notes-eris (Team33 Notifications Library - Edition "eris")
   * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module notes-eris
 
 ### 1.11.1
 
