@@ -30,6 +30,7 @@
         <module>reflect-luna</module>
         <module>properties-01</module>
         <module>building-elara</module>
+        <module>notes-eris</module>
     </modules>
 
     <dependencyManagement>
