@@ -30,7 +30,7 @@ http://www.team33.de/dev/patterns/
 
 ## Change Log
 
-### next
+### 1.12.0
 
 * Added module notes-eris
 * Added module execution-metis
