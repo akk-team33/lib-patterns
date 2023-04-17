@@ -9,22 +9,22 @@ import java.util.function.Supplier;
  * Implements a kind of supplier that provides a virtually fixed value.
  * That value is only actually determined when it is accessed for the first time.
  * <p>
- * This implementation ensures that the {@linkplain #init(Supplier)}  originally defined initialization code}
+ * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
  * is called at most once, even if there is concurrent access from multiple threads, unless the
  * initialization attempt causes an (unchecked) exception.
  * <p>
  * Once the value is established, unnecessary effort to synchronize competing* read accesses is avoided.
  * <p>
  * *Pure read accesses are of course not really competing.
+ *
+ * @see XLazy
  */
-public class Lazy<T> {
+public class Lazy<T> extends Mutual<T, RuntimeException> {
 
     private static final Converter CNV = Converter.using(InitException::new);
 
-    private volatile Supplier<T> backing;
-
     private Lazy(final Supplier<? extends T> initial) {
-        this.backing = new Initial(initial);
+        super(initial::get);
     }
 
     /**
@@ -56,30 +56,12 @@ public class Lazy<T> {
      * This method is thread safe.
      */
     public final T get() {
-        return backing.get();
-    }
-
-    private class Initial implements Supplier<T> {
-
-        private final Supplier<? extends T> initial;
-
-        private Initial(final Supplier<? extends T> initial) {
-            this.initial = initial;
-        }
-
-        @Override
-        public final synchronized T get() {
-            if (backing == this) {
-                final T result = initial.get();
-                backing = () -> result;
-            }
-            return backing.get();
-        }
+        return super.get();
     }
 
     /**
-     * An unchecked exception type that may be thrown, when the initialization code of a {@link Lazy} instance
-     * causes a checked exception.
+     * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
+     * of a {@link Lazy} instance causes a checked exception.
      */
     public static class InitException extends RuntimeException {
 
