@@ -6,6 +6,10 @@ Team33 Patterns Library Collection
 
 http://www.team33.de/dev/patterns/
 
+## Requires
+
+    Java 8 or later
+
 ## Artifacts
 
 * patterns-bom (Team33 Patterns Library BOM)
