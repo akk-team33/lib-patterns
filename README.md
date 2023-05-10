@@ -29,10 +29,15 @@ http://www.team33.de/dev/patterns/
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
+  * serving-naiad (Team33 Serving Library - Edition "naiad")
   * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module serving-naiad
 
 ### 1.12.0
 

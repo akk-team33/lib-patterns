@@ -32,6 +32,7 @@
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <module>serving-naiad</module>
     </modules>
 
     <dependencyManagement>
