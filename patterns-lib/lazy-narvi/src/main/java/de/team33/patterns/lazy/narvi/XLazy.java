@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 public class XLazy<T, X extends Exception> extends Mutual<T, X> {
 
     private XLazy(final XSupplier<? extends T, ? extends X> initial) {
-        super(initial);
+        super(initial::get);
     }
 
     /**
