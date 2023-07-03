@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -36,6 +38,16 @@ class LazyTest {
             return value;
         }
     };
+
+    /**
+     * Ensures that {@link Lazy#init(Supplier)} can be called simply with a lambda expression.
+     * (No conflicts with an overloaded method)
+     */
+    @Test
+    final void init() {
+        final Lazy<String> lazy = Lazy.init(() -> UUID.randomUUID().toString());
+        assertEquals(lazy.get(), lazy.get());
+    }
 
     /**
      * Ensures that the initial code associated with a {@link Lazy} instance is not executed until the
