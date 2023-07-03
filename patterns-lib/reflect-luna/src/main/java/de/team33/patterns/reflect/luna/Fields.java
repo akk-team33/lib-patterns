@@ -7,6 +7,8 @@ import de.team33.patterns.exceptional.e1.XFunction;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -27,10 +29,11 @@ public class Fields {
 
     private final List<Field> fields;
 
-    private Fields(final Class<?> subjectClass) {
-        this.fields = Stream.of(subjectClass.getDeclaredFields())
-                            .filter(Fields::isSignificant)
-                            .collect(Collectors.toList());
+    private Fields(final Group group, final Class<?> subjectClass, final Collection<String> ignorable) {
+        this.fields = group.streaming.apply(subjectClass)
+                                     .filter(Fields::isSignificant)
+                                     .filter(field -> !ignorable.contains(field.getName()))
+                                     .collect(Collectors.toList());
     }
 
     private static boolean isSignificant(final Member field) {
@@ -39,6 +42,24 @@ public class Fields {
 
     private static boolean isSignificant(final int modifiers) {
         return 0 == (modifiers & NOT_SIGNIFICANT);
+    }
+
+    /**
+     * Returns a new instance that includes all significant* {@link Field}s that exist in the given class
+     * and belong to the given {@link Group}.
+     * <p>
+     * *Significant fields are those fields that are not declared <em>static</em>, <em>transient</em>,
+     * or <em>synthetic</em>**.
+     * These are typically the fields that make up the "value" of a data object and as such should be considered when
+     * implementing {@code equals()}, {@code hashCode()} and {@code toString()}.
+     * <p>
+     * **A synthetically declared field, for example, appears in a non-static inner class,
+     * namely a reference to the instance of the outer class.
+     *
+     * @see #of(Class, String...)
+     */
+    public static Fields of(final Group group, final Class<?> subjectClass, final String... ignorable) {
+        return new Fields(group, subjectClass, Arrays.asList(ignorable));
     }
 
     /**
@@ -51,9 +72,11 @@ public class Fields {
      * <p>
      * **A synthetically declared field, for example, appears in a non-static inner class,
      * namely a reference to the instance of the outer class.
+     *
+     * @see #of(Group, Class, String...)
      */
-    public static Fields of(final Class<?> subjectClass) {
-        return new Fields(subjectClass);
+    public static Fields of(final Class<?> subjectClass, final String... ignorable) {
+        return of(Group.DECLARED, subjectClass, ignorable);
     }
 
     private static <V> BiConsumer<Map<String, V>, ? super Field> put(final Function<? super Field, V> function) {
@@ -125,6 +148,28 @@ public class Fields {
     public final <V> Map<String, V> toMap(final XFunction<? super Field, V, IllegalAccessException> operation)
             throws AccessException {
         return stream().collect(TreeMap::new, put(CNV.function(operation)), Map::putAll);
+    }
+
+    /**
+     * Distinguishes groups of fields to be aggregated.
+     */
+    public enum Group {
+
+        /**
+         * Identifies fields that were declared directly by the class in question.
+         */
+        DECLARED(c -> Stream.of(c.getDeclaredFields())),
+
+        /**
+         * Identifies fields that are declared public.
+         */
+        PUBLIC(c -> Stream.of(c.getFields()));
+
+        private final Function<Class<?>, Stream<Field>> streaming;
+
+        Group(Function<Class<?>, Stream<Field>> streaming) {
+            this.streaming = streaming;
+        }
     }
 
     public static class AccessException extends IllegalStateException {
