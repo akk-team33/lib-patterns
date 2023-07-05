@@ -41,6 +41,7 @@ public class XLazy<T, X extends Exception> extends Mutual<T, X> {
      * and returns its result on that and every subsequent call without executing the initialization code again.
      * This method is thread safe.
      */
+    @Override
     public final T get() throws X {
         return super.get();
     }

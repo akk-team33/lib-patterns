@@ -55,6 +55,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
      * and returns its result on that and every subsequent call without executing the initialization code again.
      * This method is thread safe.
      */
+    @Override
     public final T get() {
         return super.get();
     }
