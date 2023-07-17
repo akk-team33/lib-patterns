@@ -12,9 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RecentTest {
 
@@ -27,7 +25,7 @@ class RecentTest {
     @BeforeEach
     final void beforeEach() {
         nextIndex = new AtomicInteger(0);
-        recent = new Recent<>(Sample::new, IDLETIME, LIFETIME);
+        recent = new Recent<>(() -> new Sample(nextIndex.getAndIncrement()), IDLETIME, LIFETIME);
     }
 
     private static void sleep(final long millis) {
@@ -40,16 +38,26 @@ class RecentTest {
     }
 
     @Test
-    final void get_IDLETIME() {
+    final void get_immediately() {
+        final Sample first = recent.get();
+        final Sample second = recent.get();
+        assertSame(first, second, "it is expected to get the same instance twice");
+        assertEquals(1, nextIndex.get());
+    }
+
+    @Test
+    final void get_afterIdleTime() {
         final Sample first = recent.get();
         sleep(IDLETIME + 1);
         final Sample second = recent.get();
         assertNotSame(first, second, "after <IDLETIME> it is not expected to get the same instance twice");
+        assertNotEquals(first.getIndex(), second.getIndex(),
+                        "after <IDLETIME> it is not expected to get the same index twice");
         assertEquals(2, nextIndex.get());
     }
 
     @Test
-    final void get_LIFETIME() {
+    final void get_afterLifeTime() {
         final Sample first = recent.get();
         final Instant created = first.getCreated();
         Sample second = first;
@@ -82,7 +90,7 @@ class RecentTest {
                             }
                             final long delta =
                                     second.getCreated().toEpochMilli() -
-                                            created.toEpochMilli();
+                                    created.toEpochMilli();
                             return new Result(context.operationIndex, delta);
                         })
                         .reThrowAny()
@@ -90,12 +98,12 @@ class RecentTest {
         final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
         final long maxExpected = limit * LIFETIME;
         assertTrue(delta < maxExpected, () -> format(" <delta> is expected to be less than" +
-                                                             " <maxExpected> (%d) - but was %d", maxExpected, delta));
+                                                     " <maxExpected> (%d) - but was %d", maxExpected, delta));
         final String unexpected = results.stream()
                                          .filter(result -> result.delta() < LIFETIME)
                                          .map(result -> format("[index: %02d] " +
-                                                                       "<delta> is expected to be greater than or " +
-                                                                       "equal to <LIFETIME> (%d) - but was %d",
+                                                               "<delta> is expected to be greater than or " +
+                                                               "equal to <LIFETIME> (%d) - but was %d",
                                                                result.index(), LIFETIME, result.delta()))
                                          .collect(joining(format("%n")));
         assertEquals("", unexpected);
@@ -117,17 +125,22 @@ class RecentTest {
         }
     }
 
-    class Sample {
+    private static class Sample {
 
-        private final int index = nextIndex.getAndIncrement();
+        private final int index;
         private final Instant created;
 
-        Sample() {
+        private Sample(int index) {
+            this.index = index;
             created = Instant.now();
         }
 
         final Instant getCreated() {
             return created;
+        }
+
+        final int getIndex() {
+            return index;
         }
     }
 }
