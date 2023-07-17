@@ -24,6 +24,7 @@ import java.util.function.Supplier;
  * This implementation does not support checked exceptions to occur while creating new <em>item</em> instances.
  *
  * @param <I> The type of provided instances <em>(items)</em>.
+ * @see RProvider
  * @see XProvider
  */
 public class Provider<I> extends Mutual<I, RuntimeException> {

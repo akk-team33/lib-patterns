@@ -26,6 +26,7 @@ import java.util.function.Function;
  * @param <I> The type of provided instances <em>(items)</em>
  * @param <E> A type of exception that may be caused by the creation of new <em>item</em> instances.
  * @see Provider
+ * @see RProvider
  */
 public class XProvider<I, E extends Exception> extends Mutual<I, E> {
 

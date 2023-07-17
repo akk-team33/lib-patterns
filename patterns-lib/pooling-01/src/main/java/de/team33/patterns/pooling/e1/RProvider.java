@@ -22,9 +22,12 @@ import java.util.function.Supplier;
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>item</em> could be made available.
  * <p>
+ * This implementation supports expiry of provided <em>items</em>.
+ * <p>
  * This implementation does not support checked exceptions to occur while creating new <em>item</em> instances.
  *
  * @param <I> The type of provided instances <em>(items)</em>.
+ * @see Provider
  * @see XProvider
  */
 public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
@@ -32,6 +35,9 @@ public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
     /**
      * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
      * new <em>item</em>.
+     * <p>
+     * Once an instance <em>item</em> is initialized it will expire and be renewed after a maximum idle time
+     * or at least after a maximum lifetime.
      */
     public RProvider(final Supplier<I> newItem, final long maxIdle, final long maxLiving) {
         super(() -> new Recent<I>(newItem, maxIdle, maxLiving));
