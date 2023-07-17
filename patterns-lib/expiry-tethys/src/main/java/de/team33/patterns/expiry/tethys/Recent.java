@@ -19,12 +19,8 @@ import java.util.function.Supplier;
  */
 public class Recent<T> implements Supplier<T> {
 
-    @SuppressWarnings("rawtypes")
-    private static final Actual INITIAL = new Actual() {
-    };
-
     private final Rule<? extends T> rule;
-    private volatile Actual<T> actual = initial();
+    private volatile Actual<T> actual = now -> true;
 
     private Recent(final Rule<? extends T> rule) {
         this.rule = rule;
@@ -46,11 +42,6 @@ public class Recent<T> implements Supplier<T> {
         this(new Rule<>(newSubject, maxIdle, maxLiving));
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> Actual<T> initial() {
-        return INITIAL;
-    }
-
     @Override
     public final T get() {
         return approved(actual);
@@ -70,11 +61,10 @@ public class Recent<T> implements Supplier<T> {
         }
     }
 
+    @FunctionalInterface
     private interface Actual<T> {
 
-        default boolean isTimeout(final long now) {
-            return true;
-        }
+        boolean isTimeout(final long now);
 
         default T get() {
             throw new UnsupportedOperationException("method not supported");
@@ -88,7 +78,7 @@ public class Recent<T> implements Supplier<T> {
         private volatile long idleTimeout;
 
         Substantial() {
-            this.lifeTimeout = System.currentTimeMillis() + rule.maxLiving;
+            this.lifeTimeout = System.currentTimeMillis() + rule.maxLife;
             this.idleTimeout = System.currentTimeMillis() + rule.maxIdle;
             this.subject = rule.newSubject.get();
         }
@@ -108,13 +98,13 @@ public class Recent<T> implements Supplier<T> {
     private static final class Rule<T> {
 
         private final Supplier<? extends T> newSubject;
-        private final long maxLiving;
+        private final long maxLife;
         private final long maxIdle;
 
-        private Rule(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLiving) {
+        Rule(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLife) {
             this.newSubject = newSubject;
             this.maxIdle = maxIdle;
-            this.maxLiving = maxLiving;
+            this.maxLife = maxLife;
         }
     }
 }
