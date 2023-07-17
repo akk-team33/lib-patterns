@@ -34,6 +34,14 @@ http://www.team33.de/dev/patterns/
 
 ## Change Log
 
+### 1.12.2
+
+* Added class RProvider to module pooling-01
+* Refined module expiry-tethys
+* Refined module reflect-luna ...
+  * Added option <public fields> to class Fields
+  * Fields ignorable by name
+
 ### 1.12.0
 
 * Added module notes-eris
