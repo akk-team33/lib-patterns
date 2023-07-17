@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>item</em> could be made available.
  * <p>
- * This implementation supports expiry of provided <em>items</em>.
+ * This implementation supports expiry and reinitialisation of provided <em>items</em>.
  * <p>
  * This implementation does not support checked exceptions to occur while creating new <em>item</em> instances.
  *
