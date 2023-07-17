@@ -85,10 +85,11 @@ public class Recent<T> implements Supplier<T> {
 
         private final T subject;
         private final long lifeTimeout;
-        private volatile long idleTimeout = Long.MAX_VALUE;
+        private volatile long idleTimeout;
 
         Substantial() {
             this.lifeTimeout = System.currentTimeMillis() + rule.maxLiving;
+            this.idleTimeout = System.currentTimeMillis() + rule.maxIdle;
             this.subject = rule.newSubject.get();
         }
 
