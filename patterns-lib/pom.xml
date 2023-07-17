@@ -24,8 +24,8 @@
         <module>random-tarvos</module>
         <module>lazy-01</module>
         <module>lazy-narvi</module>
-        <module>pooling-01</module>
         <module>expiry-tethys</module>
+        <module>pooling-01</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
         <module>properties-01</module>

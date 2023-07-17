@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RecentTest {
 
-    private static final long IDLETIME = 10; // milliseconds!
-    private static final long LIFETIME = 100; // milliseconds!
+    private static final long IDLE_TIME = 10; // milliseconds!
+    private static final long LIFE_TIME = 100; // milliseconds!
 
     private AtomicInteger nextIndex;
     private Recent<Sample> recent;
@@ -25,7 +25,7 @@ class RecentTest {
     @BeforeEach
     final void beforeEach() {
         nextIndex = new AtomicInteger(0);
-        recent = new Recent<>(() -> new Sample(nextIndex.getAndIncrement()), IDLETIME, LIFETIME);
+        recent = new Recent<>(() -> new Sample(nextIndex.getAndIncrement()), IDLE_TIME, LIFE_TIME);
     }
 
     private static void sleep(final long millis) {
@@ -48,7 +48,7 @@ class RecentTest {
     @Test
     final void get_afterIdleTime() {
         final Sample first = recent.get();
-        sleep(IDLETIME + 1);
+        sleep(IDLE_TIME + 1);
         final Sample second = recent.get();
         assertNotSame(first, second, "after <IDLETIME> it is not expected to get the same instance twice");
         assertNotEquals(first.getIndex(), second.getIndex(),
@@ -63,13 +63,13 @@ class RecentTest {
         Sample second = first;
         //noinspection ObjectEquality
         while (second == first) {
-            sleep(IDLETIME / 2); // significantly less than IDLETIME
+            sleep(IDLE_TIME / 2); // significantly less than IDLETIME
             second = recent.get();
         }
         final long delta = second.getCreated().toEpochMilli() - created.toEpochMilli();
-        assertTrue(delta > LIFETIME,
+        assertTrue(delta > LIFE_TIME,
                    () -> format("<delta> is expected to be greater than <LIFETIME> (%d) - but was %d",
-                                LIFETIME, delta));
+                                LIFE_TIME, delta));
         assertEquals(2, nextIndex.get());
     }
 
@@ -85,7 +85,7 @@ class RecentTest {
                             Sample second = first;
                             //noinspection ObjectEquality
                             while (second == first) {
-                                sleep(IDLETIME + 1); // sic!
+                                sleep(IDLE_TIME + 1); // sic!
                                 second = recent.get();
                             }
                             final long delta =
@@ -96,15 +96,15 @@ class RecentTest {
                         .reThrowAny()
                         .getResults();
         final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
-        final long maxExpected = limit * LIFETIME;
+        final long maxExpected = limit * LIFE_TIME;
         assertTrue(delta < maxExpected, () -> format(" <delta> is expected to be less than" +
                                                      " <maxExpected> (%d) - but was %d", maxExpected, delta));
         final String unexpected = results.stream()
-                                         .filter(result -> result.delta() < LIFETIME)
+                                         .filter(result -> result.delta() < LIFE_TIME)
                                          .map(result -> format("[index: %02d] " +
                                                                "<delta> is expected to be greater than or " +
                                                                "equal to <LIFETIME> (%d) - but was %d",
-                                                               result.index(), LIFETIME, result.delta()))
+                                                               result.index(), LIFE_TIME, result.delta()))
                                          .collect(joining(format("%n")));
         assertEquals("", unexpected);
     }

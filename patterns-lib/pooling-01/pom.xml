@@ -20,6 +20,10 @@
             <artifactId>exceptional-01</artifactId>
         </dependency>
         <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>expiry-tethys</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
