@@ -73,7 +73,6 @@ public final class Mapping {
      */
     public static <M extends Map<?, ?>> M remove(final M subject, final Object key) {
         try {
-            //noinspection SuspiciousMethodCalls
             subject.remove(key);
 
         } catch (final NullPointerException | ClassCastException caught) {
@@ -167,7 +166,7 @@ public final class Mapping {
      * Supplies a proxy for a given {@link Map subject} that may be used to implement some {@link Map}-specific
      * methods, e.g.:
      * <ul>
-     * <li>{@link Map#toString()}</li>
+     * <li>{@link Object#toString()}</li>
      * <li>{@link Map#equals(Object)}</li>
      * <li>{@link Map#hashCode()}</li>
      * <li>...</li>
@@ -188,6 +187,4 @@ public final class Mapping {
             }
         };
     }
-
-
 }

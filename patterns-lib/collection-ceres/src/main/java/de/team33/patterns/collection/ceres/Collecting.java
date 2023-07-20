@@ -175,7 +175,7 @@ public final class Collecting {
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the {@code subject} does not
-     * support some of the requested {@code elements}.
+     * support some requested {@code elements}.
      *
      * @return The {@code subject}.
      * @throws NullPointerException          if {@code subject} or the {@code array} of {@code elements} is
@@ -195,7 +195,7 @@ public final class Collecting {
      * Just like {@link Collection#removeAll(Collection)} for a given {@code subject}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @return The {@code subject}.
@@ -226,7 +226,7 @@ public final class Collecting {
      * Similar to {@link Collection#removeAll(Collection)} for a given {@code subject}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @return The {@code subject}.
@@ -245,7 +245,7 @@ public final class Collecting {
      * Allows to retain a variable number of elements.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @return The {@code subject}.
@@ -262,7 +262,7 @@ public final class Collecting {
      * Just like {@link Collection#retainAll(Collection)} for a given {@code subject}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @return The {@code subject}.
@@ -320,7 +320,7 @@ public final class Collecting {
      * Allows to test for a variable number of elements.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @throws NullPointerException if {@code subject} or the {@code array} of {@code elements} is {@code null}.
@@ -335,12 +335,13 @@ public final class Collecting {
      * Indicates if a given {@code subject} contains specific {@code elements}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some of the requested
+     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
      * @throws NullPointerException if {@code subject} or the {@link Collection} of {@code elements} is {@code null}.
      * @see Collection#containsAll(Collection)
      */
+    @SuppressWarnings("SuspiciousMethodCalls")
     public static boolean containsAll(final Collection<?> subject, final Collection<?> elements) {
         try {
             return subject.containsAll(elements);
