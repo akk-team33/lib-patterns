@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.12.2-SNAPSHOT</version>
+        <version>1.12.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-lib</artifactId>
@@ -24,8 +24,8 @@
         <module>random-tarvos</module>
         <module>lazy-01</module>
         <module>lazy-narvi</module>
-        <module>pooling-01</module>
         <module>expiry-tethys</module>
+        <module>pooling-01</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
         <module>properties-01</module>

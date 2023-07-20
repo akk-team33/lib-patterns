@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.12.2-SNAPSHOT</version>
+        <version>1.12.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>pooling-01</artifactId>
@@ -18,6 +18,10 @@
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>exceptional-01</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>expiry-tethys</artifactId>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
