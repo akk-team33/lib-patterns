@@ -1,5 +1,7 @@
 package de.team33.patterns.collection.ceres;
 
+import de.team33.patterns.building.elara.Setup;
+
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
@@ -10,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.asList;
 
@@ -48,12 +51,11 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collection#add(Object)}
-     * or rather {@link Collection#addAll(Collection)} for a given {@code subject}.
-     * Allows to add a variable number of elements.
+     * Similar to {@link Collecting#add(Collection, Object)}.
+     * Allows to add two or more elements.
      *
      * @return The {@code subject}.
-     * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
      *                                       {@code subject}.
      * @throws ClassCastException            if the class of the specified {@code elements} prevents them from being
      *                                       added to the {@code subject}
@@ -71,8 +73,8 @@ public final class Collecting {
      */
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
-    public static <E, C extends Collection<? super E>> C add(final C subject, final E... elements) {
-        return addAll(subject, asList(elements));
+    public static <E, C extends Collection<E>> C add(final C subject, final E e0, final E e1, final E... more) {
+        return addAll(subject, Stream.concat(Stream.of(e0, e1), Stream.of(more)));
     }
 
     /**
@@ -95,7 +97,7 @@ public final class Collecting {
      * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
      *                                       {@code subject}'s insertion restrictions (if any).
      */
-    public static <E, C extends Collection<? super E>> C addAll(final C subject, final Collection<E> elements) {
+    public static <E, C extends Collection<E>> C addAll(final C subject, final Collection<? extends E> elements) {
         subject.addAll(elements);
         return subject;
     }
@@ -103,6 +105,8 @@ public final class Collecting {
     /**
      * Similar to {@link Collection#addAll(Collection)} for a given {@code subject}, but ...
      *
+     * @param subject The {@link Collection} to witch the {@code elements} will be added,
+     * @param elements A {@link Stream} of the {@code elements} to be added.
      * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
      * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
@@ -119,9 +123,17 @@ public final class Collecting {
      * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
      *                                       {@code subject}'s insertion restrictions (if any).
      */
-    public static <E, C extends Collection<? super E>> C addAll(final C subject, final Stream<E> elements) {
+    public static <E, C extends Collection<E>> C addAll(final C subject, final Stream<? extends E> elements) {
         elements.forEach(subject::add);
         return subject;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E, C extends Collection<E>> C addAll(final C subject, final Iterable<? extends E> elements) {
+        if (elements instanceof Collection<?>)
+            return addAll(subject, (Collection<? extends E>)elements);
+        else
+            return addAll(subject, StreamSupport.stream(elements.spliterator(), false));
     }
 
     /**
@@ -457,5 +469,25 @@ public final class Collecting {
                 return subject.size();
             }
         };
+    }
+
+    public interface Setup<E, C extends Collection<E>, S extends Setup<E, C, S>>
+            extends de.team33.patterns.building.elara.Setup<C, S> {
+
+        default S add(final E element) {
+            return setup(c -> c.add(element));
+        }
+
+        default S addAll(final Stream<? extends E> elements) {
+            return setup(c -> Collecting.addAll(c, elements));
+        }
+
+        default S addAll(final Collection<? extends E> elements) {
+            return setup(c -> Collecting.addAll(c, elements));
+        }
+
+        default S addAll(final Iterable<? extends E> elements) {
+            return setup(c -> Collecting.addAll(c, elements));
+        }
     }
 }
