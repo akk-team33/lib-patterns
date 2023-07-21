@@ -148,7 +148,7 @@ public class CollectingTest {
     public final void retainArray() {
         assertEquals(
                 asList(sample1, sample2, sample1, sample2),
-                Collecting.retain(new ArrayList<>(duplicated), sample1, sample2));
+                Collecting.retainAll(new ArrayList<>(duplicated), sample1, sample2));
     }
 
     @Test

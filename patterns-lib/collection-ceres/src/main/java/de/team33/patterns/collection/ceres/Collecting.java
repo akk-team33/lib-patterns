@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -194,11 +195,11 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#clear()} for a given {@code subject}, but ...
+     * Just like {@link Collection#clear() subject.clear()}, but returns the {@code subject}.
      *
-     * @return The {@code subject}.
      * @throws NullPointerException          if {@code subject} is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the {@code subject}.
+     * @see Collection#clear()
      */
     public static <C extends Collection<?>> C clear(final C subject) {
         subject.clear();
@@ -206,28 +207,32 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#remove(Object)} for a given {@code subject}, but if {@code subject} contains the
-     * {@code element} several times, each occurrence will be removed!
+     * Just like {@link Collection#remove(Object) subject.remove(element)}, but returns the {@code subject}.
+     * <p>
+     * If {@code subject} contains the {@code element} several times, each occurrence will be removed!
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#remove(Object)} when the {@code subject} does not support the requested {@code element}.
      *
      * @return The {@code subject}.
      * @throws NullPointerException          if {@code subject} is {@code null}.
-     * @throws UnsupportedOperationException if {@link Collection#remove(Object)} is not supported by the
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.
+     * @see Collection#remove(Object)
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C remove(final C subject, final Object element) {
         try {
-            //noinspection StatementWithEmptyBody
-            while (subject.remove(element)) {
-            }
-
+            subject.removeAll(Collections.singleton(element));
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
             }
-
             // --> <subject> can not contain <element>
             // --> <subject> simply does not contain <element>
             // --> Nothing else to do.
@@ -236,9 +241,7 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collection#remove(Object)}
-     * or rather {@link Collection#removeAll(Collection)} for a given {@code subject}.
-     * Allows to remove a variable number of elements.
+     * Similar to {@link Collecting#remove(Collection, Object)}, but allows to remove two or more elements.
      * <p>
      * If {@code subject} contains some of the {@code elements} several times, each occurrence will be removed!
      * <p>
@@ -246,41 +249,50 @@ public final class Collecting {
      * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the {@code subject} does not
      * support some requested {@code elements}.
      *
-     * @return The {@code subject}.
-     * @throws NullPointerException          if {@code subject} or the {@code array} of {@code elements} is
-     *                                       {@code null}.
-     * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
-     *                                       {@link Collection#removeAll(Collection)} is not supported by the
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of {@code more}
+     *                                       elements is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.
      * @see Collection#remove(Object)
      * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Object[])
      */
     @SuppressWarnings("OverloadedVarargsMethod")
-    public static <C extends Collection<?>> C remove(final C subject, final Object... elements) {
-        return removeAll(subject, asList(elements));
+    public static <C extends Collection<?>> C remove(final C subject,
+                                                     final Object element0,
+                                                     final Object element1,
+                                                     final Object... more) {
+        return removeAll(subject, Stream.concat(Stream.of(element0, element1), Stream.of(more)));
     }
 
     /**
-     * Just like {@link Collection#removeAll(Collection)} for a given {@code subject}.
+     * Just like {@link Collection#removeAll(Collection) subject.removeAll(elements)}, but returns the {@code subject}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
-     * @return The {@code subject}.
-     * @throws NullPointerException          if {@code subject} or the {@link Collection} of {@code elements}
-     *                                       is {@code null}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Collection} of
+     *                                       {@code elements} is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Collection<?> elements) {
         try {
             subject.removeAll(elements);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if ((null == subject) || (null == elements)) {
                 throw caught; // expected to be a NullPointerException
-
             } else {
                 // --> <subject> or <elements> can not contain an element
                 // --> <subject> or <elements> simply does not contain that element
@@ -292,43 +304,77 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collection#removeAll(Collection)} for a given {@code subject}.
+     * Similar to {@link Collecting#removeAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
-     * @return The {@code subject}.
-     * @throws NullPointerException          if {@code subject} or the {@link Collection} of {@code elements}
-     *                                       is {@code null}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Stream} of
+     *                                       {@code elements} is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Stream<?> elements) {
-        elements.forEach(element -> remove(subject, element));
-        return subject;
+        return removeAll(subject, addAll(new HashSet<>(), elements.filter(subject::contains)));
     }
 
     /**
-     * Similar to {@link Collection#retainAll(Collection)} for a given {@code subject}.
-     * Allows to retain a variable number of elements.
+     * Similar to {@link Collecting#removeAll(Collection, Collection)}, but takes an {@link Iterable} as second
+     * argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
      * {@code elements}.
      *
-     * @return The {@code subject}.
-     * @throws NullPointerException          if {@code subject} or the {@code array} of {@code elements} is
-     *                                       {@code null}.
-     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Iterable} of
+     *                                       {@code elements} is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Object[])
      */
-    public static <C extends Collection<?>> C retain(final C subject, final Object... elements) {
-        return retainAll(subject, asList(elements));
+    public static <C extends Collection<?>> C removeAll(final C subject, final Iterable<?> elements) {
+        return (elements instanceof Collection<?>)
+               ? removeAll(subject, (Collection<?>) elements)
+               : removeAll(subject, StreamSupport.stream(elements.spliterator(), false));
     }
 
     /**
-     * Just like {@link Collection#retainAll(Collection)} for a given {@code subject}.
+     * Similar to {@link Collecting#removeAll(Collection, Collection)}, but takes an {@code array} as second
+     * argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
+     * {@code elements}.
+     *
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of
+     *                                       {@code elements} is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
+     *                                       {@code subject}.
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Iterable)
+     */
+    public static <C extends Collection<?>> C removeAll(final C subject, final Object[] elements) {
+        return removeAll(subject, Stream.of(elements));
+    }
+
+    /**
+     * Just like {@link Collection#retainAll(Collection) subject.retainAll(elements)}, but returns the {@code subject}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
@@ -337,13 +383,16 @@ public final class Collecting {
      * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
      *                                       {@code subject}.
-     * @throws NullPointerException          if {@code subject} or the {@link Collection} of {@code elements}
-     *                                       is {@code null}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Collection} of
+     *                                       {@code elements} is {@code null}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Collection<?> elements) {
         try {
             subject.retainAll(elements);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if ((null == subject) || (null == elements)) {
                 throw caught; // expected to be a NullPointerException
@@ -356,6 +405,71 @@ public final class Collecting {
             }
         }
         return subject;
+    }
+
+    /**
+     * Similar to {@link Collecting#retainAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@code elements}.
+     *
+     * @return The {@code subject}.
+     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     *                                       {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Stream} of
+     *                                       {@code elements} is {@code null}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C retainAll(final C subject, final Stream<?> elements) {
+        return retainAll(subject, addAll(new HashSet<>(), elements.filter(subject::contains)));
+    }
+
+    /**
+     * Similar to {@link Collecting#retainAll(Collection, Collection)}, but takes an {@link Iterable} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@code elements}.
+     *
+     * @return The {@code subject}.
+     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     *                                       {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Iterable} of
+     *                                       {@code elements} is {@code null}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C retainAll(final C subject, final Iterable<?> elements) {
+        return (elements instanceof Collection<?>)
+               ? retainAll(subject, (Collection<?>) elements)
+               : retainAll(subject, StreamSupport.stream(elements.spliterator(), false));
+    }
+
+    /**
+     * Similar to {@link Collecting#retainAll(Collection, Collection)}, but takes an {@code array} as second
+     * argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@code elements}.
+     *
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of
+     *                                       {@code elements} is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     *                                       {@code subject}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterable)
+     */
+    public static <C extends Collection<?>> C retainAll(final C subject, final Object... elements) {
+        return retainAll(subject, Stream.of(elements));
     }
 
     /**
