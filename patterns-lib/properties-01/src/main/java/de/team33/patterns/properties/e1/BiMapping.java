@@ -13,6 +13,7 @@ import java.util.function.Function;
  *
  * @param <T> The type whose properties are to be mapped.
  */
+@Deprecated
 public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
 
     /**

@@ -10,6 +10,7 @@ import java.util.function.Function;
  *
  * @param <T> The type whose properties are to be mapped.
  */
+@Deprecated
 @FunctionalInterface
 public interface Mapping<T> {
 

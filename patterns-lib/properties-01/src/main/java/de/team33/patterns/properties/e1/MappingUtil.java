@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@Deprecated
 final class MappingUtil {
 
     private MappingUtil() {

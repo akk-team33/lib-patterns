@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.toMap;
  *
  * @see #mapping(Class, Mode)
  */
+@Deprecated
 public final class Fields {
 
     private Fields() {

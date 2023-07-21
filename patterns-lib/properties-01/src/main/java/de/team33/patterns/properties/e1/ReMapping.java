@@ -11,6 +11,7 @@ import java.util.function.BiConsumer;
  *
  * @param <T> The type whose properties are to be re-mapped.
  */
+@Deprecated
 @FunctionalInterface
 public interface ReMapping<T> {
 

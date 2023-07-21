@@ -27,6 +27,7 @@ import static java.util.stream.Collectors.toMap;
  *
  * @see #mapping(Class)
  */
+@Deprecated
 public final class Methods {
 
     private Methods() {
