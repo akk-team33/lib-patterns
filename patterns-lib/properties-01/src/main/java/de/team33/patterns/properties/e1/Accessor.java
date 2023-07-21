@@ -3,6 +3,7 @@ package de.team33.patterns.properties.e1;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+@Deprecated
 interface Accessor<T, V> extends Function<T, V>, BiConsumer<T, V> {
 
     static <T, V> Accessor<T, V> combine(final Function<? super T, ? extends V> getter,

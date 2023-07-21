@@ -25,7 +25,7 @@ http://www.team33.de/dev/patterns/
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
-  * properties-01 (Team33 Properties Library - Edition 1)
+  * properties-01 (Team33 Properties Library - Edition 1) - **deprecated**
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -33,6 +33,10 @@ http://www.team33.de/dev/patterns/
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Marked module properties-01 as deprecated
 
 ### 1.12.2
 

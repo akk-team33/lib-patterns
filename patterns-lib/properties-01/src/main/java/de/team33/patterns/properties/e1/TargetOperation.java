@@ -6,6 +6,7 @@ package de.team33.patterns.properties.e1;
  *
  * @param <T> The target type.
  */
+@Deprecated
 public interface TargetOperation<T> {
 
     /**
