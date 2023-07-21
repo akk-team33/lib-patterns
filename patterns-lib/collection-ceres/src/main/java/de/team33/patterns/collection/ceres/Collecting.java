@@ -26,76 +26,83 @@ public final class Collecting {
     }
 
     /**
-     * For the sake of completeness.
-     * Just like {@link Collection#add(Object)} for a given {@code subject}, but ...
+     * Just like {@link Collection#add(Object) subject.add(element)}, but returns the {@code subject}.
      *
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the specified {@code element}
+     *                                       is {@code null} and the {@code subject} does not permit {@code null}
+     *                                       elements.
      * @throws ClassCastException            if the class of the specified {@code element} prevents it from being
      *                                       added to the {@code subject}
      *                                       (may occur only if used raw or forced in a mismatched class context).
-     * @throws NullPointerException          <ul>
-     *                                       <li>if {@code subject} is {@code null}.</li>
-     *                                       <li>if the specified {@code element} is {@code null}
-     *                                       and the {@code subject} does not permit {@code null} elements.</li>
-     *                                       </ul>
      * @throws IllegalArgumentException      if some property of the {@code element} prevents it from being added to
      *                                       the {@code subject}.
      * @throws IllegalStateException         if the {@code element} cannot be added at this time due to
      *                                       the {@code subject}'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Object[])
      */
     @SuppressWarnings("OverloadedVarargsMethod")
-    public static <E, C extends Collection<? super E>> C add(final C subject, final E element) {
+    public static <E, C extends Collection<E>> C add(final C subject, final E element) {
         subject.add(element);
         return subject;
     }
 
     /**
-     * Similar to {@link Collecting#add(Collection, Object)}.
-     * Allows to add two or more elements.
+     * Similar to {@link Collecting#add(Collection, Object)}, but allows to add two or more elements.
      *
-     * @return The {@code subject}.
-     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
-     *                                       {@code subject}.
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@code array} of {@code more}
+     *                                       elements is {@code null} or if any of the specified {@code elements}
+     *                                       is {@code null} and the {@code subject} does not permit {@code null}
+     *                                       elements.
      * @throws ClassCastException            if the class of the specified {@code elements} prevents them from being
      *                                       added to the {@code subject}
      *                                       (may occur only if used raw or forced in a mismatched class context).
-     * @throws NullPointerException          <ul>
-     *                                       <li>if {@code subject} or the {@code array} of {@code elements} is
-     *                                       {@code null}.</li>
-     *                                       <li>if some of the specified {@code elements} are {@code null}
-     *                                       and the {@code subject} does not permit {@code null} elements.</li>
-     *                                       </ul>
      * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being
      *                                       added to the {@code subject}.
      * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to
      *                                       the {@code subject}'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Object[])
      */
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
-    public static <E, C extends Collection<E>> C add(final C subject, final E e0, final E e1, final E... more) {
-        return addAll(subject, Stream.concat(Stream.of(e0, e1), Stream.of(more)));
+    public static <E, C extends Collection<E>> C add(final C subject,
+                                                     final E element0, final E element1, final E... more) {
+        return addAll(subject, Stream.concat(Stream.of(element0, element1), Stream.of(more)));
     }
 
     /**
-     * Just like {@link Collection#addAll(Collection)} for a given {@code subject}, but ...
+     * Just like {@link Collection#addAll(Collection) subject.addAll(elements)}, but returns the {@code subject}.
      *
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
      *                                       {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Collection} of
+     *                                       {@code elements} is {@code null} or if any of the specified
+     *                                       {@code elements} is {@code null} and the {@code subject} does not permit
+     *                                       {@code null} elements.
      * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
      *                                       {@code subject}
      *                                       (may occur only if used raw or forced in a mismatched class context).
-     * @throws NullPointerException          <ul>
-     *                                       <li>if {@code subject} or the {@link Collection} of {@code elements} is
-     *                                       {@code null}</li>
-     *                                       <li>if some {@code elements} are {@code null} and the {@code subject}
-     *                                       does not permit {@code null} elements.</li>
-     *                                       </ul>
      * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being added
      *                                       to the {@code subject}.
      * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
      *                                       {@code subject}'s insertion restrictions (if any).
+     * @see Collection#addAll(Collection)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Collection<? extends E> elements) {
         subject.addAll(elements);
@@ -103,37 +110,87 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collection#addAll(Collection)} for a given {@code subject}, but ...
+     * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
      *
-     * @param subject The {@link Collection} to witch the {@code elements} will be added,
-     * @param elements A {@link Stream} of the {@code elements} to be added.
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Stream} of
+     *                                       {@code elements} is {@code null} or if any of the streamed
+     *                                       {@code elements} is {@code null} and the {@code subject} does not permit
+     *                                       {@code null} elements.
      * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
      *                                       {@code subject}
      *                                       (may occur only if used raw or forced in a mismatched class context).
-     * @throws NullPointerException          <ul>
-     *                                       <li>if {@code subject} or the {@link Stream} of {@code elements} is
-     *                                       {@code null}</li>
-     *                                       <li>if some {@code elements} are {@code null} and the {@code subject}
-     *                                       does not permit {@code null} elements.</li>
-     *                                       </ul>
      * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being added
      *                                       to the {@code subject}.
      * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
      *                                       {@code subject}'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Stream<? extends E> elements) {
         elements.forEach(subject::add);
         return subject;
     }
 
+    /**
+     * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes an {@link Iterable} as second argument.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} or {@link Collection#addAll(Collection)}
+     *                                       is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Iterable} of
+     *                                       {@code elements} is {@code null} or if any of the specified
+     *                                       {@code elements} is {@code null} and the {@code subject} does not permit
+     *                                       {@code null} elements.
+     * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
+     *                                       {@code subject}
+     *                                       (may occur only if used raw or forced in a mismatched class context).
+     * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being added
+     *                                       to the {@code subject}.
+     * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
+     *                                       {@code subject}'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collection#addAll(Collection)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Object[])
+     */
     @SuppressWarnings("unchecked")
     public static <E, C extends Collection<E>> C addAll(final C subject, final Iterable<? extends E> elements) {
-        if (elements instanceof Collection<?>)
-            return addAll(subject, (Collection<? extends E>)elements);
-        else
-            return addAll(subject, StreamSupport.stream(elements.spliterator(), false));
+        return (elements instanceof Collection<?>)
+               ? addAll(subject, (Collection<? extends E>) elements)
+               : addAll(subject, StreamSupport.stream(elements.spliterator(), false));
+    }
+
+    /**
+     * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes an {@code array} as second argument.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@code array} of
+     *                                       {@code elements} is {@code null} or if any of the specified
+     *                                       {@code elements} is {@code null} and the {@code subject} does not permit
+     *                                       {@code null} elements.
+     * @throws ClassCastException            if the class of the {@code elements} prevents them from being added to the
+     *                                       {@code subject}
+     *                                       (may occur only if used raw or forced in a mismatched class context).
+     * @throws IllegalArgumentException      if some property of some {@code elements} prevents them from being added
+     *                                       to the {@code subject}.
+     * @throws IllegalStateException         if the {@code elements} cannot be added at this time due to the
+     *                                       {@code subject}'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Stream)
+     */
+    public static <E, C extends Collection<E>> C addAll(final C subject, final E[] elements) {
+        return addAll(subject, Stream.of(elements));
     }
 
     /**
@@ -471,11 +528,41 @@ public final class Collecting {
         };
     }
 
+    /**
+     * Utility interface to set up a target instance of {@link Collection}.
+     *
+     * @param <E> The element type.
+     * @param <C> The final type of the target instance, at least {@link Collection}.
+     * @param <S> The final type of the Setup implementation.
+     */
     public interface Setup<E, C extends Collection<E>, S extends Setup<E, C, S>>
             extends de.team33.patterns.building.elara.Setup<C, S> {
 
+        /**
+         * Adds an element to the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
+         *                                       to be set up.
+         * @throws ClassCastException            if the class of the specified {@code element} prevents it from being
+         *                                       added to the {@code subject}
+         *                                       (may occur only if used raw or forced in a mismatched class context).
+         * @throws NullPointerException          if the specified {@code element} is {@code null} and the instance
+         *                                       to be set up does not permit {@code null} elements.
+         * @throws IllegalArgumentException      if some property of the {@code element} prevents it from being added to
+         *                                       the {@code subject}.
+         * @throws IllegalStateException         if the {@code element} cannot be added at this time due to
+         *                                       the {@code subject}'s insertion restrictions (if any).
+         * @see Collection#add(Object)
+         */
         default S add(final E element) {
-            return setup(c -> c.add(element));
+            return setup(c -> Collecting.add(c, element));
+        }
+
+        /**
+         * @see Collection#add(Object)
+         */
+        default S add(final E element0, final E element1, final E... more) {
+            return setup(c -> Collecting.add(c, element0, element1, more));
         }
 
         default S addAll(final Stream<? extends E> elements) {
