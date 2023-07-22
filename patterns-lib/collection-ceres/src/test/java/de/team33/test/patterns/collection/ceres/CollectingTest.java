@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
-import java.util.UUID;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
@@ -17,11 +16,14 @@ import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 public class CollectingTest {
+
+    private static final Supply SUPPLY = new Supply();
 
     public static final String STRAIGHT_NOT_FAILED = "straight call did not fail -> test is not significant";
     public static final String NULL_ELEMENT = null;
@@ -35,18 +37,23 @@ public class CollectingTest {
 
     @BeforeEach
     public final void before() {
-        sample1 = UUID.randomUUID().toString();
-        sample2 = UUID.randomUUID().toString();
-        sample3 = UUID.randomUUID().toString();
+        sample1 = SUPPLY.nextString();
+        sample2 = SUPPLY.nextString();
+        sample3 = SUPPLY.nextString();
         samples = unmodifiableList(asList(sample1, sample2, sample3));
         samplesAndNull = asList(sample1, NULL_ELEMENT, sample2, NULL_ELEMENT, sample3);
         samplesAndIncompatibleType = asList(sample1, sample2, NOT_A_STRING, sample3);
         duplicated = unmodifiableList(asList(sample1, sample2, sample3, sample1, sample3, sample2));
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked", "UnnecessaryLocalVariable"})
     @Test
     public final void addSingle() {
-        assertTrue(Collecting.add(new TreeSet<>(), sample1).contains(sample1));
+        final Collection<String> subject = new TreeSet<>();
+        final Collection rawSubject = subject;
+        assertTrue(Collecting.add(subject, sample1).contains(sample1));
+        assertThrows(NullPointerException.class, () -> Collecting.add(subject, null));
+        assertThrows(ClassCastException.class, () -> Collecting.add(rawSubject, SUPPLY.nextInt()));
     }
 
     @Test
@@ -196,7 +203,7 @@ public class CollectingTest {
         assertTrue(Collecting.contains(samples, sample2));
         assertTrue(Collecting.contains(samples, sample3));
 
-        assertFalse(Collecting.contains(samples, UUID.randomUUID().toString()));
+        assertFalse(Collecting.contains(samples, SUPPLY.nextString()));
         assertFalse(Collecting.contains(samples, NOT_A_STRING));
         assertFalse(Collecting.contains(samples, NULL_ELEMENT));
 
@@ -219,7 +226,7 @@ public class CollectingTest {
     @Test
     public final void containsArray() {
         assertTrue(Collecting.contains(samples, sample1, sample2, sample3));
-        assertFalse(Collecting.contains(samples, UUID.randomUUID().toString(), NOT_A_STRING, NULL_ELEMENT));
+        assertFalse(Collecting.contains(samples, SUPPLY.nextString(), NOT_A_STRING, NULL_ELEMENT));
     }
 
     @Test
