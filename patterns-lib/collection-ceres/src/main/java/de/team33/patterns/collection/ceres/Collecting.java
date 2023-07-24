@@ -1,17 +1,15 @@
 package de.team33.patterns.collection.ceres;
 
-import de.team33.patterns.building.elara.Setup;
-
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -370,7 +368,7 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Iterable)
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Object[] elements) {
-        return removeAll(subject, Stream.of(elements));
+        return removeAll(subject, Arrays.asList(elements));
     }
 
     /**
@@ -469,11 +467,11 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Iterable)
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Object... elements) {
-        return retainAll(subject, Stream.of(elements));
+        return retainAll(subject, Arrays.asList(elements));
     }
 
     /**
-     * Just like {@link Collection#contains(Object)} for a given {@code subject}.
+     * Just like {@link Collection#contains(Object) subject.contains(element)}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#contains(Object)} when the {@code subject} does not support the requested {@code element}.
@@ -484,11 +482,9 @@ public final class Collecting {
     public static boolean contains(final Collection<?> subject, final Object element) {
         try {
             return subject.contains(element);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
-
             } else {
                 // --> <subject> can not contain <element>
                 // --> <subject> simply does not contain <element> ...
@@ -528,12 +524,10 @@ public final class Collecting {
     public static boolean containsAll(final Collection<?> subject, final Collection<?> elements) {
         try {
             return subject.containsAll(elements);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if ((null == subject) || (null == elements)) {
                 // <caught> is expected to be a NullPointerException ...
                 throw caught;
-
             } else {
                 // --> <subject> can not contain all <elements>
                 // --> <subject> simply does not contain all <elements> ...

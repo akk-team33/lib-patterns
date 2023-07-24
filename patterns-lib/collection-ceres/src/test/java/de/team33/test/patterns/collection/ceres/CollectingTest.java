@@ -1,307 +1,325 @@
 package de.team33.test.patterns.collection.ceres;
 
 import de.team33.patterns.collection.ceres.Collecting;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
 class CollectingTest {
 
     private static final Supply SUPPLY = new Supply();
 
-    private static final String STRAIGHT_NOT_FAILED = "straight call did not fail -> test is not significant";
-    private static final String NULL_ELEMENT = null;
-
-    @SuppressWarnings("MultipleVariablesInDeclaration")
-    private String sample1, sample2, sample3;
-    @SuppressWarnings("MultipleVariablesInDeclaration")
-    private List<String> samples, duplicated, samplesAndNull;
-    private Object noString;
-    private List<Object> samplesAndIncompatible;
-
-    @BeforeEach
-    public final void before() {
-        sample1 = SUPPLY.nextString();
-        sample2 = SUPPLY.nextString();
-        sample3 = SUPPLY.nextString();
-        samples = asList(sample1, sample2, sample3);
-        samplesAndNull = asList(sample1, NULL_ELEMENT, sample2, NULL_ELEMENT, sample3);
-        noString = SUPPLY.nextInt();
-        samplesAndIncompatible = asList(sample1, sample2, noString, sample3);
-        duplicated = asList(sample1, sample2, sample3, sample1, sample3, sample2);
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked", "UnnecessaryLocalVariable"})
     @Test
-    public final void add_single() {
-        final Set<String> subject = new TreeSet<>();
-        assertEquals(singleton(sample1), Collecting.add(subject, sample1));
-        assertThrows(NullPointerException.class, () -> Collecting.add(subject, null));
-        final Set rawSubject = subject;
-        assertThrows(ClassCastException.class, () -> Collecting.add(rawSubject, SUPPLY.nextInt()));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked", "UnnecessaryLocalVariable"})
-    @Test
-    public final void add_more() {
-        final Set<String> subject = new TreeSet<>();
-        assertEquals(new HashSet<>(samples), Collecting.add(subject, sample1, sample2, sample3));
-        assertThrows(NullPointerException.class, () -> Collecting.add(subject, sample1, null, sample3));
-        final Set rawSubject = subject;
-        assertThrows(ClassCastException.class, () -> Collecting.add(rawSubject, sample1, SUPPLY.nextInt(), sample3));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked", "UnnecessaryLocalVariable"})
-    @Test
-    public final void addAll_Collection() {
-        final Set<String> subject = new TreeSet<>();
-        assertEquals(new HashSet<>(samples), Collecting.addAll(subject, samples));
-        assertThrows(NullPointerException.class, () -> Collecting.addAll(subject, samplesAndNull));
-        final Set rawSubject = subject;
-        assertThrows(ClassCastException.class, () -> Collecting.addAll(rawSubject, samplesAndIncompatible));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked", "UnnecessaryLocalVariable"})
-    @Test
-    public final void addAll_Stream() {
-        final Set<String> subject = new TreeSet<>();
-        assertEquals(new HashSet<>(samples), Collecting.addAll(subject, samples.stream()));
-        assertThrows(NullPointerException.class, () -> Collecting.addAll(subject, samplesAndNull.stream()));
-        final Set rawSubject = subject;
-        assertThrows(ClassCastException.class, () -> Collecting.addAll(rawSubject, samplesAndIncompatible.stream()));
+    void add_single() {
+        final String element = SUPPLY.nextString();
+        final List<String> expected = Collections.singletonList(element);
+        final List<String> result = Collecting.add(new LinkedList<>(), element);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void addAll_Iterable() {
-        final Iterable<String> other1 = () -> samplesAndNull.iterator();
-        assertEquals(samplesAndNull, Collecting.addAll(new LinkedList<>(), other1)); // not a collection
-        final Iterable<String> other2 = samplesAndNull;
-        assertEquals(samplesAndNull, Collecting.addAll(new ArrayList<>(), other2)); // is a collection
+    void add_more() {
+        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> result = Collecting.add(new LinkedList<>(),
+                                                   expected.get(0), expected.get(1), expected.get(2), expected.get(3));
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void addAll_array() {
-        final String[] other = samples.stream().toArray(String[]::new);
-        assertEquals(samples, Collecting.addAll(new ArrayList<>(), other));
+    void addAll_Collection() {
+        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> result = Collecting.addAll(new LinkedList<>(), expected);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void clear() {
-        assertTrue(Collecting.clear(new ArrayList<>(samples)).isEmpty());
+    void addAll_Stream() {
+        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> result = Collecting.addAll(new LinkedList<>(), expected.stream());
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void remove_single() {
-        final LinkedList<String> subject = new LinkedList<>(duplicated);
-        assertTrue(subject.contains(sample2));
-        assertFalse(Collecting.remove(subject, sample2).contains(sample2));
-
-        assertEquals(new HashSet<>(samples), Collecting.remove(new TreeSet<>(samples), null));
-        assertThrows(NullPointerException.class, () -> Collecting.remove(null, sample1));
-
-        assertEquals(new HashSet<>(samples), Collecting.remove(new TreeSet<>(samples), noString));
+    void addAll_array() {
+        final List<String> expected = SUPPLY.nextStringList(4);
+        final String[] elements = expected.toArray(new String[0]);
+        final List<String> result = Collecting.addAll(new LinkedList<>(), elements);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void remove_more() {
-        final LinkedList<String> subject = new LinkedList<>(duplicated);
-        assertEquals(emptyList(), Collecting.remove(subject, sample1, sample2, sample3));
-
-        assertEquals(new HashSet<>(samples), Collecting.remove(new TreeSet<>(samples), null));
-        assertThrows(NullPointerException.class, () -> Collecting.remove(null, sample1));
-
-        assertEquals(new HashSet<>(samples), Collecting.remove(new TreeSet<>(samples), noString));
+    void addAll_Iterable_noCollection() {
+        final List<String> expected = SUPPLY.nextStringList(4);
+        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"}) final Iterable<String> elements = () -> expected.iterator();
+        final List<String> result = Collecting.addAll(new LinkedList<>(), elements);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void removeNull() {
-        final TreeSet<String> subject = new TreeSet<>(samples);
-        try {
-            subject.remove(null);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(
-                    Collecting.contains(
-                            Collecting.remove(subject, NULL_ELEMENT),
-                            NULL_ELEMENT
-                    )
-            );
-        }
+    void addAll_Iterable_Collection() {
+        final Iterable<String> expected = SUPPLY.nextStringList(4);
+        final List<String> result = Collecting.addAll(new LinkedList<>(), expected);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void removeIncompatibleType() {
-        final TreeSet<String> subject = new TreeSet<>(samples);
-        try {
-            //noinspection SuspiciousMethodCalls
-            subject.remove(noString);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(
-                    Collecting.contains(
-                            Collecting.remove(subject, noString),
-                            noString
-                    )
-            );
-        }
+    void clear() {
+        final List<String> origin = SUPPLY.nextStringList(4);
+        final List<String> result = Collecting.clear(new ArrayList<>(origin));
+        assertEquals(Collections.emptyList(), result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    void remove_single(final RemoveCase rmCase) {
+        final List<String> origin = SUPPLY.nextStringList(4);
+        final Object obsolete = rmCase.obsolete.apply(origin);
+        final Set<String> expected = new HashSet<String>(origin) {{
+            remove(obsolete);
+        }};
+        final Set<String> result = Collecting.remove(new TreeSet<>(origin), obsolete);
+        assertEquals(expected, result);
+        assertThrows(NullPointerException.class, () -> Collecting.remove(null, obsolete));
     }
 
     @Test
-    public final void removeArray() {
-        assertTrue(Collecting.remove(new ArrayList<>(duplicated), sample1, sample3, sample2).isEmpty());
+    void remove_more() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final String[] obsolete = {origin.get(1), origin.get(6), origin.get(3)};
+        final List<String> expected = new ArrayList<String>(origin) {{
+            removeAll(Arrays.asList(obsolete));
+        }};
+        final List<String> result = Collecting.remove(new ArrayList<>(origin), obsolete[0], obsolete[1], obsolete[2]);
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    void removeAll_Collection(final RemoveCase rmCase) {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<?> obsolete = rmCase.obsoleteList.apply(origin);
+        final Set<String> expected = new HashSet<String>(origin) {{
+            removeAll(obsolete);
+        }};
+        final Set<String> result = Collecting.removeAll(new TreeSet<>(origin), obsolete);
+        assertEquals(expected, result);
+
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.removeAll(null, obsolete));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.removeAll(new TreeSet<>(), (Collection<?>) null));
     }
 
     @Test
-    public final void testRemoveAll() {
-        assertTrue(Collecting.removeAll(new ArrayList<>(duplicated), samples).isEmpty());
+    void removeAll_Stream() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> obsolete = Arrays.asList(origin.get(1), origin.get(2), origin.get(5));
+        final List<String> expected = new ArrayList<String>(origin) {{
+            removeAll(obsolete);
+        }};
+        final List<String> result = Collecting.removeAll(new ArrayList<>(origin), obsolete.stream());
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void removeAllNull() {
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            boolean result = new ArrayList<>(samplesAndNull).removeAll(treeSet);
-            fail("expected to fail - but was " + result);
-        } catch (final NullPointerException ignored) {
-            assertEquals(
-                    asList(NULL_ELEMENT, NULL_ELEMENT),
-                    Collecting.removeAll(
-                            new ArrayList<>(samplesAndNull),
-                            treeSet)
-            );
-        }
+    void removeAll_array() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final String[] obsolete = {origin.get(1), origin.get(3), origin.get(4)};
+        final List<String> expected = new ArrayList<String>(origin) {{
+            removeAll(Arrays.asList(obsolete));
+        }};
+        final List<String> result = Collecting.removeAll(new ArrayList<>(origin), obsolete);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void removeAllIncompatibleType() {
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            new ArrayList<>(samplesAndIncompatible).removeAll(treeSet);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertEquals(
-                    singletonList(noString),
-                    Collecting.removeAll(
-                            new ArrayList<>(samplesAndIncompatible),
-                            treeSet)
-            );
-        }
+    void removeAll_Iterable() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Iterable<String> obsolete1 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
+        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"}) final Iterable<String> obsolete2 = () -> obsolete1.iterator();
+        final List<String> expected = new ArrayList<String>(origin) {{
+            obsolete1.forEach(item -> removeAll(Collections.singleton(item)));
+        }};
+        final List<String> result1 = Collecting.removeAll(new ArrayList<>(origin), obsolete1);
+        assertEquals(expected, result1);
+        final List<String> result2 = Collecting.removeAll(new ArrayList<>(origin), obsolete2);
+        assertEquals(expected, result2);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    void retainAll_Collection(final RemoveCase rmCase) {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<?> relevant = rmCase.obsoleteList.apply(origin);
+        final Set<String> expected = new TreeSet<String>(origin) {{
+            retainAll(relevant);
+        }};
+        final Set<String> result = Collecting.retainAll(new TreeSet<>(origin), relevant);
+        assertEquals(expected, result);
+
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.retainAll(null, relevant));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.retainAll(new TreeSet<>(), (Collection<?>) null));
     }
 
     @Test
-    public final void retainArray() {
-        assertEquals(
-                asList(sample1, sample2, sample1, sample2),
-                Collecting.retainAll(new ArrayList<>(duplicated), sample1, sample2));
+    void retainAll_Stream() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> relevant = Arrays.asList(origin.get(1), origin.get(5), origin.get(3));
+        final List<String> expected = new ArrayList<String>(origin) {{
+            retainAll(relevant);
+        }};
+        final List<String> result = Collecting.retainAll(new ArrayList<>(origin), relevant.stream());
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void retainAll() {
-        assertEquals(
-                asList(sample1, sample1),
-                Collecting.retainAll(new ArrayList<>(duplicated), singleton(sample1)));
+    void retainAll_array() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final String[] relevant = {origin.get(1), origin.get(3), origin.get(4)};
+        final List<String> expected = new ArrayList<String>(origin) {{
+            retainAll(Arrays.asList(relevant));
+        }};
+        final List<String> result = Collecting.retainAll(new ArrayList<>(origin), relevant);
+        assertEquals(expected, result);
     }
 
     @Test
-    public final void retainAllNull() {
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            new ArrayList<>(samplesAndNull).retainAll(treeSet);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertEquals(
-                    samples,
-                    Collecting.retainAll(
-                            new ArrayList<>(samplesAndNull),
-                            treeSet)
-            );
-        }
+    void retainAll_Iterable() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> relevant0 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
+        @SuppressWarnings("UnnecessaryLocalVariable") final Iterable<String> relevant1 = relevant0;
+        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"}) final Iterable<String> relevant2 = () -> relevant0.iterator();
+        final List<String> expected = new ArrayList<String>(origin) {{
+            retainAll(relevant0);
+        }};
+        final List<String> result1 = Collecting.retainAll(new ArrayList<>(origin), relevant1);
+        assertEquals(expected, result1);
+        final List<String> result2 = Collecting.retainAll(new ArrayList<>(origin), relevant2);
+        assertEquals(expected, result2);
     }
 
     @Test
-    public final void retainAllIncompatibleType() {
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            new ArrayList<>(samplesAndIncompatible).retainAll(treeSet);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertEquals(
-                    samples,
-                    Collecting.retainAll(
-                            new ArrayList<>(samplesAndIncompatible),
-                            treeSet)
-            );
-        }
+    void contains_single() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Set<String> subject = new TreeSet<>(origin);
+        final String item1 = origin.get(2);
+        final String item2 = SUPPLY.nextStringExcluding(subject);
+        final String noItem = null;
+        final int foreign = SUPPLY.nextInt();
+        assertTrue(Collecting.contains(subject, item1));
+        assertFalse(Collecting.contains(subject, item2));
+        assertFalse(Collecting.contains(subject, noItem));
+        assertFalse(Collecting.contains(subject, foreign));
+
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.contains(null, SUPPLY.nextString()));
     }
 
     @Test
-    public final void contains() {
-        assertTrue(Collecting.contains(samples, sample1));
-        assertTrue(Collecting.contains(samples, sample2));
-        assertTrue(Collecting.contains(samples, sample3));
+    void contains_more() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Set<String> subject = new TreeSet<>(origin);
+        final String item1 = origin.get(2);
+        final String item2 = SUPPLY.nextStringExcluding(subject);
+        final String noItem = null;
+        final int foreign = SUPPLY.nextInt();
+        assertTrue(Collecting.contains(subject, item1, item1, item1, item1));
+        assertFalse(Collecting.contains(subject, item1, item1, item2, item1));
+        assertFalse(Collecting.contains(subject, item1, item1, noItem, item1));
+        assertFalse(Collecting.contains(subject, item1, item1, foreign, item1));
+    }
 
-        assertFalse(Collecting.contains(samples, SUPPLY.nextString()));
-        assertFalse(Collecting.contains(samples, noString));
-        assertFalse(Collecting.contains(samples, NULL_ELEMENT));
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "MismatchedQueryAndUpdateOfCollection"})
+    @Test
+    void containsAll_Collection() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Set<String> subject = new TreeSet<>(origin);
+        final List<?> items1 = origin.subList(2, 6);
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        assertTrue(Collecting.containsAll(subject, items1));
+        assertFalse(Collecting.containsAll(subject, items2));
+        assertFalse(Collecting.containsAll(subject, items3));
+        assertFalse(Collecting.containsAll(subject, items4));
 
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            treeSet.contains(NULL_ELEMENT);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(Collecting.contains(treeSet, NULL_ELEMENT));
-        }
-        try {
-            //noinspection SuspiciousMethodCalls
-            treeSet.contains(noString);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(Collecting.contains(treeSet, noString));
-        }
+        final Collection<String> missing = null;
+        final Collection<String> empty = new ArrayList<>(0);
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.containsAll(missing, SUPPLY.nextStringList(4)));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.containsAll(missing, empty));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.containsAll(new ArrayList<>(SUPPLY.nextStringList(4)), missing));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.containsAll(empty, missing));
     }
 
     @Test
-    public final void containsArray() {
-        assertTrue(Collecting.contains(samples, sample1, sample2, sample3));
-        assertFalse(Collecting.contains(samples, SUPPLY.nextString(), noString, NULL_ELEMENT));
+    void proxy_Collection() {
+        final Collection<String> origin = SUPPLY.nextStringList(4);
+        final Collection<String> proxy = Collecting.proxy(origin);
+        assertEquals(origin.size(), proxy.size());
+        assertEquals(origin.toString(), proxy.toString());
+        assertArrayEquals(origin.toArray(), proxy.toArray());
     }
 
     @Test
-    public final void testContainsAll() {
-        assertTrue(Collecting.containsAll(samplesAndNull, samples));
-        assertFalse(Collecting.containsAll(samples, samplesAndIncompatible));
+    void proxy_List() {
+        final List<String> origin = SUPPLY.nextStringList(4);
+        final List<String> copy = new ArrayList<>(origin);
+        final List<String> proxy = Collecting.proxy(origin);
+        assertEquals(origin.size(), proxy.size());
+        assertEquals(origin.toString(), proxy.toString());
+        assertEquals(origin.hashCode(), proxy.hashCode());
+        assertEquals(origin.equals(copy), proxy.equals(copy));
+        assertEquals(copy.equals(origin), copy.equals(proxy));
+    }
 
-        final Collection<String> treeSet = new TreeSet<>(samples);
-        try {
-            treeSet.containsAll(samplesAndNull);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(Collecting.containsAll(treeSet, samplesAndNull));
-        }
-        try {
-            treeSet.containsAll(samplesAndIncompatible);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(Collecting.contains(treeSet, samplesAndIncompatible));
+    @Test
+    void proxy_Set() {
+        final Set<String> origin = SUPPLY.nextStringSet(4);
+        final Set<String> copy = new HashSet<>(origin);
+        final Set<String> proxy = Collecting.proxy(origin);
+        assertEquals(origin.size(), proxy.size());
+        assertEquals(origin.toString(), proxy.toString());
+        assertEquals(origin.hashCode(), proxy.hashCode());
+        assertEquals(origin.equals(copy), proxy.equals(copy));
+        assertEquals(copy.equals(origin), copy.equals(proxy));
+    }
+
+    @SuppressWarnings("Convert2MethodRef")
+    enum RemoveCase {
+        PRESENT(origin -> origin.get(2),
+                origin -> origin.subList(0, 4)),
+        ABSENT(origin -> SUPPLY.nextStringExcluding(origin),
+               origin -> Arrays.asList(origin.get(1), SUPPLY.nextStringExcluding(origin), origin.get(3))),
+        NULL(origin -> null,
+             origin -> Arrays.asList(origin.get(1), null, origin.get(3))),
+        FOREIGN(origin -> SUPPLY.nextInt(),
+                origin -> Arrays.asList(origin.get(1), SUPPLY.nextInt(), origin.get(3)));
+
+        private final Function<List<String>, Object> obsolete;
+        private final Function<List<String>, List<?>> obsoleteList;
+
+        RemoveCase(final Function<List<String>, Object> obsolete, Function<List<String>, List<?>> obsoleteList) {
+            this.obsolete = obsolete;
+            this.obsoleteList = obsoleteList;
         }
     }
 }
