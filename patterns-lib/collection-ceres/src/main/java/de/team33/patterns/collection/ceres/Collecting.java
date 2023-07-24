@@ -1,5 +1,7 @@
 package de.team33.patterns.collection.ceres;
 
+import de.team33.patterns.building.elara.LateBuilder;
+
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
@@ -10,6 +12,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -637,6 +640,16 @@ public final class Collecting {
     }
 
     /**
+     * Returns a new {@link Builder} for target instances as supplied by the given {@link Supplier}.
+     *
+     * @param <E> The element type.
+     * @param <C> The final type of the target instances, at least {@link Collection}.
+     */
+    public static <E, C extends Collection<E>> Builder<E, C> builder(final Supplier<C> newTarget) {
+        return new Builder<>(newTarget, Builder.class);
+    }
+
+    /**
      * Utility interface to set up a target instance of {@link Collection}.
      *
      * @param <E> The element type.
@@ -673,16 +686,36 @@ public final class Collecting {
             return setup(c -> Collecting.add(c, element0, element1, more));
         }
 
-        default S addAll(final Stream<? extends E> elements) {
+        default S addAll(final Collection<? extends E> elements) {
             return setup(c -> Collecting.addAll(c, elements));
         }
 
-        default S addAll(final Collection<? extends E> elements) {
+        default S addAll(final Stream<? extends E> elements) {
             return setup(c -> Collecting.addAll(c, elements));
         }
 
         default S addAll(final Iterable<? extends E> elements) {
             return setup(c -> Collecting.addAll(c, elements));
+        }
+
+        default S addAll(final E[] elements) {
+            return setup(c -> Collecting.addAll(c, elements));
+        }
+    }
+
+    /**
+     * Builder implementation to build target instances of {@link Collection}.
+     *
+     * @param <E> The element type.
+     * @param <C> The final type of the target instances, at least {@link Collection}.
+     */
+    public static class Builder<E, C extends Collection<E>>
+            extends LateBuilder<C, Builder<E, C>>
+            implements Setup<E, C, Builder<E, C>> {
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private Builder(final Supplier<C> newResult, final Class builderClass) {
+            super(newResult, builderClass);
         }
     }
 }
