@@ -666,6 +666,7 @@ public final class Collecting {
      * @param <C> The final type of the target instance, at least {@link Collection}.
      * @param <S> The final type of the Setup implementation.
      */
+    @FunctionalInterface
     public interface Setup<E, C extends Collection<E>, S extends Setup<E, C, S>>
             extends de.team33.patterns.building.elara.Setup<C, S> {
 
