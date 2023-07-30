@@ -650,6 +650,16 @@ public final class Collecting {
     }
 
     /**
+     * Returns a new {@link Charger} for target instances as supplied by the given {@link Supplier}.
+     *
+     * @param <E> The element type.
+     * @param <C> The final type of the target instances, at least {@link Collection}.
+     */
+    public static <E, C extends Collection<E>> Charger<E, C> charger(final C newTarget) {
+        return new Charger<E, C>(newTarget, Charger.class);
+    }
+
+    /**
      * Utility interface to set up a target instance of {@link Collection}.
      *
      * @param <E> The element type.
@@ -705,6 +715,8 @@ public final class Collecting {
 
     /**
      * Builder implementation to build target instances of {@link Collection}.
+     * <p>
+     * User {@link #builder(Supplier)} to get an instance.
      *
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
@@ -716,6 +728,24 @@ public final class Collecting {
         @SuppressWarnings({"rawtypes", "unchecked"})
         private Builder(final Supplier<C> newResult, final Class builderClass) {
             super(newResult, builderClass);
+        }
+    }
+
+    /**
+     * Charger implementation to charge target instances of {@link Collection}.
+     * <p>
+     * User {@link #charger(Collection)} to get an instance.
+     *
+     * @param <E> The element type.
+     * @param <C> The final type of the target instances, at least {@link Collection}.
+     */
+    public static class Charger<E, C extends Collection<E>>
+            extends de.team33.patterns.building.elara.Charger<C, Charger<E, C>>
+            implements Setup<E, C, Charger<E, C>> {
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private Charger(final C target, final Class builderClass) {
+            super(target, builderClass);
         }
     }
 }
