@@ -110,6 +110,49 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(expected, result);
     }
 
+//    @Test
+//    final void removeAll_null() {
+//        final List<String> original = SUPPLY.nextStringList(36);
+//        final Collection<String> head = null;
+//        final Stream<String> stream = null;
+//        final Iterable<String> iterable = null;
+//        final String[] array = null;
+//
+//        final List<String> result = resultOf(setup().addAll(original)
+//                                                    .removeAll(head)
+//                                                    .removeAll(stream)
+//                                                    .removeAll(iterable)
+//                                                    .removeAll(array));
+//        assertEquals(original, result);
+//    }
+
+    @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+    @Test
+    final void retainAll() {
+        final List<String> original = SUPPLY.nextStringList(36);
+        final Collection<String> head = original.subList(0, 25);
+        final Stream<String> stream = original.stream().skip(10);
+        final Iterable<String> iterable1 = original.subList(3, 28);
+        final List<String> subList1216 = original.subList(6, 31);
+        final Iterable<String> iterable2 = () -> subList1216.iterator();
+        final String[] array = original.subList(9, 26).toArray(new String[]{});
+
+        final List<String> expected = new ArrayList<String>(original) {{
+            retainAll(original.subList(0, 25));
+            retainAll(original.subList(10, 36));
+            retainAll(original.subList(3, 28));
+            retainAll(original.subList(6, 31));
+            retainAll(original.subList(9, 26));
+        }};
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .retainAll(head)
+                                                    .retainAll(stream)
+                                                    .retainAll(iterable1)
+                                                    .retainAll(iterable2)
+                                                    .retainAll(array));
+        assertEquals(expected, result);
+    }
+
     @Test
     final void clear() {
         final List<String> expected = Collections.emptyList();

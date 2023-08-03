@@ -426,7 +426,7 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Stream<?> elements) {
-        return retainAll(subject, addAll(new HashSet<>(), elements.filter(subject::contains)));
+        return retainAll(subject, addAll(new HashSet<>(), elements));
     }
 
     /**
@@ -469,7 +469,7 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Stream)
      * @see Collecting#retainAll(Collection, Iterable)
      */
-    public static <C extends Collection<?>> C retainAll(final C subject, final Object... elements) {
+    public static <C extends Collection<?>> C retainAll(final C subject, final Object[] elements) {
         return retainAll(subject, Arrays.asList(elements));
     }
 
@@ -891,6 +891,55 @@ public final class Collecting {
          */
         default S removeAll(final Object[] elements) {
             return setup(c -> Collecting.removeAll(c, elements));
+        }
+
+        /**
+         * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+         * {@link Collection#retainAll(Collection)} when the instance to be set up does not support the requested
+         * <em>elements</em>.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collection#retainAll(Collection)
+         * @see Collecting#retainAll(Collection, Collection)
+         */
+        default S retainAll(final Collection<?> elements) {
+            return setup(c -> Collecting.retainAll(c, elements));
+        }
+
+        /**
+         * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#retainAll(Collection, Stream)
+         */
+        default S retainAll(final Stream<?> elements) {
+            return setup(c -> Collecting.retainAll(c, elements));
+        }
+
+        /**
+         * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#retainAll(Collection, Iterable)
+         */
+        default S retainAll(final Iterable<?> elements) {
+            return setup(c -> Collecting.retainAll(c, elements));
+        }
+
+        /**
+         * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#retainAll(Collection, Object[])
+         */
+        default S retainAll(final Object[] elements) {
+            return setup(c -> Collecting.retainAll(c, elements));
         }
 
         /**
