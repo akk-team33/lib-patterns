@@ -3,10 +3,7 @@ package de.team33.test.patterns.collection.ceres;
 import de.team33.patterns.collection.ceres.Collecting;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,10 +29,18 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @SuppressWarnings("Convert2MethodRef")
     @Test
     final void add_more() {
-        final List<String> expected = SUPPLY.nextStringList(9);
-        final List<String> result = resultOf(setup().add(expected.get(0), expected.get(1))
-                                                    .add(expected.get(2), expected.get(3), expected.get(4))
-                                                    .add(expected.get(5), expected.get(6), expected.get(7), expected.get(8)));
+        final List<String> original = SUPPLY.nextStringList(9);
+        final List<String> expected = new ArrayList<String>(original) {{
+            addAll(2, Arrays.asList(null, null, null, null, null));
+        }};
+        final List<String> result = resultOf(setup().add(original.get(0), original.get(1))
+                                                    .add(null, null, (String) null)
+                                                    .add(null, null, (String[]) null)
+                                                    .add(original.get(2), original.get(3), original.get(4))
+                                                    .add(original.get(5),
+                                                         original.get(6),
+                                                         original.get(7),
+                                                         original.get(8)));
         assertEquals(expected, result);
     }
 
@@ -48,7 +53,11 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final Iterable<String> iterable1 = expected.subList(8, 12);
         final Iterable<String> iterable2 = () -> expected.subList(12, 16).iterator();
         final String[] array = expected.subList(16, 20).toArray(new String[4]);
-        final List<String> result = resultOf(setup().addAll(head)
+        final List<String> result = resultOf(setup().addAll((Collection<String>) null)
+                                                    .addAll((Stream<String>) null)
+                                                    .addAll((Iterable<String>) null)
+                                                    .addAll((String[]) null)
+                                                    .addAll(head)
                                                     .addAll(stream)
                                                     .addAll(iterable1)
                                                     .addAll(iterable2)
@@ -82,6 +91,8 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         }};
         final List<String> result = resultOf(setup().addAll(original)
                                                     .remove(original.get(1), original.get(5))
+                                                    .remove(original.get(4), original.get(9), (Object) null)
+                                                    .remove(original.get(5), original.get(17), (Object[]) null)
                                                     .remove(original.get(4), original.get(9), original.get(17))
                                                     .remove(original.get(5), original.get(4), original.get(9), original.get(2)));
         assertEquals(expected, result);
@@ -110,21 +121,16 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(expected, result);
     }
 
-//    @Test
-//    final void removeAll_null() {
-//        final List<String> original = SUPPLY.nextStringList(36);
-//        final Collection<String> head = null;
-//        final Stream<String> stream = null;
-//        final Iterable<String> iterable = null;
-//        final String[] array = null;
-//
-//        final List<String> result = resultOf(setup().addAll(original)
-//                                                    .removeAll(head)
-//                                                    .removeAll(stream)
-//                                                    .removeAll(iterable)
-//                                                    .removeAll(array));
-//        assertEquals(original, result);
-//    }
+    @Test
+    final void removeAll_null() {
+        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .removeAll((Collection<?>) null)
+                                                    .removeAll((Stream<?>) null)
+                                                    .removeAll((Iterable<?>) null)
+                                                    .removeAll((Object[]) null));
+        assertEquals(original, result);
+    }
 
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     @Test
@@ -150,6 +156,18 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .retainAll(iterable1)
                                                     .retainAll(iterable2)
                                                     .retainAll(array));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void retainAll_null() {
+        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> expected = Collections.emptyList();
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .retainAll((Collection<?>) null)
+                                                    .retainAll((Stream<?>) null)
+                                                    .retainAll((Iterable<?>) null)
+                                                    .retainAll((Object[]) null));
         assertEquals(expected, result);
     }
 

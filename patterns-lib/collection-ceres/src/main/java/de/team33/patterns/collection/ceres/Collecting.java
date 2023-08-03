@@ -24,6 +24,8 @@ import static java.util.Arrays.asList;
 @SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
 public final class Collecting {
 
+    private static final Object[] EMPTY_ARRAY = {};
+
     private Collecting() {
     }
 
@@ -639,6 +641,23 @@ public final class Collecting {
         };
     }
 
+    private static <E> Collection<E> nullAsEmpty(final Collection<E> nullable) {
+        return (null == nullable) ? Collections.emptySet() : nullable;
+    }
+
+    private static <E> Stream<E> nullAsEmpty(final Stream<E> nullable) {
+        return (null == nullable) ? Stream.empty() : nullable;
+    }
+
+    private static <E> Iterable<E> nullAsEmpty(final Iterable<E> nullable) {
+        return (null == nullable) ? Collections.emptySet() : nullable;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E> E[] nullAsEmpty(final E[] nullable) {
+        return (null == nullable) ? (E[]) EMPTY_ARRAY : nullable;
+    }
+
     /**
      * Returns a new {@link Builder} for target instances as supplied by the given {@link Supplier}.
      *
@@ -696,8 +715,7 @@ public final class Collecting {
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
-         * @throws NullPointerException          if the {@code array} of {@code more} elements is {@code null} or
-         *                                       if any of the specified <em>elements</em> is {@code null} and the
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
          *                                       {@code subject} does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
          *                                       prevents them from being added to the {@code subject}
@@ -709,16 +727,17 @@ public final class Collecting {
          * @see Collecting#add(Collection, Object, Object, Object[])
          */
         default S add(final E element0, final E element1, final E... more) {
-            return setup(c -> Collecting.add(c, element0, element1, more));
+            return setup(c -> Collecting.add(c, element0, element1, nullAsEmpty(more)));
         }
 
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Collection}.
          *
          * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
-         * @throws NullPointerException          if the {@link Collection} of <em>elements</em> is {@code null} or
-         *                                       if any of the specified <em>elements</em> is {@code null} and the
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
          *                                       {@code subject} does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
          *                                       prevents them from being added to the {@code subject}
@@ -731,16 +750,17 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Collection)
          */
         default S addAll(final Collection<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, elements));
+            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Stream}.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
          *                                       instance to be set up.
-         * @throws NullPointerException          if the {@link Stream} of <em>elements</em> is {@code null} or
-         *                                       if any of the specified <em>elements</em> is {@code null} and the
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
          *                                       {@code subject} does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
          *                                       prevents them from being added to the {@code subject}
@@ -752,17 +772,18 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Stream)
          */
         default S addAll(final Stream<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, elements));
+            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterable}.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} or
-         *                                       {@link Collection#addAll(Collection)} is not supported by the
+         *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
-         * @throws NullPointerException          if the {@link Iterable} of <em>elements</em> is {@code null} or
-         *                                       if any of the specified <em>elements</em> is {@code null} and the
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
          *                                       {@code subject} does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
          *                                       prevents them from being added to the {@code subject}
@@ -774,17 +795,18 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Iterable)
          */
         default S addAll(final Iterable<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, elements));
+            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@code array}.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} or
-         *                                       {@link Collection#addAll(Collection)} is not supported by the
+         *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
-         * @throws NullPointerException          if the {@code array} of <em>elements</em> is {@code null} or
-         *                                       if any of the specified <em>elements</em> is {@code null} and the
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
          *                                       {@code subject} does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
          *                                       prevents them from being added to the {@code subject}
@@ -796,7 +818,7 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Iterable)
          */
         default S addAll(final E[] elements) {
-            return setup(c -> Collecting.addAll(c, elements));
+            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
         }
 
         /**
@@ -829,13 +851,15 @@ public final class Collecting {
          * @see Collecting#remove(Collection, Object, Object, Object[])
          */
         default S remove(final Object element0, final Object element1, final Object... more) {
-            return setup(c -> Collecting.remove(c, element0, element1, more));
+            return setup(c -> Collecting.remove(c, element0, element1, nullAsEmpty(more)));
         }
 
         /**
          * Removes multiple <em>elements</em> from the instance to be set up.
          * <p>
          * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Collection}.
          * <p>
          * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
          * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the instance to be set up
@@ -848,13 +872,15 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Collection)
          */
         default S removeAll(final Collection<?> elements) {
-            return setup(c -> Collecting.removeAll(c, elements));
+            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Removes multiple <em>elements</em> from the instance to be set up.
          * <p>
          * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Stream}.
          *
          * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
@@ -862,13 +888,15 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Stream)
          */
         default S removeAll(final Stream<?> elements) {
-            return setup(c -> Collecting.removeAll(c, elements));
+            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Removes multiple <em>elements</em> from the instance to be set up.
          * <p>
          * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterable}.
          *
          * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
@@ -876,13 +904,15 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Iterable)
          */
         default S removeAll(final Iterable<?> elements) {
-            return setup(c -> Collecting.removeAll(c, elements));
+            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Removes multiple <em>elements</em> from the instance to be set up.
          * <p>
          * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@code array}.
          *
          * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
@@ -890,11 +920,13 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Object[])
          */
         default S removeAll(final Object[] elements) {
-            return setup(c -> Collecting.removeAll(c, elements));
+            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Collection}.
          * <p>
          * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
          * {@link Collection#retainAll(Collection)} when the instance to be set up does not support the requested
@@ -906,40 +938,46 @@ public final class Collecting {
          * @see Collecting#retainAll(Collection, Collection)
          */
         default S retainAll(final Collection<?> elements) {
-            return setup(c -> Collecting.retainAll(c, elements));
+            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Stream}.
          *
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Stream)
          */
         default S retainAll(final Stream<?> elements) {
-            return setup(c -> Collecting.retainAll(c, elements));
+            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterable}.
          *
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Iterable)
          */
         default S retainAll(final Iterable<?> elements) {
-            return setup(c -> Collecting.retainAll(c, elements));
+            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
         }
 
         /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@code array}.
          *
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Object[])
          */
         default S retainAll(final Object[] elements) {
-            return setup(c -> Collecting.retainAll(c, elements));
+            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
         }
 
         /**
