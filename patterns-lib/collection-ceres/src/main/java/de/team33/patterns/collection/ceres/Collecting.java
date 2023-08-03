@@ -798,6 +798,17 @@ public final class Collecting {
         default S addAll(final E[] elements) {
             return setup(c -> Collecting.addAll(c, elements));
         }
+
+        /**
+         * Removes all <em>elements</em> from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the instance to be
+         *                                       set up.
+         * @see Collection#clear()
+         */
+        default S clear() {
+            return setup(Collecting::clear);
+        }
     }
 
     /**

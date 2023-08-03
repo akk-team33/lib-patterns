@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,6 +53,14 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .addAll(iterable1)
                                                     .addAll(iterable2)
                                                     .addAll(array));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void clear() {
+        final List<String> expected = Collections.emptyList();
+        final List<String> result = resultOf(setup().addAll(SUPPLY.nextStringList(20))
+                                                    .clear());
         assertEquals(expected, result);
     }
 }
