@@ -820,6 +820,8 @@ public final class Collecting {
 
         /**
          * Removes two or more <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
          *
          * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
@@ -828,6 +830,67 @@ public final class Collecting {
          */
         default S remove(final Object element0, final Object element1, final Object... more) {
             return setup(c -> Collecting.remove(c, element0, element1, more));
+        }
+
+        /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+         * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the instance to be set up
+         * does not support the requested <em>elements</em>.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collection#removeAll(Collection)
+         * @see Collecting#removeAll(Collection, Collection)
+         */
+        default S removeAll(final Collection<?> elements) {
+            return setup(c -> Collecting.removeAll(c, elements));
+        }
+
+        /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#removeAll(Collection, Stream)
+         */
+        default S removeAll(final Stream<?> elements) {
+            return setup(c -> Collecting.removeAll(c, elements));
+        }
+
+        /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#removeAll(Collection, Iterable)
+         */
+        default S removeAll(final Iterable<?> elements) {
+            return setup(c -> Collecting.removeAll(c, elements));
+        }
+
+        /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#removeAll(Collection, Object[])
+         */
+        default S removeAll(final Object[] elements) {
+            return setup(c -> Collecting.removeAll(c, elements));
         }
 
         /**
