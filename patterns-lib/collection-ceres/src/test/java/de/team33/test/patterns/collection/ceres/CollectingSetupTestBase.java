@@ -57,6 +57,39 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     }
 
     @Test
+    final void remove_single() {
+        final List<String> original = SUPPLY.nextStringList(20);
+        final List<String> expected = new ArrayList<String>(original) {{
+            remove(original.get(0));
+            remove(original.get(3));
+            remove(original.get(7));
+        }};
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .remove(original.get(0))
+                                                    .remove(original.get(3))
+                                                    .remove(original.get(7)));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void remove_more() {
+        final List<String> original = SUPPLY.nextStringList(20);
+        final List<String> expected = new ArrayList<String>(original) {{
+            remove(original.get(1));
+            remove(original.get(2));
+            remove(original.get(4));
+            remove(original.get(5));
+            remove(original.get(9));
+            remove(original.get(17));
+        }};
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .remove(original.get(1), original.get(5))
+                                                    .remove(original.get(4), original.get(9), original.get(17))
+                                                    .remove(original.get(5), original.get(4), original.get(9), original.get(2)));
+        assertEquals(expected, result);
+    }
+
+    @Test
     final void clear() {
         final List<String> expected = Collections.emptyList();
         final List<String> result = resultOf(setup().addAll(SUPPLY.nextStringList(20))

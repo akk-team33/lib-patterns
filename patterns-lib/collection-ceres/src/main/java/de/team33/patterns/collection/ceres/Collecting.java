@@ -671,7 +671,7 @@ public final class Collecting {
             extends de.team33.patterns.building.elara.Setup<C, S> {
 
         /**
-         * Adds an element to the instance to be set up.
+         * Adds an <em>element</em> to the instance to be set up.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
@@ -692,7 +692,7 @@ public final class Collecting {
         }
 
         /**
-         * Adds two or more elements to the instance to be set up.
+         * Adds two or more <em>elements</em> to the instance to be set up.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
@@ -797,6 +797,37 @@ public final class Collecting {
          */
         default S addAll(final E[] elements) {
             return setup(c -> Collecting.addAll(c, elements));
+        }
+
+        /**
+         * Removes an <em>element</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains the <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+         * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the instance to be set up
+         * does not support the requested <em>element</em>.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collection#remove(Object)
+         * @see Collecting#remove(Collection, Object)
+         */
+        default S remove(final Object element) {
+            return setup(c -> Collecting.remove(c, element));
+        }
+
+        /**
+         * Removes two or more <em>elements</em> from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#remove(Collection, Object, Object, Object[])
+         */
+        default S remove(final Object element0, final Object element1, final Object... more) {
+            return setup(c -> Collecting.remove(c, element0, element1, more));
         }
 
         /**
