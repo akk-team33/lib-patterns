@@ -15,6 +15,8 @@ import static java.util.stream.Collectors.toMap;
  * {@link Field}s of a specific class.
  *
  * @see #mapping(Class, Mode)
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
 @Deprecated
 public final class Fields {
@@ -40,7 +42,10 @@ public final class Fields {
 
     /**
      * Defines modes for determining relevant fields of a class that represent its properties.
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+     * package/module may be removed in a future release.
      */
+    @Deprecated
     public enum Mode {
 
         /**

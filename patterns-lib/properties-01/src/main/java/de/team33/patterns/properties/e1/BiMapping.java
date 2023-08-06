@@ -12,6 +12,8 @@ import java.util.function.Function;
  * {@link Map}. In Addition, it can copy the properties from one instance of the type to another.
  *
  * @param <T> The type whose properties are to be mapped.
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
 @Deprecated
 public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
@@ -48,7 +50,10 @@ public interface BiMapping<T> extends Mapping<T>, ReMapping<T> {
      * Defines a builder for the declarative creation of a {@link BiMapping}.
      *
      * @param <T> The type whose properties are to be mapped.
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+     * package/module may be removed in a future release.
      */
+    @Deprecated
     class Builder<T> {
 
         @SuppressWarnings("rawtypes")
