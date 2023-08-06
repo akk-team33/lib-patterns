@@ -7,15 +7,19 @@ import static java.lang.String.format;
 
 /**
  * Constants and methods for dealing with FactoryHubs.
+ *
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit
+ * and this package/module may be removed in a future release.
  */
+@Deprecated
 public class FactoryUtil {
 
     private static final Logger LOG = Logger.getLogger(FactoryHub.class.getCanonicalName());
     private static final String UNKNOWN_TOKEN =
             "unknown token:%n" +
-            "- type of token   : %s%n" +
-            "- value* of token : %s%n" +
-            "  *(string representation)%n";
+                    "- type of token   : %s%n" +
+                    "- value* of token : %s%n" +
+                    "  *(string representation)%n";
 
     /**
      * A {@link Consumer} to be used with {@link FactoryHub.Collector#setUnknownTokenListener(Consumer)}

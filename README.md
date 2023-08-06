@@ -15,7 +15,7 @@ http://www.team33.de/dev/patterns/
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * exceptional-01 (Team33 Exceptional Library - Edition 1)
-  * production-01 (Team33 Production Library - Edition 1)
+  * production-01 (Team33 Production Library - Edition 1) - **deprecated**
   * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
   * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
@@ -38,6 +38,7 @@ http://www.team33.de/dev/patterns/
 ### next
 
 * Marked module properties-01 as deprecated
+* Marked module production-01 as deprecated
 * Added module collection-ceres
 
 ### 1.12.2

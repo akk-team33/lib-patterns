@@ -5,6 +5,8 @@ package de.team33.patterns.properties.e1;
  * returns that target as a <em>functional</em> result.
  *
  * @param <T> The target type.
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
 @Deprecated
 public interface TargetOperation<T> {
