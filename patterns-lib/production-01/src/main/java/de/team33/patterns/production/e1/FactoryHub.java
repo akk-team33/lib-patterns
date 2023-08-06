@@ -267,7 +267,10 @@ public abstract class FactoryHub<C> {
      *
      * @param <C> The type of the context of a resulting {@link FactoryHub}.
      * @param <B> The type of the <em>Builder</em> implementation that utilizes this.
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit
+     * and this package/module may be removed in a future release.
      */
+    @Deprecated
     public abstract static class Collector<C, B> {
 
         private final Map<Object, Function<C, ?>> methods = new HashMap<>(0);
@@ -313,7 +316,10 @@ public abstract class FactoryHub<C> {
      *
      * @param <C> The type of the context of a resulting {@link FactoryHub}.
      * @see #builder(Supplier)
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit
+     * and this package/module may be removed in a future release.
      */
+    @Deprecated
     public static final class Builder<C> extends Collector<C, Builder<C>> {
 
         private final Supplier<C> contextGetter;
