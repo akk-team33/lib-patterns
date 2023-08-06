@@ -87,8 +87,11 @@ import static java.util.Collections.unmodifiableMap;
  * </pre>
  *
  * @param <C> The type of the context.
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit
+ * and this package/module may be removed in a future release.
  */
 @SuppressWarnings("BoundedWildcard")
+@Deprecated
 public abstract class FactoryHub<C> {
 
     @SuppressWarnings("rawtypes")

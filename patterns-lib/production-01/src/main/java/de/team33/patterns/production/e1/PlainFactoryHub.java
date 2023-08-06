@@ -2,7 +2,11 @@ package de.team33.patterns.production.e1;
 
 /**
  * Plain implementation of a {@link FactoryHub}.
+ *
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit
+ * and this package/module may be removed in a future release.
  */
+@Deprecated
 public final class PlainFactoryHub extends FactoryHub<PlainFactoryHub> {
 
     private PlainFactoryHub(final Collector<PlainFactoryHub, ?> collector) {
