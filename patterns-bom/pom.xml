@@ -97,17 +97,17 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>features-rhea</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-titan</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>features-rhea</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
