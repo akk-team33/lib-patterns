@@ -1,6 +1,6 @@
 # mvn / build artifacts
 target/
-/00-home/*/apidocs/
+/patterns-home/src/main/generated/
 
 # Mac artifacts
 .DS_Store
