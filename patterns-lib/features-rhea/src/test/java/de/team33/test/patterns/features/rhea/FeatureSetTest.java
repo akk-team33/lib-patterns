@@ -1,7 +1,7 @@
-package de.team33.test.patterns.features.e1;
+package de.team33.test.patterns.features.rhea;
 
-import de.team33.patterns.features.e1.FeatureHub;
-import de.team33.patterns.features.e1.FeatureSet;
+import de.team33.patterns.features.rhea.FeatureHub;
+import de.team33.patterns.features.rhea.FeatureSet;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;

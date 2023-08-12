@@ -1,4 +1,4 @@
-package de.team33.patterns.features.e1;
+package de.team33.patterns.features.rhea;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
