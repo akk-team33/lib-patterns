@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.team33.patterns</groupId>
-    <artifactId>patterns-parent</artifactId>
-    <version>1.6.1-SNAPSHOT</version>
+    <artifactId>patterns-root</artifactId>
+    <version>1.12.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Team33 Patterns Library Parent</name>
-    <description>Parent of team33 patterns library collection</description>
+    <name>Team33 Patterns Library Root</name>
+    <description>Root of team33 patterns library collection</description>
     <url>http://team33.de/dev/patterns</url>
 
     <licenses>
@@ -35,100 +35,16 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <copyright.year>2022</copyright.year>
+        <copyright.year>2023</copyright.year>
         <skipHome>false</skipHome>
+        <skipDeploy>false</skipDeploy>
     </properties>
 
     <modules>
-        <module>testing-01</module>
-        <module>random-mimas</module>
-        <module>random-tarvos</module>
-        <module>production-01</module>
-        <module>random-01</module>
-        <module>exceptional-01</module>
-        <module>lazy-01</module>
-        <module>pooling-01</module>
-        <module>expiry-tethys</module>
-        <module>tuple-janus</module>
-        <module>properties-01</module>
-        <module>math-phoebe</module>
         <module>patterns-bom</module>
+        <module>patterns-lib</module>
+        <module>patterns-home</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <!-- Submodules -->
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>production-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-mimas</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-tarvos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>exceptional-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>lazy-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>pooling-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>tuple-janus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>expiry-tethys</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>properties-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>math-phoebe</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <!-- Testing -->
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.8.2</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 
     <build>
         <pluginManagement>
@@ -136,7 +52,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M5</version>
+                    <version>3.0.0-M9</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -146,10 +62,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.5.0</version>
                     <configuration>
                         <show>protected</show>
                         <bottom><![CDATA[Copyright &copy; ${copyright.year} Andreas Kluge-Kaindl, Bremen (de). All rights reserved.]]></bottom>
+                        <detectLinks>true</detectLinks>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -161,42 +78,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.2.0</version>
-                    <executions>
-                        <execution>
-                            <id>default-resources-home</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${basedir}/../00-home/${project.artifactId}</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${basedir}/../00-home/00-template</directory>
-                                        <filtering>true</filtering>
-                                    </resource>
-                                </resources>
-                                <skip>${skipHome}</skip>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>apidoc-resources-home</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${basedir}/../00-home/${project.artifactId}/apidocs</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.build.directory}/apidocs</directory>
-                                        <filtering>false</filtering>
-                                    </resource>
-                                </resources>
-                                <skip>${skipHome}</skip>
-                            </configuration>
-                        </execution>
-                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>3.1.0</version>
+                    <configuration>
+                        <skip>${skipDeploy}</skip>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
