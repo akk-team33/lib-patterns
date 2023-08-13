@@ -1,15 +1,5 @@
 /**
- * This package contains variants of basic functional constructs that can throw checked exceptions,
- * for example {@link de.team33.patterns.exceptional.e1.XFunction} as a variant of {@link java.util.function.Function}.
- * <p>
- * In addition, it contains tools and utilities that enable the functional constructs defined here to be converted
- * into their counterparts. For example, an {@link de.team33.patterns.exceptional.e1.XFunction} can be converted
- * into a {@link java.util.function.Function}, with any <em>checked</em> exception being wrapped in a specific
- * <em>unchecked</em> exception.
- * <p>
- * The reverse conversion is trivial and does not require any utilities.
- * <p>
- * Finally, it contains tools and utilities for dealing with exceptions as well as exception types for occasional
- * special cases.
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
 package de.team33.patterns.exceptional.e1;

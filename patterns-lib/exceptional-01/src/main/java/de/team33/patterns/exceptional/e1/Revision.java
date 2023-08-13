@@ -32,7 +32,11 @@ import java.util.function.Predicate;
  * @see #of(Throwable)
  * @see #reThrow(Class)
  * @see #close(Function)
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
+@Deprecated
 public final class Revision<T extends Throwable> {
 
     private final T subject;
