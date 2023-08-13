@@ -1,0 +1,133 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-root</artifactId>
+        <version>1.12.3-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>patterns-lib</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Team33 Patterns Library</name>
+    <description>Parent of team33 patterns library collection</description>
+
+    <modules>
+        <module>exceptional-01</module>
+        <module>testing-01</module>
+        <module>testing-titan</module>
+        <module>production-01</module>
+        <module>random-01</module>
+        <module>random-mimas</module>
+        <module>random-tarvos</module>
+        <module>lazy-01</module>
+        <module>lazy-narvi</module>
+        <module>expiry-tethys</module>
+        <module>pooling-01</module>
+        <module>tuple-janus</module>
+        <module>reflect-luna</module>
+        <module>properties-01</module>
+        <module>building-elara</module>
+        <module>notes-eris</module>
+        <module>execution-metis</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Submodules -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>patterns-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.10.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>default-resources-home</id>
+                            <phase>validate</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/../../target/home-collected/patterns-lib/${project.artifactId}</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${basedir}/../../patterns-home/src/main/template/module</directory>
+                                        <filtering>true</filtering>
+                                    </resource>
+                                </resources>
+                                <skip>${skipHome}</skip>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>apidoc-resources-home</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>copy-resources</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>${basedir}/../../target/home-collected/patterns-lib/${project.artifactId}/apidocs</outputDirectory>
+                                <resources>
+                                    <resource>
+                                        <directory>${project.build.directory}/apidocs</directory>
+                                        <filtering>false</filtering>
+                                    </resource>
+                                </resources>
+                                <skip>${skipHome}</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sources-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
