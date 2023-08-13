@@ -39,6 +39,8 @@ http://www.team33.de/dev/patterns/
 
 * Marked module properties-01 as deprecated
 * Marked module production-01 as deprecated
+* Nailed deprecated module random-01 to 1.12.2
+* Nailed deprecated module testing-01 to 1.12.2
 * Added module serving-naiad
 
 ### 1.12.2
