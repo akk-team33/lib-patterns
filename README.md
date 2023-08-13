@@ -29,6 +29,7 @@ http://www.team33.de/dev/patterns/
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
+  * generics-atlas (Team33 Generic Type Library - Edition "atlas")
   * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
   * testing-titan (Team33 Testing Library - Edition "titan")
 
@@ -38,6 +39,7 @@ http://www.team33.de/dev/patterns/
 
 * Marked module properties-01 as deprecated
 * Marked module production-01 as deprecated
+* Added module generics-atlas
 
 ### 1.12.2
 

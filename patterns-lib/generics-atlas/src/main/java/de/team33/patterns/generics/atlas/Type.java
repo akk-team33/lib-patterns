@@ -1,6 +1,6 @@
 package de.team33.patterns.generics.atlas;
 
-import de.team33.patterns.lazy.e1.Lazy;
+import de.team33.patterns.lazy.narvi.Lazy;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -50,10 +50,10 @@ public abstract class Type<T> {
     private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
 
     private final Setup setup;
-    private final Supplier<List<Object>> listView = new Lazy<>(this::newListView);
-    private final Supplier<String> stringView = new Lazy<>(this::newStringView);
-    private final Supplier<Integer> hashCode = new Lazy<>(this::newHashCode);
-    private final Supplier<List<Type<?>>> actualParameters = new Lazy<>(this::newActualParameters);
+    private final Lazy<List<Object>> listView = Lazy.init(this::newListView);
+    private final Lazy<String> stringView = Lazy.init(this::newStringView);
+    private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
+    private final Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
 
     private List<Object> newListView() {
         return Arrays.asList(asClass(), getActualParameters());
