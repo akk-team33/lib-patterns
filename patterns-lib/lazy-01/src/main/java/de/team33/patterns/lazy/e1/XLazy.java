@@ -1,6 +1,6 @@
 package de.team33.patterns.lazy.e1;
 
-import de.team33.patterns.exceptional.e1.XSupplier;
+import de.team33.patterns.exceptional.dione.XSupplier;
 
 /**
  * Implements an {@link XSupplier} that provides a virtually fixed value.
