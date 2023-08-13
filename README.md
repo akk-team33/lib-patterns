@@ -29,6 +29,7 @@ http://www.team33.de/dev/patterns/
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
+  * math-phoebe (Team33 Math Library - Edition "phoebe")
   * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
   * testing-titan (Team33 Testing Library - Edition "titan")
 

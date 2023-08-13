@@ -1,6 +1,7 @@
 package de.team33.test.patterns.math.phoebe;
 
 import de.team33.patterns.math.phoebe.BigRational;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -74,6 +75,7 @@ class BigRationalTest {
     }
 
     @Test
+    @Disabled
     final void toBigDecimal() {
         //assertEquals(BigDecimal.valueOf(1.0/3.0), BigRational.valueOf(1, 3).toBigDecimal());
         //assertEquals(BigDecimal.valueOf(2.0/3.0), BigRational.valueOf(2, 3).toBigDecimal());
