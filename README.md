@@ -14,7 +14,8 @@ http://www.team33.de/dev/patterns/
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * exceptional-01 (Team33 Exceptional Library - Edition 1)
+  * exceptional-dione (Team33 Exceptional Library - Edition "dione")
+  * exceptional-01 (Team33 Exceptional Library - Edition 1) - **deprecated**
   * production-01 (Team33 Production Library - Edition 1) - **deprecated**
   * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
   * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**

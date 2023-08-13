@@ -1,6 +1,6 @@
 package de.team33.patterns.lazy.narvi;
 
-import de.team33.patterns.exceptional.e1.XSupplier;
+import de.team33.patterns.exceptional.dione.XSupplier;
 
 class Mutual<T, X extends Exception> {
 

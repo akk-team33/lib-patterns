@@ -1,7 +1,7 @@
 package de.team33.patterns.pooling.e1;
 
-import de.team33.patterns.exceptional.e1.XConsumer;
-import de.team33.patterns.exceptional.e1.XFunction;
+import de.team33.patterns.exceptional.dione.XConsumer;
+import de.team33.patterns.exceptional.dione.XFunction;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
