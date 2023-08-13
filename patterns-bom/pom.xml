@@ -28,7 +28,7 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-01</artifactId>
-                <version>${project.version}</version>
+                <version>1.12.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
