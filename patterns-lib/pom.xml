@@ -16,6 +16,7 @@
 
     <modules>
         <module>exceptional-01</module>
+        <module>exceptional-dione</module>
         <module>testing-titan</module>
         <module>production-01</module>
         <module>random-mimas</module>
