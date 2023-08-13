@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-root</artifactId>
-    <version>1.12.1-SNAPSHOT</version>
+    <version>1.12.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Root</name>
@@ -78,42 +78,6 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.2.0</version>
-                    <!--executions>
-                        <execution>
-                            <id>default-resources-home</id>
-                            <phase>validate</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${basedir}/../00-home/${project.artifactId}</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${basedir}/../00-home/00-template</directory>
-                                        <filtering>true</filtering>
-                                    </resource>
-                                </resources>
-                                <skip>${skipHome}</skip>
-                            </configuration>
-                        </execution>
-                        <execution>
-                            <id>apidoc-resources-home</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>copy-resources</goal>
-                            </goals>
-                            <configuration>
-                                <outputDirectory>${basedir}/../00-home/${project.artifactId}/apidocs</outputDirectory>
-                                <resources>
-                                    <resource>
-                                        <directory>${project.build.directory}/apidocs</directory>
-                                        <filtering>false</filtering>
-                                    </resource>
-                                </resources>
-                                <skip>${skipHome}</skip>
-                            </configuration>
-                        </execution>
-                    </executions-->
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

@@ -15,7 +15,7 @@ http://www.team33.de/dev/patterns/
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * exceptional-01 (Team33 Exceptional Library - Edition 1)
-  * production-01 (Team33 Production Library - Edition 1)
+  * production-01 (Team33 Production Library - Edition 1) - **deprecated**
   * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
   * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
@@ -25,7 +25,7 @@ http://www.team33.de/dev/patterns/
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
-  * properties-01 (Team33 Properties Library - Edition 1)
+  * properties-01 (Team33 Properties Library - Edition 1) - **deprecated**
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -37,7 +37,17 @@ http://www.team33.de/dev/patterns/
 
 ### next
 
+* Marked module properties-01 as deprecated
+* Marked module production-01 as deprecated
 * Added module serving-naiad
+
+### 1.12.2
+
+* Added class RProvider to module pooling-01
+* Refined module expiry-tethys
+* Refined module reflect-luna ...
+  * Added option <public fields> to class Fields
+  * Fields ignorable by name
 
 ### 1.12.0
 

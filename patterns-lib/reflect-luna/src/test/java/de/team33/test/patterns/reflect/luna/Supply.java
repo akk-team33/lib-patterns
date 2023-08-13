@@ -7,6 +7,7 @@ import de.team33.sample.patterns.reflect.luna.Level1;
 import de.team33.sample.patterns.reflect.luna.Level2;
 import de.team33.sample.patterns.reflect.luna.Simple;
 
+import java.awt.GridBagConstraints;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Random;
@@ -44,5 +45,19 @@ public class Supply extends Random implements Generator, Charger {
                                        .setDoubleValue2(nextDouble())
                                        .setInstantValue2(nextInstant())
                                        .setStringValue2(nextString());
+    }
+
+    public GridBagConstraints nextGridBagConstraints() {
+        return new GridBagConstraints(nextInt(8),
+                                      nextInt(8),
+                                      nextInt(16),
+                                      nextInt(16),
+                                      nextDouble(),
+                                      nextDouble(),
+                                      nextInt(4),
+                                      nextInt(4),
+                                      null,
+                                      nextInt(5),
+                                      nextInt(5));
     }
 }

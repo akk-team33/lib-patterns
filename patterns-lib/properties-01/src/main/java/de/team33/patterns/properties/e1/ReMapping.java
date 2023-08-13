@@ -10,7 +10,10 @@ import java.util.function.BiConsumer;
  * Abstracts a tool which can re-map properties of an instance of a certain type from a {@link Map}.
  *
  * @param <T> The type whose properties are to be re-mapped.
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
+@Deprecated
 @FunctionalInterface
 public interface ReMapping<T> {
 
@@ -34,7 +37,10 @@ public interface ReMapping<T> {
      * Defines a builder for the declarative creation of a {@link ReMapping}.
      *
      * @param <T> The type whose properties are to be re-mapped.
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+     * package/module may be removed in a future release.
      */
+    @Deprecated
     class Builder<T> {
 
         @SuppressWarnings("rawtypes")

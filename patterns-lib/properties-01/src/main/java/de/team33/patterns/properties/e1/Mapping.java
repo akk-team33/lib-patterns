@@ -9,7 +9,10 @@ import java.util.function.Function;
  * Abstracts a tool which can map properties of an instance of a certain type into a {@link Map}.
  *
  * @param <T> The type whose properties are to be mapped.
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
+@Deprecated
 @FunctionalInterface
 public interface Mapping<T> {
 
@@ -41,7 +44,10 @@ public interface Mapping<T> {
      * Defines a builder for the declarative creation of a {@link Mapping}.
      *
      * @param <T> The type whose properties are to be mapped.
+     * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+     * package/module may be removed in a future release.
      */
+    @Deprecated
     class Builder<T> {
 
         private final Map<String, Function<T, ?>> getters = new TreeMap<>();

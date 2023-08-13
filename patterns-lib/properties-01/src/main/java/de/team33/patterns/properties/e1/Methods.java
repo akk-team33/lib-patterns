@@ -26,7 +26,10 @@ import static java.util.stream.Collectors.toMap;
  * getter {@link Method}s of a specific class.
  *
  * @see #mapping(Class)
+ * @deprecated Further development is discontinued due to relatively high complexity with little benefit and this
+ * package/module may be removed in a future release.
  */
+@Deprecated
 public final class Methods {
 
     private Methods() {

@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import static java.util.Collections.unmodifiableMap;
 
+@Deprecated
 class AccMapping<T> implements BiMapping<T> {
 
     private final Map<String, ? extends Accessor<T, Object>> methods;

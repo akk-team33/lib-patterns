@@ -3,6 +3,7 @@ package de.team33.patterns.properties.e1;
 import java.util.Map;
 import java.util.TreeMap;
 
+@Deprecated
 class ComboMapping<T> implements BiMapping<T> {
 
     private final Mapping<? super T> mapping;
