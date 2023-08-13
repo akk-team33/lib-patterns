@@ -16,10 +16,8 @@
 
     <modules>
         <module>exceptional-01</module>
-        <module>testing-01</module>
         <module>testing-titan</module>
         <module>production-01</module>
-        <module>random-01</module>
         <module>random-mimas</module>
         <module>random-tarvos</module>
         <module>lazy-01</module>
