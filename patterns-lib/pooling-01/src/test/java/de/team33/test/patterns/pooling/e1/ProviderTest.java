@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static de.team33.patterns.exceptional.e1.Conversion.function;
+import static de.team33.patterns.exceptional.dione.Conversion.function;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;

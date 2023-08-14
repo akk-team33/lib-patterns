@@ -14,7 +14,11 @@ import java.util.function.Supplier;
  * {@link WrappedException}. Any unchecked exception that may occur will remain unaffected.
  *
  * @see Converter
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
+@Deprecated
 public final class Conversion {
 
     private static final Converter CONVERTER = Converter.using(WrappedException::new);

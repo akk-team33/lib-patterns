@@ -15,7 +15,11 @@ import java.util.function.Supplier;
  * specific unchecked exception. Any unchecked exception that may occur will remain unaffected.
  *
  * @see Conversion
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
+@Deprecated
 public final class Converter {
 
     private final Function<Throwable, ? extends RuntimeException> wrapping;

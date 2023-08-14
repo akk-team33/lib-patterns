@@ -4,7 +4,11 @@ import java.util.Optional;
 
 /**
  * An unchecked exception that is used to signal an unexpected state, particularly an unexpected exception.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
+@Deprecated
 public class ExpectationException extends RuntimeException {
 
     /**

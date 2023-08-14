@@ -1,7 +1,7 @@
 package de.team33.test.patterns.reflect.luna;
 
-import de.team33.patterns.exceptional.e1.XConsumer;
-import de.team33.patterns.exceptional.e1.XFunction;
+import de.team33.patterns.exceptional.dione.XConsumer;
+import de.team33.patterns.exceptional.dione.XFunction;
 import de.team33.patterns.reflect.luna.Fields;
 import de.team33.sample.patterns.reflect.luna.Simple;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package de.team33.patterns.properties.e1;
 
-import de.team33.patterns.exceptional.e1.Converter;
+import de.team33.patterns.exceptional.dione.Converter;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

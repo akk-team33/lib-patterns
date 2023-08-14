@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 
 /**
  * An unchecked exception dedicated to temporarily wrap checked exceptions.
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>exceptional-dione</em>.
  */
+@Deprecated
 public class WrappedException extends RuntimeException {
 
     private static final String MISSING_EXCEPTION =
