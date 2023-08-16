@@ -43,6 +43,8 @@ http://www.team33.de/dev/patterns/
 * Nailed deprecated module testing-01 to 1.12.2
 * Added module exceptional-dione
   * Marked module exceptional-01 as deprecated
+* Refined module random-tarvos ...
+  * added simple factory methods to Generator
 
 ### 1.12.2
 
