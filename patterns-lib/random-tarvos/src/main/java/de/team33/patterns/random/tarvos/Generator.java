@@ -41,6 +41,20 @@ import java.util.stream.Stream;
 public interface Generator {
 
     /**
+     * Provides a new {@link Generator} using a new {@link Random}.
+     */
+    static Generator simple() {
+        return simple(new Random());
+    }
+
+    /**
+     * Provides a new {@link Generator} using a given {@link Random}.
+     */
+    static Generator simple(final Random random) {
+        return numBits -> new BigInteger(numBits, random);
+    }
+
+    /**
      * Returns any non-negative {@link BigInteger} representing a sequence of significant bits of a given length.
      * In other words, the result is any value between zero (inclusive) and 2<sup>length</sup> (exclusive).
      * <p>
