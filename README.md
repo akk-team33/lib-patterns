@@ -35,7 +35,7 @@ http://www.team33.de/dev/patterns/
 
 ## Change Log
 
-### next
+### 1.13.0
 
 * Marked module properties-01 as deprecated
 * Marked module production-01 as deprecated
