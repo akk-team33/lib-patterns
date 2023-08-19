@@ -13,14 +13,10 @@ import java.util.stream.Collectors;
  */
 public class WrappedException extends RuntimeException {
 
-    private static final String MISSING_EXCEPTION =
-            "Missing: an exception to be wrapped in a " + WrappedException.class.getSimpleName();
-
-    private final Revision<?> revision;
+    private static final String MISSING_EXCEPTION = "Missing: an exception to be wrapped in a " + WrappedException.class.getSimpleName();
 
     private WrappedException(final Throwable cause, final String message) {
         super(message, cause);
-        this.revision = Revision.of(cause);
     }
 
     /**
@@ -28,6 +24,10 @@ public class WrappedException extends RuntimeException {
      */
     public WrappedException(final String message, final Throwable cause) {
         this(toCause(cause), toMessage(message, cause));
+    }
+
+    private Revision<?> revision() {
+        return Revision.of(getCause());
     }
 
     /**
@@ -45,17 +45,14 @@ public class WrappedException extends RuntimeException {
                 causeIsMissing ? "nothing!?" : null,
                 (causeIsMissing && !messageIsMissing) ? "Message:" : null,
                 (messageIsMissing && !causeIsMissing) ? toMessage(cause) : null,
-                message
-
-        );
+                message);
         return result.stream()
                      .filter(Objects::nonNull)
                      .collect(Collectors.joining(" "));
     }
 
     private static String toMessage(final Throwable cause) {
-        return Optional.ofNullable(cause.getMessage())
-                       .orElseGet(() -> cause.getClass().getCanonicalName());
+        return Optional.ofNullable(cause.getMessage()).orElseGet(() -> cause.getClass().getCanonicalName());
     }
 
     private static Throwable toCause(final Throwable cause) {
@@ -65,10 +62,10 @@ public class WrappedException extends RuntimeException {
     public final <X extends Throwable>
     WrappedException reThrowCauseIf(final Predicate<? super Throwable> condition,
                                     final Function<? super Throwable, X> mapping) throws X {
-        return revision.throwIf(condition, mapping, this);
+        return revision().throwIf(condition, mapping, this);
     }
 
     public final <X extends Throwable> WrappedException reThrowCauseAs(final Class<X> xClass) throws X {
-        return revision.reThrow(xClass, this);
+        return revision().reThrow(xClass, this);
     }
 }
