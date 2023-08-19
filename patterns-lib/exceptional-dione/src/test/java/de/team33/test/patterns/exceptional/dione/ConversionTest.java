@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 
 class ConversionTest {
@@ -121,6 +121,41 @@ class ConversionTest {
             assertSame(WrappedException.class, e.getClass());
             assertSame(IOException.class, e.getCause().getClass());
             assertEquals("args: [a, b]", e.getCause().getMessage());
+        }
+    }
+
+    @Test
+    final void run() {
+        // regular ...
+        final AtomicInteger i = new AtomicInteger(0);
+        Conversion.run(i::incrementAndGet);
+        assertEquals(1, i.get());
+
+        // exceptional ...
+        try {
+            Conversion.run(() -> {
+                throw new IOException();
+            });
+            fail("expected to fail with a WrappedException");
+        } catch (final WrappedException e) {
+            assertInstanceOf(IOException.class, e.getCause());
+        }
+    }
+
+    @Test
+    final void get() {
+        // regular ...
+        final AtomicInteger i = new AtomicInteger(0);
+        assertEquals(1, Conversion.get(i::incrementAndGet));
+
+        // exceptional ...
+        try {
+            Conversion.get(() -> {
+                throw new IOException();
+            });
+            fail("expected to fail with a WrappedException");
+        } catch (final WrappedException e) {
+            assertInstanceOf(IOException.class, e.getCause());
         }
     }
 }

@@ -24,7 +24,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XRunnable} that may throw a checked exception to a {@link Runnable} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static Runnable runnable(final XRunnable<?> xRunnable) {
         return CONVERTER.runnable(xRunnable);
@@ -32,7 +32,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XConsumer} that may throw a checked exception to a {@link Consumer} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <T> Consumer<T> consumer(final XConsumer<T, ?> xConsumer) {
         return CONVERTER.consumer(xConsumer);
@@ -40,7 +40,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XBiConsumer} that may throw a checked exception to a {@link BiConsumer} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<T, U, ?> xBiConsumer) {
         return CONVERTER.biConsumer(xBiConsumer);
@@ -48,7 +48,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XSupplier} that may throw a checked exception to a {@link Supplier} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <R> Supplier<R> supplier(final XSupplier<R, ?> xSupplier) {
         return CONVERTER.supplier(xSupplier);
@@ -56,7 +56,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XPredicate} that may throw a checked exception to a {@link Predicate} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <T> Predicate<T> predicate(final XPredicate<T, ?> xPredicate) {
         return CONVERTER.predicate(xPredicate);
@@ -64,7 +64,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XBiPredicate} that may throw a checked exception to a {@link BiPredicate} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static  <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<T, U, ?> xBiPredicate) {
         return CONVERTER.biPredicate(xBiPredicate);
@@ -72,7 +72,7 @@ public final class Conversion {
 
     /**
      * Converts an {@link XFunction} that may throw a checked exception to a {@link Function} that,
-     * when executed, wraps any occurring checked exception in a {@link WrappedException}.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <T, R> Function<T, R> function(final XFunction<T, R, ?> xFunction) {
         return CONVERTER.function(xFunction);
@@ -80,9 +80,26 @@ public final class Conversion {
 
     /**
      * Converts an {@link XBiFunction} that may throw a checked exception to a {@link BiFunction} that,
-     * when executed, wraps any occurring checked exception as a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
     public static <T, U, R> BiFunction<T, U, R> biFunction(final XBiFunction<T, U, R, ?> xBiFunction) {
         return CONVERTER.biFunction(xBiFunction);
+    }
+
+    /**
+     * Runs a given {@link XRunnable} that wraps a checked exception that may occur as a {@link WrappedException}.
+     */
+    public static void run(final XRunnable<?> xRunnable) {
+        CONVERTER.run(xRunnable);
+    }
+
+    /**
+     * Returns the result of a given {@link XSupplier} and wraps any checked exception that may occur as a
+     * {@link WrappedException}.
+     *
+     * @param <R> The result type.
+     */
+    public static <R> R get(final XSupplier<R, ?> xSupplier) {
+        return CONVERTER.get(xSupplier);
     }
 }

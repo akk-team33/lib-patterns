@@ -86,7 +86,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XRunnable} that may throw a checked exception to a {@link Runnable} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -97,7 +97,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XConsumer} that may throw a checked exception to a {@link Consumer} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -108,7 +108,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XBiConsumer} that may throw a checked exception to a {@link BiConsumer} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -119,7 +119,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XSupplier} that may throw a checked exception to a {@link Supplier} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -130,7 +130,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XPredicate} that may throw a checked exception to a {@link Predicate} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -141,7 +141,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XBiPredicate} that may throw a checked exception to a {@link BiPredicate} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -152,7 +152,7 @@ public final class Converter {
 
     /**
      * Converts an {@link XFunction} that may throw a checked exception to a {@link Function} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
@@ -163,11 +163,32 @@ public final class Converter {
 
     /**
      * Converts an {@link XBiFunction} that may throw a checked exception to a {@link BiFunction} that,
-     * when executed, wraps any occurring checked exception in a specific unchecked exception.
+     * when executed, wraps any occurring checked exception as a specific unchecked exception.
      *
      * @see #using(Function)
      */
     public final <T, U, R> BiFunction<T, U, R> biFunction(final XBiFunction<T, U, R, ?> xBiFunction) {
         return (t, u) -> call(xBiFunction, t, u);
+    }
+
+    /**
+     * Runs a given {@link XRunnable} that wraps a checked exception that may occur as a specific unchecked exception.
+     *
+     * @see #using(Function)
+     */
+    public final void run(final XRunnable<?> xRunnable) {
+        runnable(xRunnable).run();
+    }
+
+    /**
+     * Returns the result of a given {@link XSupplier} and wraps any checked exception that may occur as a
+     * specific unchecked exception.
+     *
+     * @see #using(Function)
+     *
+     * @param <R> The result type.
+     */
+    public final <R> R get(final XSupplier<R, ?> xSupplier) {
+        return supplier(xSupplier).get();
     }
 }
