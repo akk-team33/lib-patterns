@@ -80,7 +80,7 @@ http://www.team33.de/dev/patterns/
 
 * building-elara
   * Refined existing classes
-  * Added several classes and funktionality
+  * Added several classes and functionality
 
 ### 1.10.0
 
