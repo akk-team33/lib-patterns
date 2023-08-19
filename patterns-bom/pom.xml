@@ -22,32 +22,12 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>production-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-mimas</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>random-tarvos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>exceptional-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-dione</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>lazy-01</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -77,11 +57,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>properties-01</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>building-elara</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -102,6 +77,31 @@
             </dependency>
 
             <!-- nailed (deprecated) ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>exceptional-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>production-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-mimas</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>properties-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-01</artifactId>

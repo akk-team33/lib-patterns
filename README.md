@@ -25,21 +25,22 @@ http://www.team33.de/dev/patterns/
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
   * testing-titan (Team33 Testing Library - Edition "titan")
-* deprecated (declared)
+* _deprecated_ ...
   * exceptional-01 (Team33 Exceptional Library - Edition 1)
   * production-01 (Team33 Production Library - Edition 1)
   * random-mimas (Team33 Randomization Library - Edition "mimas")
   * lazy-01 (Team33 Lazy Initialization Library - Edition 1)
   * properties-01 (Team33 Properties Library - Edition 1)
-* deprecated (nailed)
-  * random-01 (Team33 Randomization Library - Edition 1) - 1.12.2
-  * testing-01 (Team33 Testing Library - Edition 1) - 1.12.2
 
 ## Change Log
 
 ### next
 
-* ...
+* Nailed deprecated module exceptional-01 to 1.13.0
+* Nailed deprecated module production-01 to 1.13.0
+* Nailed deprecated module random-mimas to 1.13.0
+* Nailed deprecated module lazy-01 to 1.13.0
+* Nailed deprecated module properties-01 to 1.13.0
 
 ### 1.13.0
 
