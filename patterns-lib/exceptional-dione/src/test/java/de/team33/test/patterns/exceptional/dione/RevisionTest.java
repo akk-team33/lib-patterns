@@ -109,7 +109,7 @@ class RevisionTest {
     }
 
     @Test
-    final void finish() {
+    final void close() {
         final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
                                            .close();
@@ -117,10 +117,28 @@ class RevisionTest {
     }
 
     @Test
-    final void finishMapped() {
+    final void closeMapped() {
         final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
                                            .close(Function.identity());
+        assertSame(original, result);
+    }
+
+    @Deprecated
+    @Test
+    final void finish() {
+        final IOException original = new IOException("test");
+        final IOException result = Revision.of(original)
+                                           .finish();
+        assertSame(original, result);
+    }
+
+    @Deprecated
+    @Test
+    final void finishMapped() {
+        final IOException original = new IOException("test");
+        final IOException result = Revision.of(original)
+                                           .finish(Function.identity());
         assertSame(original, result);
     }
 }
