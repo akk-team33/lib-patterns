@@ -15,23 +15,25 @@ http://www.team33.de/dev/patterns/
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
-  * exceptional-01 (Team33 Exceptional Library - Edition 1) - **deprecated**
-  * production-01 (Team33 Production Library - Edition 1) - **deprecated**
-  * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
-  * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
-  * lazy-01 (Team33 Lazy Initialization Library - Edition 1) - **deprecated**
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * pooling-01 (Team33 Pooling Library - Edition 1)
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
-  * properties-01 (Team33 Properties Library - Edition 1) - **deprecated**
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
-  * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
   * testing-titan (Team33 Testing Library - Edition "titan")
+* deprecated (declared)
+  * exceptional-01 (Team33 Exceptional Library - Edition 1) - **deprecated**
+  * production-01 (Team33 Production Library - Edition 1) - **deprecated**
+  * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
+  * lazy-01 (Team33 Lazy Initialization Library - Edition 1) - **deprecated**
+  * properties-01 (Team33 Properties Library - Edition 1) - **deprecated**
+* deprecated (nailed)
+  * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
+  * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
 
 ## Change Log
 
