@@ -15,19 +15,14 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>exceptional-01</module>
         <module>exceptional-dione</module>
         <module>testing-titan</module>
-        <module>production-01</module>
-        <module>random-mimas</module>
         <module>random-tarvos</module>
-        <module>lazy-01</module>
         <module>lazy-narvi</module>
         <module>expiry-tethys</module>
         <module>pooling-01</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
-        <module>properties-01</module>
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
