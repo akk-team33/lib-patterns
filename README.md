@@ -26,14 +26,14 @@ http://www.team33.de/dev/patterns/
   * execution-metis (Team33 Execution Library - Edition "metis")
   * testing-titan (Team33 Testing Library - Edition "titan")
 * deprecated (declared)
-  * exceptional-01 (Team33 Exceptional Library - Edition 1) - **deprecated**
-  * production-01 (Team33 Production Library - Edition 1) - **deprecated**
-  * random-mimas (Team33 Randomization Library - Edition "mimas") - **deprecated**
-  * lazy-01 (Team33 Lazy Initialization Library - Edition 1) - **deprecated**
-  * properties-01 (Team33 Properties Library - Edition 1) - **deprecated**
+  * exceptional-01 (Team33 Exceptional Library - Edition 1)
+  * production-01 (Team33 Production Library - Edition 1)
+  * random-mimas (Team33 Randomization Library - Edition "mimas")
+  * lazy-01 (Team33 Lazy Initialization Library - Edition 1)
+  * properties-01 (Team33 Properties Library - Edition 1)
 * deprecated (nailed)
-  * random-01 (Team33 Randomization Library - Edition 1) - **deprecated**
-  * testing-01 (Team33 Testing Library - Edition 1) - **deprecated**
+  * random-01 (Team33 Randomization Library - Edition 1) - 1.12.2
+  * testing-01 (Team33 Testing Library - Edition 1) - 1.12.2
 
 ## Change Log
 
