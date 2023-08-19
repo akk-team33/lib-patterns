@@ -27,7 +27,11 @@ import java.util.function.Function;
  * @param <E> A type of exception that may be caused by the creation of new <em>item</em> instances.
  * @see Provider
  * @see RProvider
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>pooling-ariel</em>.
  */
+@Deprecated
 public class XProvider<I, E extends Exception> extends Mutual<I, E> {
 
     /**

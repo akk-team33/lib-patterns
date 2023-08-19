@@ -1,4 +1,4 @@
-package de.team33.patterns.pooling.e1;
+package de.team33.patterns.pooling.ariel;
 
 import de.team33.patterns.exceptional.dione.XConsumer;
 import de.team33.patterns.exceptional.dione.XFunction;
@@ -7,7 +7,6 @@ import de.team33.patterns.exceptional.dione.XSupplier;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-@Deprecated
 class Mutual<S, E extends Exception> {
 
     private static final Void VOID = null;

@@ -17,7 +17,7 @@ http://www.team33.de/dev/patterns/
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
-  * pooling-01 (Team33 Pooling Library - Edition 1)
+  * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
@@ -26,11 +26,7 @@ http://www.team33.de/dev/patterns/
   * execution-metis (Team33 Execution Library - Edition "metis")
   * testing-titan (Team33 Testing Library - Edition "titan")
 * _deprecated_ ...
-  * exceptional-01 (Team33 Exceptional Library - Edition 1)
-  * production-01 (Team33 Production Library - Edition 1)
-  * random-mimas (Team33 Randomization Library - Edition "mimas")
-  * lazy-01 (Team33 Lazy Initialization Library - Edition 1)
-  * properties-01 (Team33 Properties Library - Edition 1)
+  * pooling-01 (Team33 Pooling Library - Edition 1)
 
 ## Change Log
 
@@ -41,6 +37,8 @@ http://www.team33.de/dev/patterns/
 * Nailed deprecated module random-mimas to 1.13.0
 * Nailed deprecated module lazy-01 to 1.13.0
 * Nailed deprecated module properties-01 to 1.13.0
+* Added module pooling-ariel
+  * Marked module pooling-01 as deprecated
 
 ### 1.13.0
 

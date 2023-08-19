@@ -29,7 +29,11 @@ import java.util.function.Supplier;
  * @param <I> The type of provided instances <em>(items)</em>.
  * @see Provider
  * @see XProvider
+ *
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module <em>pooling-ariel</em>.
  */
+@Deprecated
 public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
 
     /**

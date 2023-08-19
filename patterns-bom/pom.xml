@@ -37,7 +37,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>pooling-01</artifactId>
+                <artifactId>pooling-ariel</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -76,7 +76,14 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- nailed (deprecated) ... -->
+            <!-- declared deprecated ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>pooling-01</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- nailed deprecated ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-01</artifactId>

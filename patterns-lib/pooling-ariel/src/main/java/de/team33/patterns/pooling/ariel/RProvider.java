@@ -1,7 +1,8 @@
-package de.team33.patterns.pooling.e1;
+package de.team33.patterns.pooling.ariel;
 
 import de.team33.patterns.exceptional.dione.XConsumer;
 import de.team33.patterns.exceptional.dione.XFunction;
+import de.team33.patterns.expiry.tethys.Recent;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -21,24 +22,25 @@ import java.util.function.Supplier;
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>item</em> could be made available.
  * <p>
+ * This implementation supports expiry and reinitialisation of provided <em>items</em>.
+ * <p>
  * This implementation does not support checked exceptions to occur while creating new <em>item</em> instances.
  *
  * @param <I> The type of provided instances <em>(items)</em>.
- * @see RProvider
+ * @see Provider
  * @see XProvider
- *
- * @deprecated Further development is discontinued and this package/module may be removed in a future release.
- * Successor is the module <em>pooling-ariel</em>.
  */
-@Deprecated
-public class Provider<I> extends Mutual<I, RuntimeException> {
+public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
 
     /**
      * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
      * new <em>item</em>.
+     * <p>
+     * Once an instance <em>item</em> is initialized it will expire and be renewed after a maximum idle time
+     * or at least after a maximum lifetime.
      */
-    public Provider(final Supplier<I> newItem) {
-        super(newItem::get);
+    public RProvider(final Supplier<I> newItem, final long maxIdle, final long maxLiving) {
+        super(() -> new Recent<I>(newItem, maxIdle, maxLiving));
     }
 
     /**
@@ -48,7 +50,7 @@ public class Provider<I> extends Mutual<I, RuntimeException> {
      * "hijacked" from the context of the execution or the executing thread!
      */
     public final void run(final Consumer<? super I> consumer) {
-        accept(consumer::accept);
+        accept(recent -> consumer.accept(recent.get()));
     }
 
     /**
@@ -61,7 +63,7 @@ public class Provider<I> extends Mutual<I, RuntimeException> {
      * @throws X if the execution of the given {@link XConsumer} causes one.
      */
     public final <X extends Exception> void runEx(final XConsumer<? super I, X> xConsumer) throws X {
-        accept(xConsumer);
+        accept(recent -> xConsumer.accept(recent.get()));
     }
 
     /**
@@ -74,7 +76,7 @@ public class Provider<I> extends Mutual<I, RuntimeException> {
      * @param <R> The result type of the given {@link Function}
      */
     public final <R> R get(final Function<? super I, R> function) {
-        return apply(function::apply);
+        return apply(recent -> function.apply(recent.get()));
     }
 
     /**
@@ -89,6 +91,6 @@ public class Provider<I> extends Mutual<I, RuntimeException> {
      * @throws X if the execution of the given {@link XFunction} causes one.
      */
     public final <R, X extends Exception> R getEx(final XFunction<? super I, R, X> xFunction) throws X {
-        return apply(xFunction);
+        return apply(recent -> xFunction.apply(recent.get()));
     }
 }

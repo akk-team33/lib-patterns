@@ -20,12 +20,14 @@
         <module>random-tarvos</module>
         <module>lazy-narvi</module>
         <module>expiry-tethys</module>
-        <module>pooling-01</module>
+        <module>pooling-ariel</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <!-- deprecated -->
+        <module>pooling-01</module>
     </modules>
 
     <dependencyManagement>

@@ -1,4 +1,4 @@
-package de.team33.patterns.pooling.e1;
+package de.team33.patterns.pooling.ariel;
 
 import de.team33.patterns.exceptional.dione.XConsumer;
 import de.team33.patterns.exceptional.dione.XFunction;
@@ -26,11 +26,7 @@ import java.util.function.Supplier;
  * @param <I> The type of provided instances <em>(items)</em>.
  * @see RProvider
  * @see XProvider
- *
- * @deprecated Further development is discontinued and this package/module may be removed in a future release.
- * Successor is the module <em>pooling-ariel</em>.
  */
-@Deprecated
 public class Provider<I> extends Mutual<I, RuntimeException> {
 
     /**
