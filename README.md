@@ -30,7 +30,7 @@ http://www.team33.de/dev/patterns/
 
 ## Change Log
 
-### next
+### 1.13.1
 
 * Nailed deprecated module exceptional-01 to 1.13.0
 * Nailed deprecated module production-01 to 1.13.0
