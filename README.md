@@ -4,11 +4,11 @@ Team33 Patterns Library Collection
 
 ## Home
 
-http://www.team33.de/dev/patterns/1.x
+http://www.team33.de/dev/patterns/2.x
 
 ## Requires
 
-    Java 8 or later
+    Java 11 or later
 
 ## Artifacts
 
