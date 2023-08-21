@@ -31,6 +31,7 @@ http://www.team33.de/dev/patterns/
 ### next
 
 * Nailed deprecated module exceptional-01 to 1.13.1
+* Prepared site url for multiple major releases
 
 ### 1.13.1
 
