@@ -26,8 +26,8 @@ class CollectingTest {
     @Test
     final void identity_Charger() {
         final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.nextStringList(3));
-        final List<String> original = charger.release();
-        final List<String> result = charger.release();
+        final List<String> original = charger.charged();
+        final List<String> result = charger.charged();
         assertEquals(original, result);
         assertSame(original, result);
     }
@@ -49,7 +49,7 @@ class CollectingTest {
                                               .add(expected.get(0))
                                               .add(expected.get(1))
                                               .add(expected.get(2))
-                                              .release();
+                                              .charged();
         assertEquals(expected, result);
     }
 
@@ -69,7 +69,7 @@ class CollectingTest {
         final List<String> expected = SUPPLY.nextStringList(3);
         final List<String> result = Collecting.charger(new ArrayList<String>())
                                               .addAll(expected)
-                                              .release();
+                                              .charged();
         assertEquals(expected, result);
     }
 

@@ -28,11 +28,12 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### next
+### next (2.x)
 
 * Branched from 1.13.2-SNAPSHOT on 2023-08-21
 * Switched JDK to 11 -> requires Java 11 or later
 * patterns-bom: Removed deprecated modules from dependency management
+* Removed deprecated methods from all classes / modules
 
 ### 1.13.1
 

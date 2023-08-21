@@ -149,20 +149,4 @@ public final class Revision<T extends Throwable> {
     public final T close() {
         return subject;
     }
-
-    /**
-     * @deprecated use {@link #close(Function)} instead!
-     */
-    @Deprecated
-    public final <R> R finish(final Function<? super T, R> mapping) {
-        return close(mapping);
-    }
-
-    /**
-     * @deprecated use {@link #close()} instead!
-     */
-    @Deprecated
-    public final T finish() {
-        return close();
-    }
 }
