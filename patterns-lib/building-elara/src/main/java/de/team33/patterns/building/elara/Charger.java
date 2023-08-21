@@ -10,8 +10,8 @@ import java.util.function.Consumer;
  * instance from the start and also be used as the result of the build process.
  * <p>
  * An instance of this builder type is limited to single use.
- * Once the terminating {@link #release} method has been used, subsequent calls to setup() throw an
- * IllegalStateException.
+ * Once the terminating {@link #charged()} method has been used, subsequent calls to {@link #setup(Consumer)} throw an
+ * {@link IllegalStateException}.
  *
  * @param <T> The target type: an instance of that type is associated with the builder instance
  *            to hold the data to be collected during the build process.
