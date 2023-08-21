@@ -26,8 +26,6 @@
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
-        <!-- deprecated -->
-        <module>pooling-01</module>
     </modules>
 
     <dependencyManagement>

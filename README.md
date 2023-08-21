@@ -25,10 +25,12 @@ http://www.team33.de/dev/patterns/
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
   * testing-titan (Team33 Testing Library - Edition "titan")
-* _deprecated_ ...
-  * pooling-01 (Team33 Pooling Library - Edition 1)
 
 ## Change Log
+
+### next
+
+* Nailed deprecated module exceptional-01 to 1.13.1
 
 ### 1.13.1
 

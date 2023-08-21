@@ -76,14 +76,12 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- declared deprecated ... -->
+            <!-- deprecated ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>
-                <version>${project.version}</version>
+                <version>1.13.1</version>
             </dependency>
-
-            <!-- nailed deprecated ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-01</artifactId>
