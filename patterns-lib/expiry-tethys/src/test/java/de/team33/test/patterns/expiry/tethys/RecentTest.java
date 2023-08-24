@@ -6,6 +6,7 @@ import de.team33.patterns.tuple.janus.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -58,14 +59,14 @@ class RecentTest {
     @Test
     final void get_afterLifeTime() {
         final Sample first = recent.get();
-        final long created = first.getCreated();
+        final Instant created = first.getCreated();
         Sample second = first;
         //noinspection ObjectEquality
         while (second == first) {
             sleep(IDLE_TIME / 2); // significantly less than IDLETIME
             second = recent.get();
         }
-        final long delta = second.getCreated() - created;
+        final long delta = second.getCreated().toEpochMilli() - created.toEpochMilli();
         assertTrue(delta > LIFE_TIME,
                    () -> format("<delta> is expected to be greater than <LIFETIME> (%d) - but was %d",
                                 LIFE_TIME, delta));
@@ -76,11 +77,11 @@ class RecentTest {
     final void get_parallel() throws Exception {
         // there must always be enough threads to be executed while others are sleeping ...
         final int limit = 100;
-        final long time00 = System.currentTimeMillis();
+        final Instant time00 = Instant.now();
         final List<Result> results =
                 Parallel.report(limit, context -> {
                             final Sample first = recent.get();
-                            final long created = first.getCreated();
+                            final Instant created = first.getCreated();
                             Sample second = first;
                             //noinspection ObjectEquality
                             while (second == first) {
@@ -88,12 +89,13 @@ class RecentTest {
                                 second = recent.get();
                             }
                             final long delta =
-                                    second.getCreated() - created;
+                                    second.getCreated().toEpochMilli() -
+                                    created.toEpochMilli();
                             return new Result(context.operationIndex, delta);
                         })
                         .reThrowAny()
                         .getResults();
-        final long delta = System.currentTimeMillis() - time00;
+        final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
         final long maxExpected = limit * LIFE_TIME;
         assertTrue(delta < maxExpected, () -> format(" <delta> is expected to be less than" +
                                                      " <maxExpected> (%d) - but was %d", maxExpected, delta));
@@ -126,14 +128,14 @@ class RecentTest {
     private static class Sample {
 
         private final int index;
-        private final long created;
+        private final Instant created;
 
         private Sample(int index) {
             this.index = index;
-            created = System.currentTimeMillis();
+            created = Instant.now();
         }
 
-        final long getCreated() {
+        final Instant getCreated() {
             return created;
         }
 
