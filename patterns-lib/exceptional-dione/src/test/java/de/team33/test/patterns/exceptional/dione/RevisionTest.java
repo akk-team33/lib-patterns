@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("NestedTryStatement")
 class RevisionTest {
@@ -24,6 +23,19 @@ class RevisionTest {
 
     private static <X extends Exception> void doThrow(final Supplier<X> supplier) throws X {
         throw supplier.get();
+    }
+
+    @Test
+    final void of_null() throws IOException, SQLException {
+        final Throwable result = Revision.of(null)
+                                         .reThrow(IOException.class)
+                                         .throwIf(SQLException.class::isInstance,
+                                                  SQLException.class::cast)
+                                         .reThrow(IllegalArgumentException.class)
+                                         .throwIf(IllegalStateException.class::isInstance,
+                                                  IllegalStateException.class::cast)
+                                         .close(Function.identity());
+        assertNull(result);
     }
 
     @Test

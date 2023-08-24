@@ -10,9 +10,11 @@ import java.util.function.Supplier;
 
 
 /**
- * A tool class that can convert certain functional constructs defined in this package (e.g. {@link XFunction})
+ * A tool class that can convert certain functional constructs defined in this module (e.g. {@link XFunction})
  * to more common ones (e.g. {@link Function}) that, when executed, will wrap any occurring checked exception in a
  * specific unchecked exception. Any unchecked exception that may occur will remain unaffected.
+ * <p>
+ * Use {@link #using(Function)} to get an instance.
  *
  * @see Conversion
  */

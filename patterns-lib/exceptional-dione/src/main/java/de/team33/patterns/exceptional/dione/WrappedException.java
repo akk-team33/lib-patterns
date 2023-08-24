@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * An unchecked exception dedicated to temporarily wrap checked exceptions.
+ * An unchecked exception dedicated to (temporarily) wrap checked exceptions.
  */
 public class WrappedException extends RuntimeException {
 
@@ -59,12 +59,34 @@ public class WrappedException extends RuntimeException {
         return (null != cause) ? cause : new IllegalStateException(MISSING_EXCEPTION);
     }
 
+    /**
+     * Applies a given {@link Function mapping} to the {@linkplain #getCause() cause of this exception} if the given
+     * {@link Predicate condition} applies and throws the result, otherwise this exception will be returned.
+     *
+     * @param condition A {@link Predicate} that is used to check the {@linkplain #getCause() cause of this exception}
+     *                  for applicability.
+     * @param mapping   A {@link Function} that converts the {@linkplain #getCause() cause of this exception} to a
+     *                  specific type of exception to be thrown at that point.
+     * @param <X>       The exception type that is intended as a result of the given mapping and that is thrown by this
+     *                  method, if applicable.
+     * @return this exception.
+     * @throws X The mapped exception, if present.
+     */
     public final <X extends Throwable>
     WrappedException reThrowCauseIf(final Predicate<? super Throwable> condition,
                                     final Function<? super Throwable, X> mapping) throws X {
         return revision().throwIf(condition, mapping, this);
     }
 
+    /**
+     * Rethrows the {@linkplain #getCause() cause of this exception} if it matches the given exception type,
+     * otherwise this exception will be returned.
+     *
+     * @param xClass The {@link Class} that represents the type of exception that is expected.
+     * @param <X>    The type of exception that is expected and, if applicable, thrown by this method.
+     * @return this exception.
+     * @throws X the {@linkplain #getCause() cause of this exception}, cast to the given type, if applicable.
+     */
     public final <X extends Throwable> WrappedException reThrowCauseAs(final Class<X> xClass) throws X {
         return revision().reThrow(xClass, this);
     }

@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
- * A utility class that can convert certain functional constructs defined in this package (e.g. {@link XFunction})
+ * A utility class that can convert certain functional constructs defined in this module (e.g. {@link XFunction})
  * to more common ones (e.g. {@link Function}) that, when executed, will wrap any occurring checked exception in a
  * {@link WrappedException}. Any unchecked exception that may occur will remain unaffected.
  *

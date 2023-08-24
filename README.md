@@ -34,6 +34,12 @@ http://www.team33.de/dev/patterns/2.x
 * Switched JDK to 11 -> requires Java 11 or later
 * patterns-bom: Removed deprecated modules from dependency management
 * Removed deprecated methods from all classes / modules
+* Merged from 1.13.3-SNAPSHOT on 2023-08-24
+
+### 1.13.2
+
+* Nailed deprecated module exceptional-01 to 1.13.1
+* Prepared site url for multiple major releases
 
 ### 1.13.1
 
