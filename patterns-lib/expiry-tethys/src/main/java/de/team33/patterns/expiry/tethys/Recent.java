@@ -1,5 +1,6 @@
 package de.team33.patterns.expiry.tethys;
 
+import java.time.Instant;
 import java.util.function.Supplier;
 
 /**
@@ -48,7 +49,7 @@ public class Recent<T> implements Supplier<T> {
     }
 
     private T approved(final Actual<? extends T> candidate) {
-        return candidate.isTimeout(System.currentTimeMillis()) ? updated(candidate) : candidate.get();
+        return candidate.isTimeout(Instant.now()) ? updated(candidate) : candidate.get();
     }
 
     @SuppressWarnings("ObjectEquality")
@@ -64,7 +65,7 @@ public class Recent<T> implements Supplier<T> {
     @FunctionalInterface
     private interface Actual<T> {
 
-        boolean isTimeout(final long now);
+        boolean isTimeout(final Instant now);
 
         default T get() {
             throw new UnsupportedOperationException("method not supported");
@@ -74,23 +75,24 @@ public class Recent<T> implements Supplier<T> {
     private class Substantial implements Actual<T> {
 
         private final T subject;
-        private final long lifeTimeout;
-        private volatile long idleTimeout;
+        private final Instant lifeTimeout;
+        private volatile Instant idleTimeout;
 
         Substantial() {
-            this.lifeTimeout = System.currentTimeMillis() + rule.maxLife;
-            this.idleTimeout = System.currentTimeMillis() + rule.maxIdle;
+            final Instant now = Instant.now();
+            this.lifeTimeout = now.plusMillis(rule.maxLife);
+            this.idleTimeout = now.plusMillis(rule.maxIdle);
             this.subject = rule.newSubject.get();
         }
 
         @Override
-        public final boolean isTimeout(final long now) {
-            return (now > lifeTimeout) || (now > idleTimeout);
+        public final boolean isTimeout(final Instant now) {
+            return (now.compareTo(lifeTimeout) > 0) || (now.compareTo(idleTimeout) > 0);
         }
 
         @Override
         public final T get() {
-            idleTimeout = System.currentTimeMillis() + rule.maxIdle;
+            idleTimeout = Instant.now().plusMillis(rule.maxIdle);
             return subject;
         }
     }
