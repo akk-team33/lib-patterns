@@ -1,0 +1,56 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-root</artifactId>
+        <version>1.13.3-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>patterns-test</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Team33 Patterns Library - Additional Tests</name>
+    <description>Parent of team33 patterns library's additional testing</description>
+
+    <properties>
+        <skipHome>true</skipHome>
+        <skipDeploy>true</skipDeploy>
+    </properties>
+
+    <modules>
+        <module>test-time</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Submodules -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>patterns-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.9.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
