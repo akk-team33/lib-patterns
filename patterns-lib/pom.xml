@@ -26,6 +26,7 @@
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <module>serial-charon</module>
     </modules>
 
     <dependencyManagement>
