@@ -11,7 +11,7 @@
     <artifactId>serial-charon</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Sequential Collection Library - Edition "charon"</name>
+    <name>Team33 Serial Collection Library - Edition "charon"</name>
     <description>Provides an alternative abstraction of Collections
         whose access methods are suitable for both recursive and successive serial processing.</description>
 

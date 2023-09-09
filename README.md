@@ -24,9 +24,14 @@ http://www.team33.de/dev/patterns/1.x
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
+  * serial-charon (Team33 Serial Collection Library - Edition "charon")
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module serial-charon
 
 ### 1.13.2
 
