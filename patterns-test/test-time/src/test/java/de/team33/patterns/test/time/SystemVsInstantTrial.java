@@ -11,7 +11,9 @@ public class SystemVsInstantTrial {
 
     @RepeatedTest(1000)
     final void currentTimeMillis() throws InterruptedException {
-        Thread.sleep(1);
-        assertEquals(Instant.now().toEpochMilli(), System.currentTimeMillis());
+        Thread.sleep(0);
+        final Instant now = Instant.now();
+        final long expected = System.currentTimeMillis();
+        assertEquals(expected, now.toEpochMilli());
     }
 }
