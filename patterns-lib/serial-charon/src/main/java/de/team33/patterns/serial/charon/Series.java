@@ -24,14 +24,22 @@ import java.util.function.BiFunction;
  *
  * @param <E> The element type.
  */
-public interface Series<E> {
+public abstract class Series<E> {
+
+    /**
+     * Returns an empty {@link Series}.
+     */
+    @SuppressWarnings("unchecked")
+    public static <E> Series<E> empty() {
+        return Empty.INSTANCE;
+    }
 
     /**
      * Returns {@code true} if <em>this</em> does not contain any element, {@code false} otherwise.
      *
      * @see #isCharged()
      */
-    default boolean isEmpty() {
+    public final boolean isEmpty() {
         return 0 == size();
     }
 
@@ -40,7 +48,7 @@ public interface Series<E> {
      *
      * @see #isEmpty()
      */
-    default boolean isCharged() {
+    public final boolean isCharged() {
         return 0 < size();
     }
 
@@ -59,7 +67,7 @@ public interface Series<E> {
      *
      * @see #isCharged()
      */
-    default <R> Optional<R> ifCharged(final BiFunction<E, Series<E>, R> function) {
+    public final <R> Optional<R> ifCharged(final BiFunction<E, Series<E>, R> function) {
         return Optional.of(this)
                        .filter(Series::isCharged)
                        .map(series -> function.apply(series.head(), series.tail()));
@@ -70,20 +78,35 @@ public interface Series<E> {
      *
      * @throws NoSuchElementException if <em>this</em> {@linkplain #isEmpty() is empty}.
      */
-    E head();
+    public abstract E head();
 
     /**
      * Returns the remaining subseries that follows <em>this</em> series' {@linkplain #head() head element}.
      */
-    Series<E> tail();
+    public abstract Series<E> tail();
 
     /**
      * Returns the number of elements within <em>this</em> series.
      */
-    int size();
+    public abstract int size();
 
     /**
      * Returns an immutable {@link List} representation of <em>this</em> series.
      */
-    List<E> asList();
+    public abstract List<E> asList();
+
+    @Override
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof Series) && asList().equals(((Series<?>) obj).asList()));
+    }
+
+    @Override
+    public final int hashCode() {
+        return asList().hashCode();
+    }
+
+    @Override
+    public final String toString() {
+        return asList().toString();
+    }
 }
