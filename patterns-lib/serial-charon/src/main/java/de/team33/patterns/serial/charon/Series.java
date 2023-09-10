@@ -2,7 +2,9 @@ package de.team33.patterns.serial.charon;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * Abstracts a series of elements of a certain type and as such represents an alternative view of a {@link Collection}.
@@ -25,30 +27,63 @@ import java.util.stream.Stream;
 public interface Series<E> {
 
     /**
-     * Returns an empty {@link Series}.
+     * Returns {@code true} if <em>this</em> does not contain any element, {@code false} otherwise.
+     *
+     * @see #isCharged()
      */
-    static <E> Series<E> empty() {
-        throw new UnsupportedOperationException("not yet implemented");
+    default boolean isEmpty() {
+        return 0 == size();
     }
 
     /**
-     * Returns a {@link Series} composed of the given elements in the given order.
-     * Any {@code null} elements given are ignored and are not included in the resulting {@link Sequence}.
+     * Returns {@code true} if <em>this</em> contains at least one element, {@code false} otherwise.
+     *
+     * @see #isEmpty()
      */
-    @SafeVarargs
-    static <E> Series<E> of(final E... elements) {
-        return of(List.of(elements));
+    default boolean isCharged() {
+        return 0 < size();
     }
 
     /**
-     * Returns a {@link Series} composed of the given {@link Collection}'s elements in the given order.
-     * Any {@code null} elements given are ignored and are not included in the resulting {@link Series}.
+     * Executes a given {@linkplain BiFunction function} with <em>this</em> series' {@linkplain #head() head} and
+     * {@linkplain #tail() tail} as arguments if <em>this</em> {@linkplain #isCharged() is charged}.
+     *
+     * @param <R> The result type.
+     * @return <ul>
+     * <li>An {@link Optional} describing the result of the {@linkplain BiFunction#apply(Object, Object) function call}
+     * if <em>this</em> {@linkplain #isCharged() is charged}.</li>
+     * <li>{@link Optional#empty()} if the result of the {@linkplain BiFunction#apply(Object, Object) function call}
+     * is {@code null}.</li>
+     * <li>{@link Optional#empty()} if <em>this</em> {@linkplain #isEmpty() is empty}.</li>
+     * </ul>
+     *
+     * @see #isCharged()
      */
-    public static <E> Series<E> of(final Collection<? extends E> elements) {
-        throw new UnsupportedOperationException("not yet implemented");
+    default <R> Optional<R> ifCharged(final BiFunction<E, Series<E>, R> function) {
+        return Optional.of(this)
+                       .filter(Series::isCharged)
+                       .map(series -> function.apply(series.head(), series.tail()));
     }
 
-    static <E> Series<E> collecting(final Stream<? extends E> elements) {
-        throw new UnsupportedOperationException("not yet implemented");
-    }
+    /**
+     * Returns <em>this</em> series' head element if <em>this</em> {@linkplain #isCharged() is charged}.
+     *
+     * @throws NoSuchElementException if <em>this</em> {@linkplain #isEmpty() is empty}.
+     */
+    E head();
+
+    /**
+     * Returns the remaining subseries that follows <em>this</em> series' {@linkplain #head() head element}.
+     */
+    Series<E> tail();
+
+    /**
+     * Returns the number of elements within <em>this</em> series.
+     */
+    int size();
+
+    /**
+     * Returns an immutable {@link List} representation of <em>this</em> series.
+     */
+    List<E> asList();
 }
