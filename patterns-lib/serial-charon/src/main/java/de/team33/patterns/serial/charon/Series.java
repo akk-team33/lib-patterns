@@ -1,9 +1,6 @@
 package de.team33.patterns.serial.charon;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.BiFunction;
 
 /**
@@ -32,6 +29,10 @@ public abstract class Series<E> {
     @SuppressWarnings("unchecked")
     public static <E> Series<E> empty() {
         return Empty.INSTANCE;
+    }
+
+    public static <E> Series<E> of(final Collection<? extends E> origin) {
+        return Charged.seriesOf(new ArrayList<>(origin), 0);
     }
 
     /**

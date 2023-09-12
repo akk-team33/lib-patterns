@@ -1,13 +1,18 @@
 package de.team33.patterns.test.serial.charon;
 
 import de.team33.patterns.serial.charon.Series;
+import de.team33.patterns.shared.serial.charon.Supply;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SeriesTest {
+
+    private static final Supply SUPPLY = new Supply();
 
     @Test
     final void empty() {
@@ -19,24 +24,45 @@ class SeriesTest {
         assertSame(empty, Series.empty());
     }
 
-    @Test
-    final void isEmpty() {
-        fail("not yet implemented");
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    final void isEmpty(final boolean empty) {
+        final List<String> origin = empty ? Collections.emptyList() : SUPPLY.nextChargedList();
+        final Series<String> result = Series.of(origin);
+        assertEquals(empty, result.isEmpty());
     }
 
-    @Test
-    final void isCharged() {
-        fail("not yet implemented");
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    final void isCharged(final boolean charged) {
+        final List<String> origin = charged ? SUPPLY.nextChargedList() : Collections.emptyList();
+        final Series<String> result = Series.of(origin);
+        assertEquals(charged, result.isCharged());
     }
 
-    @Test
-    final void ifCharged() {
-        fail("not yet implemented");
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    final void ifCharged(final boolean charged) {
+        final List<String> origin = charged ? SUPPLY.nextChargedList() : Collections.emptyList();
+        final String fallback = SUPPLY.nextString();
+        final Series<String> sample = Series.of(origin);
+        final String expected = charged ? origin.get(0) : fallback;
+        final String result = sample.ifCharged((head, tail) -> head).orElse(fallback);
+        assertEquals(expected, result);
     }
 
-    @Test
-    final void head() {
-        fail("not yet implemented");
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    final void head(final boolean charged) {
+        final List<String> origin = charged ? SUPPLY.nextChargedList() : Collections.emptyList();
+        final Series<String> sample = Series.of(origin);
+        try {
+            final String result = sample.head();
+            assertTrue(charged);
+            assertEquals(origin.get(0), result);
+        } catch (final NoSuchElementException e) {
+            assertFalse(charged);
+        }
     }
 
     @Test
