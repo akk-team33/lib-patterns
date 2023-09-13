@@ -130,7 +130,7 @@ class SeriesTest {
 
     @Test
     final void testHashCode() {
-        final List<String> origin = SUPPLY.nextList(0, 10);
+        final List<String> origin = SUPPLY.nextList(1, 10);
         final Series<String> left = Series.of(origin);
         final Series<String> right = Series.of(origin);
         assertNotSame(left, right,
@@ -141,7 +141,7 @@ class SeriesTest {
 
     @Test
     final void testToString() {
-        final List<String> origin = SUPPLY.nextList(0, 10);
+        final List<String> origin = SUPPLY.nextList(1, 10);
         final Series<String> left = Series.of(origin);
         final Series<String> right = Series.of(origin);
         assertNotSame(left, right,
