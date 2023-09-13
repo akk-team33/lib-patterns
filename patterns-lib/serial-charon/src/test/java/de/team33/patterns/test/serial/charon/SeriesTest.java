@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,6 +23,32 @@ class SeriesTest {
         assertThrows(NoSuchElementException.class, empty::head);
         assertSame(empty, empty.tail());
         assertSame(empty, Series.empty());
+    }
+
+    @Test
+    final void of_array() {
+        String string0 = SUPPLY.nextString();
+        String string1 = SUPPLY.nextString();
+        String string2 = SUPPLY.nextString();
+        final Series<?> sample = Series.of(string0, string1, string2);
+        assertFalse(sample.isEmpty());
+        assertTrue(sample.isCharged());
+        assertEquals(string0, sample.head());
+        assertEquals(sample.tail(), Series.of(string1, string2));
+        assertEquals(Series.empty(), sample.tail().tail().tail());
+    }
+
+    @Test
+    final void of_streamable() {
+        String string0 = SUPPLY.nextString();
+        String string1 = SUPPLY.nextString();
+        String string2 = SUPPLY.nextString();
+        final Series<?> sample = Series.of(() -> Stream.of(string0, string1, string2));
+        assertFalse(sample.isEmpty());
+        assertTrue(sample.isCharged());
+        assertEquals(string0, sample.head());
+        assertEquals(sample.tail(), Series.of(string1, string2));
+        assertEquals(Series.empty(), sample.tail().tail().tail());
     }
 
     @ParameterizedTest

@@ -2,6 +2,9 @@ package de.team33.patterns.serial.charon;
 
 import java.util.*;
 import java.util.function.BiFunction;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Abstracts a series of elements of a certain type and as such represents an alternative view of a {@link Collection}.
@@ -29,6 +32,15 @@ public abstract class Series<E> {
     @SuppressWarnings("unchecked")
     public static <E> Series<E> empty() {
         return Empty.INSTANCE;
+    }
+
+    @SafeVarargs
+    public static <E> Series<E> of(final E... elements) {
+        return of(Arrays.asList(elements));
+    }
+
+    public static <E> Series<E> of(final Supplier<? extends Stream<? extends E>> origin) {
+        return of(origin.get().collect(Collectors.toList()));
     }
 
     public static <E> Series<E> of(final Collection<? extends E> origin) {
