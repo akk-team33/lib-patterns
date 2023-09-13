@@ -54,7 +54,7 @@ class SeriesTest {
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
     final void head(final boolean charged) {
-        final List<String> origin = charged ? SUPPLY.nextChargedList() : Collections.emptyList();
+        final List<String> origin = charged ? SUPPLY.nextList(1) : Collections.emptyList();
         final Series<String> sample = Series.of(origin);
         try {
             final String result = sample.head();
@@ -65,33 +65,64 @@ class SeriesTest {
         }
     }
 
-    @Test
-    final void tail() {
-        fail("not yet implemented");
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3})
+    final void tail(final int size) {
+        final List<String> origin = SUPPLY.nextList(size);
+        final Series<String> sample = Series.of(origin);
+        final Series<String> tail = sample.tail();
+        assertEquals(size < 2, tail.isEmpty());
     }
 
     @Test
     final void size() {
-        fail("not yet implemented");
+        final List<String> origin = SUPPLY.nextList(0, 10);
+        final Series<String> sample = Series.of(origin);
+        assertEquals(origin.size(), sample.size());
     }
 
     @Test
     final void asList() {
-        fail("not yet implemented");
+        final List<String> origin = SUPPLY.nextList(0, 10);
+        final Series<String> sample = Series.of(origin);
+        assertEquals(origin, sample.asList());
     }
 
     @Test
     final void testEquals() {
-        fail("not yet implemented");
+        final List<String> origin = SUPPLY.nextList(1, 5);
+        final Series<String> left = Series.of(origin);
+        final Series<String> right = Series.of(origin);
+        assertNotSame(left, right,
+                      () -> "The following test result would not be significant if left and right were identical.");
+        assertEquals(left, right,
+                     () -> "Two series with the same origin are expected to be equal.");
+        assertNotEquals(left, Series.of(SUPPLY.nextList(6, 10)),
+                        () -> "Two series with the different origins are expected to be different.");
     }
 
     @Test
     final void testHashCode() {
-        fail("not yet implemented");
+        final List<String> origin = SUPPLY.nextList(0, 10);
+        final Series<String> left = Series.of(origin);
+        final Series<String> right = Series.of(origin);
+        assertNotSame(left, right,
+                      () -> "The following test result would not be significant if left and right were identical.");
+        assertEquals(left.hashCode(), right.hashCode(),
+                     () -> "The hash code of two equal series are also expected to be equal.");
     }
 
     @Test
     final void testToString() {
-        fail("not yet implemented");
+        final List<String> origin = SUPPLY.nextList(0, 10);
+        final Series<String> left = Series.of(origin);
+        final Series<String> right = Series.of(origin);
+        assertNotSame(left, right,
+                      () -> "The following test results would not be significant if left and right were identical.");
+        assertEquals(left.toString(), right.toString(),
+                     () -> "The string representations of two equal series are also expected to be equal.");
+        assertEquals(origin.toString(), right.toString(),
+                     () -> "The string representation of a Series is expected to be equal to " +
+                           "the string representation of the original List.");
     }
 }
