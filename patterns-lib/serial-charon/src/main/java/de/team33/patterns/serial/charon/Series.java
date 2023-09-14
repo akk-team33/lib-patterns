@@ -1,10 +1,16 @@
 package de.team33.patterns.serial.charon;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Abstracts a series of elements of a certain type and as such represents an alternative view of a {@link Collection}.
@@ -34,17 +40,45 @@ public abstract class Series<E> {
         return Empty.INSTANCE;
     }
 
+    /**
+     * Returns a {@link Series} composed of the given elements in the given order.
+     */
+    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public static <E> Series<E> of(final E... elements) {
         return of(Arrays.asList(elements));
     }
 
-    public static <E> Series<E> of(final Supplier<? extends Stream<? extends E>> origin) {
-        return of(origin.get().collect(Collectors.toList()));
+    /**
+     * Returns a {@link Series} composed of the given {@link Streamable}'s elements in the given order.
+     */
+    public static <E> Series<E> of(final Streamable<? extends E> origin) {
+        return of(origin.stream().collect(Collectors.toList()));
     }
 
+    /**
+     * Returns a {@link Series} composed of the given {@link Iterable}'s elements in the given order.
+     */
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static <E> Series<E> of(final Iterable<? extends E> origin) {
+        if (origin instanceof Collection) {
+            return of((Collection)origin);
+        } else {
+            final Streamable streamable = () -> StreamSupport.stream(origin.spliterator(), false);
+            return of(streamable);
+        }
+    }
+
+    /**
+     * Returns a {@link Series} composed of the given {@link Collection}'s elements in the given order.
+     */
     public static <E> Series<E> of(final Collection<? extends E> origin) {
-        return Charged.seriesOf(new ArrayList<>(origin), 0);
+        return seriesOf(new ArrayList<>(origin), 0);
+    }
+
+    private static <E> Series<E> seriesOf(final List<E> backing, final int headIndex) {
+        assert 0 <= headIndex;
+        return (headIndex < backing.size()) ? new Charged<>(backing, headIndex) : empty();
     }
 
     /**
@@ -108,6 +142,13 @@ public abstract class Series<E> {
      */
     public abstract List<E> asList();
 
+    /**
+     * Returns a sequential {@link Stream} with this {@link Series} as its source.
+     */
+    public final Stream<E> stream() {
+        return asList().stream();
+    }
+
     @Override
     public final boolean equals(final Object obj) {
         return (this == obj) || ((obj instanceof Series) && asList().equals(((Series<?>) obj).asList()));
@@ -121,5 +162,62 @@ public abstract class Series<E> {
     @Override
     public final String toString() {
         return asList().toString();
+    }
+
+    private static final class Empty<E> extends Series<E> {
+
+        @SuppressWarnings("rawtypes")
+        private static final Empty INSTANCE = new Empty();
+
+        @Override
+        public final E head() {
+            throw new NoSuchElementException("this Series is empty");
+        }
+
+        @Override
+        public final Series<E> tail() {
+            return empty();
+        }
+
+        @Override
+        public final int size() {
+            return 0;
+        }
+
+        @Override
+        public final List<E> asList() {
+            return Collections.emptyList();
+        }
+    }
+
+    private static final class Charged<E> extends Series<E> {
+
+        private final List<E> backing;
+        private final int headIndex;
+
+        private Charged(final List<E> backing, final int headIndex) {
+            this.headIndex = headIndex;
+            this.backing = backing;
+        }
+
+        @Override
+        public final E head() {
+            return backing.get(headIndex);
+        }
+
+        @Override
+        public final Series<E> tail() {
+            return seriesOf(backing, headIndex + 1);
+        }
+
+        @Override
+        public final int size() {
+            return backing.size() - headIndex;
+        }
+
+        @Override
+        public final List<E> asList() {
+            return backing.subList(headIndex, backing.size());
+        }
     }
 }
