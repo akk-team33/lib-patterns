@@ -29,6 +29,10 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.14.1
+
+* Added class Redirected to module testing-titan
+
 ### 1.14.0
 
 * Added module serial-charon

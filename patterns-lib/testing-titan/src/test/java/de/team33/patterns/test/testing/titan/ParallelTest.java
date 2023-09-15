@@ -1,4 +1,4 @@
-package de.team33.test.patterns.testing.titan;
+package de.team33.patterns.test.testing.titan;
 
 import de.team33.patterns.testing.titan.Context;
 import de.team33.patterns.testing.titan.Operation;
