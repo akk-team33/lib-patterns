@@ -9,17 +9,9 @@ import java.util.List;
 
 public class InternalFeatures {
 
-    private static final Feature.Key<InternalFeatures, List<Object>> LIST_VALUE =
-            i -> Arrays.asList(i.intValue, i.stringValue, i.instantValue);
-    private static final Feature.Key<InternalFeatures, String> STRING_VALUE =
-            i -> i.toList().toString();
-    private static final Feature.Key<InternalFeatures, Integer> HASH_VALUE =
-            i -> i.toList().hashCode();
-
     private final int intValue;
     private final String stringValue;
     private final Instant instantValue;
-
     private final transient Feature.Hub<InternalFeatures> features;
 
     public InternalFeatures(final int intValue, final String stringValue, final Instant instantValue) {
@@ -47,7 +39,7 @@ public class InternalFeatures {
     }
 
     private List<Object> toList() {
-        return features.get(LIST_VALUE);
+        return features.get(Key.LIST_VALUE);
     }
 
     @Override
@@ -58,11 +50,18 @@ public class InternalFeatures {
 
     @Override
     public int hashCode() {
-        return features.get(HASH_VALUE);
+        return features.get(Key.HASH_VALUE);
     }
 
     @Override
     public String toString() {
-        return features.get(STRING_VALUE);
+        return features.get(Key.STRING_VALUE);
+    }
+
+    private interface Key<R> extends Feature.Key<InternalFeatures, R> {
+
+        Key<List<Object>> LIST_VALUE = i -> Arrays.asList(i.intValue, i.stringValue, i.instantValue);
+        Key<String> STRING_VALUE = i -> i.toList().toString();
+        Key<Integer> HASH_VALUE = i -> i.toList().hashCode();
     }
 }
