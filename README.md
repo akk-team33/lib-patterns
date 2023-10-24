@@ -21,6 +21,7 @@ http://www.team33.de/dev/patterns/1.x
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * tuple-janus (Team33 Tuple Library - Edition "janus")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
+  * reflect-pandora (Team33 Reflection Library - Edition "pandora")
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -28,6 +29,10 @@ http://www.team33.de/dev/patterns/1.x
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module reflect-pandora
 
 ### 1.14.1
 

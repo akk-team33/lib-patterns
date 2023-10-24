@@ -23,6 +23,7 @@
         <module>pooling-ariel</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
+        <module>reflect-pandora</module>
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
