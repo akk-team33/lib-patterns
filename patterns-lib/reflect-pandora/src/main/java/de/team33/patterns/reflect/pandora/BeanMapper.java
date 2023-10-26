@@ -2,18 +2,18 @@ package de.team33.patterns.reflect.pandora;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.reflect.pandora.Util.normal;
 import static java.util.Collections.unmodifiableMap;
-import static java.util.stream.Collectors.toMap;
 
 public class BeanMapper<S, T> {
-
-    private static final Predicate<Method> IS_OBJECT_METHOD = method -> Object.class.equals(method.getDeclaringClass());
-    private static final Predicate<Method> IS_SINGLE_PARAMETER = method -> 1 == method.getParameterCount();
-    private static final Predicate<Method> IS_NO_PARAMETER = method -> 0 == method.getParameterCount();
 
     private final Map<String, Getter> getters;
     private final Map<String, List<Setter>> setters;
@@ -29,14 +29,14 @@ public class BeanMapper<S, T> {
 
     public static <S, T> BeanMapper<S, T> mapping(final Class<S> sourceClass, final Class<T> targetClass) {
         final Map<String, List<Setter>> setters = Stream.of(targetClass.getMethods())
-                                                        .filter(IS_OBJECT_METHOD.negate())
-                                                        .filter(IS_SINGLE_PARAMETER)
+                                                        .filter(Util::isNoObjectMethod)
+                                                        .filter(Util::isSetter)
                                                         .map(Setter::new)
                                                         .filter(setter -> setter.prefix.isSetter)
                                                         .collect(TreeMap::new, BeanMapper::putSetter, Map::putAll);
         final Map<String, Getter> getters = Stream.of(sourceClass.getMethods())
-                                                  .filter(IS_OBJECT_METHOD.negate())
-                                                  .filter(IS_NO_PARAMETER)
+                                                  .filter(Util::isNoObjectMethod)
+                                                  .filter(Util::isGetter)
                                                   .map(Getter::new)
                                                   .filter(getter -> getter.prefix.isGetter)
                                                   .collect(TreeMap::new, BeanMapper::putGetter, Map::putAll);
@@ -50,10 +50,6 @@ public class BeanMapper<S, T> {
     private static void putSetter(final Map<String, List<Setter>> map, final Setter setter) {
         map.computeIfAbsent(setter.name, name -> new LinkedList<>())
            .add(setter);
-    }
-
-    private static String normal(final String name) {
-        return name.isEmpty() ? name : name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 
     public final void map(final S source, final T target) {
@@ -104,7 +100,7 @@ public class BeanMapper<S, T> {
             // - - - - - - - - - - - - - - - - - - - -
             final String name = method.getName();
             this.prefix = Prefix.of(name);
-            this.name = normal(name.substring(prefix.length));
+            this.name = Util.normal(name.substring(prefix.length));
             this.method = method;
             this.type = method.getReturnType();
         }
@@ -128,34 +124,4 @@ public class BeanMapper<S, T> {
         }
     }
 
-    private enum Prefix {
-
-        is(true, false),
-        get(true, false),
-        set(false, true),
-        none(0, false, false);
-
-        final int length;
-        final boolean isGetter;
-        final boolean isSetter;
-
-        Prefix(final boolean isGetter, final boolean isSetter) {
-            this.length = name().length();
-            this.isGetter = isGetter;
-            this.isSetter = isSetter;
-        }
-
-        Prefix(int length, final boolean isGetter, final boolean isSetter) {
-            this.length = length;
-            this.isGetter = isGetter;
-            this.isSetter = isSetter;
-        }
-
-        static Prefix of(final String name) {
-            return Stream.of(values())
-                         .filter(value -> name.startsWith(value.name()))
-                         .findAny()
-                         .orElse(none);
-        }
-    }
 }
