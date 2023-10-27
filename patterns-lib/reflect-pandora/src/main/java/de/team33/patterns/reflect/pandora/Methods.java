@@ -25,6 +25,29 @@ final class Methods {
         return publicOf(subjectClass).filter(Methods::isInherent);
     }
 
+    static <T> Stream<Method> publicGettersOf(final Class<?> subjectClass) {
+        return publicInherentOf(subjectClass).filter(Methods::isGetter);
+    }
+
+    static <T> Stream<Method> publicSettersOf(final Class<?> subjectClass) {
+        return publicInherentOf(subjectClass).filter(Methods::isSetter);
+    }
+
+    private static boolean isGetter(final Method method) {
+        return (0 == method.getParameterCount()) && !isSetterResult(method);
+    }
+
+    private static boolean isSetter(final Method method) {
+        return (1 == method.getParameterCount()) && isSetterResult(method);
+    }
+
+    private static boolean isSetterResult(final Method method) {
+        final Class<?> returnType = method.getReturnType();
+        return void.class.equals(returnType)
+                || Void.class.equals(returnType)
+                || method.getDeclaringClass().equals(returnType);
+    }
+
     static String signatureOf(final Method method) {
         return new Signature(method).toString();
     }

@@ -46,26 +46,57 @@ class MethodsTest {
         assertEquals(cs.expectedInherentOf, result);
     }
 
+    @ParameterizedTest
+    @EnumSource
+    final void publicGettersOf(final Case cs) {
+        final Set<String> result = Methods.publicGettersOf(cs.subjectClass)
+                                          .map(Methods::signatureOf)
+                                          .collect(toCollection(TreeSet::new));
+
+        assertEquals(cs.expectedGettersOf, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void publicSettersOf(final Case cs) {
+        final Set<String> result = Methods.publicSettersOf(cs.subjectClass)
+                                          .map(Methods::signatureOf)
+                                          .collect(toCollection(TreeSet::new));
+
+        assertEquals(cs.expectedSettersOf, result);
+    }
+
     enum Case {
 
         OBJECT(Object.class,
                Collections.emptyList(),
+               Collections.emptyList(),
+               Collections.emptyList(),
                asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                       "toString()", "wait()", "wait(long)", "wait(long, int)")),
         PRIVATE_CLASS(PrivateClass.class,
+                      Collections.emptyList(),
+                      Collections.emptyList(),
                       asList("publicMethod()"),
                       asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                              "publicMethod()", "publicStaticMethod()", "toString()", "wait()", "wait(long)",
                              "wait(long, int)")),
         PACKAGE_CLASS(PackageClass.class,
+                      Collections.emptyList(),
+                      Collections.emptyList(),
                       asList("publicMethod()"),
                       asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                              "publicMethod()", "publicStaticMethod()", "toString()", "wait()", "wait(long)",
                              "wait(long, int)")),
         BEAN_INTERFACE(BeanInterface.class,
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                       Collections.emptyList(),
+                       asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()")),
         BEAN_CLASS(BeanClass.class,
+                   asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                   asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                          "setStringValue(java.lang.String)"),
                    asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()",
                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)"),
@@ -74,6 +105,11 @@ class MethodsTest {
                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
         INSTANT(Instant.class,
+                asList("getEpochSecond()", "getNano()", "toEpochMilli()"),
+                asList("minus(java.time.temporal.TemporalAmount)", "minusMillis(long)", "minusNanos(long)",
+                       "minusSeconds(long)", "plus(java.time.temporal.TemporalAmount)", "plusMillis(long)",
+                       "plusNanos(long)", "plusSeconds(long)", "truncatedTo(java.time.temporal.TemporalUnit)",
+                       "with(java.time.temporal.TemporalAdjuster)"),
                 asList("adjustInto(java.time.temporal.Temporal)", "atOffset(java.time.ZoneOffset)",
                        "atZone(java.time.ZoneId)", "compareTo(java.time.Instant)",
                        "get(java.time.temporal.TemporalField)", "getEpochSecond()",
@@ -105,20 +141,35 @@ class MethodsTest {
                        "toEpochMilli()", "toString()", "truncatedTo(java.time.temporal.TemporalUnit)",
                        "until(java.time.temporal.Temporal, java.time.temporal.TemporalUnit)", "wait()", "wait(long)",
                        "wait(long, int)", "with(java.time.temporal.TemporalAdjuster)",
-                       "with(java.time.temporal.TemporalField, long)"));
+                       "with(java.time.temporal.TemporalField, long)")),
+        NUMBER(Number.class,
+               asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
+               Collections.emptyList(),
+               asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
+               asList("byteValue()", "doubleValue()", "equals(java.lang.Object)", "floatValue()", "getClass()",
+                      "hashCode()", "intValue()", "longValue()", "notify()", "notifyAll()", "shortValue()",
+                      "toString()", "wait()", "wait(long)", "wait(long, int)"));
 
         final Class<?> subjectClass;
+        final Set<String> expectedGettersOf;
+        final Set<String> expectedSettersOf;
         final Set<String> expectedInherentOf;
         final Set<String> expectedPublicOf;
 
-        Case(final Class<?> subjectClass, final List<String> expectedInherentOf, final List<String> expectedPublicOf) {
+        Case(final Class<?> subjectClass,
+             final List<String> expectedGettersOf,
+             final List<String> expectedSettersOf,
+             final List<String> expectedInherentOf,
+             final List<String> expectedPublicOf) {
             this.subjectClass = subjectClass;
+            this.expectedGettersOf = new TreeSet<>(expectedGettersOf);
+            this.expectedSettersOf = new TreeSet<>(expectedSettersOf);
             this.expectedInherentOf = new TreeSet<>(expectedInherentOf);
             this.expectedPublicOf = new TreeSet<>(expectedPublicOf);
         }
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"unused", "MethodMayBeStatic"})
     private static class PrivateClass {
 
         private static void privateStaticMethod() {
@@ -141,15 +192,15 @@ class MethodsTest {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        void packageMethod() {
+        final void packageMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        protected void protectedMethod() {
+        protected final void protectedMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        public void publicMethod() {
+        public final void publicMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
     }
@@ -177,15 +228,15 @@ class MethodsTest {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        void packageMethod() {
+        final void packageMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        protected void protectedMethod() {
+        protected final void protectedMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
 
-        public void publicMethod() {
+        public final void publicMethod() {
             throw new UnsupportedOperationException("not yet implemented");
         }
     }
