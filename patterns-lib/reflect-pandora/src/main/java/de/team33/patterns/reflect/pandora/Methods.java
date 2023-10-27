@@ -2,8 +2,70 @@ package de.team33.patterns.reflect.pandora;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toSet;
+
 final class Methods {
+
+    private static final int SYNTHETIC = 0x00001000;
+    private static final int NON_INHERENT_MODIFIERS = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
+    private static final Set<Signature> NON_INHERENT_SIGNATURES = publicOf(Object.class).map(Signature::new)
+                                                                                        .collect(toSet());
+
+    static Stream<Method> publicOf(final Class<?> subjectClass) {
+        return Stream.of(subjectClass.getMethods());
+    }
+
+    static Stream<Method> publicInherentOf(final Class<?> subjectClass) {
+        return publicOf(subjectClass).filter(Methods::isInherent);
+    }
+
+    static String signatureOf(final Method method) {
+        return new Signature(method).toString();
+    }
+
+    private static boolean isInherent(final Method method) {
+        return !NON_INHERENT_SIGNATURES.contains(new Signature(method)) && isInherent(method.getModifiers());
+    }
+
+    private static boolean isInherent(final int modifiers) {
+        return 0 == (modifiers & NON_INHERENT_MODIFIERS);
+    }
+
+    private static class Signature {
+
+        final String name;
+        final List<Class<?>> parameterTypes;
+
+        Signature(final Method method) {
+            this.name = method.getName();
+            this.parameterTypes = Arrays.asList(method.getParameterTypes());
+        }
+
+        private List<Object> toList() {
+            return Arrays.asList(name, parameterTypes);
+        }
+
+        @Override
+        public final int hashCode() {
+            return toList().hashCode();
+        }
+
+        @Override
+        public final boolean equals(final Object obj) {
+            return (this == obj) || ((obj instanceof Signature) && toList().equals(((Signature) obj).toList()));
+        }
+
+        @Override
+        public final String toString() {
+            return String.format("%s(%s)", name, parameterTypes.stream()
+                                                               .map(Class::getCanonicalName)
+                                                               .collect(Collectors.joining(", ")));
+        }
+    }
 }

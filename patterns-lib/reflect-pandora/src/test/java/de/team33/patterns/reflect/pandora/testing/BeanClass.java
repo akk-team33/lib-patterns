@@ -1,14 +1,12 @@
 package de.team33.patterns.reflect.pandora.testing;
 
-import de.team33.patterns.reflect.pandora.BeanMapper;
-
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Stream;
 
 public class BeanClass implements BeanInterface {
-
-    private static final BeanMapper<BeanInterface, BeanClass> MAPPER = BeanMapper.mapping(BeanInterface.class,
-                                                                                          BeanClass.class);
 
     private int intValue;
     private Long longValue;
@@ -56,7 +54,16 @@ public class BeanClass implements BeanInterface {
     }
 
     private Map<String, Object> toMap() {
-        return MAPPER.toMap(this);
+        return Stream.of(getClass().getFields())
+                     .collect(TreeMap::new, this::put, Map::putAll);
+    }
+
+    private void put(final Map<String, Object> map, final Field field) {
+        try {
+            map.put(field.getName(), field.get(this));
+        } catch (final IllegalAccessException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     @Override
