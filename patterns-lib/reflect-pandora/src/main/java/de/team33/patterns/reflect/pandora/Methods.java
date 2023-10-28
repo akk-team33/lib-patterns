@@ -33,6 +33,26 @@ final class Methods {
         return publicInherentOf(subjectClass).filter(Methods::isSetter);
     }
 
+    static <T> Stream<Method> classicGettersOf(final Class<?> subjectClass) {
+        return publicGettersOf(subjectClass).filter(Methods::isGetterPrefixed);
+    }
+
+    static <T> Stream<Method> classicSettersOf(final Class<?> subjectClass) {
+        return publicSettersOf(subjectClass).filter(Methods::isSetterPrefixed);
+    }
+
+    private static boolean isSetterPrefixed(final Method method) {
+        return method.getName().startsWith(Prefix.set.name());
+    }
+
+    private static boolean isGetterPrefixed(final Method method) {
+        return isGetterPrefixed(method.getName());
+    }
+
+    private static boolean isGetterPrefixed(final String name) {
+        return name.startsWith(Prefix.get.name()) || name.startsWith(Prefix.is.name());
+    }
+
     private static boolean isGetter(final Method method) {
         return (0 == method.getParameterCount()) && !isSetterResult(method);
     }

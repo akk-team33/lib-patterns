@@ -66,9 +66,31 @@ class MethodsTest {
         assertEquals(cs.expectedSettersOf, result);
     }
 
+    @ParameterizedTest
+    @EnumSource
+    final void classicGettersOf(final Case cs) {
+        final Set<String> result = Methods.classicGettersOf(cs.subjectClass)
+                                          .map(Methods::signatureOf)
+                                          .collect(toCollection(TreeSet::new));
+
+        assertEquals(cs.expectedClassicGettersOf, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void classicSettersOf(final Case cs) {
+        final Set<String> result = Methods.classicSettersOf(cs.subjectClass)
+                                          .map(Methods::signatureOf)
+                                          .collect(toCollection(TreeSet::new));
+
+        assertEquals(cs.expectedClassicSettersOf, result);
+    }
+
     enum Case {
 
         OBJECT(Object.class,
+               Collections.emptyList(),
+               Collections.emptyList(),
                Collections.emptyList(),
                Collections.emptyList(),
                Collections.emptyList(),
@@ -77,11 +99,15 @@ class MethodsTest {
         PRIVATE_CLASS(PrivateClass.class,
                       Collections.emptyList(),
                       Collections.emptyList(),
+                      Collections.emptyList(),
+                      Collections.emptyList(),
                       asList("publicMethod()"),
                       asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                              "publicMethod()", "publicStaticMethod()", "toString()", "wait()", "wait(long)",
                              "wait(long, int)")),
         PACKAGE_CLASS(PackageClass.class,
+                      Collections.emptyList(),
+                      Collections.emptyList(),
                       Collections.emptyList(),
                       Collections.emptyList(),
                       asList("publicMethod()"),
@@ -92,8 +118,13 @@ class MethodsTest {
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                        Collections.emptyList(),
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                       Collections.emptyList(),
+                       asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()")),
         BEAN_CLASS(BeanClass.class,
+                   asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                   asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                          "setStringValue(java.lang.String)"),
                    asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                    asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)"),
@@ -105,6 +136,8 @@ class MethodsTest {
                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
         INSTANT(Instant.class,
+                asList("getEpochSecond()", "getNano()"),
+                Collections.emptyList(),
                 asList("getEpochSecond()", "getNano()", "toEpochMilli()"),
                 asList("minus(java.time.temporal.TemporalAmount)", "minusMillis(long)", "minusNanos(long)",
                        "minusSeconds(long)", "plus(java.time.temporal.TemporalAmount)", "plusMillis(long)",
@@ -143,6 +176,8 @@ class MethodsTest {
                        "wait(long, int)", "with(java.time.temporal.TemporalAdjuster)",
                        "with(java.time.temporal.TemporalField, long)")),
         NUMBER(Number.class,
+               Collections.emptyList(),
+               Collections.emptyList(),
                asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
                Collections.emptyList(),
                asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
@@ -151,17 +186,23 @@ class MethodsTest {
                       "toString()", "wait()", "wait(long)", "wait(long, int)"));
 
         final Class<?> subjectClass;
+        final Set<String> expectedClassicGettersOf;
+        final Set<String> expectedClassicSettersOf;
         final Set<String> expectedGettersOf;
         final Set<String> expectedSettersOf;
         final Set<String> expectedInherentOf;
         final Set<String> expectedPublicOf;
 
         Case(final Class<?> subjectClass,
+             final List<String> expectedClassicGettersOf,
+             final List<String> expectedClassicSettersOf,
              final List<String> expectedGettersOf,
              final List<String> expectedSettersOf,
              final List<String> expectedInherentOf,
              final List<String> expectedPublicOf) {
             this.subjectClass = subjectClass;
+            this.expectedClassicGettersOf = new TreeSet<>(expectedClassicGettersOf);
+            this.expectedClassicSettersOf = new TreeSet<>(expectedClassicSettersOf);
             this.expectedGettersOf = new TreeSet<>(expectedGettersOf);
             this.expectedSettersOf = new TreeSet<>(expectedSettersOf);
             this.expectedInherentOf = new TreeSet<>(expectedInherentOf);
