@@ -5,7 +5,6 @@ import de.team33.patterns.reflect.pandora.testing.BeanInterface;
 import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,9 +14,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
-@SuppressWarnings("SerializableInnerClassWithNonSerializableOuterClass")
+@SuppressWarnings({"SerializableInnerClassWithNonSerializableOuterClass", "SerializableStoresNonSerializable"})
 class GettersTest {
 
     private static final Supply SUPPLY = new Supply();
@@ -25,7 +26,7 @@ class GettersTest {
     @Test
     final void names() {
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Set<String> expected = new TreeSet<String>(){{
+        final Set<String> expected = new TreeSet<String>() {{
             add("intValue");
             add("longValue");
             add("stringValue");
@@ -33,6 +34,46 @@ class GettersTest {
         }};
 
         final Set<String> result = getters.names();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void type() {
+        final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
+        final Map<String, Class<?>> expected = new TreeMap<String, Class<?>>() {{
+            put("intValue", int.class);
+            put("longValue", Long.class);
+            put("stringValue", String.class);
+            put("instantValue", Instant.class);
+        }};
+
+        final Map<String, Class<?>> result = getters.names()
+                                                    .stream()
+                                                    .collect(HashMap::new,
+                                                             (map, name) -> map.put(name, getters.type(name)),
+                                                             Map::putAll);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void getter() {
+        final BeanClass origin = SUPPLY.nextBean();
+        final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
+        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+            put("intValue", origin.getIntValue());
+            put("longValue", origin.getLongValue());
+            put("stringValue", origin.getStringValue());
+            put("instantValue", origin.getInstantValue());
+        }};
+
+        final Map<String, Object> result = getters.names()
+                                                  .stream()
+                                                  .collect(HashMap::new,
+                                                           (map, name) -> map.put(name, getters.getter(name)
+                                                                                               .apply(origin)),
+                                                           Map::putAll);
 
         assertEquals(expected, result);
     }
@@ -55,37 +96,15 @@ class GettersTest {
     final void getter_failing() {
         final BeanInterface origin = new BeanMock();
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-
+        final Function<BeanInterface, Object> getter = getters.getter("intValue");
         try {
-            final Object intValue = getters.getter("intValue")
-                                           .apply(origin);
+            final Object intValue = getter.apply(origin);
             fail("expected to fail - but was <" + intValue + ">");
         } catch (final IllegalStateException e) {
             // as expected!
-            e.printStackTrace();
+            // e.printStackTrace();
             assertTrue(e.getMessage().contains("getIntValue"));
         }
-    }
-
-    @Test
-    final void getter() {
-        final BeanClass origin = SUPPLY.nextBean();
-        final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Map<String, Object> expected = new TreeMap<String, Object>(){{
-            put("intValue", origin.getIntValue());
-            put("longValue", origin.getLongValue());
-            put("stringValue", origin.getStringValue());
-            put("instantValue", origin.getInstantValue());
-        }};
-
-        final Map<String, Object> result = getters.names()
-                                                  .stream()
-                                                  .collect(HashMap::new,
-                                                           (map, name) -> map.put(name, getters.getter(name)
-                                                                                               .apply(origin)),
-                                                           Map::putAll);
-
-        assertEquals(expected, result);
     }
 
     static class BeanMock implements BeanInterface {
