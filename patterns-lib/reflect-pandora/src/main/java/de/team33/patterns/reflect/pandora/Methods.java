@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -78,6 +79,15 @@ final class Methods {
 
     private static boolean isInherent(final int modifiers) {
         return 0 == (modifiers & NON_INHERENT_MODIFIERS);
+    }
+
+    static String normalName(final Method method) {
+        final String name = method.getName();
+        final Prefix prefix = Prefix.of(name);
+        final int headIndex = prefix.length;
+        final int tailIndex = (headIndex < name.length()) ? (headIndex + 1) : headIndex;
+        final String head = name.substring(headIndex, tailIndex).toLowerCase(Locale.ROOT);
+        return head + name.substring(tailIndex);
     }
 
     private static class Signature {
