@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Getters<T> {
 
@@ -38,5 +39,12 @@ public class Getters<T> {
     public final Function<T, Object> getter(final String name) {
         return Optional.ofNullable(backing.get(name))
                        .orElseThrow(() -> new NoSuchElementException("no getter found for name <" + name + ">"));
+    }
+
+    public final Map<String, Object> toMap(final T subject) {
+        return names().stream()
+                      .collect(TreeMap::new,
+                               (map, name) -> map.put(name, getter(name).apply(subject)),
+                               Map::putAll);
     }
 }

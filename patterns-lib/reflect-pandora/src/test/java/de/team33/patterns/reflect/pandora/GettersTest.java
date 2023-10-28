@@ -107,6 +107,22 @@ class GettersTest {
         }
     }
 
+    @Test
+    final void toMap() {
+        final BeanClass origin = SUPPLY.nextBean();
+        final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
+        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+            put("intValue", origin.getIntValue());
+            put("longValue", origin.getLongValue());
+            put("stringValue", origin.getStringValue());
+            put("instantValue", origin.getInstantValue());
+        }};
+
+        final Map<String, Object> result = getters.toMap(origin);
+
+        assertEquals(expected, result);
+    }
+
     static class BeanMock implements BeanInterface {
 
         @Override
