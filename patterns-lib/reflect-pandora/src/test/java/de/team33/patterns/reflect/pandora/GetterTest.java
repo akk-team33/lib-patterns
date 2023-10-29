@@ -3,22 +3,22 @@ package de.team33.patterns.reflect.pandora;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SetterTest {
+class GetterTest {
 
     @Test
-    void accept_IllegalAccessException() throws NoSuchMethodException {
-        final String name = "ensureCapacityInternal";
-        final Setter<ArrayList<?>> setter = new Setter<>(ArrayList.class.getDeclaredMethod(name, int.class));
-        final ArrayList<Object> target = new ArrayList<>();
+    void apply_IllegalAccessException() throws NoSuchMethodException {
+        final String name = "writeReplace";
+        final Getter<Instant> getter = new Getter<>(Instant.class.getDeclaredMethod(name));
+        final Instant target = Instant.now();
 
         try {
-            setter.accept(target, 25);
-            fail("expected to fail - but was " + target);
+            final Object result = getter.apply(target);
+            fail("expected to fail - but was " + result);
         } catch (final IllegalStateException e) {
             // as expected!
             // e.printStackTrace();
@@ -28,13 +28,13 @@ class SetterTest {
     }
 
     @Test
-    void accept_InvocationTargetException() throws NoSuchMethodException {
-        final String name = "setLeadsToInvocationTargetException";
-        final Setter<SetterTest> setter = new Setter<>(getClass().getDeclaredMethod(name, int.class));
+    void apply_InvocationTargetException() throws NoSuchMethodException {
+        final String name = "getLeadsToInvocationTargetException";
+        final Getter<GetterTest> getter = new Getter<>(getClass().getDeclaredMethod(name));
 
         try {
-            setter.accept(this, 25);
-            fail("expected to fail - but was " + this);
+            final Object result = getter.apply(this);
+            fail("expected to fail - but was " + result);
         } catch (final IllegalStateException e) {
             // as expected!
             // e.printStackTrace();
@@ -43,7 +43,7 @@ class SetterTest {
         }
     }
 
-    final void setLeadsToInvocationTargetException(final int value) {
+    final Object getLeadsToInvocationTargetException() {
         throw new UnsupportedOperationException("should lead to an InvocationTargetException");
     }
 }

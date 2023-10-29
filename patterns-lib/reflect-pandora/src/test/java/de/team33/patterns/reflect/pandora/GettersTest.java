@@ -93,21 +93,6 @@ class GettersTest {
     }
 
     @Test
-    final void getter_failing() {
-        final BeanInterface origin = new BeanMock();
-        final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Function<BeanInterface, Object> getter = getters.getter("intValue");
-        try {
-            final Object intValue = getter.apply(origin);
-            fail("expected to fail - but was <" + intValue + ">");
-        } catch (final IllegalStateException e) {
-            // as expected!
-            // e.printStackTrace();
-            assertTrue(e.getMessage().contains("getIntValue"));
-        }
-    }
-
-    @Test
     final void toMap() {
         final BeanClass origin = SUPPLY.nextBean();
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
@@ -121,28 +106,5 @@ class GettersTest {
         final Map<String, Object> result = getters.toMap(origin);
 
         assertEquals(expected, result);
-    }
-
-    static class BeanMock implements BeanInterface {
-
-        @Override
-        public final int getIntValue() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        @Override
-        public final Long getLongValue() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        @Override
-        public final String getStringValue() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        @Override
-        public final Instant getInstantValue() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
     }
 }
