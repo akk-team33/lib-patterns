@@ -54,7 +54,7 @@ public class BeanClass implements BeanInterface {
     }
 
     private Map<String, Object> toMap() {
-        return Stream.of(getClass().getFields())
+        return Stream.of(getClass().getDeclaredFields())
                      .collect(TreeMap::new, this::put, Map::putAll);
     }
 

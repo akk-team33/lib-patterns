@@ -8,7 +8,7 @@ import static java.lang.String.format;
 
 class Setter<T> implements BiConsumer<T, Object> {
 
-    private static final String MESSAGE = "could not apply a (subject, value) to the associated method%n" +
+    private static final String MESSAGE = "could not apply (subject, value) to the associated method%n" +
             "    subject ...%n" +
             "    - type                  : %s%n" +
             "    - string representation : %s%n" +
