@@ -13,7 +13,15 @@ public class Mapper<S, T> {
     }
 
     public static <S, T> Mapper<S, T> mapping(final Class<S> sourceClass, final Class<T> targetClass) {
-        return new Mapper<>(Getters.of(sourceClass), Setters.of(targetClass));
+        return mapping(Getters.of(sourceClass), Setters.of(targetClass));
+    }
+
+    public static <S, T> Mapper<S, T> mapping(final Getters<S> getters, final Class<T> targetClass) {
+        return mapping(getters, Setters.of(targetClass));
+    }
+
+    public static <S, T> Mapper<S, T> mapping(final Getters<S> getters, final Setters<T> setters) {
+        return new Mapper<>(getters, setters);
     }
 
     public final T map(final S source, final T target) {
@@ -22,9 +30,5 @@ public class Mapper<S, T> {
                                        .accept(target, getters.getter(name)
                                                               .apply(source)));
         return target;
-    }
-
-    public final Map<String, Object> toMap(final S source) {
-        return getters.toMap(source);
     }
 }

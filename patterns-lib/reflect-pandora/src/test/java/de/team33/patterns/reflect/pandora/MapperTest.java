@@ -5,10 +5,8 @@ import de.team33.patterns.reflect.pandora.testing.BeanInterface;
 import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.TreeMap;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class MapperTest extends Supply {
 
@@ -23,20 +21,5 @@ class MapperTest extends Supply {
         mapper.map(origin, target);
 
         assertEquals(origin, target);
-    }
-
-    @Test
-    final void toMap() {
-        final BeanClass origin = nextBean();
-        final Map<String, Object> expected = new TreeMap<String, Object>() {{
-            put("intValue", origin.getIntValue());
-            put("longValue", origin.getLongValue());
-            put("stringValue", origin.getStringValue());
-            put("instantValue", origin.getInstantValue());
-        }};
-
-        final Map<String, Object> result = mapper.toMap(origin);
-
-        assertEquals(expected, result);
     }
 }
