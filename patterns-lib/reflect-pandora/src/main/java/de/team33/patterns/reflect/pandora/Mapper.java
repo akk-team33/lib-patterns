@@ -1,7 +1,5 @@
 package de.team33.patterns.reflect.pandora;
 
-import java.util.Map;
-
 public class Mapper<S, T> {
 
     private final Getters<S> getters;

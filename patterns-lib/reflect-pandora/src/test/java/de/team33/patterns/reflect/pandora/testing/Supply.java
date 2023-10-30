@@ -3,6 +3,7 @@ package de.team33.patterns.reflect.pandora.testing;
 import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Generator;
 import de.team33.patterns.sample.reflect.pandora.Sample01;
+import de.team33.patterns.sample.reflect.pandora.Sample02;
 
 import java.math.BigInteger;
 import java.time.Instant;
@@ -34,6 +35,10 @@ public class Supply implements Generator, Charger {
 
     public final Sample01 nextSample01() {
         return charge(new Sample01.Mutable());
+    }
+
+    public final Sample02 nextSample02() {
+        return charge(new Sample02.Mutable());
     }
 
     public final List<Object> nextList() {
