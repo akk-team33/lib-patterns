@@ -46,7 +46,7 @@ public class FileIO {
     /**
      * Copy a source input stream to a given target directory.
      */
-    public static void copy(final InputStream in, final Path target) throws IOException {
+    private static void copy(final InputStream in, final Path target) throws IOException {
         Files.createDirectories(target.getParent());
         Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
     }

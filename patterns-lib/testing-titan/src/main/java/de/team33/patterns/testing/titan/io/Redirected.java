@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Utility to redirect standard output to a file in test scenarios.
+ */
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public final class Redirected {
 
