@@ -9,7 +9,7 @@ import java.nio.file.StandardCopyOption;
 /**
  * Utility for copying files in test scenarios.
  */
-public class FileIO {
+public final class FileIO {
 
     private static final String CANNOT_COPY_RESOURCE = "cannot copy resource%n" +
             "    resource name   : %s%n" +
@@ -18,6 +18,9 @@ public class FileIO {
     private static final String CANNOT_COPY_FILE = "cannot copy file%n" +
             "    source path : %s%n" +
             "    target path : %s%n";
+
+    private FileIO() {
+    }
 
     /**
      * Copy a resource file to a given target directory.

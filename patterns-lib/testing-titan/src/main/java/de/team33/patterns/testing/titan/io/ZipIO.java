@@ -11,7 +11,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Utility for unpacking zip files in test scenarios.
  */
-public class ZipIO {
+public final class ZipIO {
 
     private static final String CANNOT_UNZIP_RESOURCE = "cannot unzip resource%n" +
             "    resource name   : %s%n" +
@@ -20,6 +20,9 @@ public class ZipIO {
     private static final String CANNOT_UNZIP_FILE = "cannot unzip file%n" +
             "    zip file    : %s%n" +
             "    target path : %s%n";
+
+    private ZipIO() {
+    }
 
     /**
      * Unzip a resource to a given target directory.
