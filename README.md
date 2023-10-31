@@ -29,6 +29,11 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.14.2
+
+* Refined module testing-titan ...
+  * Added class FileIO
+
 ### 1.14.1
 
 * Added class Redirected to module testing-titan
