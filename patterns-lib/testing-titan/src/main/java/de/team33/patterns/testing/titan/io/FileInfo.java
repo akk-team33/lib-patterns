@@ -8,7 +8,6 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -18,9 +17,9 @@ import java.util.stream.Stream;
 public class FileInfo {
 
     private final String name;
+    private final Type type;
     private final long size;
     private final Instant lastModified;
-    private final Type type;
     private final List<FileInfo> content;
 
     private FileInfo(final Path path, final LinkOption[] options) {
@@ -29,7 +28,18 @@ public class FileInfo {
         this.name = path.getFileName().toString();
         this.size = (null != attributes) ? attributes.size() : 0L;
         this.lastModified = (null != attributes) ? attributes.lastModifiedTime().toInstant() : null;
-        this.content = Collections.emptyList();
+        this.content = ((null != attributes) && attributes.isDirectory())
+                       ? contentOf(path, options)
+                       : Collections.emptyList();
+    }
+
+    private List<FileInfo> contentOf(final Path path, LinkOption[] options) {
+        try (final Stream<Path> stream = Files.list(path)) {
+            return stream.map(item -> new FileInfo(item, options))
+                         .collect(Collectors.toList());
+        } catch (final IOException e) {
+            return Collections.emptyList();
+        }
     }
 
     private static BasicFileAttributes basicFileAttributes(final Path path, final LinkOption[] options) {
