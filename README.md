@@ -34,6 +34,7 @@ http://www.team33.de/dev/patterns/1.x
 * Refined module testing-titan ...
   * Added class FileIO
   * Added class ZipIO
+  * Added class FileInfo
 
 ### 1.14.1
 
