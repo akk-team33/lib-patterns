@@ -36,7 +36,7 @@ class TextIOTest {
             fail("expected to fail - but was '" + result + "'");
         } catch (final IllegalArgumentException e) {
             // as expected, and ...
-            e.printStackTrace();
+            // e.printStackTrace();
             assertTrue(e.getMessage().contains(MISSING_PATH.toString()));
         }
     }
