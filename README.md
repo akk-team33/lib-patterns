@@ -35,6 +35,8 @@ http://www.team33.de/dev/patterns/1.x
   * Added class FileIO
   * Added class ZipIO
   * Added class FileInfo
+* Refined module expiry-tethys ...
+  * Added class XRecent
 
 ### 1.14.1
 
