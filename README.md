@@ -34,6 +34,18 @@ http://www.team33.de/dev/patterns/1.x
 
 * Added module reflect-pandora
 
+### 1.14.2
+
+* Refined module testing-titan ...
+  * Added class FileIO
+  * Added class ZipIO
+  * Added class TextIO
+  * Added class FileInfo
+* Refined module expiry-tethys ...
+  * Added class XRecent
+* Refined module pooling-ariel ...
+  * Added class XRProvider
+
 ### 1.14.1
 
 * Added class Redirected to module testing-titan

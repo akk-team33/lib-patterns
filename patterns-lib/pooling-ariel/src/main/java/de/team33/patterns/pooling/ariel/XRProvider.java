@@ -1,6 +1,7 @@
 package de.team33.patterns.pooling.ariel;
 
-import java.util.function.Supplier;
+import de.team33.patterns.exceptional.dione.XSupplier;
+import de.team33.patterns.expiry.tethys.XRecent;
 
 /**
  * A tool that makes instances of a certain type available for the course of operations that require such an instance.
@@ -16,23 +17,26 @@ import java.util.function.Supplier;
  * Note: this implementation cannot detect when an internal operation is taking place in the course of an operation to
  * which the same <em>item</em> could be made available.
  * <p>
- * This implementation does not support checked exceptions to occur while creating new <em>item</em> instances.
+ * This implementation supports expiry and reinitialisation of provided <em>items</em>.
+ * <p>
+ * This implementation supports checked exceptions to occur while creating new <em>item</em> instances.
  *
- * @param <I> The type of provided instances <em>(items)</em>.
- * @see RProvider
+ * @param <I> The type of provided instances <em>(items)</em>
+ * @param <E> A type of exception that may be caused by the creation of new <em>item</em> instances.
+ * @see Provider
  * @see XProvider
- * @see XRProvider
+ * @see RProvider
  */
-public class Provider<I> extends ProviderBase<I> {
+public class XRProvider<I, E extends Exception> extends XProviderBase<I, E> {
 
     /**
-     * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
+     * Initializes a new instance giving an {@link XSupplier} that defines the intended initialization of a
      * new <em>item</em>.
+     * <p>
+     * Once an instance <em>item</em> is initialized it will expire and be renewed after a maximum idle time
+     * or at least after a maximum lifetime.
      */
-    public Provider(final Supplier<I> newItem) {
-        super(() -> {
-            final I item = newItem.get();
-            return () -> item;
-        });
+    public XRProvider(final XSupplier<I, E> newItem, final long maxIdle, final long maxLiving) {
+        super(() -> new XRecent<>(newItem, maxIdle, maxLiving));
     }
 }

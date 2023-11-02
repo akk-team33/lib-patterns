@@ -1,6 +1,7 @@
 package de.team33.patterns.expiry.tethys;
 
-import java.util.function.Supplier;
+import de.team33.patterns.exceptional.dione.XSupplier;
+
 
 /**
  * Defines a container type for handling instances, which in principle can be defined globally and
@@ -17,26 +18,26 @@ import java.util.function.Supplier;
  *
  * @param <T> The type of instances to handle.
  */
-public class Recent<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
+public class XRecent<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
 
     /**
-     * Initializes a new instance of this container type given a {@link Supplier} for the type to be handled and
+     * Initializes a new instance of this container type given a {@link XSupplier} for the type to be handled and
      * an intended lifetime of such instances.
      * <p>
      * CAUTION: The given lifetime should be significantly smaller than the actually expected
      * life span of an instance to be handled, otherwise there may not be enough time to use a
      * {@linkplain #get() provided} instance successfully!
      *
-     * @param newSubject the {@link Supplier} for the instances to handle
+     * @param newSubject the {@link XSupplier} for the instances to handle
      * @param maxIdle    the maximum idle time in milliseconds
      * @param maxLiving  the maximum lifetime in milliseconds
      */
-    public Recent(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLiving) {
-        super(newSubject::get, maxIdle, maxLiving);
+    public XRecent(final XSupplier<? extends T, ? extends X> newSubject, final long maxIdle, final long maxLiving) {
+        super(newSubject, maxIdle, maxLiving);
     }
 
     @Override
-    public final T get() {
+    public final T get() throws X {
         return super.get();
     }
 }
