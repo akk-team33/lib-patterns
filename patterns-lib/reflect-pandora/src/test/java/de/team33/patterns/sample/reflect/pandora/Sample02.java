@@ -52,7 +52,7 @@ public abstract class Sample02 {
 
         private final Sample02 backing;
 
-        public Proxy(Sample02 backing) {
+        public Proxy(final Sample02 backing) {
             this.backing = backing;
         }
 
@@ -140,6 +140,10 @@ public abstract class Sample02 {
         public final Mutable setListValue(final List<Object> listValue) {
             this.listValue = new ArrayList<>(listValue);
             return this;
+        }
+
+        public final Sample02 toImmutable() {
+            return new Proxy(toMutable());
         }
     }
 }
