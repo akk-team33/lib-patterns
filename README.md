@@ -37,6 +37,8 @@ http://www.team33.de/dev/patterns/1.x
   * Added class FileInfo
 * Refined module expiry-tethys ...
   * Added class XRecent
+* Refined module pooling-ariel ...
+  * Added class XRProvider
 
 ### 1.14.1
 

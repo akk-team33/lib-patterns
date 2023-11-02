@@ -1,11 +1,7 @@
 package de.team33.patterns.pooling.ariel;
 
-import de.team33.patterns.exceptional.dione.XConsumer;
-import de.team33.patterns.exceptional.dione.XFunction;
 import de.team33.patterns.expiry.tethys.Recent;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -29,8 +25,9 @@ import java.util.function.Supplier;
  * @param <I> The type of provided instances <em>(items)</em>.
  * @see Provider
  * @see XProvider
+ * @see XRProvider
  */
-public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
+public class RProvider<I> extends ProviderBase<I> {
 
     /**
      * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
@@ -40,57 +37,6 @@ public class RProvider<I> extends Mutual<Recent<I>, RuntimeException> {
      * or at least after a maximum lifetime.
      */
     public RProvider(final Supplier<I> newItem, final long maxIdle, final long maxLiving) {
-        super(() -> new Recent<I>(newItem, maxIdle, maxLiving));
-    }
-
-    /**
-     * Runs a given {@link Consumer} with a parameter provided for it. The parameter is kept for future use.
-     * <p>
-     * While the {@link Consumer} is being executed, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the execution or the executing thread!
-     */
-    public final void run(final Consumer<? super I> consumer) {
-        accept(recent -> consumer.accept(recent.get()));
-    }
-
-    /**
-     * Runs a given {@link XConsumer} with a parameter provided for it. The parameter is kept for future use.
-     * <p>
-     * While the {@link XConsumer} is being executed, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the execution or the executing thread!
-     *
-     * @param <X> A type of exception that may be caused by the given {@link XConsumer}.
-     * @throws X if the execution of the given {@link XConsumer} causes one.
-     */
-    public final <X extends Exception> void runEx(final XConsumer<? super I, X> xConsumer) throws X {
-        accept(recent -> xConsumer.accept(recent.get()));
-    }
-
-    /**
-     * Calls a given {@link Function} with a parameter provided for it and returns its result.
-     * The parameter is kept for future use.
-     * <p>
-     * While the {@link Function} is being called, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the call or the executing thread!
-     *
-     * @param <R> The result type of the given {@link Function}
-     */
-    public final <R> R get(final Function<? super I, R> function) {
-        return apply(recent -> function.apply(recent.get()));
-    }
-
-    /**
-     * Calls a given {@link XFunction} with a parameter provided for it and returns its result.
-     * The parameter is kept for future use.
-     * <p>
-     * While the {@link XFunction} is being called, the parameter is exclusively available to it, but must not be
-     * "hijacked" from the context of the call or the executing thread!
-     *
-     * @param <R> The result type of the given {@link XFunction}
-     * @param <X> A type of exception that may be caused by the given {@link XFunction}.
-     * @throws X if the execution of the given {@link XFunction} causes one.
-     */
-    public final <R, X extends Exception> R getEx(final XFunction<? super I, R, X> xFunction) throws X {
-        return apply(recent -> xFunction.apply(recent.get()));
+        super(() -> new Recent<>(newItem, maxIdle, maxLiving)::get);
     }
 }
