@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.BiFunction;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class FileInfo {
+
+    private static final Comparator<Path> ORDER = Comparator.comparing(path -> path.getFileName().toString());
 
     private final String name;
     private final Type type;
@@ -35,7 +38,8 @@ public class FileInfo {
 
     private List<FileInfo> contentOf(final Path path, LinkOption[] options) {
         try (final Stream<Path> stream = Files.list(path)) {
-            return stream.map(item -> new FileInfo(item, options))
+            return stream.sorted(ORDER)
+                         .map(item -> new FileInfo(item, options))
                          .collect(Collectors.toList());
         } catch (final IOException e) {
             return Collections.emptyList();
