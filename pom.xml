@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-root</artifactId>
-    <version>1.14.2-SNAPSHOT</version>
+    <version>1.14.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Root</name>
