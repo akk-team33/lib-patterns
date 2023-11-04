@@ -22,6 +22,11 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>io-phobos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>random-tarvos</artifactId>
                 <version>${project.version}</version>
             </dependency>

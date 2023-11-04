@@ -15,6 +15,7 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>io-phobos</module>
         <module>exceptional-dione</module>
         <module>testing-titan</module>
         <module>random-tarvos</module>

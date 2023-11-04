@@ -15,6 +15,7 @@ http://www.team33.de/dev/patterns/1.x
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
+  * io-phobos (Team33 IO Library - Edition "phobos")
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
@@ -28,6 +29,10 @@ http://www.team33.de/dev/patterns/1.x
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module io-phobos
 
 ### 1.14.2
 

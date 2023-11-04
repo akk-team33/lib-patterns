@@ -8,21 +8,13 @@
         <version>1.14.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>testing-titan</artifactId>
+    <artifactId>io-phobos</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Testing Library - Edition "titan"</name>
-    <description>Provides classes for testing purpose</description>
+    <name>Team33 IO Library - Edition "phobos"</name>
+    <description>Provides simple convenient file access.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>io-phobos</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-dione</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
