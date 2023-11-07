@@ -4,7 +4,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-root</artifactId>
-    <version>1.13.3-SNAPSHOT</version>
+    <version>1.14.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Root</name>
@@ -67,10 +67,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <configuration>
                         <show>protected</show>
-                        <bottom><![CDATA[Copyright &copy; ${copyright.year} Andreas Kluge-Kaindl, Bremen (de). All rights reserved.]]></bottom>
+                        <bottom><![CDATA[Copyright &copy; ${copyright.year} Andreas Kluge-Kaindl, Bremen (de).
+                        All rights reserved.]]></bottom>
                         <detectLinks>true</detectLinks>
                     </configuration>
                 </plugin>

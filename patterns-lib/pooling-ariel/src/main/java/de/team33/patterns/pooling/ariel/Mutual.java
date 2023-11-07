@@ -11,10 +11,10 @@ class Mutual<S, E extends Exception> {
 
     private static final Void VOID = null;
 
-    private final Queue<S> stock = new ConcurrentLinkedQueue<>();
-    private final XSupplier<S, E> newItem;
+    private final Queue<XSupplier<S, E>> stock = new ConcurrentLinkedQueue<>();
+    private final XSupplier<XSupplier<S, E>, E> newItem;
 
-    Mutual(final XSupplier<S, E> newItem) {
+    Mutual(final XSupplier<XSupplier<S, E>, E> newItem) {
         this.newItem = newItem;
     }
 
@@ -26,10 +26,10 @@ class Mutual<S, E extends Exception> {
     }
 
     final <R, X extends Exception> R apply(final XFunction<? super S, R, X> function) throws E, X {
-        final S stocked = stock.poll();
-        final S item = (null == stocked) ? newItem.get() : stocked;
+        final XSupplier<S, E> stocked = stock.poll();
+        final XSupplier<S, E> item = (null == stocked) ? newItem.get() : stocked;
         try {
-            return function.apply(item);
+            return function.apply(item.get());
         } finally {
             stock.add(item);
         }

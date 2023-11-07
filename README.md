@@ -24,9 +24,30 @@ http://www.team33.de/dev/patterns/1.x
   * building-elara (Team33 Building Library - Edition "elara")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
+  * serial-charon (Team33 Serial Collection Library - Edition "charon")
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### 1.14.2
+
+* Refined module testing-titan ...
+  * Added class FileIO
+  * Added class ZipIO
+  * Added class TextIO
+  * Added class FileInfo
+* Refined module expiry-tethys ...
+  * Added class XRecent
+* Refined module pooling-ariel ...
+  * Added class XRProvider
+
+### 1.14.1
+
+* Added class Redirected to module testing-titan
+
+### 1.14.0
+
+* Added module serial-charon
 
 ### 1.13.2
 
