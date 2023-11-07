@@ -1,7 +1,8 @@
-package de.team33.sample.patterns.building.elara;
+package de.team33.patterns.test.building.elara.testing;
 
 import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.sample.building.elara.Buildable;
 
 import java.math.BigInteger;
 import java.time.Instant;

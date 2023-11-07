@@ -1,7 +1,7 @@
-package de.team33.test.patterns.building.elara;
+package de.team33.patterns.test.building.elara;
 
-import de.team33.sample.patterns.building.elara.Collecting;
-import de.team33.sample.patterns.building.elara.Supply;
+import de.team33.patterns.sample.building.elara.Collecting;
+import de.team33.patterns.test.building.elara.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

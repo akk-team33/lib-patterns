@@ -1,4 +1,4 @@
-package de.team33.sample.patterns.building.elara;
+package de.team33.patterns.sample.building.elara;
 
 import java.util.Collection;
 import java.util.Comparator;
