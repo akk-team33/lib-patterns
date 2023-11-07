@@ -28,11 +28,23 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>expiry-tethys</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>building-elara</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-titan</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
