@@ -15,8 +15,8 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>exceptional-dione</module>
         <module>testing-titan</module>
+        <module>exceptional-dione</module>
         <module>random-tarvos</module>
         <module>lazy-narvi</module>
         <module>expiry-tethys</module>
