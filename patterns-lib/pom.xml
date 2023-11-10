@@ -16,8 +16,8 @@
 
     <modules>
         <module>testing-titan</module>
-        <module>exceptional-dione</module>
         <module>random-tarvos</module>
+        <module>exceptional-dione</module>
         <module>lazy-narvi</module>
         <module>expiry-tethys</module>
         <module>pooling-ariel</module>
