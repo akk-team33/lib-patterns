@@ -1,5 +1,5 @@
 /**
- * Provides simple convinient file access.
+ * Provides simple convenient file access.
  *
  * @see <a href="https://de.wikipedia.org/wiki/Deimos_(Mond)">Deimos</a>
  */

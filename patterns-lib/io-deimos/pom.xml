@@ -14,15 +14,15 @@
     <name>Team33 IO Library - Edition "deimos"</name>
     <description>Provides simple convenient file access.</description>
 
-    <properties>
-        <skipJavadoc>true</skipJavadoc>
-        <skipHome>true</skipHome>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-titan</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
