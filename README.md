@@ -16,6 +16,7 @@ http://www.team33.de/dev/patterns/1.x
 * patterns-lib (Team33 Patterns Library)
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
+  * io-deimos (Team33 IO Library - Edition "deimos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
@@ -28,6 +29,10 @@ http://www.team33.de/dev/patterns/1.x
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### next
+
+* Added module io-deimos
 
 ### 1.14.2
 
