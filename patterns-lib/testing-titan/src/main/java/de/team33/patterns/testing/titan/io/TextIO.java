@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * This class may be removed in a future release.
  */
 @Deprecated
-public class TextIO {
+public final class TextIO {
 
     private static final String CANNOT_READ_RESOURCE = "cannot read resource%n" +
                                                        "    resource name   : %s%n" +
@@ -22,6 +22,9 @@ public class TextIO {
     private static final String CANNOT_READ_FILE = "cannot read file%n" +
                                                    "    path : %s%n";
     private static final String NEW_LINE = String.format("%n");
+
+    private TextIO() {
+    }
 
     public static String read(final Class<?> refClass, final String rsrcName) {
         try (final InputStream in = refClass.getResourceAsStream(rsrcName)) {
