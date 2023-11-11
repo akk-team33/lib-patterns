@@ -30,7 +30,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.15.0
 
 * Added module io-deimos ...
   * Added class TextIO
