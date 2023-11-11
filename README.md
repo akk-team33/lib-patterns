@@ -32,7 +32,10 @@ http://www.team33.de/dev/patterns/1.x
 
 ### next
 
-* Added module io-deimos
+* Added module io-deimos ...
+  * Added class TextIO
+* Refined module testing-titan ...
+  * Marked class TextIO as deprecated
 
 ### 1.14.2
 

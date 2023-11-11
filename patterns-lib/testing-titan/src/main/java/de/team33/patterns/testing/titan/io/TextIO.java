@@ -9,6 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
 
+/**
+ * @deprecated use class <em>TextIO</em> from module <em>io-deimos</em> instead.
+ * This class may be removed in a future release.
+ */
+@Deprecated
 public class TextIO {
 
     private static final String CANNOT_READ_RESOURCE = "cannot read resource%n" +
