@@ -1,4 +1,4 @@
-package de.team33.patterns.testing.titan.io;
+package de.team33.patterns.io.deimos;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,10 +10,8 @@ import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 /**
- * @deprecated use class <em>TextIO</em> from module <em>io-deimos</em> instead.
- * This class may be removed in a future release.
+ * Utility for reading text from files, mainly in test scenarios.
  */
-@Deprecated
 public final class TextIO {
 
     private static final String CANNOT_READ_RESOURCE = "cannot read resource%n" +

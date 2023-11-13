@@ -3,7 +3,6 @@ package de.team33.patterns.testing.titan;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.management.modelmbean.XMLParseException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -37,7 +36,6 @@ class ReportTest extends Random {
                 new NumberFormatException(),
                 new IOException(),
                 new SQLException(),
-                new XMLParseException(),
                 new OutOfMemoryError(),
                 new InternalError(),
                 new AssertionError());

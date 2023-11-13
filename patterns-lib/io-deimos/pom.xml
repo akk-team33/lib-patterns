@@ -8,12 +8,11 @@
         <version>1.15.0</version>
     </parent>
 
-    <artifactId>notes-eris</artifactId>
+    <artifactId>io-deimos</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Notifications Library - Edition "eris"</name>
-    <description>Classes and utilities in the context of notifications that can be triggered based on events
-        within an originator and that should be acted upon from outside.</description>
+    <name>Team33 IO Library - Edition "deimos"</name>
+    <description>Provides simple convenient file access.</description>
 
     <dependencies>
         <dependency>
@@ -23,12 +22,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>reflect-luna</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>random-tarvos</artifactId>
+            <artifactId>testing-titan</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

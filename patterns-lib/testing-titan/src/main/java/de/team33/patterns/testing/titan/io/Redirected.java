@@ -1,7 +1,5 @@
 package de.team33.patterns.testing.titan.io;
 
-import de.team33.patterns.exceptional.dione.XRunnable;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -18,7 +16,7 @@ public final class Redirected {
     private Redirected() {
     }
 
-    public static <X extends Exception> String outputOf(final XRunnable<X> command) throws IOException, X {
+    public static <X extends Exception> String outputOf(final Command<X> command) throws IOException, X {
         final PrintStream oldOut = System.out;
         try (final ByteArrayOutputStream stream = new ByteArrayOutputStream();
              final PrintStream newOut = new PrintStream(stream, false, UTF_8)) {
@@ -29,5 +27,17 @@ public final class Redirected {
         } finally {
             System.setOut(oldOut);
         }
+    }
+
+    /**
+     * A command that allows to throw a checked exception.
+     */
+    @FunctionalInterface
+    public interface Command<X extends Exception> {
+
+        /**
+         * Performs this command.
+         */
+        void run() throws X;
     }
 }

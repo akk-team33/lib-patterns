@@ -1,7 +1,7 @@
-package de.team33.patterns.test.testing.titan.io;
+package de.team33.patterns.test.io.deimos;
 
+import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.testing.titan.io.FileIO;
-import de.team33.patterns.testing.titan.io.TextIO;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-@Deprecated
 class TextIOTest {
 
     private static final Path TEST_PATH = Paths.get("target", "testing", TextIOTest.class.getSimpleName())
