@@ -1,4 +1,4 @@
-package de.team33.patterns.reflect.pandora.testing;
+package de.team33.patterns.testing.reflect.pandora;
 
 import java.time.Instant;
 

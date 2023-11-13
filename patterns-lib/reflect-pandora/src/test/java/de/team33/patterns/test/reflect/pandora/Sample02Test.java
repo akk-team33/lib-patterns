@@ -1,6 +1,6 @@
-package de.team33.patterns.reflect.pandora;
+package de.team33.patterns.test.reflect.pandora;
 
-import de.team33.patterns.reflect.pandora.testing.Supply;
+import de.team33.patterns.testing.reflect.pandora.Supply;
 import de.team33.patterns.sample.reflect.pandora.Sample02;
 import org.junit.jupiter.api.Test;
 
