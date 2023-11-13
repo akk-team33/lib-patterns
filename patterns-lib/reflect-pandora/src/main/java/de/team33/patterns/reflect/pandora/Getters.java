@@ -22,7 +22,7 @@ public class Getters<T> {
     }
 
     /**
-     * Returns a view the getters of a given data object class.
+     * Returns a view of the getters of a given data object class.
      * <p>
      * Getters in this sense are all public, parameterless instance methods that actually return a result
      * (not {@code void} or {@link Void}) that have not already been defined by {@link Object} and whose name begins
@@ -57,6 +57,8 @@ public class Getters<T> {
     /**
      * Returns the getter with the given name as a {@link Function} that takes an instance of the underlying type as
      * a parameter and returns the value of the represented property.
+     *
+     * @throws NoSuchElementException if no suitable getter can be found.
      */
     public final Function<T, Object> getter(final String name) {
         return Optional.ofNullable(backing.get(name))
