@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class Getters<T> {
 
@@ -18,12 +17,11 @@ public class Getters<T> {
     }
 
     public static <T> Getters<T> of(final Class<T> subjectClass) {
-        final Map<String, Getter<T>> backing = Methods.classicGettersOf(subjectClass)
-                                                      .map(method -> new Getter<T>(method))
-                                                      .collect(TreeMap::new,
-                                                               (map, getter) -> map.put(getter.name(), getter),
-                                                               Map::putAll);
-        return new Getters<>(backing);
+        return new Getters<>(Methods.classicGettersOf(subjectClass)
+                                    .map(method -> new Getter<T>(method))
+                                    .collect(TreeMap::new,
+                                             (map, getter) -> map.put(getter.name(), getter),
+                                             Map::putAll));
     }
 
     public final Set<String> names() {

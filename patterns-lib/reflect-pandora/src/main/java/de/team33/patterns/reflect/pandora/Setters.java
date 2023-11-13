@@ -22,12 +22,11 @@ public class Setters<T> {
     }
 
     public static <T> Setters<T> of(final Class<T> subjectClass) {
-        final Map<String, List<Setter<T>>> backing = Methods.classicSettersOf(subjectClass)
-                                                            .map(method -> new Setter<T>(method))
-                                                            .collect(TreeMap::new,
-                                                                     Setters::put,
-                                                                     Map::putAll);
-        return new Setters<>(backing);
+        return new Setters<>(Methods.classicSettersOf(subjectClass)
+                                    .map(method -> new Setter<T>(method))
+                                    .collect(TreeMap::new,
+                                             Setters::put,
+                                             Map::putAll));
     }
 
     private static <T> void put(final Map<String, List<Setter<T>>> map, final Setter<T> setter) {
