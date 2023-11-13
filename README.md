@@ -31,7 +31,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.16.0
 
 * Added module reflect-pandora
 
