@@ -8,26 +8,16 @@
         <version>1.15.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>building-elara</artifactId>
+    <artifactId>decision-telesto</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Building Library - Edition "elara"</name>
-    <description>Classes and utilities for implementing and handling builders.</description>
+    <name>Team33 Decision Library - Edition "telesto"</name>
+    <description>Classes and utilities for implementing and handling decisions.</description>
 
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>reflect-luna</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>random-tarvos</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
