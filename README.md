@@ -32,11 +32,11 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### 1.16.0
+### next
 
 * Added module decision-telesto
 
-### next
+### 1.16.0
 
 * Added module reflect-pandora
 
