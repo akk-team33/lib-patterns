@@ -22,6 +22,11 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-titan</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>random-tarvos</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -87,7 +92,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-titan</artifactId>
+                <artifactId>decision-telesto</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
