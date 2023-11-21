@@ -2,7 +2,14 @@ package de.team33.patterns.decision.telesto.sample;
 
 // Type of input parameter for criterion k1 ...
 public class X {
+
+    private final int value;
+
+    public X(int value) {
+        this.value = value;
+    }
+
     public boolean k1() {
-        throw new UnsupportedOperationException("not yet implemented");
+        return 0 > value;
     }
 }
