@@ -31,6 +31,7 @@
         <module>notes-eris</module>
         <module>execution-metis</module>
         <module>serial-charon</module>
+        <module>decision-telesto</module>
     </modules>
 
     <dependencyManagement>

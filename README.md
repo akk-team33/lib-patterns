@@ -28,12 +28,14 @@ http://www.team33.de/dev/patterns/1.x
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
+  * decision-telesto (Team33 Decision Library - Edition "telesto")
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
 
 ### next
 
+* Added module decision-telesto
 * Added module io-phobos
 
 ### 1.16.0
