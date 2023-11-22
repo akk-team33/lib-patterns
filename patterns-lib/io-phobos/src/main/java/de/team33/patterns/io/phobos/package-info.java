@@ -1,5 +1,5 @@
 /**
- * Provides simple convenient file access.
+ * Provides efficient directory access.
  *
  * @see <a href="https://de.wikipedia.org/wiki/Phobos_(Mond)">Phobos</a>
  */

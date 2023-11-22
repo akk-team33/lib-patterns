@@ -15,11 +15,10 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>io-phobos</module>
-        <module>exceptional-dione</module>
         <module>testing-titan</module>
         <module>random-tarvos</module>
         <module>io-deimos</module>
+        <module>io-phobos</module>
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>
         <module>expiry-tethys</module>
