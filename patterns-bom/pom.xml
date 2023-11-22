@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.14.3-SNAPSHOT</version>
+        <version>1.16.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-bom</artifactId>
@@ -32,6 +32,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>io-deimos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-dione</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -53,6 +58,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-luna</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>reflect-pandora</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
