@@ -15,9 +15,9 @@ class ChoiceTest {
                     final X x = new X(i);
                     final Y y = new Y(k);
                     final Z z = new Z(n);
-                    final String expected = SamplePlain.Result.map(x, y, z).name();
+                    final Result expected = Straight.map(x, y, z);
 
-                    final String result = SampleChoice.Result.map(x, y, z).name();
+                    final Result result = Choices.map(x, y, z);
 
                     assertEquals(expected, result);
                 }
