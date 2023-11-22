@@ -122,6 +122,20 @@ public abstract class FileEntry {
      */
     public abstract List<FileEntry> content();
 
+    public final Stream<FileEntry> stream() {
+        final Stream<FileEntry> result = Stream.of(this);
+        if (isDirectory()) {
+            return Stream.concat(result, content().stream().flatMap(FileEntry::stream));
+        } else {
+            return result;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return path.toString();
+    }
+
     private static class NoDirectory extends Existing {
 
         NoDirectory(Path path, BasicFileAttributes attributes) {

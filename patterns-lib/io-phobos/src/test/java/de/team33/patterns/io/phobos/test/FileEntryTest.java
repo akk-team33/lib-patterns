@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FileEntryTest {
 
-    private static final Path DEV_NULL = Paths.get("/", "dev", "null");
-    private static final Path ROOT = Paths.get("/", "root");
+    private static final Path DEV_NULL = Paths.get("/", "dev", "null"); // special file
+    private static final Path ROOT = Paths.get("/", "root"); // unreadable directory
 
     static Stream<Path> paths() {
         return Stream.of(
@@ -95,7 +97,7 @@ class FileEntryTest {
 
     @ParameterizedTest
     @MethodSource("paths")
-    final void lastAccess(final Path path) throws IOException {
+    final void lastAccess(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.exists())
             assertNotNull(entry.lastAccess());
@@ -105,7 +107,7 @@ class FileEntryTest {
 
     @ParameterizedTest
     @MethodSource("paths")
-    final void creation(final Path path) throws IOException {
+    final void creation(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.exists())
             assertNotNull(entry.creation());
@@ -125,11 +127,21 @@ class FileEntryTest {
 
     @ParameterizedTest
     @MethodSource("paths")
-    final void content(final Path path) throws IOException {
+    final void content(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.isDirectory())
             assertNotNull(entry.content());
         else
             assertThrows(UnsupportedOperationException.class, entry::content);
+    }
+
+    @ParameterizedTest
+    @MethodSource("paths")
+    final void stream(final Path path) {
+        final FileEntry entry = FileEntry.of(path);
+        final List<FileEntry> result = entry.stream().collect(Collectors.toList());
+        assertEquals(entry.path(), result.get(0).path());
+        final boolean expected = entry.isDirectory() && !(path == ROOT);
+        assertEquals(expected, 1 < result.size());
     }
 }
