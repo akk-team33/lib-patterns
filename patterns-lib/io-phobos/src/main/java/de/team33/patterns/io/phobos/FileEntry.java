@@ -14,10 +14,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Comparator.comparing;
+
 /**
  * Represents an entry from the virtual file index.
  * Includes some meta information about a file, particularly the file system path, file type, size,
  * and some timestamps.
+ * <p>
+ * Strictly speaking, the meta information only applies to the moment of instantiation.
+ * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
+ * that the meta information is out of date because the underlying file may have been changed in the meantime.
  */
 public abstract class FileEntry {
 
@@ -116,20 +122,11 @@ public abstract class FileEntry {
     public abstract long size();
 
     /**
-     * Returns the entries of the content of the represented file if it {@link #isDirectory() is a directory}.
+     * Returns the content of the represented file if it {@link #isDirectory() is a directory}.
      *
      * @throws UnsupportedOperationException if the represented file is not a directory.
      */
-    public abstract List<FileEntry> content();
-
-    public final Stream<FileEntry> stream() {
-        final Stream<FileEntry> result = Stream.of(this);
-        if (isDirectory()) {
-            return Stream.concat(result, content().stream().flatMap(FileEntry::stream));
-        } else {
-            return result;
-        }
-    }
+    public abstract List<Path> content();
 
     @Override
     public String toString() {
@@ -143,7 +140,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final List<FileEntry> content() {
+        public final List<Path> content() {
             throw new UnsupportedOperationException("not a directory: " + path());
         }
     }
@@ -207,12 +204,12 @@ public abstract class FileEntry {
 
         private static final Comparator<String> IGNORE_CASE = String::compareToIgnoreCase;
         private static final Comparator<String> RESPECT_CASE = String::compareTo;
-        private static final Comparator<String> STRING_ORDER = IGNORE_CASE.thenComparing(RESPECT_CASE);
-        private static final Comparator<FileEntry> ENTRY_ORDER = Comparator.comparing(FileEntry::name, STRING_ORDER);
+        private static final Comparator<Path> ENTRY_ORDER = comparing(path -> path.getFileName().toString(),
+                                                                      IGNORE_CASE.thenComparing(RESPECT_CASE));
 
         private final LinkOption[] linkOptions;
 
-        private final Lazy<List<FileEntry>> lazyContent;
+        private final Lazy<List<Path>> lazyContent;
 
         public Directory(Path path, BasicFileAttributes attributes, LinkOption[] linkOptions) {
             super(path, attributes);
@@ -220,10 +217,9 @@ public abstract class FileEntry {
             this.lazyContent = Lazy.init(this::newContent);
         }
 
-        private List<FileEntry> newContent() {
+        private List<Path> newContent() {
             try (final Stream<Path> stream = Files.list(path())) {
-                return Collections.unmodifiableList(stream.map(this::newEntry)
-                                                          .sorted(ENTRY_ORDER)
+                return Collections.unmodifiableList(stream.sorted(ENTRY_ORDER)
                                                           .collect(Collectors.toList()));
             } catch (final IOException ignored) {
                 return Collections.emptyList();
@@ -235,7 +231,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final List<FileEntry> content() {
+        public final List<Path> content() {
             return lazyContent.get();
         }
     }
@@ -295,7 +291,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final List<FileEntry> content() {
+        public final List<Path> content() {
             throw new UnsupportedOperationException("not existing: " + path(), cause);
         }
     }
