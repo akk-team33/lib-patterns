@@ -6,12 +6,34 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+/**
+ * Symbolizes different file types
+ */
 public enum FileType {
 
+    /**
+     * Symbolizes a missing file.
+     */
     MISSING(Objects::isNull),
+
+    /**
+     * Symbolizes a directory.
+     */
     DIRECTORY(BasicFileAttributes::isDirectory),
+
+    /**
+     * Symbolizes a regular file.
+     */
     REGULAR(BasicFileAttributes::isRegularFile),
+
+    /**
+     * Symbolizes a symbolic link.
+     */
     SYMBOLIC(BasicFileAttributes::isSymbolicLink),
+
+    /**
+     * Symbolizes a special file.
+     */
     OTHER(BasicFileAttributes::isOther);
 
     private final Predicate<BasicFileAttributes> filter;
