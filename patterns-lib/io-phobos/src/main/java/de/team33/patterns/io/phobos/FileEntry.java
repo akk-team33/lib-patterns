@@ -28,9 +28,11 @@ import static java.util.Comparator.comparing;
 public abstract class FileEntry {
 
     private final Path path;
+    private final FileType type;
 
-    FileEntry(final Path path) {
+    FileEntry(final Path path, final FileType type) {
         this.path = path.toAbsolutePath().normalize();
+        this.type = type;
     }
 
     /**
@@ -65,6 +67,10 @@ public abstract class FileEntry {
      */
     public final String name() {
         return path.getFileName().toString();
+    }
+
+    public final FileType type() {
+        return type;
     }
 
     /**
@@ -150,7 +156,7 @@ public abstract class FileEntry {
         private final BasicFileAttributes attributes;
 
         Existing(final Path path, final BasicFileAttributes attributes) {
-            super(path);
+            super(path, FileType.map(attributes));
             this.attributes = attributes;
         }
 
@@ -234,7 +240,7 @@ public abstract class FileEntry {
         private final IOException cause;
 
         Missing(final Path path, final IOException cause) {
-            super(path);
+            super(path, FileType.MISSING);
             this.cause = cause;
         }
 

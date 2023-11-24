@@ -4,12 +4,15 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Represents a file index.
  */
 public class FileIndex {
+
+    private static final String NEW_LINE = String.format("%n");
 
     private final Path root;
     private final Predicate<Path> skipPath;
@@ -73,5 +76,22 @@ public class FileIndex {
 
     private Stream<FileEntry> stream(final FileEntry entry, final Stream<FileEntry> head) {
         return entry.isDirectory() ? Stream.concat(head, entry.content().stream().flatMap(this::stream)) : head;
+    }
+
+    @Override
+    public final String toString() {
+        final Path ref = root.toAbsolutePath().normalize().getParent();
+        return stream().map(entry -> toString(ref, entry))
+                       .collect(Collectors.joining(NEW_LINE));
+    }
+
+    private static String toString(final Path ref, final FileEntry entry) {
+        final Path relative = ref.relativize(entry.path());
+        final String indent = Stream.generate(() -> "    ")
+                                    .limit(relative.getNameCount() - 1)
+                                    .collect(Collectors.joining());
+        final String details = entry.isRegularFile()
+                ? String.format(" (%,d %s)", entry.size(), entry.lastModified()) : "";
+        return indent + entry.name() + ": " + entry.type() + details + ";";
     }
 }

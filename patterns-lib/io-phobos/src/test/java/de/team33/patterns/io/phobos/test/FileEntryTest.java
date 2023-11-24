@@ -1,6 +1,7 @@
 package de.team33.patterns.io.phobos.test;
 
 import de.team33.patterns.io.phobos.FileEntry;
+import de.team33.patterns.io.phobos.FileType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -43,6 +44,23 @@ class FileEntryTest {
     final void name(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         assertEquals(path.getFileName().toString(), entry.name());
+    }
+
+    @ParameterizedTest
+    @MethodSource("paths")
+    final void type(final Path path) {
+        final FileEntry entry = FileEntry.of(path);
+        if (entry.isDirectory()) {
+            assertEquals(FileType.DIRECTORY, entry.type());
+        } else if (entry.isSymbolicLink()) {
+            assertEquals(FileType.SYMBOLIC, entry.type());
+        } else if (entry.isRegularFile()) {
+            assertEquals(FileType.REGULAR, entry.type());
+        } else if (entry.isOther()) {
+            assertEquals(FileType.OTHER, entry.type());
+        } else {
+            assertEquals(FileType.MISSING, entry.type());
+        }
     }
 
     @ParameterizedTest
