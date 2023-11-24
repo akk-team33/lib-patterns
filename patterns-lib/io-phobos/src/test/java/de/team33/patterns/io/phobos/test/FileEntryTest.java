@@ -48,6 +48,13 @@ class FileEntryTest {
 
     @ParameterizedTest
     @MethodSource("paths")
+    final void testToString(final Path path) {
+        final FileEntry entry = FileEntry.of(path);
+        assertEquals(path.toAbsolutePath().normalize().toString(), entry.toString());
+    }
+
+    @ParameterizedTest
+    @MethodSource("paths")
     final void type(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.isDirectory()) {
