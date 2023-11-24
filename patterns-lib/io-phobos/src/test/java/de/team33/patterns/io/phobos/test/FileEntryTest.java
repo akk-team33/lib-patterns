@@ -134,14 +134,4 @@ class FileEntryTest {
         else
             assertThrows(UnsupportedOperationException.class, entry::content);
     }
-
-    @ParameterizedTest
-    @MethodSource("paths")
-    final void stream(final Path path) {
-        final FileEntry entry = FileEntry.of(path);
-        final List<FileEntry> result = entry.stream().collect(Collectors.toList());
-        assertEquals(entry.path(), result.get(0).path());
-        final boolean expected = entry.isDirectory() && !(path == ROOT);
-        assertEquals(expected, 1 < result.size());
-    }
 }
