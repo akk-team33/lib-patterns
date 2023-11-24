@@ -1,15 +1,14 @@
 package de.team33.patterns.io.phobos.test;
 
+import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.io.phobos.FileEntry;
 import de.team33.patterns.io.phobos.FileIndex;
+import de.team33.patterns.testing.titan.io.ZipIO;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,36 +16,46 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileIndexTest {
 
-    @Test
-    void of() {
+    private static final Path TEST_PATH = Paths.get("target", "testing", FileIndexTest.class.getSimpleName());
+    private static final Path CWD = Paths.get(".").toAbsolutePath().normalize();
+    private static final String NEW_LINE = String.format("%n");
+
+    @BeforeAll
+    static void init() {
+        ZipIO.unzip(FileIndexTest.class, "files.zip", TEST_PATH);
     }
 
     @Test
-    void testOf() {
+    final void skipPath() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.skipPath.txt");
+        final String result = collected(FileIndex.of(TEST_PATH.toString())
+                                                 .skipPath(entry -> "main".equals(entry.getFileName().toString()))
+                                                 .stream());
+        assertEquals(expected, result);
     }
 
     @Test
-    void skipPath() {
+    final void skipEntry() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
+        final String result = collected(FileIndex.of(TEST_PATH.toString())
+                                                 .skipEntry(entry -> "test".equals(entry.name()))
+                                                 .stream());
+        assertEquals(expected, result);
     }
 
     @Test
-    void skipEntry() {
+    final void stream() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
+        final String result = collected(FileIndex.of(TEST_PATH.toString())
+                                                 .stream());
+        assertEquals(expected, result);
     }
 
-    @Test
-    void stream() {
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "missing",
-            "src/main/java"
-    })
-    final void stream(final String path) {
-        final FileIndex index = FileIndex.of(path);
-        final List<String> result = index.stream()
-                                         .map(FileEntry::toString)
-                                         .collect(Collectors.toList());
-        assertEquals(path, result.get(0));
+    private static String collected(final Stream<FileEntry> entrys) {
+        final Path normal = TEST_PATH.toAbsolutePath().normalize();
+        return entrys.map(FileEntry::path)
+                     .map(normal::relativize)
+                     .map(Path::toString)
+                     .collect(Collectors.joining(NEW_LINE));
     }
 }

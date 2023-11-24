@@ -31,11 +31,11 @@ public class FileIndex {
         return of(Paths.get(root), options);
     }
 
-    public final FileIndex skipPath(Predicate<? super Path> ignorable) {
+    public final FileIndex skipPath(final Predicate<? super Path> ignorable) {
         return new FileIndex(root, skipPath.or(ignorable), skipEntry, options);
     }
 
-    public final FileIndex skipEntry(Predicate<? super FileEntry> ignorable) {
+    public final FileIndex skipEntry(final Predicate<? super FileEntry> ignorable) {
         return new FileIndex(root, skipPath, skipEntry.or(ignorable), options);
     }
 

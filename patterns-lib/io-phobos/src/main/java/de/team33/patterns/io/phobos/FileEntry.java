@@ -29,7 +29,7 @@ public abstract class FileEntry {
 
     private final Path path;
 
-    FileEntry(Path path) {
+    FileEntry(final Path path) {
         this.path = path.toAbsolutePath().normalize();
     }
 
@@ -39,15 +39,15 @@ public abstract class FileEntry {
     public static FileEntry of(final Path path, final LinkOption... linkOptions) {
         try {
             final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
-            return of(path, attributes, linkOptions);
+            return of(path, attributes);
         } catch (final IOException e) {
             return new Missing(path, e);
         }
     }
 
-    private static FileEntry of(Path path, BasicFileAttributes attributes, LinkOption[] linkOptions) {
+    private static FileEntry of(final Path path, final BasicFileAttributes attributes) {
         return attributes.isDirectory()
-               ? new Directory(path, attributes, linkOptions)
+               ? new Directory(path, attributes)
                : new NoDirectory(path, attributes);
     }
 
@@ -129,13 +129,13 @@ public abstract class FileEntry {
     public abstract List<Path> content();
 
     @Override
-    public String toString() {
+    public final String toString() {
         return path.toString();
     }
 
     private static class NoDirectory extends Existing {
 
-        NoDirectory(Path path, BasicFileAttributes attributes) {
+        NoDirectory(final Path path, final BasicFileAttributes attributes) {
             super(path, attributes);
         }
 
@@ -145,11 +145,11 @@ public abstract class FileEntry {
         }
     }
 
-    private static abstract class Existing extends FileEntry {
+    private abstract static class Existing extends FileEntry {
 
         private final BasicFileAttributes attributes;
 
-        Existing(Path path, BasicFileAttributes attributes) {
+        Existing(final Path path, final BasicFileAttributes attributes) {
             super(path);
             this.attributes = attributes;
         }
@@ -207,13 +207,10 @@ public abstract class FileEntry {
         private static final Comparator<Path> ENTRY_ORDER = comparing(path -> path.getFileName().toString(),
                                                                       IGNORE_CASE.thenComparing(RESPECT_CASE));
 
-        private final LinkOption[] linkOptions;
-
         private final Lazy<List<Path>> lazyContent;
 
-        public Directory(Path path, BasicFileAttributes attributes, LinkOption[] linkOptions) {
+        private Directory(final Path path, final BasicFileAttributes attributes) {
             super(path, attributes);
-            this.linkOptions = linkOptions;
             this.lazyContent = Lazy.init(this::newContent);
         }
 
@@ -224,10 +221,6 @@ public abstract class FileEntry {
             } catch (final IOException ignored) {
                 return Collections.emptyList();
             }
-        }
-
-        private FileEntry newEntry(final Path path) {
-            return FileEntry.of(path, linkOptions);
         }
 
         @Override

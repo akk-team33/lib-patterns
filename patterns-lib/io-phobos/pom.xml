@@ -19,9 +19,20 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>lazy-narvi</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>testing-titan</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>io-deimos</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

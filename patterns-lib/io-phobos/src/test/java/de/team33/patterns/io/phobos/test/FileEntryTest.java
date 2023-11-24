@@ -9,8 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -72,10 +70,11 @@ class FileEntryTest {
     @MethodSource("paths")
     final void isOther(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.isOther())
+        if (entry.isOther()) {
             assertEquals(DEV_NULL, path);
-        else
+        } else {
             assertNotEquals(DEV_NULL, path);
+        }
     }
 
     @ParameterizedTest
@@ -89,49 +88,54 @@ class FileEntryTest {
     @MethodSource("paths")
     final void lastModified(final Path path) throws IOException {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.exists())
+        if (entry.exists()) {
             assertEquals(Files.getLastModifiedTime(path).toInstant(), entry.lastModified());
-        else
+        } else {
             assertThrows(UnsupportedOperationException.class, entry::lastModified);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("paths")
     final void lastAccess(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.exists())
+        if (entry.exists()) {
             assertNotNull(entry.lastAccess());
-        else
+        } else {
             assertThrows(UnsupportedOperationException.class, entry::lastAccess);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("paths")
     final void creation(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.exists())
+        if (entry.exists()) {
             assertNotNull(entry.creation());
-        else
+        } else {
             assertThrows(UnsupportedOperationException.class, entry::creation);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("paths")
     final void size(final Path path) throws IOException {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.exists())
+        if (entry.exists()) {
             assertEquals(Files.size(path), entry.size());
-        else
+        } else {
             assertThrows(UnsupportedOperationException.class, entry::size);
+        }
     }
 
     @ParameterizedTest
     @MethodSource("paths")
     final void content(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.isDirectory())
+        if (entry.isDirectory()) {
             assertNotNull(entry.content());
-        else
+        } else {
             assertThrows(UnsupportedOperationException.class, entry::content);
+        }
     }
 }
