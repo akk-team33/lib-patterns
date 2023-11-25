@@ -33,7 +33,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.17.0
 
 * Added module decision-telesto
 * Added module io-phobos
