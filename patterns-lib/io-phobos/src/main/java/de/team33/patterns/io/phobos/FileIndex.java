@@ -23,7 +23,7 @@ public class FileIndex {
                       final Predicate<Path> skipPath,
                       final Predicate<FileEntry> skipEntry,
                       final LinkOption[] options) {
-        this.root = root;
+        this.root = root.toAbsolutePath().normalize();
         this.skipPath = skipPath;
         this.skipEntry = skipEntry;
         this.options = options;
@@ -80,18 +80,27 @@ public class FileIndex {
 
     @Override
     public final String toString() {
-        final Path ref = root.toAbsolutePath().normalize().getParent();
-        return stream().map(entry -> toString(ref, entry))
+        return stream().map(this::toString)
                        .collect(Collectors.joining(NEW_LINE));
     }
 
-    private static String toString(final Path ref, final FileEntry entry) {
-        final Path relative = ref.relativize(entry.path());
-        final String indent = Stream.generate(() -> "    ")
-                                    .limit(relative.getNameCount() - 1)
-                                    .collect(Collectors.joining());
-        final String details = entry.isRegularFile()
-                ? String.format(" (%,d %s)", entry.size(), entry.lastModified()) : "";
-        return indent + entry.name() + ": " + entry.type() + details + ";";
+    private String toString(final FileEntry entry) {
+        final int count = entry.path().getNameCount() - root.getNameCount();
+        final String name = root.equals(entry.path()) ? root.toString() : entry.name();
+        return String.join("", indent(count), name, " : ", entry.type().name(), details(entry), tail(entry));
+    }
+
+    private static String indent(final int count) {
+        return Stream.generate(() -> "    ")
+                     .limit(count)
+                     .collect(Collectors.joining());
+    }
+
+    private static String tail(final FileEntry entry) {
+        return entry.isDirectory() ? " ..." : ";";
+    }
+
+    private static String details(final FileEntry entry) {
+        return entry.isRegularFile() ? String.format(" (%,d - %s)", entry.size(), entry.lastModified()) : "";
     }
 }

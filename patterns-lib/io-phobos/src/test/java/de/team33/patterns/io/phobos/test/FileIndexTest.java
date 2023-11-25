@@ -53,8 +53,12 @@ class FileIndexTest {
 
     @Test
     final void testToString() {
-        final String expected = TextIO.read(getClass(), "FileIndexTest.toString.txt");
+        final String expected = String.format(TextIO.read(getClass(), "FileIndexTest.toString.txt"),
+                                              TEST_PATH.toAbsolutePath().normalize());
+
         final String result = FileIndex.of(TEST_PATH).toString();
+        // System.out.println(result);
+
         assertEquals(expected, result);
     }
 

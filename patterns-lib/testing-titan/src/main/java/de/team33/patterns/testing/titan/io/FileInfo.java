@@ -96,12 +96,12 @@ public class FileInfo {
         return toString(0);
     }
 
-    public final String toString(final int indent) {
+    private String toString(final int indent) {
         return String.format("%s : %s%s%s;",
                              name, type, type.details.apply(size, lastModified), type.toTail.apply(indent, content));
     }
 
-    public enum Type {
+    private enum Type {
 
         REGULAR(BasicFileAttributes::isRegularFile, FileInfo::regularDetail, FileInfo::noTail),
         DIRECTORY(BasicFileAttributes::isDirectory, FileInfo::noDetail, FileInfo::dirTail),
