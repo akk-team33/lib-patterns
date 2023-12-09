@@ -28,29 +28,33 @@ class SymbolicLinkTest {
     private Path dirLinkPath;
     private Path specLinkPath;
     private Path linkLinkPath;
+    private Path missingLinkPath;
 
     @BeforeEach
     final void setUp() throws IOException {
         final Path testPath = BASE_PATH.resolve(UUID.randomUUID().toString());
         final Path dirPath = testPath.resolve("directory");
         final Path regularPath = testPath.resolve("regular.file");
+        final Path missingPath = testPath.resolve("missing.file");
 
         regLinkPath = testPath.resolve("regular.link");
         dirLinkPath = testPath.resolve("directory.link");
         specLinkPath = testPath.resolve("special.link");
         linkLinkPath = testPath.resolve("indirect.link");
+        missingLinkPath = testPath.resolve("missing.link");
 
         Files.createDirectories(dirPath);
         Files.write(regularPath, UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8));
         Files.createSymbolicLink(regLinkPath, regularPath.getFileName());
         Files.createSymbolicLink(dirLinkPath, dirPath.getFileName());
+        Files.createSymbolicLink(missingLinkPath, missingPath.getFileName());
         Files.createSymbolicLink(specLinkPath, SPECIAL_PATH);
         Files.createSymbolicLink(linkLinkPath, regLinkPath.getFileName());
     }
 
     @Test
     final void linkRegularPrimary() {
-        final FileEntry result = FileEntry.of(regLinkPath, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry result = FileEntry.primary(regLinkPath);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isRegularFile());
@@ -66,7 +70,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkDirectoryPrimary() {
-        final FileEntry result = FileEntry.of(dirLinkPath, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry result = FileEntry.primary(dirLinkPath);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isDirectory());
@@ -74,15 +78,31 @@ class SymbolicLinkTest {
 
     @Test
     final void linkDirectoryEvaluated() {
-        final FileEntry result = FileEntry.of(dirLinkPath);
+        final FileEntry result = FileEntry.evaluated(dirLinkPath);
         assertEquals(FileType.DIRECTORY, result.type());
         assertFalse(result.isSymbolicLink());
         assertTrue(result.isDirectory());
     }
 
     @Test
+    final void linkMissingPrimary() {
+        final FileEntry result = FileEntry.primary(missingLinkPath);
+        assertEquals(FileType.SYMBOLIC, result.type());
+        assertTrue(result.isSymbolicLink());
+        assertTrue(result.exists());
+    }
+
+    @Test
+    final void linkMissingEvaluated() {
+        final FileEntry result = FileEntry.evaluated(missingLinkPath);
+        assertEquals(FileType.MISSING, result.type());
+        assertFalse(result.isSymbolicLink());
+        assertFalse(result.exists());
+    }
+
+    @Test
     final void linkSpecialPrimary() {
-        final FileEntry result = FileEntry.of(specLinkPath, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry result = FileEntry.primary(specLinkPath);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isOther());
@@ -98,7 +118,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkLinkRegularPrimary() {
-        final FileEntry result = FileEntry.of(linkLinkPath, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry result = FileEntry.primary(linkLinkPath);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isRegularFile());
