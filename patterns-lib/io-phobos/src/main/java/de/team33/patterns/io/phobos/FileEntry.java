@@ -61,7 +61,8 @@ public abstract class FileEntry {
     @Deprecated
     public static FileEntry of(final Path path, final LinkOption... linkOptions) {
         try {
-            final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
+            final BasicFileAttributes attributes = //
+                    Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
             return of(path, attributes);
         } catch (final IOException e) {
             return new Missing(path, e);
