@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.17.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-lib</artifactId>
@@ -15,21 +15,22 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>exceptional-01</module>
         <module>testing-titan</module>
-        <module>production-01</module>
-        <module>random-mimas</module>
         <module>random-tarvos</module>
-        <module>lazy-01</module>
+        <module>io-deimos</module>
+        <module>exceptional-dione</module>
         <module>lazy-narvi</module>
+        <module>io-phobos</module>
         <module>expiry-tethys</module>
-        <module>pooling-01</module>
+        <module>pooling-ariel</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
-        <module>properties-01</module>
+        <module>reflect-pandora</module>
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <module>serial-charon</module>
+        <module>decision-telesto</module>
         <module>collection-ceres</module>
     </modules>
 
@@ -48,7 +49,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.10.0</version>
+                <version>5.9.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

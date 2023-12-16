@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * Most methods provide a default implementation that (directly or indirectly) uses {@link #nextBits(int)}.
  * The latter is the only method without a default implementation.
  * <p>
- * This interface is primarily intended to extend a derivation of {@link java.util.Random} with basic methods, example:
+ * This interface is primarily intended to extend a derivation of {@link Random} with basic methods, example:
  * <pre>
  * import de.team33.patterns.random.tarvos.Generator;
  *
@@ -31,14 +31,47 @@ import java.util.stream.Stream;
  * </pre>
  * <p>
  * In such a use case, some default implementations will be overwritten by existing implementations from
- * {@link java.util.Random}.
+ * {@link Random}.
  * <p>
  * However, it can also be used in other ways. In particular, deterministic implementations are also conceivable.
+ * <p>
+ * *CAUTION: When used with Java 17 or higher, the above example will not work due to a new class hierarchy
+ * underlying the {@link Random} class. In this case, you should use the following example as a guide:
+ * <pre>
+ * import de.team33.patterns.random.tarvos.Generator;
+ *
+ * import java.math.BigInteger;
+ * import java.util.Random;
+ *
+ * public class Producer implements Generator {
+ *
+ *     private final Random random = new Random();
+ *
+ *     &#64;Override
+ *     public final BigInteger nextBits(final int numBits) {
+ *         return new BigInteger(numBits, random);
+ *     }
+ * }
+ * </pre>
  *
  * @see de.team33.patterns.random.tarvos package
  */
 @FunctionalInterface
 public interface Generator {
+
+    /**
+     * Provides a new {@link Generator} using a new {@link Random}.
+     */
+    static Generator simple() {
+        return simple(new Random());
+    }
+
+    /**
+     * Provides a new {@link Generator} using a given {@link Random}.
+     */
+    static Generator simple(final Random random) {
+        return numBits -> new BigInteger(numBits, random);
+    }
 
     /**
      * Returns any non-negative {@link BigInteger} representing a sequence of significant bits of a given length.
@@ -54,7 +87,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextBoolean()}.
      */
     default boolean nextBoolean() {
@@ -84,7 +117,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextInt()}.
      */
     default int nextInt() {
@@ -96,7 +129,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextInt(int)}.
      */
     default int nextInt(final int bound) {
@@ -117,7 +150,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextLong()}.
      */
     default long nextLong() {
@@ -147,7 +180,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextFloat()}.
      */
     default float nextFloat() {
@@ -161,7 +194,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #nextBits(int)}.
      * <p>
-     * When used as extension of a {@link java.util.Random} derivation, this method will (at least) be overridden by
+     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextDouble()}.
      */
     default double nextDouble() {

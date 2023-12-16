@@ -1,6 +1,6 @@
 package de.team33.test.patterns.lazy.narvi;
 
-import de.team33.patterns.exceptional.e1.XSupplier;
+import de.team33.patterns.exceptional.dione.XSupplier;
 import de.team33.patterns.lazy.narvi.Lazy;
 import de.team33.patterns.testing.titan.Parallel;
 import org.junit.jupiter.api.Test;

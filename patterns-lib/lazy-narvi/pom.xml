@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.17.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>lazy-narvi</artifactId>
@@ -17,8 +17,9 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-01</artifactId>
+            <artifactId>exceptional-dione</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
