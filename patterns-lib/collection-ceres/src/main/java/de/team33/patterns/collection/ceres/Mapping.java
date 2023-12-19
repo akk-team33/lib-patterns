@@ -11,22 +11,25 @@ import java.util.Set;
  */
 @SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
 public final class Mapping {
+
     private Mapping() {
     }
 
     /**
-     * Just like {@link Map#put(Object, Object)} for a given {@code subject}, but ...
+     * Just like {@link Map#put(Object, Object) subject.put(key, value)} for a given {@code subject},
+     * but returns the {@code subject}.
      *
-     * @return The {@code subject}.
-     * @throws UnsupportedOperationException if the <tt>put</tt> operation is not supported by the {@code subject}.
-     * @throws ClassCastException            if the class of the specified key or value prevents it from being stored
-     *                                       in the {@code subject}.
-     * @throws NullPointerException          if the specified key or value is null and the {@code subject} does not
-     *                                       permit null keys or values.
-     * @throws IllegalArgumentException      if some property of the specified key or value prevents it from being
-     *                                       stored in the {@code subject}.
+     * @throws UnsupportedOperationException if {@link Map#put(Object, Object)} is not supported by the {@code subject}.
+     * @throws NullPointerException          if {@code subject} is {@code null} or if the specified <em>key</em> or
+     *                                       <em>value</em> is {@code null} and the {@code subject} does not permit
+     *                                       {@code null} <em>keys</em> or <em>values</em>
+     * @throws ClassCastException            if the class of the specified <em>key</em> or <em>value</em> prevents it
+     *                                       from being put into the {@code subject}
+     *                                       (may occur only if used raw or forced in a mismatched class context).
+     * @throws IllegalArgumentException      if some property of the specified <em>key</em> or <em>value</em> prevents
+     *                                       it from being stored in the {@code subject}.
+     * @see Map#put(Object, Object)
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
     public static <K, V, M extends Map<? super K, ? super V>> M put(final M subject, final K key, final V value) {
         subject.put(key, value);
         return subject;
@@ -44,7 +47,8 @@ public final class Mapping {
      * @throws IllegalArgumentException      if some property of a key or value in the specified map prevents it from
      *                                       being stored in the {@code subject}.
      */
-    public static <K, V, M extends Map<? super K, ? super V>> M putAll(final M subject, final Map<K, V> origin) {
+    public static <K, V, M extends Map<? super K, ? super V>> M putAll(final M subject,
+                                                                       final Map<? extends K, ? extends V> origin) {
         subject.putAll(origin);
         return subject;
     }

@@ -5,7 +5,6 @@ import de.team33.patterns.building.elara.LateBuilder;
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,7 +20,7 @@ import static java.util.Arrays.asList;
 /**
  * {@linkplain Collections Additional} convenience methods to deal with Collections.
  */
-@SuppressWarnings({"ProhibitedExceptionCaught", "unused"})
+@SuppressWarnings({"ProhibitedExceptionCaught", "unused", "ClassWithTooManyMethods"})
 public final class Collecting {
 
     private static final Object[] EMPTY_ARRAY = {};
@@ -50,7 +49,6 @@ public final class Collecting {
      * @see Collecting#addAll(Collection, Stream)
      * @see Collecting#addAll(Collection, Object[])
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
     public static <E, C extends Collection<E>> C add(final C subject, final E element) {
         subject.add(element);
         return subject;
@@ -78,7 +76,6 @@ public final class Collecting {
      * @see Collecting#addAll(Collection, Stream)
      * @see Collecting#addAll(Collection, Object[])
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public static <E, C extends Collection<E>> C add(final C subject,
                                                      final E element0, final E element1, final E... more) {
@@ -164,7 +161,6 @@ public final class Collecting {
      * @see Collecting#addAll(Collection, Stream)
      * @see Collecting#addAll(Collection, Object[])
      */
-    @SuppressWarnings("unchecked")
     public static <E, C extends Collection<E>> C addAll(final C subject, final Iterable<? extends E> elements) {
         return (elements instanceof Collection<?>)
                ? addAll(subject, (Collection<? extends E>) elements)
@@ -264,7 +260,6 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Iterable)
      * @see Collecting#removeAll(Collection, Object[])
      */
-    @SuppressWarnings("OverloadedVarargsMethod")
     public static <C extends Collection<?>> C remove(final C subject,
                                                      final Object element0,
                                                      final Object element1,
@@ -373,7 +368,7 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Iterable)
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Object[] elements) {
-        return removeAll(subject, Arrays.asList(elements));
+        return removeAll(subject, asList(elements));
     }
 
     /**
@@ -432,7 +427,8 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collecting#retainAll(Collection, Collection)}, but takes an {@link Iterable} as second argument.
+     * Similar to {@link Collecting#retainAll(Collection, Collection)},
+     * but takes an {@link Iterable} as second argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
@@ -472,7 +468,7 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Iterable)
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Object[] elements) {
-        return retainAll(subject, Arrays.asList(elements));
+        return retainAll(subject, asList(elements));
     }
 
     /**
@@ -525,7 +521,6 @@ public final class Collecting {
      * @throws NullPointerException if {@code subject} or the {@link Collection} of <em>elements</em> is {@code null}.
      * @see Collection#containsAll(Collection)
      */
-    @SuppressWarnings("SuspiciousMethodCalls")
     public static boolean containsAll(final Collection<?> subject, final Collection<?> elements) {
         try {
             return subject.containsAll(elements);
@@ -559,7 +554,7 @@ public final class Collecting {
      */
     @SuppressWarnings("ReturnOfInnerClass")
     public static <E> Collection<E> proxy(final Collection<E> subject) {
-        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
+        // noinspection AnonymousInnerClass
         return new AbstractCollection<E>() {
             @Override
             public Iterator<E> iterator() {
@@ -593,7 +588,7 @@ public final class Collecting {
      */
     @SuppressWarnings("ReturnOfInnerClass")
     public static <E> List<E> proxy(final List<E> subject) {
-        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
+        // noinspection AnonymousInnerClass
         return new AbstractList<E>() {
             @Override
             public E get(final int index) {
@@ -625,9 +620,9 @@ public final class Collecting {
      *                <li>{@link Set#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings({"TypeMayBeWeakened", "ReturnOfInnerClass"})
+    @SuppressWarnings("ReturnOfInnerClass")
     public static <E> Set<E> proxy(final Set<E> subject) {
-        //noinspection AnonymousInnerClass,AnonymousInnerClassWithTooManyMethods
+        // noinspection AnonymousInnerClass
         return new AbstractSet<E>() {
             @Override
             public Iterator<E> iterator() {
@@ -641,19 +636,22 @@ public final class Collecting {
         };
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static <E> Collection<E> nullAsEmpty(final Collection<E> nullable) {
         return (null == nullable) ? Collections.emptySet() : nullable;
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static <E> Stream<E> nullAsEmpty(final Stream<E> nullable) {
         return (null == nullable) ? Stream.empty() : nullable;
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static <E> Iterable<E> nullAsEmpty(final Iterable<E> nullable) {
         return (null == nullable) ? Collections.emptySet() : nullable;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "MethodOnlyUsedFromInnerClass", "SuspiciousArrayCast"})
     private static <E> E[] nullAsEmpty(final E[] nullable) {
         return (null == nullable) ? (E[]) EMPTY_ARRAY : nullable;
     }
@@ -685,6 +683,7 @@ public final class Collecting {
      * @param <C> The final type of the target instance, at least {@link Collection}.
      * @param <S> The final type of the Setup implementation.
      */
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     @FunctionalInterface
     public interface Setup<E, C extends Collection<E>, S extends Setup<E, C, S>>
             extends de.team33.patterns.building.elara.Setup<C, S> {
@@ -707,7 +706,7 @@ public final class Collecting {
          * @see Collecting#add(Collection, Object)
          */
         default S add(final E element) {
-            return setup(c -> Collecting.add(c, element));
+            return setup(target -> Collecting.add(target, element));
         }
 
         /**
@@ -726,8 +725,9 @@ public final class Collecting {
          *                                       due to insertion restrictions of the instance to be set up (if any).
          * @see Collecting#add(Collection, Object, Object, Object[])
          */
+        @SuppressWarnings("unchecked")
         default S add(final E element0, final E element1, final E... more) {
-            return setup(c -> Collecting.add(c, element0, element1, nullAsEmpty(more)));
+            return setup(target -> Collecting.add(target, element0, element1, nullAsEmpty(more)));
         }
 
         /**
@@ -750,7 +750,7 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Collection)
          */
         default S addAll(final Collection<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -772,7 +772,7 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Stream)
          */
         default S addAll(final Stream<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -795,7 +795,7 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Iterable)
          */
         default S addAll(final Iterable<? extends E> elements) {
-            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -818,7 +818,7 @@ public final class Collecting {
          * @see Collecting#addAll(Collection, Iterable)
          */
         default S addAll(final E[] elements) {
-            return setup(c -> Collecting.addAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -837,7 +837,7 @@ public final class Collecting {
          * @see Collecting#remove(Collection, Object)
          */
         default S remove(final Object element) {
-            return setup(c -> Collecting.remove(c, element));
+            return setup(target -> Collecting.remove(target, element));
         }
 
         /**
@@ -851,7 +851,7 @@ public final class Collecting {
          * @see Collecting#remove(Collection, Object, Object, Object[])
          */
         default S remove(final Object element0, final Object element1, final Object... more) {
-            return setup(c -> Collecting.remove(c, element0, element1, nullAsEmpty(more)));
+            return setup(target -> Collecting.remove(target, element0, element1, nullAsEmpty(more)));
         }
 
         /**
@@ -872,7 +872,7 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Collection)
          */
         default S removeAll(final Collection<?> elements) {
-            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -888,7 +888,7 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Stream)
          */
         default S removeAll(final Stream<?> elements) {
-            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -904,7 +904,7 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Iterable)
          */
         default S removeAll(final Iterable<?> elements) {
-            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -920,7 +920,7 @@ public final class Collecting {
          * @see Collecting#removeAll(Collection, Object[])
          */
         default S removeAll(final Object[] elements) {
-            return setup(c -> Collecting.removeAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -938,7 +938,7 @@ public final class Collecting {
          * @see Collecting#retainAll(Collection, Collection)
          */
         default S retainAll(final Collection<?> elements) {
-            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -951,7 +951,7 @@ public final class Collecting {
          * @see Collecting#retainAll(Collection, Stream)
          */
         default S retainAll(final Stream<?> elements) {
-            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -964,7 +964,7 @@ public final class Collecting {
          * @see Collecting#retainAll(Collection, Iterable)
          */
         default S retainAll(final Iterable<?> elements) {
-            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -977,7 +977,7 @@ public final class Collecting {
          * @see Collecting#retainAll(Collection, Object[])
          */
         default S retainAll(final Object[] elements) {
-            return setup(c -> Collecting.retainAll(c, nullAsEmpty(elements)));
+            return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
         }
 
         /**
@@ -995,7 +995,7 @@ public final class Collecting {
     /**
      * Builder implementation to build target instances of {@link Collection}.
      * <p>
-     * User {@link #builder(Supplier)} to get an instance.
+     * Use {@link #builder(Supplier)} to get an instance.
      *
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
@@ -1013,11 +1013,12 @@ public final class Collecting {
     /**
      * Charger implementation to charge target instances of {@link Collection}.
      * <p>
-     * User {@link #charger(Collection)} to get an instance.
+     * Use {@link #charger(Collection)} to get an instance.
      *
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
      */
+    @SuppressWarnings("ClassNameSameAsAncestorName")
     public static class Charger<E, C extends Collection<E>>
             extends de.team33.patterns.building.elara.Charger<C, Charger<E, C>>
             implements Setup<E, C, Charger<E, C>> {
