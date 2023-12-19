@@ -1,10 +1,10 @@
 package de.team33.patterns.collection.ceres;
 
-import java.util.AbstractMap;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
+import de.team33.patterns.building.elara.LateBuilder;
+
+import java.util.*;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 
 /**
  * {@linkplain Collections Additional} convenience methods to deal with Collections.
@@ -78,12 +78,10 @@ public final class Mapping {
     public static <M extends Map<?, ?>> M remove(final M subject, final Object key) {
         try {
             subject.remove(key);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
             }
-
             // --> <subject> can not contain <key>
             // --> <subject> simply does not contain <key>
             // --> Nothing else to do.
@@ -102,11 +100,9 @@ public final class Mapping {
     public static boolean containsKey(final Map<?, ?> subject, final Object key) {
         try {
             return subject.containsKey(key);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
-
             } else {
                 // --> <subject> can not contain <key>
                 // --> <subject> simply does not contain <key> ...
@@ -126,11 +122,9 @@ public final class Mapping {
     public static boolean containsValue(final Map<?, ?> subject, final Object value) {
         try {
             return subject.containsValue(value);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
-
             } else {
                 // --> <subject> can not contain <value>
                 // --> <subject> simply does not contain <value> ...
@@ -151,11 +145,9 @@ public final class Mapping {
     public static <V> V get(final Map<?, V> subject, final Object key) {
         try {
             return subject.get(key);
-
         } catch (final NullPointerException | ClassCastException caught) {
             if (null == subject) {
                 throw caught; // expected to be a NullPointerException
-
             } else {
                 // --> <subject> can not contain <key>
                 // --> <subject> simply does not contain <key>
@@ -190,5 +182,96 @@ public final class Mapping {
                 return subject.entrySet();
             }
         };
+    }
+
+    /**
+     * Returns a new {@link Builder} for target instances as supplied by the given {@link Supplier}.
+     *
+     * @param <K> The key type of the target instance.
+     * @param <V> The value type of the target instance.
+     * @param <M> The final type of the target instance, at least {@link Map}.
+     */
+    public static <K, V, M extends Map<K, V>> Builder<K, V, M> builder(final Supplier<M> newTarget) {
+        return new Builder<>(newTarget, Builder.class);
+    }
+
+    /**
+     * Returns a new {@link Charger} for target instances as supplied by the given {@link Supplier}.
+     *
+     * @param <K> The key type of the target instance.
+     * @param <V> The value type of the target instance.
+     * @param <M> The final type of the target instance, at least {@link Map}.
+     */
+    public static <K, V, M extends Map<K, V>> Charger<K, V, M> charger(final M newTarget) {
+        return new Charger<>(newTarget, Charger.class);
+    }
+
+    /**
+     * Utility interface to set up a target instance of {@link Map}.
+     *
+     * @param <K> The key type of the target instance.
+     * @param <V> The value type of the target instance.
+     * @param <M> The final type of the target instance, at least {@link Map}.
+     * @param <S> The final type of the Setup implementation.
+     */
+    @SuppressWarnings("ClassNameSameAsAncestorName")
+    @FunctionalInterface
+    public interface Setup<K, V, M extends Map<K, V>, S extends Setup<K, V, M, S>>
+            extends de.team33.patterns.building.elara.Setup<M, S> {
+
+        default S put(final K key, final V value) {
+            return setup(target -> Mapping.put(target, key, value));
+        }
+
+        default S remove(final Object key) {
+            return setup(target -> Mapping.remove(target, key));
+        }
+
+        default S putAll(final Map<? extends K, ? extends V> origin) {
+            return setup(target -> Mapping.putAll(target, origin));
+        }
+
+        default S clear() {
+            return setup(Mapping::clear);
+        }
+    }
+
+    /**
+     * Builder implementation to build target instances of {@link Map}.
+     * <p>
+     * Use {@link #builder(Supplier)} to get an instance.
+     *
+     * @param <K> The key type of the target instance.
+     * @param <V> The value type of the target instance.
+     * @param <M> The final type of the target instance, at least {@link Map}.
+     */
+    public static class Builder<K, V, M extends Map<K, V>>
+            extends LateBuilder<M, Builder<K, V, M>>
+            implements Setup<K, V, M, Builder<K, V, M>> {
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private Builder(Supplier<M> newResult, Class builderClass) {
+            super(newResult, builderClass);
+        }
+    }
+
+    /**
+     * Charger implementation to charge target instances of {@link Map}.
+     * <p>
+     * Use {@link #charger(Map)} to get an instance.
+     *
+     * @param <K> The key type of the target instance.
+     * @param <V> The value type of the target instance.
+     * @param <M> The final type of the target instance, at least {@link Map}.
+     */
+    @SuppressWarnings("ClassNameSameAsAncestorName")
+    public static class Charger<K, V, M extends Map<K, V>>
+            extends de.team33.patterns.building.elara.Charger<M, Charger<K, V, M>>
+            implements Setup<K, V, M, Charger<K, V, M>> {
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private Charger(M target, Class builderClass) {
+            super(target, builderClass);
+        }
     }
 }

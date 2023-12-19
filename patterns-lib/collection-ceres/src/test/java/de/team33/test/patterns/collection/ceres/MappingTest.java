@@ -9,175 +9,231 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-@SuppressWarnings("NonBooleanMethodNameMayNotStartWithQuestion")
-public class MappingTest {
+class MappingTest extends Supply {
 
-    public static final String STRAIGHT_NOT_FAILED = "straight call did not fail -> test is not significant";
-    public static final String NULL_ELEMENT = null;
-    public static final int NOT_A_STRING = 278;
-
-    private String sample1, sample2, sample3;
     private Map<String, String> samples;
 
     @BeforeEach
-    public final void before() {
-        sample1 = UUID.randomUUID().toString();
-        sample2 = UUID.randomUUID().toString();
-        sample3 = UUID.randomUUID().toString();
-        samples = new HashMap<>(3);
-        samples.put(sample1, sample2);
-        samples.put(sample2, sample3);
-        samples.put(sample3, sample1);
-        samples = Collections.unmodifiableMap(samples);
+    final void before() {
+        samples = Collections.unmodifiableMap(nextMap(3));
     }
 
     @Test
-    public final void put() {
-        assertEquals(
-                Collections.singletonMap(sample1, sample2),
-                Mapping.put(new HashMap<>(1), sample1, sample2)
-                    );
+    final void put() {
+        final String key = nextString();
+        final String value = nextString();
+        final Map<String, String> expected = Collections.singletonMap(key, value);
+        final HashMap<String, String> stage = new HashMap<>(1);
+
+        final HashMap<String, String> result = Mapping.put(stage, key, value);
+
+        assertEquals(expected, result);
+        assertSame(stage, result);
     }
 
     @Test
-    public final void putAll() {
-        assertEquals(
-                samples,
-                Mapping.putAll(new HashMap<>(3), samples)
-                    );
+    final void putAll() {
+        final HashMap<String, String> stage = new HashMap<>(3);
+
+        final HashMap<String, String> result = Mapping.putAll(stage, samples);
+
+        assertEquals(samples, result);
+        assertSame(stage, result);
     }
 
     @Test
-    public final void clear() {
-        assertEquals(
-                Collections.emptyMap(),
-                Mapping.clear(new HashMap<>(samples))
-                    );
+    final void clear() {
+        final HashMap<String, String> stage = new HashMap<>(samples);
+
+        final HashMap<String, String> result = Mapping.clear(stage);
+
+        assertEquals(Collections.emptyMap(), result);
+        assertSame(stage, result);
     }
 
     @Test
-    public final void remove() {
-        assertFalse(Mapping.remove(new HashMap<>(samples), sample2).containsKey(sample2));
+    final void remove() {
+        final String key = samples.keySet()
+                                  .stream()
+                                  .findAny()
+                                  .orElseThrow(() -> new AssertionError("not found"));
+        final Map<String, String> expected = new HashMap<>(samples);
+        expected.remove(key);
+
+        final Map<String, String> stage = new TreeMap<>(samples);
+        final Map<String, String> result = Mapping.remove(stage, key);
+
+        assertEquals(expected, result);
+        assertSame(stage, result);
     }
 
     @Test
-    public final void removeNull() {
-        final TreeMap<String, String> subject = new TreeMap<>(samples);
-        try {
-            subject.remove(null);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(
-                    Mapping.containsKey(
-                            Mapping.remove(subject, NULL_ELEMENT),
-                            NULL_ELEMENT
-                                       )
-                       );
-        }
+    final void remove_null() {
+        final Map<String, String> stage = new TreeMap<>(samples);
+        final Map<String, String> result = Mapping.remove(stage, null);
+
+        assertEquals(samples, result);
+        assertSame(stage, result);
+
+        // cross-check ...
+
+        assertThrows(NullPointerException.class, () -> stage.remove(null));
     }
 
     @Test
-    public final void removeIncompatibleType() {
-        final TreeMap<String, String> subject = new TreeMap<>(samples);
-        try {
-            subject.remove(NOT_A_STRING);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(
-                    Mapping.containsKey(
-                            Mapping.remove(subject, NOT_A_STRING),
-                            NOT_A_STRING
-                                       )
-                       );
-        }
+    final void remove_subject_null() {
+        assertThrows(NullPointerException.class, () -> Mapping.remove(null, nextString()));
+        assertThrows(NullPointerException.class, () -> Mapping.remove(null, nextDouble()));
+        assertThrows(NullPointerException.class, () -> Mapping.remove(null, null));
     }
 
     @Test
-    public final void containsKey() {
-        assertTrue(Mapping.containsKey(samples, sample1));
-        assertTrue(Mapping.containsKey(samples, sample2));
-        assertTrue(Mapping.containsKey(samples, sample3));
+    final void remove_incompatible() {
+        final Map<String, String> stage = new TreeMap<>(samples);
+        final Map<String, String> result = Mapping.remove(stage, nextDouble());
 
-        assertFalse(Mapping.containsKey(samples, UUID.randomUUID().toString()));
-        assertFalse(Mapping.containsKey(samples, NOT_A_STRING));
-        assertFalse(Mapping.containsKey(samples, NULL_ELEMENT));
+        assertEquals(samples, result);
+        assertSame(stage, result);
 
-        final Map<String, String> treeMap = new TreeMap<>(samples);
-        try {
-            treeMap.containsKey(NULL_ELEMENT);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(Mapping.containsKey(treeMap, NULL_ELEMENT));
-        }
-        try {
-            treeMap.containsKey(NOT_A_STRING);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(Mapping.containsKey(treeMap, NOT_A_STRING));
-        }
+        // cross-check ...
+
+        //noinspection SuspiciousMethodCalls
+        assertThrows(ClassCastException.class, () -> stage.remove(nextDouble()));
     }
 
     @Test
-    public final void containsValue() {
-        assertTrue(Mapping.containsValue(samples, sample1));
-        assertTrue(Mapping.containsValue(samples, sample2));
-        assertTrue(Mapping.containsValue(samples, sample3));
+    final void containsKey() {
+        samples.keySet().forEach(key -> assertTrue(Mapping.containsKey(samples, key)));
+    }
 
-        assertFalse(Mapping.containsValue(samples, UUID.randomUUID().toString()));
-        assertFalse(Mapping.containsValue(samples, NOT_A_STRING));
-        assertFalse(Mapping.containsValue(samples, NULL_ELEMENT));
+    @Test
+    final void containsKey_null() {
+        final Map<String, String> subject = new TreeMap<>(samples);
 
-        //noinspection serial,CloneableClassWithoutClone,ClassExtendsConcreteCollection,CloneableClassInSecureContext
-        final Map<String, String> treeMap = new TreeMap<String, String>(samples) {
+        assertFalse(Mapping.containsKey(subject, null));
+
+        // cross-check ...
+        assertThrows(NullPointerException.class, () -> subject.containsKey(null));
+    }
+
+    @Test
+    final void containsKey_subject_null() {
+        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, nextString()));
+        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, nextLong()));
+        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, null));
+    }
+
+    @Test
+    final void containsKey_incompatible() {
+        final long longKey = nextLong();
+        final Map<String, String> subject = new TreeMap<>(samples);
+
+        assertFalse(Mapping.containsKey(subject, longKey));
+
+        // cross-check ...
+        // noinspection SuspiciousMethodCalls
+        assertThrows(ClassCastException.class, () -> subject.containsKey(longKey));
+    }
+
+    @Test
+    final void containsValue() {
+        samples.values().forEach(value -> assertTrue(Mapping.containsValue(samples, value)));
+    }
+
+    @Test
+    final void containsValue_null() {
+        final Map<String, String> subject = new TreeMap<String, String>(samples) {
             @Override
-            public boolean containsValue(final Object value) {
-                return super.containsValue(String.class.cast(Objects.requireNonNull(value)));
+            public boolean containsValue(Object value) {
+                return super.containsValue(Objects.requireNonNull(value));
             }
         };
-        try {
-            treeMap.containsValue(NULL_ELEMENT);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertFalse(Mapping.containsValue(treeMap, NULL_ELEMENT));
-        }
-        try {
-            treeMap.containsValue(NOT_A_STRING);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertFalse(Mapping.containsValue(treeMap, NOT_A_STRING));
-        }
+
+        assertFalse(Mapping.containsValue(subject, null));
+
+        // cross-check ...
+        assertThrows(NullPointerException.class, () -> subject.containsValue(null));
     }
 
     @Test
-    public final void get() {
-        assertEquals(sample2, Mapping.get(samples, sample1));
-        assertEquals(sample3, Mapping.get(samples, sample2));
-        assertEquals(sample1, Mapping.get(samples, sample3));
+    final void containsValue_subject_null() {
+        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, nextString()));
+        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, nextDouble()));
+        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, null));
+    }
 
-        assertNull(Mapping.get(samples, UUID.randomUUID().toString()));
-        assertNull(Mapping.get(samples, NOT_A_STRING));
-        assertNull(Mapping.get(samples, NULL_ELEMENT));
+    @Test
+    final void containsValue_incompatible() {
+        final long longValue = nextLong();
+        final Map<String, String> subject = new TreeMap<String, String>(samples) {
+            @Override
+            public boolean containsValue(Object value) {
+                //noinspection RedundantCast
+                return super.containsValue((String) value);
+            }
+        };
 
-        final Map<String, String> treeMap = new TreeMap<>(samples);
-        try {
-            treeMap.get(NULL_ELEMENT);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final NullPointerException ignored) {
-            assertNull(Mapping.get(treeMap, NULL_ELEMENT));
-        }
-        try {
-            treeMap.get(NOT_A_STRING);
-            fail(STRAIGHT_NOT_FAILED);
-        } catch (final ClassCastException ignored) {
-            assertNull(Mapping.get(treeMap, NOT_A_STRING));
-        }
+        assertFalse(Mapping.containsValue(subject, longValue));
+
+        // cross-check ...
+        // noinspection SuspiciousMethodCalls
+        assertThrows(ClassCastException.class, () -> subject.containsValue(longValue));
+    }
+
+    @Test
+    final void get() {
+        samples.keySet().forEach(key -> {
+            final String expected = samples.get(key);
+            final String result = Mapping.get(samples, key);
+            assertEquals(expected, result);
+        });
+    }
+
+    @Test
+    final void get_null() {
+        final Map<String, String> subject = new TreeMap<>(samples);
+        assertNull(Mapping.get(subject, null));
+
+        // cross-check ...
+        assertThrows(NullPointerException.class, () -> subject.get(null));
+    }
+
+    @Test
+    final void get_subject_null() {
+        assertThrows(NullPointerException.class, () -> Mapping.get(null, nextString()));
+        assertThrows(NullPointerException.class, () -> Mapping.get(null, nextFloat()));
+        assertThrows(NullPointerException.class, () -> Mapping.get(null, null));
+    }
+
+    @Test
+    final void get_incompatible() {
+        final long longKey = nextLong();
+        final Map<String, String> subject = new TreeMap<>(samples);
+        assertNull(Mapping.get(subject, longKey));
+
+        // cross-check ...
+        // noinspection SuspiciousMethodCalls
+        assertThrows(ClassCastException.class, () -> subject.get(longKey));
+    }
+
+    @Test
+    void proxy() {
+        final Map<String, String> origin = nextMap(4);
+        final Map<String, String> copy = new TreeMap<>(origin);
+        final Map<String, String> proxy = Mapping.proxy(origin);
+
+        assertEquals(origin.size(), proxy.size());
+        assertEquals(origin.toString(), proxy.toString());
+        assertEquals(origin.hashCode(), proxy.hashCode());
+        assertEquals(origin.equals(copy), proxy.equals(copy));
+        assertEquals(copy.equals(origin), copy.equals(proxy));
     }
 }

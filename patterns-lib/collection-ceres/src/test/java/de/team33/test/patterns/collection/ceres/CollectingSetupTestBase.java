@@ -12,11 +12,10 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     private static final Supply SUPPLY = new Supply();
 
-    abstract Collecting.Setup<String, List<String>, S> setup();
+    abstract S setup();
 
     abstract List<String> resultOf(S setup);
 
-    @SuppressWarnings("Convert2MethodRef")
     @Test
     final void add_single() {
         final List<String> expected = SUPPLY.nextStringList(3);
@@ -26,7 +25,6 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(expected, result);
     }
 
-    @SuppressWarnings("Convert2MethodRef")
     @Test
     final void add_more() {
         final List<String> original = SUPPLY.nextStringList(9);
