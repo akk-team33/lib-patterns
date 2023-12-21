@@ -8,12 +8,12 @@ import java.util.List;
 public class CollectingBuilderTest extends CollectingSetupTestBase<Collecting.Builder<String, List<String>>> {
 
     @Override
-    Collecting.Builder<String, List<String>> setup() {
+    final Collecting.Builder<String, List<String>> setup() {
         return Collecting.builder(LinkedList::new);
     }
 
     @Override
-    List<String> resultOf(final Collecting.Builder<String, List<String>> builder) {
+    final List<String> resultOf(final Collecting.Builder<String, List<String>> builder) {
         return builder.build();
     }
 }

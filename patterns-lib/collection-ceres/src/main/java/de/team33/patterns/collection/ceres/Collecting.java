@@ -55,7 +55,7 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collecting#add(Collection, Object)}, but allows to add two or more elements.
+     * Similar to {@link Collecting#add(Collection, Object)}, but allows to add two or more elements at once.
      *
      * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
      * @throws NullPointerException          if {@code subject} is {@code null}, if the {@code array} of {@code more}
@@ -213,7 +213,6 @@ public final class Collecting {
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
      * {@link Collection#remove(Object)} when the {@code subject} does not support the requested <em>element</em>.
      *
-     * @return The {@code subject}.
      * @throws NullPointerException          if {@code subject} is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
      *                                       {@code subject}.

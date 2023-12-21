@@ -225,7 +225,7 @@ class MappingTest extends Supply {
     }
 
     @Test
-    void proxy() {
+    final void proxy() {
         final Map<String, String> origin = nextMap(4);
         final Map<String, String> copy = new TreeMap<>(origin);
         final Map<String, String> proxy = Mapping.proxy(origin);

@@ -16,38 +16,38 @@ public class Supply implements Generator {
     private static final Random RANDOM = new SecureRandom();
 
     @Override
-    public BigInteger nextBits(final int numBits) {
+    public final BigInteger nextBits(final int numBits) {
         return new BigInteger(numBits, RANDOM);
     }
 
-    public int nextLength() {
+    public final int nextLength() {
         return nextInt(24);
     }
 
-    public String nextString() {
+    public final String nextString() {
         return nextString(nextLength(), CHARACTERS);
     }
 
-    public List<String> nextStringList(final int size) {
+    public final List<String> nextStringList(final int size) {
         return Stream.generate(this::nextString)
                      .limit(size)
                      .collect(Collectors.toList());
     }
 
-    public Set<String> nextStringSet(final int size) {
+    public final Set<String> nextStringSet(final int size) {
         return Stream.generate(this::nextString)
                      .distinct()
                      .limit(size)
                      .collect(Collectors.toSet());
     }
 
-    public Map<String, String> nextMap(final int size) {
+    public final Map<String, String> nextMap(final int size) {
         return Stream.generate(() -> nextStringList(2))
                      .limit(size)
                      .collect(HashMap::new, (map, list) -> map.put(list.get(0), list.get(1)), Map::putAll);
     }
 
-    public Map<String, List<String>> nextStringListMap(final int size) {
+    public final Map<String, List<String>> nextStringListMap(final int size) {
         return Stream.generate(this::nextString)
                      .limit(size)
                      .map(key -> singletonMap(key, nextStringList(nextInt(size))))
@@ -55,7 +55,7 @@ public class Supply implements Generator {
                      .collect(HashMap::new, (map, entry) -> map.put(entry.getKey(), entry.getValue()), Map::putAll);
     }
 
-    public String nextStringExcluding(final Collection<?> obsolete) {
+    public final String nextStringExcluding(final Collection<?> obsolete) {
         final String result = nextString();
         return obsolete.contains(result) ? nextStringExcluding(obsolete) : result;
     }

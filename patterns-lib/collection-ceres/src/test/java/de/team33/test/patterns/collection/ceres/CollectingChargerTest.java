@@ -8,12 +8,12 @@ import java.util.List;
 public class CollectingChargerTest extends CollectingSetupTestBase<Collecting.Charger<String, List<String>>> {
 
     @Override
-    Collecting.Charger<String, List<String>> setup() {
+    final Collecting.Charger<String, List<String>> setup() {
         return Collecting.charger(new LinkedList<>());
     }
 
     @Override
-    List<String> resultOf(final Collecting.Charger<String, List<String>> charger) {
+    final List<String> resultOf(final Collecting.Charger<String, List<String>> charger) {
         return charger.charged();
     }
 }
