@@ -14,24 +14,29 @@ http://www.team33.de/dev/patterns/1.x
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * exceptional-dione (Team33 Exceptional Library - Edition "dione")
-  * random-tarvos (Team33 Randomization Library - Edition "tarvos")
-  * io-deimos (Team33 IO Library - Edition "deimos")
-  * io-phobos (Team33 IO Library - Edition "phobos")
-  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
-  * pooling-ariel (Team33 Pooling Library - Edition "ariel")
-  * expiry-tethys (Team33 Expiration Library - Edition "tethys")
-  * tuple-janus (Team33 Tuple Library - Edition "janus")
-  * reflect-luna (Team33 Reflection Library - Edition "luna")
-  * reflect-pandora (Team33 Reflection Library - Edition "pandora")
-  * building-elara (Team33 Building Library - Edition "elara")
-  * notes-eris (Team33 Notifications Library - Edition "eris")
-  * execution-metis (Team33 Execution Library - Edition "metis")
-  * serial-charon (Team33 Serial Collection Library - Edition "charon")
-  * decision-telesto (Team33 Decision Library - Edition "telesto")
-  * testing-titan (Team33 Testing Library - Edition "titan")
+  * exceptional-dione (Team33 Exceptional Library - Edition "Dione")
+  * random-tarvos (Team33 Randomization Library - Edition "Tarvos")
+  * io-deimos (Team33 IO Library - Edition "Deimos")
+  * io-phobos (Team33 IO Library - Edition "Phobos")
+  * lazy-narvi (Team33 Lazy Initialization Library - Edition "Narvi")
+  * pooling-ariel (Team33 Pooling Library - Edition "Ariel")
+  * expiry-tethys (Team33 Expiration Library - Edition "Tethys")
+  * tuple-janus (Team33 Tuple Library - Edition "Janus")
+  * reflect-luna (Team33 Reflection Library - Edition "Luna")
+  * reflect-pandora (Team33 Reflection Library - Edition "Pandora")
+  * building-elara (Team33 Building Library - Edition "Elara")
+  * notes-eris (Team33 Notifications Library - Edition "Eris")
+  * execution-metis (Team33 Execution Library - Edition "Metis")
+  * serial-charon (Team33 Serial Collection Library - Edition "Charon")
+  * decision-telesto (Team33 Decision Library - Edition "Telesto")
+  * normal-iocaste (Team33 Normalization Library - Edition "Iocaste")
+  * testing-titan (Team33 Testing Library - Edition "Titan")
 
 ## Change Log
+
+### next
+
+* Added module normal-iocaste
 
 ### 1.17.0
 

@@ -31,6 +31,7 @@
         <module>execution-metis</module>
         <module>serial-charon</module>
         <module>decision-telesto</module>
+        <module>normal-iocaste</module>
     </modules>
 
     <dependencyManagement>
