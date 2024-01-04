@@ -16,6 +16,10 @@ public class Supply implements Generator {
         return new BigInteger(numBits, RANDOM);
     }
 
+    public final char nextChar() {
+        return nextChar(CHARS);
+    }
+
     public final String nextString() {
         return nextString(nextInt(25), CHARS);
     }
