@@ -16,7 +16,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NormalizerTest extends Supply {
 
-    private static final Normalizer NORMALIZER = Normalizer.builder().build();
+    private static final Normalizer NORMALIZER = Normalizer.builder()
+                                                           .setToSimple(Integer.class, i -> String.format("%,d", i))
+                                                           .build();
 
     private static Normal normal(final Object origin) {
         return NORMALIZER.normal(origin);
