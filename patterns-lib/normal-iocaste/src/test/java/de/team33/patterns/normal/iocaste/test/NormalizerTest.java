@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -17,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class NormalizerTest extends Supply {
 
     private static final Normalizer NORMALIZER = Normalizer.builder()
-                                                           .setToSimple(Integer.class, i -> String.format("%,d", i))
                                                            .build();
 
     private static Normal normal(final Object origin) {
@@ -42,6 +42,17 @@ class NormalizerTest extends Supply {
         assertEquals(Normal.Type.SIMPLE, normal.type());
         assertTrue(normal.isSimple());
         assertEquals(origin.toString(), normal.asSimple());
+    }
+
+    @Test
+    final void normal_array() {
+        final String[] origin = nextStringArray();
+
+        final Normal normal = normal(origin);
+
+        assertEquals(Normal.Type.AGGREGATE, normal.type());
+        assertTrue(normal.isAggregate());
+        assertEquals(Arrays.asList(origin), normal.asAggregate());
     }
 
     private enum SimpleCase {

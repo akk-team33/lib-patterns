@@ -5,6 +5,7 @@ import de.team33.patterns.random.tarvos.Generator;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Supply implements Generator {
 
@@ -22,5 +23,11 @@ public class Supply implements Generator {
 
     public final String nextString() {
         return nextString(nextInt(25), CHARS);
+    }
+
+    public String[] nextStringArray() {
+        return Stream.generate(this::nextString)
+                     .limit(nextInt(1, 8))
+                     .toArray(String[]::new);
     }
 }

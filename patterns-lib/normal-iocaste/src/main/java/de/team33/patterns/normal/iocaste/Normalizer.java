@@ -1,5 +1,6 @@
 package de.team33.patterns.normal.iocaste;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -22,8 +23,8 @@ public class Normalizer {
     }
 
     public static Builder builder() {
-        return new Builder().setToSimple(Boolean.class, Character.class, Number.class)
-                            .setToSimple(CharSequence.class, Function.identity());
+        return new Builder().setToString(Boolean.class, Character.class, Number.class, Instant.class)
+                            .setToCharSequence(CharSequence.class, Function.identity());
     }
 
     /**
@@ -91,15 +92,15 @@ public class Normalizer {
             return new Normalizer(entries);
         }
 
-        public final <T> Builder setToSimple(final Class<T> originClass, final Function<T, CharSequence> method) {
+        public final <T> Builder setToCharSequence(final Class<T> originClass, final Function<T, CharSequence> method) {
             entries.removeIf(entry -> entry.type.equals(originClass));
             entries.add(new Entry(originClass, method));
             return this;
         }
 
-        public final Builder setToSimple(final Class<?> ... classes) {
+        public final Builder setToString(final Class<?> ... classes) {
             return Stream.of(classes)
-                         .map(originClass -> setToSimple(originClass, Object::toString))
+                         .map(originClass -> setToCharSequence(originClass, Object::toString))
                          .reduce(this, (left, right) -> right);
         }
     }
