@@ -58,7 +58,7 @@ public class Normalizer {
     }
 
     private Normal resultOf(final Object stage) {
-        return new NormalSimple((CharSequence) stage);
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     private enum Type {
