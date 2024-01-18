@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -111,7 +110,19 @@ public abstract class Normal {
 
         @Override
         final String toString(final int indent) {
-            throw new UnsupportedOperationException("not yet implemented");
+            if (value.isEmpty()) {
+                return "{}";
+            } else {
+                final int nextIndent = indent + 1;
+                final String nextLine = newLine(nextIndent);
+                return value.entrySet()
+                            .stream()
+                            .map(normal -> String.join("",
+                                                       normal.getKey().toString(nextIndent),
+                                                       " -> ",
+                                                       normal.getValue().toString(nextIndent)))
+                            .collect(Collectors.joining(nextLine, "{" + nextLine, newLine(indent) + "}"));
+            }
         }
     }
 
@@ -180,10 +191,10 @@ public abstract class Normal {
 
         @Override
         final String toString(final int indent) {
-            if (value.trim().equals(value) && !value.contains(QUOTE)) {
-                return value;
-            } else {
+            if (value.matches("[^\\s\"]*[\\s\"].*")) {
                 return String.join("", QUOTE, PATTERN.matcher(value).replaceAll(DOUBLE_QUOTE), QUOTE);
+            } else {
+                return value;
             }
         }
     }

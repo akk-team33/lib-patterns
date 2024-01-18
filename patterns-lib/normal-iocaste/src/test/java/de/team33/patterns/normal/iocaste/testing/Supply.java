@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 public class Supply implements Generator {
 
     private static final Random RANDOM = new SecureRandom();
-    private static final String CHARS = "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
+    private static final String CHARS = "\"\t abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
 
     @Override
     public final BigInteger nextBits(final int numBits) {
@@ -32,32 +32,50 @@ public class Supply implements Generator {
     }
 
     public final Normal nextNormal() {
-        final int sel = nextInt(12);
-        if (sel < 10) {
+        return nextNormal(3);
+    }
+
+    public final Normal nextNormal(final int maxDepth) {
+        final int selection = nextInt(6);
+        if ((1 > maxDepth) || (2 > selection))
             return Normal.of(nextString());
-        } else if (sel < 11) {
-            return Normal.of(nextNormalSet());
-        } else {
-            return Normal.of(nextNormalList());
-        }
+        else if (3 > selection)
+            return Normal.of(nextNormalSet(maxDepth - 1));
+        else if (4 > selection)
+            return Normal.of(nextNormalList(maxDepth - 1));
+        else
+            return Normal.of(nextNormalMap(0, maxDepth - 1));
+
     }
 
     public final Set<Normal> nextNormalSet() {
-        return Stream.generate(this::nextNormal)
+        return nextNormalSet(3);
+    }
+
+    public final Set<Normal> nextNormalSet(final int maxDepth) {
+        return Stream.generate(() -> nextNormal(maxDepth))
                      .limit(nextLong(1, 16))
                      .collect(Collectors.toSet());
     }
 
     public final List<Normal> nextNormalList() {
-        return Stream.generate(this::nextNormal)
+        return nextNormalList(3);
+    }
+
+    public final List<Normal> nextNormalList(final int maxDepth) {
+        return Stream.generate(() -> nextNormal(maxDepth))
                      .limit(nextLong(1, 16))
                      .collect(Collectors.toList());
     }
 
     public final Map<Normal, Normal> nextNormalMap() {
-        return Stream.generate(this::nextNormal)
+        return nextNormalMap(0, 3);
+    }
+
+    public final Map<Normal, Normal> nextNormalMap(final int keyDepth, final int valDepth) {
+        return Stream.generate(() -> nextNormal(valDepth))
                      .limit(nextLong(1, 16))
-                     .collect(Collectors.toMap(value -> Normal.of(nextString()), Function.identity()));
+                     .collect(Collectors.toMap(value -> nextNormal(keyDepth), Function.identity(), (l, r) -> r));
     }
 
     public String[] nextStringArray() {
