@@ -3,17 +3,28 @@ package de.team33.patterns.normal.iocaste;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class Normal {
+
+    public static final Comparator<Normal> ORDER = Comparator.comparing(Normal::type)
+                                                             .thenComparing(Normal::compareSameType);
+
+    private static int compareSameType(final Normal left, final Normal right) {
+        return left.type().order.compare(left, right);
+    }
 
     public static Normal of(final CharSequence value) {
         return new Simple(value);
@@ -78,23 +89,49 @@ public abstract class Normal {
 
     public enum Type {
 
-        SIMPLE(Normal::asSimple),
-        AGGREGATE(Normal::asAggregate),
-        COMPOSITE(Normal::asComposite);
+        SIMPLE(Normal::asSimple, Simple.ORDER),
+        AGGREGATE(Normal::asAggregate, Aggregate.ORDER),
+        COMPOSITE(Normal::asComposite, Composite.ORDER);
 
         private final Function<Normal, Object> primary;
+        private final Comparator<Normal> order;
 
-        Type(final Function<Normal, Object> primary) {
+        Type(final Function<Normal, Object> primary, final Comparator<Normal> order) {
             this.primary = primary;
+            this.order = order;
         }
     }
 
     private static class Composite extends Base {
 
+        private static final Comparator<Normal> ORDER = Comparator.comparing(normal -> normal.asComposite()
+                                                                                             .entrySet()
+                                                                                             .iterator(),
+                                                                             Composite::compare);
+
+        private static int compare(final Iterator<Map.Entry<Normal, Normal>> left,
+                                   final Iterator<Map.Entry<Normal, Normal>> right) {
+            int result = 0;
+            while ((result == 0) && left.hasNext() && right.hasNext()) {
+                result = Normal.ORDER.compare(left.next().getKey(), right.next().getKey());
+            }
+            if (0 != result) {
+                return result;
+            } else if (left.hasNext()) {
+                return 1;
+            } else if (right.hasNext()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+
         private final Map<Normal, Normal> value;
 
         private Composite(final Map<? extends Normal, ? extends Normal> value) {
-            this.value = Collections.unmodifiableMap(new HashMap<>(value));
+            final Map<Normal, Normal> stage = new TreeMap<>(Normal.ORDER);
+            stage.putAll(value);
+            this.value = Collections.unmodifiableMap(stage);
         }
 
         @Override
@@ -128,6 +165,25 @@ public abstract class Normal {
 
     private static class Aggregate extends Base {
 
+        private static final Comparator<Normal> ORDER = Comparator.comparing(normal -> normal.asAggregate().iterator(),
+                                                                             Aggregate::compare);
+
+        private static int compare(final Iterator<Normal> left, final Iterator<Normal> right) {
+            int result = 0;
+            while ((result == 0) && left.hasNext() && right.hasNext()) {
+                result = Normal.ORDER.compare(left.next(), right.next());
+            }
+            if (0 != result) {
+                return result;
+            } else if (left.hasNext()) {
+                return 1;
+            } else if (right.hasNext()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+
         private final Collection<Normal> value;
 
         private Aggregate(final Collection<? extends Normal> value) {
@@ -139,7 +195,9 @@ public abstract class Normal {
         }
 
         private static Set<Normal> newSet(final Collection<? extends Normal> value) {
-            return Collections.unmodifiableSet(new HashSet<>(value));
+            final Set<Normal> result = new TreeSet<Normal>(Normal.ORDER);
+            result.addAll(value);
+            return Collections.unmodifiableSet(result);
         }
 
         @Override
@@ -169,9 +227,12 @@ public abstract class Normal {
 
     private static class Simple extends Base {
 
+        private static final Comparator<Normal> ORDER = Comparator.comparing(Normal::asSimple);
+
         private static final String QUOTE = "\"";
         private static final String DOUBLE_QUOTE = "\"\"";
-        private static final Pattern PATTERN = Pattern.compile(QUOTE, Pattern.LITERAL);
+        private static final Pattern P_RPLC_QUOTE = Pattern.compile(QUOTE, Pattern.LITERAL);
+        private static final Pattern P_TO_BE_QUOTED = Pattern.compile("[^\\s\"]*[\\s\"].*");
 
         private final String value;
 
@@ -191,8 +252,8 @@ public abstract class Normal {
 
         @Override
         final String toString(final int indent) {
-            if (value.matches("[^\\s\"]*[\\s\"].*")) {
-                return String.join("", QUOTE, PATTERN.matcher(value).replaceAll(DOUBLE_QUOTE), QUOTE);
+            if (value.isEmpty() || P_TO_BE_QUOTED.matcher(value).matches()) {
+                return String.join("", QUOTE, P_RPLC_QUOTE.matcher(value).replaceAll(DOUBLE_QUOTE), QUOTE);
             } else {
                 return value;
             }
