@@ -5,6 +5,7 @@ import de.team33.patterns.building.elara.LateBuilder;
 import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.AbstractSet;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -29,23 +30,24 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#add(Object) subject.add(element)}, but returns the {@code subject}.
+     * Just like {@link Collection#add(Object) subject.add(element)}, but returns the <em>subject</em>.
      *
-     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the specified <em>element</em>
-     *                                       is {@code null} and the {@code subject} does not permit {@code null}
-     *                                       elements.
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the specified <em>element</em> is {@code null} and the <em>subject</em>
+     *                                       does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the specified <em>element</em> prevents it from being
-     *                                       added to the {@code subject}
+     *                                       added to the <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of the <em>element</em> prevents it from being added to
-     *                                       the {@code subject}.
+     *                                       the <em>subject</em>.
      * @throws IllegalStateException         if the <em>element</em> cannot be added at this time due to
-     *                                       the {@code subject}'s insertion restrictions (if any).
+     *                                       the <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#add(Object)
      * @see Collecting#add(Collection, Object, Object, Object[])
      * @see Collecting#addAll(Collection, Collection)
      * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Iterator)
      * @see Collecting#addAll(Collection, Stream)
      * @see Collecting#addAll(Collection, Object[])
      */
@@ -57,22 +59,23 @@ public final class Collecting {
     /**
      * Similar to {@link Collecting#add(Collection, Object)}, but allows to add two or more elements at once.
      *
-     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@code array} of {@code more}
-     *                                       elements is {@code null} or if any of the specified <em>elements</em>
-     *                                       is {@code null} and the {@code subject} does not permit {@code null}
-     *                                       elements.
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@code array} of <em>more</em> elements is {@code null} or ...
+     * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the specified <em>elements</em> prevents them from being
-     *                                       added to the {@code subject}
+     *                                       added to the <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being
-     *                                       added to the {@code subject}.
+     *                                       added to the <em>subject</em>.
      * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to
-     *                                       the {@code subject}'s insertion restrictions (if any).
+     *                                       the <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#add(Object)
      * @see Collecting#add(Collection, Object)
      * @see Collecting#addAll(Collection, Collection)
      * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Iterator)
      * @see Collecting#addAll(Collection, Stream)
      * @see Collecting#addAll(Collection, Object[])
      */
@@ -83,26 +86,27 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#addAll(Collection) subject.addAll(elements)}, but returns the {@code subject}.
+     * Just like {@link Collection#addAll(Collection) subject.addAll(elements)}, but returns the <em>subject</em>.
      *
      * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
-     *                                       {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Collection} of
-     *                                       <em>elements</em> is {@code null} or if any of the specified
-     *                                       <em>elements</em> is {@code null} and the {@code subject} does not permit
-     *                                       {@code null} elements.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Collection} of <em>elements</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the <em>elements</em> prevents them from being added to the
-     *                                       {@code subject}
+     *                                       <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being added
-     *                                       to the {@code subject}.
+     *                                       to the <em>subject</em>.
      * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to the
-     *                                       {@code subject}'s insertion restrictions (if any).
+     *                                       <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#addAll(Collection)
      * @see Collecting#add(Collection, Object)
      * @see Collecting#add(Collection, Object, Object, Object[])
-     * @see Collecting#addAll(Collection, Iterable)
      * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Iterator)
      * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Collection<? extends E> elements) {
@@ -113,23 +117,24 @@ public final class Collecting {
     /**
      * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
      *
-     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Stream} of
-     *                                       <em>elements</em> is {@code null} or if any of the streamed
-     *                                       <em>elements</em> is {@code null} and the {@code subject} does not permit
-     *                                       {@code null} elements.
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Stream} of <em>elements</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the streamed <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the <em>elements</em> prevents them from being added to the
-     *                                       {@code subject}
+     *                                       <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being added
-     *                                       to the {@code subject}.
+     *                                       to the <em>subject</em>.
      * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to the
-     *                                       {@code subject}'s insertion restrictions (if any).
+     *                                       <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#add(Object)
      * @see Collecting#add(Collection, Object)
      * @see Collecting#add(Collection, Object, Object, Object[])
      * @see Collecting#addAll(Collection, Collection)
      * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Iterator)
      * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Stream<? extends E> elements) {
@@ -141,63 +146,96 @@ public final class Collecting {
      * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes an {@link Iterable} as second argument.
      *
      * @throws UnsupportedOperationException if {@link Collection#add(Object)} or {@link Collection#addAll(Collection)}
-     *                                       is not supported by the {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@link Iterable} of
-     *                                       <em>elements</em> is {@code null} or if any of the specified
-     *                                       <em>elements</em> is {@code null} and the {@code subject} does not permit
-     *                                       {@code null} elements.
+     *                                       is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterable} of <em>elements</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the <em>elements</em> prevents them from being added to the
-     *                                       {@code subject}
+     *                                       <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being added
-     *                                       to the {@code subject}.
+     *                                       to the <em>subject</em>.
      * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to the
-     *                                       {@code subject}'s insertion restrictions (if any).
+     *                                       <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#add(Object)
      * @see Collection#addAll(Collection)
      * @see Collecting#add(Collection, Object)
      * @see Collecting#add(Collection, Object, Object, Object[])
      * @see Collecting#addAll(Collection, Collection)
      * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Iterator)
      * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Iterable<? extends E> elements) {
         return (elements instanceof Collection<?>)
                ? addAll(subject, (Collection<? extends E>) elements)
-               : addAll(subject, StreamSupport.stream(elements.spliterator(), false));
+               : addAll(subject, elements.iterator());
+    }
+
+    /**
+     * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes an {@link Iterator} as second argument.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterator} of <em>elements</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the iterated <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
+     * @throws ClassCastException            if the class of the <em>elements</em> prevents them from being added to the
+     *                                       <em>subject</em>
+     *                                       (may occur only if used raw or forced in a mismatched class context).
+     * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being added
+     *                                       to the <em>subject</em>.
+     * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to the
+     *                                       <em>subject</em>'s insertion restrictions (if any).
+     * @see Collection#add(Object)
+     * @see Collecting#add(Collection, Object)
+     * @see Collecting#add(Collection, Object, Object, Object[])
+     * @see Collecting#addAll(Collection, Collection)
+     * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Object[])
+     */
+    public static <E, C extends Collection<E>> C addAll(final C subject, final Iterator<? extends E> elements) {
+        while (elements.hasNext()) {
+            subject.add(elements.next());
+        }
+        return subject;
     }
 
     /**
      * Similar to {@link Collecting#addAll(Collection, Collection)}, but takes an {@code array} as second argument.
      *
-     * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null}, if the {@code array} of
-     *                                       <em>elements</em> is {@code null} or if any of the specified
-     *                                       <em>elements</em> is {@code null} and the {@code subject} does not permit
-     *                                       {@code null} elements.
+     * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@code array} of <em>elements</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
+     *                                       <em>subject</em> does not permit {@code null} elements.
      * @throws ClassCastException            if the class of the <em>elements</em> prevents them from being added to the
-     *                                       {@code subject}
+     *                                       <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
      * @throws IllegalArgumentException      if some property of some <em>elements</em> prevents them from being added
-     *                                       to the {@code subject}.
+     *                                       to the <em>subject</em>.
      * @throws IllegalStateException         if the <em>elements</em> cannot be added at this time due to the
-     *                                       {@code subject}'s insertion restrictions (if any).
+     *                                       <em>subject</em>'s insertion restrictions (if any).
      * @see Collection#add(Object)
      * @see Collecting#add(Collection, Object)
      * @see Collecting#add(Collection, Object, Object, Object[])
      * @see Collecting#addAll(Collection, Collection)
-     * @see Collecting#addAll(Collection, Iterable)
      * @see Collecting#addAll(Collection, Stream)
+     * @see Collecting#addAll(Collection, Iterable)
+     * @see Collecting#addAll(Collection, Iterator)
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final E[] elements) {
-        return addAll(subject, Stream.of(elements));
+        return addAll(subject, Arrays.asList(elements));
     }
 
     /**
-     * Just like {@link Collection#clear() subject.clear()}, but returns the {@code subject}.
+     * Just like {@link Collection#clear() subject.clear()}, but returns the <em>subject</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null}.
-     * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the {@code subject}.
+     * @throws NullPointerException          if <em>subject</em> is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the <em>subject</em>.
      * @see Collection#clear()
      */
     public static <C extends Collection<?>> C clear(final C subject) {
@@ -206,22 +244,23 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#remove(Object) subject.remove(element)}, but returns the {@code subject}.
+     * Similar to {@link Collection#remove(Object) subject.remove(element)}, but returns the <em>subject</em>.
      * <p>
-     * If {@code subject} contains the <em>element</em> several times, each occurrence will be removed!
+     * If <em>subject</em> contains the <em>element</em> several times, each occurrence will be removed!
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#remove(Object)} when the {@code subject} does not support the requested <em>element</em>.
+     * {@link Collection#remove(Object)} when the <em>subject</em> does not support the requested <em>element</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null}.
      * @see Collection#remove(Object)
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object, Object, Object...)
      * @see Collecting#removeAll(Collection, Collection)
      * @see Collecting#removeAll(Collection, Stream)
      * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Iterator)
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C remove(final C subject, final Object element) {
@@ -241,22 +280,23 @@ public final class Collecting {
     /**
      * Similar to {@link Collecting#remove(Collection, Object)}, but allows to remove two or more elements.
      * <p>
-     * If {@code subject} contains some of the <em>elements</em> several times, each occurrence will be removed!
+     * If <em>subject</em> contains some of the <em>elements</em> several times, each occurrence will be removed!
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the {@code subject} does not
+     * {@link Collection#remove(Object)} or {@link Collection#removeAll(Collection)} when the <em>subject</em> does not
      * support some requested <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of {@code more}
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or if the {@code array} of {@code more}
      *                                       elements is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
      * @see Collection#remove(Object)
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object)
      * @see Collecting#removeAll(Collection, Collection)
      * @see Collecting#removeAll(Collection, Stream)
      * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Iterator)
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C remove(final C subject,
@@ -267,21 +307,22 @@ public final class Collecting {
     }
 
     /**
-     * Just like {@link Collection#removeAll(Collection) subject.removeAll(elements)}, but returns the {@code subject}.
+     * Just like {@link Collection#removeAll(Collection) subject.removeAll(elements)}, but returns the <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#removeAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Collection} of
-     *                                       <em>elements</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Collection} of <em>elements</em> is {@code null}.
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object)
      * @see Collecting#remove(Collection, Object, Object, Object...)
      * @see Collecting#removeAll(Collection, Stream)
      * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Iterator)
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Collection<?> elements) {
@@ -304,18 +345,19 @@ public final class Collecting {
      * Similar to {@link Collecting#removeAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#removeAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Stream} of
-     *                                       <em>elements</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Stream} of <em>elements</em> is {@code null}.
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object)
      * @see Collecting#remove(Collection, Object, Object, Object...)
      * @see Collecting#removeAll(Collection, Collection)
      * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Iterator)
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Stream<?> elements) {
@@ -327,24 +369,49 @@ public final class Collecting {
      * argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#removeAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Iterable} of
-     *                                       <em>elements</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterable} of <em>elements</em> is {@code null}.
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object)
      * @see Collecting#remove(Collection, Object, Object, Object...)
      * @see Collecting#removeAll(Collection, Collection)
      * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Iterator)
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Iterable<?> elements) {
         return (elements instanceof Collection<?>)
                ? removeAll(subject, (Collection<?>) elements)
-               : removeAll(subject, StreamSupport.stream(elements.spliterator(), false));
+               : removeAll(subject, elements.iterator());
+    }
+
+    /**
+     * Similar to {@link Collecting#removeAll(Collection, Collection)}, but takes an {@link Iterator} as second
+     * argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#removeAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterator} of <em>elements</em> is {@code null}.
+     * @see Collection#removeAll(Collection)
+     * @see Collecting#remove(Collection, Object)
+     * @see Collecting#remove(Collection, Object, Object, Object...)
+     * @see Collecting#removeAll(Collection, Collection)
+     * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Stream)
+     * @see Collecting#removeAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C removeAll(final C subject, final Iterator<?> elements) {
+        return removeAll(subject, addAll(new HashSet<>(), elements));
     }
 
     /**
@@ -352,39 +419,40 @@ public final class Collecting {
      * argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#removeAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#removeAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of
-     *                                       <em>elements</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@code array} of <em>elements</em> is {@code null}.
      * @see Collection#removeAll(Collection)
      * @see Collecting#remove(Collection, Object)
      * @see Collecting#remove(Collection, Object, Object, Object...)
      * @see Collecting#removeAll(Collection, Collection)
      * @see Collecting#removeAll(Collection, Stream)
      * @see Collecting#removeAll(Collection, Iterable)
+     * @see Collecting#removeAll(Collection, Iterator)
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Object[] elements) {
         return removeAll(subject, asList(elements));
     }
 
     /**
-     * Just like {@link Collection#retainAll(Collection) subject.retainAll(elements)}, but returns the {@code subject}.
+     * Just like {@link Collection#retainAll(Collection) subject.retainAll(elements)}, but returns the <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
-     *                                       {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Collection} of
-     *                                       <em>elements</em> is {@code null}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Collection} of <em>elements</em> is {@code null}.
      * @see Collection#retainAll(Collection)
      * @see Collecting#retainAll(Collection, Stream)
      * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Iterator)
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Collection<?> elements) {
@@ -408,17 +476,17 @@ public final class Collecting {
      * Similar to {@link Collecting#retainAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
-     *                                       {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Stream} of
-     *                                       <em>elements</em> is {@code null}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Stream} of <em>elements</em> is {@code null}.
      * @see Collection#retainAll(Collection)
      * @see Collecting#retainAll(Collection, Collection)
      * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Iterator)
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Stream<?> elements) {
@@ -430,23 +498,45 @@ public final class Collecting {
      * but takes an {@link Iterable} as second argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @return The {@code subject}.
      * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
-     *                                       {@code subject}.
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@link Iterable} of
-     *                                       <em>elements</em> is {@code null}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterable} of <em>elements</em> is {@code null}.
      * @see Collection#retainAll(Collection)
      * @see Collecting#retainAll(Collection, Collection)
      * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterator)
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Iterable<?> elements) {
         return (elements instanceof Collection<?>)
                ? retainAll(subject, (Collection<?>) elements)
-               : retainAll(subject, StreamSupport.stream(elements.spliterator(), false));
+               : retainAll(subject, elements.iterator());
+    }
+
+    /**
+     * Similar to {@link Collecting#retainAll(Collection, Collection)},
+     * but takes an {@link Iterator} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@link Iterator} of <em>elements</em> is {@code null}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C retainAll(final C subject, final Iterator<?> elements) {
+        return retainAll(subject, addAll(new HashSet<>(), elements));
     }
 
     /**
@@ -454,17 +544,18 @@ public final class Collecting {
      * argument.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#retainAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if {@code subject} is {@code null} or if the {@code array} of
-     *                                       <em>elements</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
-     *                                       {@code subject}.
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@code array} of <em>elements</em> is {@code null}.
      * @see Collection#retainAll(Collection)
      * @see Collecting#retainAll(Collection, Collection)
      * @see Collecting#retainAll(Collection, Stream)
      * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Iterator)
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Object[] elements) {
         return retainAll(subject, asList(elements));
@@ -474,9 +565,17 @@ public final class Collecting {
      * Just like {@link Collection#contains(Object) subject.contains(element)}.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#contains(Object)} when the {@code subject} does not support the requested <em>element</em>.
+     * {@link Collection#contains(Object)} when the <em>subject</em> does not support the requested <em>element</em>.
      *
-     * @throws NullPointerException if {@code subject} is {@code null}.
+     * @throws NullPointerException if <em>subject</em> is {@code null}.
+     * @see Collection#contains(Object)
+     * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Iterator)
+     * @see Collecting#containsAll(Collection, Object[])
      */
     @SuppressWarnings("OverloadedMethodsWithSameNumberOfParameters")
     public static boolean contains(final Collection<?> subject, final Object element) {
@@ -494,31 +593,45 @@ public final class Collecting {
     }
 
     /**
-     * Similar to {@link Collection#contains(Object)}
-     * or rather {@link Collection#containsAll(Collection)} for a given {@code subject}.
-     * Allows to test for a variable number of elements.
+     * Similar to {@link Collecting#contains(Collection, Object)}, but allows to test two or more elements.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some requested
-     * <em>elements</em>.
+     * {@link Collection#contains(Object)} when the <em>subject</em> does not support the requested <em>element</em>.
      *
-     * @throws NullPointerException if {@code subject} or the {@code array} of <em>elements</em> is {@code null}.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the {@code array} of {@code more} elements is {@code null}.
+     * @see Collection#contains(Object)
      * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Iterator)
+     * @see Collecting#containsAll(Collection, Object[])
      */
-    @SuppressWarnings({"OverloadedVarargsMethod", "OverloadedMethodsWithSameNumberOfParameters"})
-    public static boolean contains(final Collection<?> subject, final Object... elements) {
-        return containsAll(subject, asList(elements));
+    public static boolean contains(final Collection<?> subject,
+                                   final Object element0, final Object element1, final Object... more) {
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     /**
-     * Indicates if a given {@code subject} contains specific <em>elements</em>.
+     * Just like {@link Collection#containsAll(Collection) subject.containsAll(elements)},
+     * but returns the <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#containsAll(Collection)} when the {@code subject} does not support some requested
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException if {@code subject} or the {@link Collection} of <em>elements</em> is {@code null}.
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@link Collection} of <em>elements</em> is {@code null}.
+     * @see Collection#contains(Object)
      * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Iterator)
+     * @see Collecting#containsAll(Collection, Object[])
      */
     public static boolean containsAll(final Collection<?> subject, final Collection<?> elements) {
         try {
@@ -535,8 +648,24 @@ public final class Collecting {
         }
     }
 
+    public static boolean containsAll(final Collection<?> subject, final Stream<?> elements) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public static boolean containsAll(final Collection<?> subject, final Iterable<?> elements) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public static boolean containsAll(final Collection<?> subject, final Iterator<?> elements) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    public static boolean containsAll(final Collection<?> subject, final Object[] elements) {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
     /**
-     * Supplies a proxy for a given {@code subject} that may be used to implement some {@link Collection}-specific
+     * Supplies a proxy for a given <em>subject</em> that may be used to implement some {@link Collection}-specific
      * methods, e.g.:
      * <ul>
      * <li>{@link Collection#toArray()}</li>
@@ -695,12 +824,12 @@ public final class Collecting {
          * @throws NullPointerException          if the specified <em>element</em> is {@code null} and the instance
          *                                       to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of the specified <em>element</em> prevents it from being
-         *                                       added to the {@code subject}
+         *                                       added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of the <em>element</em> prevents it from being added
          *                                       to the instance to be set up.
          * @throws IllegalStateException         if the <em>element</em> cannot be added at this time due to
-         *                                       the {@code subject}'s insertion restrictions (if any).
+         *                                       the <em>subject</em>'s insertion restrictions (if any).
          * @see Collection#add(Object)
          * @see Collecting#add(Collection, Object)
          */
@@ -714,9 +843,9 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       {@code subject} does not permit {@code null} elements.
+         *                                       <em>subject</em> does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the {@code subject}
+         *                                       prevents them from being added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -737,9 +866,9 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       {@code subject} does not permit {@code null} elements.
+         *                                       <em>subject</em> does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the {@code subject}
+         *                                       prevents them from being added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -760,9 +889,9 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       {@code subject} does not permit {@code null} elements.
+         *                                       <em>subject</em> does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the {@code subject}
+         *                                       prevents them from being added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -783,9 +912,9 @@ public final class Collecting {
          *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       {@code subject} does not permit {@code null} elements.
+         *                                       <em>subject</em> does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the {@code subject}
+         *                                       prevents them from being added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -806,9 +935,9 @@ public final class Collecting {
          *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       {@code subject} does not permit {@code null} elements.
+         *                                       <em>subject</em> does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the {@code subject}
+         *                                       prevents them from being added to the <em>subject</em>
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
