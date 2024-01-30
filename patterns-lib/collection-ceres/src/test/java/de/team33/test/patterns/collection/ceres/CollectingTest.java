@@ -5,15 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -259,7 +251,7 @@ class CollectingTest {
         assertFalse(Collecting.contains(subject, item1, item1, foreign, item1));
     }
 
-    @SuppressWarnings({"ResultOfMethodCallIgnored", "MismatchedQueryAndUpdateOfCollection"})
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
     @Test
     final void containsAll_Collection() {
         final List<String> origin = SUPPLY.nextStringList(8);
@@ -283,6 +275,49 @@ class CollectingTest {
                      () -> Collecting.containsAll(new ArrayList<>(SUPPLY.nextStringList(4)), missing));
         assertThrows(NullPointerException.class,
                      () -> Collecting.containsAll(empty, missing));
+    }
+
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
+    @Test
+    final void containsAll_array() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Set<String> subject = new TreeSet<>(origin);
+        final List<?> items1 = origin.subList(2, 6);
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        assertTrue(Collecting.containsAll(subject, items1.toArray()));
+        assertFalse(Collecting.containsAll(subject, items2.toArray()));
+        assertFalse(Collecting.containsAll(subject, items3.toArray()));
+        assertFalse(Collecting.containsAll(subject, items4.toArray()));
+    }
+
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
+    @Test
+    final void containsAll_Iterable() {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final Set<String> subject = new TreeSet<>(origin);
+        final List<?> items1 = origin.subList(2, 6);
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        assertTrue(Collecting.containsAll(subject, toIterable(items1)));
+        assertTrue(Collecting.containsAll(subject, asIterable(items1)));
+        assertFalse(Collecting.containsAll(subject, toIterable(items2)));
+        assertFalse(Collecting.containsAll(subject, asIterable(items2)));
+        assertFalse(Collecting.containsAll(subject, toIterable(items3)));
+        assertFalse(Collecting.containsAll(subject, asIterable(items3)));
+        assertFalse(Collecting.containsAll(subject, toIterable(items4)));
+        assertFalse(Collecting.containsAll(subject, asIterable(items4)));
+    }
+
+    private <E> Iterable<E> asIterable(final Collection<E> collection) {
+        return collection;
+    }
+
+    @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+    private <E> Iterable<E> toIterable(final Collection<E> collection) {
+        return () -> collection.iterator();
     }
 
     @Test

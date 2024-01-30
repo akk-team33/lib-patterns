@@ -596,7 +596,8 @@ public final class Collecting {
      * Similar to {@link Collecting#contains(Collection, Object)}, but allows to test two or more elements.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Collection#contains(Object)} when the <em>subject</em> does not support the requested <em>element</em>.
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
      *
      * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
      * @throws NullPointerException          if the {@code array} of {@code more} elements is {@code null}.
@@ -611,7 +612,7 @@ public final class Collecting {
      */
     public static boolean contains(final Collection<?> subject,
                                    final Object element0, final Object element1, final Object... more) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return containsAll(subject, Stream.concat(Stream.of(element0, element1), Stream.of(more)));
     }
 
     /**
@@ -648,20 +649,96 @@ public final class Collecting {
         }
     }
 
+    /**
+     * Similar to {@link Collecting#containsAll(Collection, Collection)}, but takes a {@link Stream} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@link Collection} of <em>elements</em> is {@code null}.
+     * @see Collection#contains(Object)
+     * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Iterator)
+     * @see Collecting#containsAll(Collection, Object[])
+     */
     public static boolean containsAll(final Collection<?> subject, final Stream<?> elements) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return containsAll(subject, addAll(new HashSet<>(), elements));
     }
 
+    /**
+     * Similar to {@link Collecting#containsAll(Collection, Collection)},
+     * but takes an {@link Iterable} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@link Collection} of <em>elements</em> is {@code null}.
+     * @see Collection#contains(Object)
+     * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterator)
+     * @see Collecting#containsAll(Collection, Object[])
+     */
     public static boolean containsAll(final Collection<?> subject, final Iterable<?> elements) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return (elements instanceof Collection<?>)
+               ? containsAll(subject, (Collection<?>) elements)
+               : containsAll(subject, elements.iterator());
     }
 
+    /**
+     * Similar to {@link Collecting#containsAll(Collection, Collection)},
+     * but takes an {@link Iterator} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@link Collection} of <em>elements</em> is {@code null}.
+     * @see Collection#contains(Object)
+     * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Object[])
+     */
     public static boolean containsAll(final Collection<?> subject, final Iterator<?> elements) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return containsAll(subject, addAll(new HashSet<>(), elements));
     }
 
+    /**
+     * Similar to {@link Collecting#containsAll(Collection, Collection)}, but takes an {@code array} as second argument.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
+     * <em>elements</em>.
+     *
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@link Collection} of <em>elements</em> is {@code null}.
+     * @see Collection#contains(Object)
+     * @see Collection#containsAll(Collection)
+     * @see Collecting#contains(Collection, Object)
+     * @see Collecting#contains(Collection, Object, Object, Object...)
+     * @see Collecting#containsAll(Collection, Collection)
+     * @see Collecting#containsAll(Collection, Stream)
+     * @see Collecting#containsAll(Collection, Iterable)
+     * @see Collecting#containsAll(Collection, Iterator)
+     */
     public static boolean containsAll(final Collection<?> subject, final Object[] elements) {
-        throw new UnsupportedOperationException("not yet implemented");
+        return containsAll(subject, asList(elements));
     }
 
     /**
