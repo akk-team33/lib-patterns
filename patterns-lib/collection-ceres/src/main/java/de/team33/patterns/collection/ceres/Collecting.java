@@ -1119,6 +1119,7 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
          *                                       instance to be set up.
+         * @see #remove(Object)
          * @see Collecting#remove(Collection, Object, Object, Object[])
          */
         default S remove(final Object element0, final Object element1, final Object... more) {
@@ -1141,6 +1142,10 @@ public final class Collecting {
          *                                       instance to be set up.
          * @see Collection#removeAll(Collection)
          * @see Collecting#removeAll(Collection, Collection)
+         * @see #removeAll(Stream)
+         * @see #removeAll(Iterable)
+         * @see #removeAll(Iterator)
+         * @see #removeAll(Object[])
          */
         default S removeAll(final Collection<?> elements) {
             return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
@@ -1157,6 +1162,10 @@ public final class Collecting {
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#removeAll(Collection, Stream)
+         * @see #removeAll(Collection)
+         * @see #removeAll(Iterable)
+         * @see #removeAll(Iterator)
+         * @see #removeAll(Object[])
          */
         default S removeAll(final Stream<?> elements) {
             return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
@@ -1173,8 +1182,32 @@ public final class Collecting {
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#removeAll(Collection, Iterable)
+         * @see #removeAll(Collection)
+         * @see #removeAll(Stream)
+         * @see #removeAll(Iterator)
+         * @see #removeAll(Object[])
          */
         default S removeAll(final Iterable<?> elements) {
+            return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
+        }
+
+        /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be removed!
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterator}.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#remove(Object)} or
+         *                                       if {@link Collection#removeAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#removeAll(Collection, Iterable)
+         * @see #removeAll(Collection)
+         * @see #removeAll(Stream)
+         * @see #removeAll(Iterable)
+         * @see #removeAll(Object[])
+         */
+        default S removeAll(final Iterator<?> elements) {
             return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
         }
 
@@ -1189,6 +1222,10 @@ public final class Collecting {
          *                                       if {@link Collection#removeAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#removeAll(Collection, Object[])
+         * @see #removeAll(Collection)
+         * @see #removeAll(Stream)
+         * @see #removeAll(Iterable)
+         * @see #removeAll(Iterator)
          */
         default S removeAll(final Object[] elements) {
             return setup(target -> Collecting.removeAll(target, nullAsEmpty(elements)));
