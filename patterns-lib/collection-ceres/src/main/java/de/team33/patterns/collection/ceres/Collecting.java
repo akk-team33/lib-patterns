@@ -613,8 +613,8 @@ public final class Collecting {
      * {@link Collection#containsAll(Collection)} when the <em>subject</em> does not support some requested
      * <em>elements</em>.
      *
-     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
-     * @throws NullPointerException          if the {@code array} of {@code more} elements is {@code null}.
+     * @throws NullPointerException if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException if the {@code array} of {@code more} elements is {@code null}.
      * @see Collection#contains(Object)
      * @see Collection#containsAll(Collection)
      * @see Collecting#contains(Collection, Object)
@@ -920,7 +920,7 @@ public final class Collecting {
          * @throws IllegalArgumentException      if some property of the <em>element</em> prevents it from being added
          *                                       to the instance to be set up.
          * @throws IllegalStateException         if the <em>element</em> cannot be added at this time due to
-         *                                       the <em>subject</em>'s insertion restrictions (if any).
+         *                                       insertion restrictions on the instance to be set up (if any).
          * @see Collection#add(Object)
          * @see Collecting#add(Collection, Object)
          */
@@ -936,14 +936,15 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       <em>subject</em> does not permit {@code null} elements.
+         *                                       instance to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the <em>subject</em>
+         *                                       prevents them from being added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
          * @throws IllegalStateException         if any of the <em>elements</em> cannot be added at this time
          *                                       due to insertion restrictions of the instance to be set up (if any).
+         * @see #add(Object)
          * @see Collecting#add(Collection, Object, Object, Object[])
          */
         @SuppressWarnings("unchecked")
@@ -960,9 +961,9 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       <em>subject</em> does not permit {@code null} elements.
+         *                                       instance to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the <em>subject</em>
+         *                                       prevents them from being added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -983,9 +984,9 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       <em>subject</em> does not permit {@code null} elements.
+         *                                       instance to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the <em>subject</em>
+         *                                       prevents them from being added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -1006,9 +1007,9 @@ public final class Collecting {
          *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       <em>subject</em> does not permit {@code null} elements.
+         *                                       instance to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the <em>subject</em>
+         *                                       prevents them from being added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
@@ -1029,9 +1030,9 @@ public final class Collecting {
          *                                       if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
-         *                                       <em>subject</em> does not permit {@code null} elements.
+         *                                       instance to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of any specified <em>elements</em>
-         *                                       prevents them from being added to the <em>subject</em>
+         *                                       prevents them from being added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
          *                                       them from being added to the instance to be set up.
