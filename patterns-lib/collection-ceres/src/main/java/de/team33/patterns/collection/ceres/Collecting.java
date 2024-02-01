@@ -891,13 +891,13 @@ public final class Collecting {
     }
 
     /**
-     * Returns a new {@link Charger} for target instances as supplied by the given {@link Supplier}.
+     * Returns a new {@link Charger} for a given target instance.
      *
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
      */
-    public static <E, C extends Collection<E>> Charger<E, C> charger(final C newTarget) {
-        return new Charger<>(newTarget, Charger.class);
+    public static <E, C extends Collection<E>> Charger<E, C> charger(final C target) {
+        return new Charger<>(target, Charger.class);
     }
 
     /**
@@ -1232,6 +1232,19 @@ public final class Collecting {
         }
 
         /**
+         * Removes multiple <em>elements</em> from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#removeIf(Predicate)} is not supported by the
+         *                                       instance to be set up.
+         * @throws NullPointerException          if the <em>filter</em> is {@code null}.
+         * @see Collection#removeIf(Predicate)
+         * @see Collecting#removeIf(Collection, Predicate)
+         */
+        default S removeIf(final Predicate<? super E> filter) {
+            return setup(target -> Collecting.removeIf(target, filter));
+        }
+
+        /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
          * <p>
          * Treats a {@code null}-argument just like an empty {@link Collection}.
@@ -1244,6 +1257,10 @@ public final class Collecting {
          *                                       instance to be set up.
          * @see Collection#retainAll(Collection)
          * @see Collecting#retainAll(Collection, Collection)
+         * @see #retainAll(Stream)
+         * @see #retainAll(Iterable)
+         * @see #retainAll(Iterator)
+         * @see #retainAll(Object[])
          */
         default S retainAll(final Collection<?> elements) {
             return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
@@ -1257,6 +1274,10 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Stream)
+         * @see #retainAll(Collection)
+         * @see #retainAll(Iterable)
+         * @see #retainAll(Iterator)
+         * @see #retainAll(Object[])
          */
         default S retainAll(final Stream<?> elements) {
             return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
@@ -1270,8 +1291,29 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Iterable)
+         * @see #retainAll(Collection)
+         * @see #retainAll(Stream)
+         * @see #retainAll(Iterator)
+         * @see #retainAll(Object[])
          */
         default S retainAll(final Iterable<?> elements) {
+            return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
+        }
+
+        /**
+         * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterator}.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collecting#retainAll(Collection, Iterable)
+         * @see #retainAll(Collection)
+         * @see #retainAll(Stream)
+         * @see #retainAll(Iterable)
+         * @see #retainAll(Object[])
+         */
+        default S retainAll(final Iterator<?> elements) {
             return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
         }
 
@@ -1283,6 +1325,10 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
          *                                       instance to be set up.
          * @see Collecting#retainAll(Collection, Object[])
+         * @see #retainAll(Collection)
+         * @see #retainAll(Stream)
+         * @see #retainAll(Iterable)
+         * @see #retainAll(Iterator)
          */
         default S retainAll(final Object[] elements) {
             return setup(target -> Collecting.retainAll(target, nullAsEmpty(elements)));
@@ -1294,6 +1340,7 @@ public final class Collecting {
          * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the instance to be
          *                                       set up.
          * @see Collection#clear()
+         * @see Collecting#clear(Collection)
          */
         default S clear() {
             return setup(Collecting::clear);
