@@ -48,17 +48,20 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final List<String> expected = SUPPLY.nextStringList(20);
         final Collection<String> head = expected.subList(0, 4);
         final Stream<String> stream = expected.stream().skip(4).limit(4);
-        final Iterable<String> iterable1 = expected.subList(8, 12);
-        final Iterable<String> iterable2 = () -> expected.subList(12, 16).iterator();
+        final Iterable<String> iterable1 = expected.subList(8, 11);
+        final Iterable<String> iterable2 = () -> expected.subList(11, 14).iterator();
+        final Iterator<String> iterator = expected.subList(14, 16).iterator();
         final String[] array = expected.subList(16, 20).toArray(new String[4]);
         final List<String> result = resultOf(setup().addAll((Collection<String>) null)
                                                     .addAll((Stream<String>) null)
                                                     .addAll((Iterable<String>) null)
+                                                    .addAll((Iterator<String>) null)
                                                     .addAll((String[]) null)
                                                     .addAll(head)
                                                     .addAll(stream)
                                                     .addAll(iterable1)
                                                     .addAll(iterable2)
+                                                    .addAll(iterator)
                                                     .addAll(array));
         assertEquals(expected, result);
     }
@@ -105,6 +108,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final Iterable<String> iterable1 = original.subList(8, 15);
         final List<String> subList1216 = original.subList(12, 19);
         final Iterable<String> iterable2 = () -> subList1216.iterator();
+        final Iterator<String> iterator = subList1216.iterator();
         final String[] array = original.subList(16, 24).toArray(new String[6]);
 
         final List<String> expected = new ArrayList<String>(original) {{
@@ -115,7 +119,21 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .removeAll(stream)
                                                     .removeAll(iterable1)
                                                     .removeAll(iterable2)
+                                                    .removeAll(iterator)
                                                     .removeAll(array));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void removeIf() {
+        final List<String> original = SUPPLY.nextStringList(36);
+        final Collection<String> removable = original.subList(0, 18);
+
+        final List<String> expected = new ArrayList<String>(original) {{
+            removeAll(removable);
+        }};
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .removeIf(removable::contains));
         assertEquals(expected, result);
     }
 
@@ -126,6 +144,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .removeAll((Collection<?>) null)
                                                     .removeAll((Stream<?>) null)
                                                     .removeAll((Iterable<?>) null)
+                                                    .removeAll((Iterator<?>) null)
                                                     .removeAll((Object[]) null));
         assertEquals(original, result);
     }
@@ -139,6 +158,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final Iterable<String> iterable1 = original.subList(3, 28);
         final List<String> subList1216 = original.subList(6, 31);
         final Iterable<String> iterable2 = () -> subList1216.iterator();
+        final Iterator<String> iterator = subList1216.iterator();
         final String[] array = original.subList(9, 26).toArray(new String[]{});
 
         final List<String> expected = new ArrayList<String>(original) {{
@@ -153,6 +173,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .retainAll(stream)
                                                     .retainAll(iterable1)
                                                     .retainAll(iterable2)
+                                                    .retainAll(iterator)
                                                     .retainAll(array));
         assertEquals(expected, result);
     }
@@ -165,6 +186,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
                                                     .retainAll((Collection<?>) null)
                                                     .retainAll((Stream<?>) null)
                                                     .retainAll((Iterable<?>) null)
+                                                    .retainAll((Iterator<?>) null)
                                                     .retainAll((Object[]) null));
         assertEquals(expected, result);
     }
