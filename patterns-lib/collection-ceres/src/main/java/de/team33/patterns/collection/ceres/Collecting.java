@@ -870,6 +870,11 @@ public final class Collecting {
         return (null == nullable) ? Collections.emptySet() : nullable;
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
+    private static <E> Iterator<E> nullAsEmpty(final Iterator<E> nullable) {
+        return (null == nullable) ? Collections.emptyIterator() : nullable;
+    }
+
     @SuppressWarnings({"unchecked", "MethodOnlyUsedFromInnerClass", "SuspiciousArrayCast"})
     private static <E> E[] nullAsEmpty(final E[] nullable) {
         return (null == nullable) ? (E[]) EMPTY_ARRAY : nullable;
@@ -971,6 +976,10 @@ public final class Collecting {
          *                                       due to insertion restrictions of the instance to be set up (if any).
          * @see Collection#addAll(Collection)
          * @see Collecting#addAll(Collection, Collection)
+         * @see #addAll(Stream)
+         * @see #addAll(Iterable)
+         * @see #addAll(Iterator)
+         * @see #addAll(Object[])
          */
         default S addAll(final Collection<? extends E> elements) {
             return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
@@ -993,6 +1002,10 @@ public final class Collecting {
          * @throws IllegalStateException         if any of the <em>elements</em> cannot be added at this time
          *                                       due to insertion restrictions of the instance to be set up (if any).
          * @see Collecting#addAll(Collection, Stream)
+         * @see #addAll(Collection)
+         * @see #addAll(Iterable)
+         * @see #addAll(Iterator)
+         * @see #addAll(Object[])
          */
         default S addAll(final Stream<? extends E> elements) {
             return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
@@ -1016,8 +1029,39 @@ public final class Collecting {
          * @throws IllegalStateException         if any of the <em>elements</em> cannot be added at this time
          *                                       due to insertion restrictions of the instance to be set up (if any).
          * @see Collecting#addAll(Collection, Iterable)
+         * @see #addAll(Collection)
+         * @see #addAll(Stream)
+         * @see #addAll(Iterator)
+         * @see #addAll(Object[])
          */
         default S addAll(final Iterable<? extends E> elements) {
+            return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
+        }
+
+        /**
+         * Adds multiple <em>elements</em> to the instance to be set up.
+         * <p>
+         * Treats a {@code null}-argument just like an empty {@link Iterator}.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#add(Object)} or
+         *                                       if {@link Collection#addAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @throws NullPointerException          if any of the specified <em>elements</em> is {@code null} and the
+         *                                       instance to be set up does not permit {@code null} elements.
+         * @throws ClassCastException            if the class of any specified <em>elements</em>
+         *                                       prevents them from being added to the instance to be set up
+         *                                       (may occur only if used raw or forced in a mismatched class context).
+         * @throws IllegalArgumentException      if some property of any <em>elements</em> prevents
+         *                                       them from being added to the instance to be set up.
+         * @throws IllegalStateException         if any of the <em>elements</em> cannot be added at this time
+         *                                       due to insertion restrictions of the instance to be set up (if any).
+         * @see Collecting#addAll(Collection, Iterable)
+         * @see #addAll(Collection)
+         * @see #addAll(Stream)
+         * @see #addAll(Iterable)
+         * @see #addAll(Object[])
+         */
+        default S addAll(final Iterator<? extends E> elements) {
             return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
         }
 
@@ -1039,6 +1083,10 @@ public final class Collecting {
          * @throws IllegalStateException         if any of the <em>elements</em> cannot be added at this time
          *                                       due to insertion restrictions of the instance to be set up (if any).
          * @see Collecting#addAll(Collection, Iterable)
+         * @see #addAll(Collection)
+         * @see #addAll(Stream)
+         * @see #addAll(Iterable)
+         * @see #addAll(Iterator)
          */
         default S addAll(final E[] elements) {
             return setup(target -> Collecting.addAll(target, nullAsEmpty(elements)));
