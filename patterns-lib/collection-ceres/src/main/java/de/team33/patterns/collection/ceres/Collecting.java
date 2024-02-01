@@ -12,9 +12,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import static java.util.Arrays.asList;
 
@@ -436,6 +436,20 @@ public final class Collecting {
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Object[] elements) {
         return removeAll(subject, asList(elements));
+    }
+
+    /**
+     * Just like {@link Collection#removeIf(Predicate) subject.removeIf(filter)}, but returns the <em>subject</em>.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#removeIf(Predicate)} is not supported by the
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the <em>filter</em> is {@code null}.
+     * @see Collection#removeIf(Predicate)
+     */
+    public static <E, C extends Collection<E>> C removeIf(final C subject, final Predicate<? super E> filter) {
+        subject.removeIf(filter);
+        return subject;
     }
 
     /**
@@ -901,7 +915,7 @@ public final class Collecting {
          * @throws NullPointerException          if the specified <em>element</em> is {@code null} and the instance
          *                                       to be set up does not permit {@code null} elements.
          * @throws ClassCastException            if the class of the specified <em>element</em> prevents it from being
-         *                                       added to the <em>subject</em>
+         *                                       added to the instance to be set up
          *                                       (may occur only if used raw or forced in a mismatched class context).
          * @throws IllegalArgumentException      if some property of the <em>element</em> prevents it from being added
          *                                       to the instance to be set up.
@@ -916,6 +930,8 @@ public final class Collecting {
 
         /**
          * Adds two or more <em>elements</em> to the instance to be set up.
+         * <p>
+         * If the {@code array} of <em>more</em> elements is {@code null} it will be treated as an empty {@code array}.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the instance
          *                                       to be set up.
@@ -938,7 +954,8 @@ public final class Collecting {
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
          * <p>
-         * Treats a {@code null}-argument just like an empty {@link Collection}.
+         * If the {@link Collection} of <em>elements</em> is {@code null} it will be treated as an empty
+         * {@link Collection}.
          *
          * @throws UnsupportedOperationException if {@link Collection#addAll(Collection)} is not supported by the
          *                                       instance to be set up.
@@ -961,7 +978,7 @@ public final class Collecting {
         /**
          * Adds multiple <em>elements</em> to the instance to be set up.
          * <p>
-         * Treats a {@code null}-argument just like an empty {@link Stream}.
+         * If the {@link Stream} of <em>elements</em> is {@code null} it will be treated as an empty {@link Stream}.
          *
          * @throws UnsupportedOperationException if {@link Collection#add(Object)} is not supported by the
          *                                       instance to be set up.

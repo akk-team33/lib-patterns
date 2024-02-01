@@ -168,6 +168,23 @@ class CollectingTest {
 
     @ParameterizedTest
     @EnumSource
+    final void removeIf(final RemoveCase rmCase) {
+        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<?> obsolete = rmCase.obsoleteList.apply(origin);
+        final Set<String> expected = new HashSet<String>(origin) {{
+            removeAll(obsolete);
+        }};
+        final Set<String> result = Collecting.removeIf(new TreeSet<>(origin), obsolete::contains);
+        assertEquals(expected, result);
+
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.removeIf(null, obsolete::contains));
+        assertThrows(NullPointerException.class,
+                     () -> Collecting.removeIf(new TreeSet<>(), null));
+    }
+
+    @ParameterizedTest
+    @EnumSource
     final void retainAll_Collection(final RemoveCase rmCase) {
         final List<String> origin = SUPPLY.nextStringList(8);
         final List<?> relevant = rmCase.obsoleteList.apply(origin);
