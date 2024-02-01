@@ -4,9 +4,9 @@ import de.team33.patterns.building.elara.LateBuilder;
 
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -24,9 +24,10 @@ public final class Mapping {
      *
      * @throws UnsupportedOperationException if {@link Map#put(Object, Object)} is not supported by the
      *                                       <em>subject</em>.
-     * @throws NullPointerException          if <em>subject</em> is {@code null} or if the specified <em>key</em> or
-     *                                       <em>value</em> is {@code null} and the <em>subject</em> does not permit
-     *                                       {@code null} <em>keys</em> or <em>values</em>
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or ...
+     * @throws NullPointerException          if the specified <em>key</em> or <em>value</em> is {@code null}
+     *                                       and the <em>subject</em> does not permit {@code null}
+     *                                       <em>keys</em> or <em>values</em>
      * @throws ClassCastException            if the class of the specified <em>key</em> or <em>value</em> prevents it
      *                                       from being put into the <em>subject</em>
      *                                       (may occur only if used raw or forced in a mismatched class context).
@@ -44,8 +45,8 @@ public final class Mapping {
      * but returns the <em>subject</em>.
      *
      * @throws UnsupportedOperationException if {@link Map#putAll(Map)} is not supported by the <em>subject</em>.
-     * @throws NullPointerException          if <em>subject</em> is {@code null}, if <em>origin</em> is {@code null}
-     *                                       or if any of the specified <em>keys</em> or <em>values</em> are
+     * @throws NullPointerException          if <em>subject</em> or <em>origin</em> is {@code null} or ...
+     * @throws NullPointerException          if any of the specified <em>keys</em> or <em>values</em> are
      *                                       {@code null} and the {@code subject} does not permit {@code null}
      *                                       <em>keys</em> or <em>values</em>.
      * @throws ClassCastException            if the class of any specified <em>key</em> or <em>value</em> prevents it
@@ -75,13 +76,14 @@ public final class Mapping {
     }
 
     /**
-     * Just like {@link Map#remove(Object) subject.remove(key)} for a given <em>subject</em>,
-     * but avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Map#remove(Object)} when the <em>subject</em> does not support the requested <em>key</em>
-     * and returns the <em>subject</em>.
+     * Just like {@link Map#remove(Object) subject.remove(key)} for a given <em>subject</em>
+     * but returns the <em>subject</em>.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Map#remove(Object)} when the <em>subject</em> does not support the requested <em>key</em>.
      *
-     * @throws NullPointerException          if <em>subject</em> is {@code null}.
      * @throws UnsupportedOperationException if {@link Map#remove(Object)} is not supported by the <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null}.
      */
     public static <M extends Map<?, ?>> M remove(final M subject, final Object key) {
         try {
@@ -101,7 +103,7 @@ public final class Mapping {
      * Just like {@link Map#containsKey(Object)} for a given <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Map#containsKey(Object)} when the <em>subject</em> does not support the requested {@code key}.
+     * {@link Map#containsKey(Object)} when the <em>subject</em> does not support the requested <em>key</em>.
      *
      * @throws NullPointerException if <em>subject</em> is {@code null}.
      */
@@ -123,7 +125,7 @@ public final class Mapping {
      * Just like {@link Map#containsValue(Object)} for a given <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Map#containsValue(Object)} when the <em>subject</em> does not support the requested {@code value}.
+     * {@link Map#containsValue(Object)} when the <em>subject</em> does not support the requested <em>value</em>.
      *
      * @throws NullPointerException if <em>subject</em> is {@code null}.
      */
@@ -145,9 +147,9 @@ public final class Mapping {
      * Just like {@link Map#get(Object)} for a given <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
-     * {@link Map#get(Object)} when the <em>subject</em> does not support the requested {@code key}.
+     * {@link Map#get(Object)} when the <em>subject</em> does not support the requested <em>key</em>.
      *
-     * @return The value or {@code null} if the <em>subject</em> doesn't contain (an entry for) the {@code key}.
+     * @return The value or {@code null} if the <em>subject</em> doesn't contain (an entry for) the <em>key</em>.
      * @throws NullPointerException if <em>subject</em> is {@code null}.
      */
     public static <V> V get(final Map<?, V> subject, final Object key) {
@@ -204,14 +206,14 @@ public final class Mapping {
     }
 
     /**
-     * Returns a new {@link Charger} for target instances as supplied by the given {@link Supplier}.
+     * Returns a new {@link Charger} for a given target instance.
      *
      * @param <K> The key type of the target instance.
      * @param <V> The value type of the target instance.
      * @param <M> The final type of the target instance, at least {@link Map}.
      */
-    public static <K, V, M extends Map<K, V>> Charger<K, V, M> charger(final M newTarget) {
-        return new Charger<>(newTarget, Charger.class);
+    public static <K, V, M extends Map<K, V>> Charger<K, V, M> charger(final M target) {
+        return new Charger<>(target, Charger.class);
     }
 
     /**
@@ -227,18 +229,70 @@ public final class Mapping {
     public interface Setup<K, V, M extends Map<K, V>, S extends Setup<K, V, M, S>>
             extends de.team33.patterns.building.elara.Setup<M, S> {
 
+        /**
+         * Puts a pair of <em>key / value</em> to the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Map#put(Object, Object)} is not supported by the instance
+         *                                       to be set up.
+         * @throws NullPointerException          if the specified <em>key</em> or <em>value</em> is {@code null}
+         *                                       and the instance to be set up does not permit {@code null}
+         *                                       <em>keys</em> or <em>values</em>
+         * @throws ClassCastException            if the class of the specified <em>key</em> or <em>value</em> prevents
+         *                                       it from being put into the instance to be set up
+         *                                       (may occur only if used raw or forced in a mismatched class context).
+         * @throws IllegalArgumentException      if some property of the specified <em>key</em> or <em>value</em>
+         *                                       prevents it from being stored in the instance to be set up.
+         * @see Map#put(Object, Object)
+         * @see Mapping#put(Map, Object, Object)
+         */
         default S put(final K key, final V value) {
             return setup(target -> Mapping.put(target, key, value));
         }
 
+        /**
+         * Removes a pair of a given <em>key</em> and its associated <em>value</em> from the instance to be set up.
+         * <p>
+         * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+         * {@link Map#remove(Object)} when the instance to be set up does not support the requested <em>key</em>.
+         *
+         * @throws UnsupportedOperationException if {@link Map#remove(Object)} is not supported by the
+         *                                       <em>subject</em>.
+         * @see Map#remove(Object)
+         * @see Mapping#remove(Map, Object)
+         */
         default S remove(final Object key) {
             return setup(target -> Mapping.remove(target, key));
         }
 
+        /**
+         * Puts multiple pairs of <em>key / value</em> to the instance to be set up.
+         * <p>
+         * If <em>origin</em> is {@code null} it will be treated as an empty {@link Map}.
+         *
+         * @throws UnsupportedOperationException if {@link Map#putAll(Map)} is not supported
+         *                                       by the instance to be set up.
+         * @throws NullPointerException          if any of the specified <em>keys</em> or <em>values</em> are
+         *                                       {@code null} and the instance to be set up does not permit
+         *                                       {@code null} <em>keys</em> or <em>values</em>.
+         * @throws ClassCastException            if the class of any specified <em>key</em> or <em>value</em> prevents it
+         *                                       from being put into the <em>subject</em>
+         *                                       (may occur only if used raw or forced in a mismatched class context).
+         * @throws IllegalArgumentException      if some property of any <em>key</em> or <em>value</em> in the specified
+         *                                       <em>origin</em> prevents it from being stored in the <em>subject</em>.
+         * @see Map#putAll(Map)
+         * @see Mapping#putAll(Map, Map)
+         */
         default S putAll(final Map<? extends K, ? extends V> origin) {
-            return setup(target -> Mapping.putAll(target, origin));
+            return setup(target -> Mapping.putAll(target, (null == origin) ? Collections.emptyMap() : origin));
         }
 
+        /**
+         * Removes all pairs of <em>key / value</em> from the instance to be set up.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the <em>subject</em>.
+         * @see Map#clear()
+         * @see Mapping#clear(Map)
+         */
         default S clear() {
             return setup(Mapping::clear);
         }
