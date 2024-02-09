@@ -34,9 +34,13 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.18.0
 
 * Added module collection-ceres
+* Removed some deprecated methods from non-deprecated classes
+  * de.team33.patterns.building.elara.Charger.release()
+  * de.team33.patterns.exceptional.dione.Revision.finish()
+  * de.team33.patterns.exceptional.dione.Revision.finish(Function)
 
 ### 1.17.0
 

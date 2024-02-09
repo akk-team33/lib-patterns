@@ -84,12 +84,6 @@ public class ChargerTest implements Charger {
         assertEquals(new Generic<String>(), result);
     }
 
-    @Deprecated
-    @Test
-    final void chargerLog() {
-        assertThrows(UnsupportedOperationException.class, () -> chargerLog(null, null));
-    }
-
     public final boolean nextBoolean() {
         return sample.isBooleanValue();
     }
