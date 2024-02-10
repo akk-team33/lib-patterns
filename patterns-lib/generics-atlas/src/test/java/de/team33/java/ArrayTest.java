@@ -1,4 +1,4 @@
-package de.team33.test.java;
+package de.team33.java;
 
 import org.junit.jupiter.api.Test;
 

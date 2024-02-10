@@ -1,4 +1,4 @@
-package de.team33.test.patterns.generics.atlas;
+package de.team33.patterns.generics.atlas.publics;
 
 import de.team33.patterns.generics.atlas.Type;
 import org.junit.jupiter.api.Test;
