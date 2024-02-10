@@ -1,8 +1,8 @@
 package de.team33.patterns.reflect.luna;
 
-import de.team33.patterns.exceptional.e1.Converter;
-import de.team33.patterns.exceptional.e1.XConsumer;
-import de.team33.patterns.exceptional.e1.XFunction;
+import de.team33.patterns.exceptional.dione.Converter;
+import de.team33.patterns.exceptional.dione.XConsumer;
+import de.team33.patterns.exceptional.dione.XFunction;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;

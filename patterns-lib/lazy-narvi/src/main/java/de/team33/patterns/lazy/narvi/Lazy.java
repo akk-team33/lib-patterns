@@ -1,7 +1,7 @@
 package de.team33.patterns.lazy.narvi;
 
-import de.team33.patterns.exceptional.e1.Converter;
-import de.team33.patterns.exceptional.e1.XSupplier;
+import de.team33.patterns.exceptional.dione.Converter;
+import de.team33.patterns.exceptional.dione.XSupplier;
 
 import java.util.function.Supplier;
 

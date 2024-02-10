@@ -50,12 +50,4 @@ public interface Charger {
     default <T> T charge(final T target, final String... ignore) {
         return new Charging<>(this, target, Arrays.asList(ignore)).result();
     }
-
-    /**
-     * @deprecated This method is not used anymore and maybe removed in a future version.
-     */
-    @Deprecated
-    default void chargerLog(final Supplier<String> message, final Exception cause) {
-        throw new UnsupportedOperationException("this method is deprecated and should not be called");
-    }
 }

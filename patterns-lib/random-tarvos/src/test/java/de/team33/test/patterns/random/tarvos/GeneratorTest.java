@@ -29,6 +29,15 @@ class GeneratorTest {
     private final Producer random = new Producer();
     private final Generator fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
 
+    @Test
+    final void simple() {
+        final Generator simple = Generator.simple();
+        assertInstanceOf(Generator.class, simple);
+        assertInstanceOf(Boolean.class, simple.nextBoolean());
+        assertInstanceOf(Byte.class, simple.nextByte());
+        // etc. ...
+    }
+
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})
     final void nextBits(final int numBits) {

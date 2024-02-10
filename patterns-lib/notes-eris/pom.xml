@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.18.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>notes-eris</artifactId>
@@ -17,6 +17,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
             <scope>test</scope>
@@ -24,11 +29,6 @@
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>random-tarvos</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
