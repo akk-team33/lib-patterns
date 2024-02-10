@@ -50,30 +50,10 @@ public abstract class Type<T> {
     private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
 
     private final Setup setup;
-    private final Lazy<List<Object>> listView = Lazy.init(this::newListView);
     private final Lazy<String> stringView = Lazy.init(this::newStringView);
-    private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
     private final Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
-
-    private List<Object> newListView() {
-        return Arrays.asList(asClass(), getActualParameters());
-    }
-
-    private String newStringView() {
-        return setup.toString();
-    }
-
-    private Integer newHashCode() {
-        return listView.get().hashCode();
-    }
-
-    private List<Type<?>> newActualParameters() {
-        return Collections.unmodifiableList(
-                setup.getActualParameters().stream()
-                     .map(Type::of)
-                     .collect(Collectors.toList())
-        );
-    }
+    private final Lazy<List<Object>> listView = Lazy.init(this::newListView);
+    private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
 
     /**
      * Initializes a {@link Type} based on its well-defined derivative.
@@ -101,6 +81,26 @@ public abstract class Type<T> {
     private static Type<?> of(final Setup setup) {
         return new Type(setup) {
         };
+    }
+
+    private List<Object> newListView() {
+        return Arrays.asList(asClass(), getActualParameters());
+    }
+
+    private String newStringView() {
+        return setup.toString();
+    }
+
+    private Integer newHashCode() {
+        return listView.get().hashCode();
+    }
+
+    private List<Type<?>> newActualParameters() {
+        return Collections.unmodifiableList(
+                setup.getActualParameters().stream()
+                     .map(Type::of)
+                     .collect(Collectors.toList())
+        );
     }
 
     /**
