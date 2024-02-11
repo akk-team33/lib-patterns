@@ -12,32 +12,31 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * {@code Type<T>} represents a specific <em>type</em>, just as {@link Class}{@code <T>} represents a specific
+ * <em>class</em>.
+ * For example, an instance of {@code Class<String>} uniquely represents the <em>class</em> {@link String}
+ * and an instance of {@code Type<String>} uniquely represents the <em>type</em> {@link String}.
  * <p>
- * Represents a definite type description that can be based on a generic as well as a non-generic class. Examples:
- * <ul>
- * <li>an instance of <strong>{@code Type<Map<String, List<String>>>}</strong> represents the type
- * <strong>{@code Map<String, List<String>>}</strong>.</li>
- * <li>an instance of <strong>{@code Type<String>}</strong> represents the type <strong>{@code String}</strong>.</li>
- * </ul><p>
+ * However, while there cannot be an instance of e.g. {@code Class<List<String>>}, an instance of
+ * {@code Type<List<String>>} is absolutely possible. It then represents the <em>type</em> {@code List<String>}.
+ * <p>
  * To get an instance of Type, you need to create a definite derivative of Type.
- * The easiest way to achieve this is to use an anonymous derivation with simultaneous instantiation. Examples:
+ * The easiest way to achieve this is to directly instantiate an anonymous derivation. Examples:
  * <pre>
- * final Type&lt;Map&lt;String, List&lt;String&gt;&gt;&gt; mapStringToListOfStringType
- *         = new Type&lt;Map&lt;String, List&lt;String&gt;&gt;&gt;() { };
+ * final Type&lt;List&lt;String&gt;&gt; listOfStringType =
+ *         new Type&lt;List&lt;String&gt;&gt;() { };
  * </pre><pre>
- * final Type&lt;String&gt; stringType
- *         = new Type&lt;String&gt;() { };
+ * final Type&lt;String&gt; stringType =
+ *         new Type&lt;String&gt;() { };
  * </pre><p>
  * If, as in the last case, a simple class already fully defines the type concerned, there is a convenience method to
  * get a corresponding Type instance. Example:
  * <pre>
- * final Type&lt;String&gt; stringType
- *         = Type.of(String.class);
+ * final Type&lt;String&gt; stringType = Type.of(String.class);
  * </pre>
  *
  * @see #Type()
@@ -56,7 +55,9 @@ public abstract class Type<T> {
     private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
 
     /**
-     * Initializes a {@link Type} based on its well-defined derivative.
+     * Initializes a {@link Type} based on its definite derivative.
+     *
+     * @see Type
      */
     protected Type() {
         final ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
@@ -72,6 +73,8 @@ public abstract class Type<T> {
 
     /**
      * Returns a {@link Type} based on a simple {@link Class}.
+     *
+     * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
         return new Type<T>(ClassCase.toStage(simpleClass)) {

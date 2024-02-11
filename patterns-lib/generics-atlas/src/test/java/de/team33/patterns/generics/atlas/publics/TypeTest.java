@@ -1,6 +1,8 @@
 package de.team33.patterns.generics.atlas.publics;
 
 import de.team33.patterns.generics.atlas.Type;
+import de.team33.patterns.generics.atlas.testing.ListType;
+import de.team33.patterns.generics.atlas.testing.MapType;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -18,7 +20,20 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class TypeTest {
 
     private static final Type<String> STRING_TYPE = Type.of(String.class);
+    private static final Type<List<String>> LIST_TYPE = new Type<List<String>>() {};
     private static final Type<Map<String, List<String>>> MAP_TYPE = new Type<Map<String, List<String>>>() {};
+
+    @Test
+    final void singleDerivation() {
+        final Type<List<String>> listType = new ListType();
+        assertEquals(LIST_TYPE, listType);
+    }
+
+    @Test
+    final void multipleDerivation() {
+        final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>() {};
+        assertEquals(MAP_TYPE, mapType);
+    }
 
     @Test
     final void asClass() {
