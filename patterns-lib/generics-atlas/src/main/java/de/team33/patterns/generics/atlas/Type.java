@@ -64,7 +64,11 @@ public abstract class Type<T> {
     private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
 
     /**
-     * Initializes a {@link Type} based on its definite derivative.
+     * Initializes a {@link Type} based on its definite derivative. Example:
+     * <pre>
+     * final Type&lt;List&lt;String&gt;&gt; listOfStringType =
+     *         new Type&lt;List&lt;String&gt;&gt;() { };
+     * </pre>
      *
      * @see Type
      */
@@ -101,7 +105,10 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns a {@link Type} based on a simple {@link Class}.
+     * Returns a {@link Type} based on a simple {@link Class}. Example:
+     * <pre>
+     * final Type&lt;String&gt; stringType = Type.of(String.class);
+     * </pre>
      *
      * @see Type
      */
@@ -163,7 +170,7 @@ public abstract class Type<T> {
     }
 
     /**
-     * Converts a (possibly generic) {@link java.lang.reflect.Type} that exists in the
+     * Converts a (possibly generic) {@link java.lang.reflect.Type} that exists in the context of the
      * {@linkplain #asClass() underlying class} of this Type into a definite Type (like this).
      *
      * @see Class#getGenericSuperclass()
@@ -175,7 +182,8 @@ public abstract class Type<T> {
      * @see Method#getGenericParameterTypes()
      */
     public final Type<?> getMemberType(final java.lang.reflect.Type type) {
-        return new Type(TypeCase.toStage(type, setup)) {
+        //noinspection rawtypes
+        return new Type(setup.getMemberSetup(type)) {
         };
     }
 
