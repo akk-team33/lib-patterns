@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 /**
  * {@code Type<T>} represents a specific <em>type</em>, just as {@link Class}{@code <T>} represents a specific
  * <em>class</em>.
+ * <p>
  * For example, an instance of {@code Class<String>} uniquely represents the <em>class</em> {@link String}
  * and an instance of {@code Type<String>} uniquely represents the <em>type</em> {@link String}.
  * <p>

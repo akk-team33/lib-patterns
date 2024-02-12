@@ -31,7 +31,14 @@ class TypeTest {
 
     @Test
     final void multipleDerivation() {
+        //noinspection EmptyClass
         final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>() {};
+        assertEquals(MAP_TYPE, mapType);
+    }
+
+    @Test
+    final void illegalDerivation() {
+        final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>();
         assertEquals(MAP_TYPE, mapType);
     }
 
