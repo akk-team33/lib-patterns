@@ -4,5 +4,5 @@ import de.team33.patterns.generics.atlas.Type;
 
 import java.util.List;
 
-public class ListType extends Type<List<String>> {
+public class ListType<E> extends Type<List<E>> {
 }

@@ -5,7 +5,7 @@ import de.team33.patterns.lazy.narvi.Lazy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +48,14 @@ public abstract class Type<T> {
 
     private static final Stream<? extends Type<?>> EMPTY = Stream.empty();
     private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
+    private static final String ILLEGAL_INSTANTIATION = //
+            "Do not directly instantiate %1$s%n" +
+            "  In fact, it just doesn't work.%n" +
+            "  Instead, try one of the following:%n" +
+            "  - Instantiate an anonymous derivative, something like ...%n" +
+            "    new %1$s(){};%n" +
+            "    (of course, using definite types instead of type parameters).%n" +
+            "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
     private final Setup setup;
     private final Lazy<String> stringView = Lazy.init(this::newStringView);
@@ -61,11 +69,31 @@ public abstract class Type<T> {
      * @see Type
      */
     protected Type() {
-        final ParameterizedType genericSuperclass = (ParameterizedType) getClass().getGenericSuperclass();
-        this.setup = TypeCase.toStage(
-                genericSuperclass.getActualTypeArguments()[0],
-                ClassCase.toStage(getClass())
-        );
+        final Class<?> thisClass = getClass();
+        ensureNonGeneric(thisClass);
+        this.setup = extract(ClassCase.toStage(thisClass));
+    }
+
+    private static Setup extract(final Setup thisSetup) {
+        final Class<?> thisClass = thisSetup.asClass();
+        if (Type.class.equals(thisClass))
+            return thisSetup.getActualParameters().get(0);
+
+        final Setup superSetup = thisSetup.getMemberSetup(thisClass.getGenericSuperclass());
+        return extract(superSetup);
+    }
+
+    private static void ensureNonGeneric(final Class<?> thisClass) {
+        final TypeVariable<? extends Class<?>>[] parameters = thisClass.getTypeParameters();
+        if (parameters.length > 0) {
+            final String signature = //
+                    Stream.of(parameters)
+                          .map(TypeVariable::getName)
+                          .collect(Collectors.joining(", ",
+                                                      thisClass.getSimpleName() + "<",
+                                                      ">"));
+            throw new IllegalStateException(String.format(ILLEGAL_INSTANTIATION, signature));
+        }
     }
 
     private Type(final Setup setup) {

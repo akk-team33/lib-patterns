@@ -2,6 +2,7 @@ package de.team33.patterns.generics.atlas.publics;
 
 import de.team33.patterns.generics.atlas.Type;
 import de.team33.patterns.generics.atlas.testing.ListType;
+import de.team33.patterns.generics.atlas.testing.StringListType;
 import de.team33.patterns.generics.atlas.testing.MapType;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,8 @@ import java.util.Optional;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class TypeTest {
 
@@ -24,21 +27,32 @@ class TypeTest {
     private static final Type<Map<String, List<String>>> MAP_TYPE = new Type<Map<String, List<String>>>() {};
 
     @Test
-    final void singleDerivation() {
-        final Type<List<String>> listType = new ListType();
-        assertEquals(LIST_TYPE, listType);
+    void genericDerivative() {
+        try {
+            final Type<Map<String, List<String>>> type = new MapType<>();
+            fail("expected to fail - but was " + type);
+        } catch (final IllegalStateException e) {
+            e.printStackTrace();
+            assertTrue(e.getMessage().contains(MapType.class.getSimpleName()));
+        }
+    }
+
+    @Test
+    void indirectAnonymousDerivative() {
+        final Type<List<String>> type = new ListType<String>(){};
+        assertEquals(LIST_TYPE, type);
+    }
+
+    @Test
+    void indirectDerivative() {
+        final Type<List<String>> type = new StringListType(){};
+        assertEquals(LIST_TYPE, type);
     }
 
     @Test
     final void multipleDerivation() {
         //noinspection EmptyClass
         final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>() {};
-        assertEquals(MAP_TYPE, mapType);
-    }
-
-    @Test
-    final void illegalDerivation() {
-        final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>();
         assertEquals(MAP_TYPE, mapType);
     }
 

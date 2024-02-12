@@ -1,5 +1,6 @@
 package de.team33.patterns.generics.atlas;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,10 @@ abstract class Setup {
                        .map(index -> getActualParameters().get(index))
                        .orElseThrow(() -> new IllegalArgumentException(
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
+    }
+
+    final Setup getMemberSetup(final Type type) {
+        return TypeCase.toStage(type, this);
     }
 
     @Override
