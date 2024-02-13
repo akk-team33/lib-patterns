@@ -5,8 +5,12 @@ import de.team33.patterns.generics.atlas.testing.ListType;
 import de.team33.patterns.generics.atlas.testing.StringListType;
 import de.team33.patterns.generics.atlas.testing.MapType;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -14,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.emptySet;
+import static java.util.Collections.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,7 +36,7 @@ class TypeTest {
             final Type<Map<String, List<String>>> type = new MapType<>();
             fail("expected to fail - but was " + type);
         } catch (final IllegalStateException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             assertTrue(e.getMessage().contains(MapType.class.getSimpleName()));
         }
     }
@@ -56,16 +60,22 @@ class TypeTest {
         assertEquals(MAP_TYPE, mapType);
     }
 
-    @Test
-    final void asClass() {
-        assertSame(String.class, STRING_TYPE.asClass());
-        assertSame(Map.class, MAP_TYPE.asClass());
+    @ParameterizedTest
+    @EnumSource
+    final void asClass(final ToStringCase testCase) {
+        assertSame(testCase.asClass, testCase.type.asClass());
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void getFormalParameters(final ToStringCase testCase) {
+        assertEquals(testCase.formalParameters, testCase.type.getFormalParameters());
     }
 
     @Test
-    final void getFormalParameters() {
-        assertEquals(Collections.emptyList(), STRING_TYPE.getFormalParameters());
-        assertEquals(Arrays.asList("K", "V"), MAP_TYPE.getFormalParameters());
+    final void getActualParameters() {
+        assertEquals(emptyList(), STRING_TYPE.getActualParameters());
+        assertEquals(Arrays.asList(STRING_TYPE, LIST_TYPE), MAP_TYPE.getActualParameters());
     }
 
     @Test
@@ -81,8 +91,74 @@ class TypeTest {
                 Type.of(Serializable.class),
                 new Type<Comparable<String>>() {},
                 Type.of(CharSequence.class)
-        )), new HashSet<>(STRING_TYPE.getSuperTypes()));
+                                                )), new HashSet<>(STRING_TYPE.getSuperTypes()));
         assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
+    }
+
+    @Test
+    final void getInterfaces() {
+        assertEquals(new HashSet<>(Arrays.asList(
+                Type.of(Serializable.class),
+                new Type<Comparable<String>>() {},
+                Type.of(CharSequence.class))),
+                     new HashSet<>(STRING_TYPE.getInterfaces()));
+        assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
+    }
+
+    static class SuperTypeOf<T> {
+
+        private final T field;
+
+        SuperTypeOf(T field) {
+            this.field = field;
+        }
+
+        final T getField() {
+            return field;
+        }
+    }
+
+    static class TypeOf<T> extends SuperTypeOf<T> {
+
+        TypeOf(T field) {
+            super(field);
+        }
+    }
+
+    @Test
+    final void typeOf() throws NoSuchFieldException {
+        final Field field = SuperTypeOf.class.getDeclaredField("field");
+
+        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {};
+        assertEquals(STRING_TYPE, typeOfStringType.typeOf(field));
+
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {};
+        assertEquals(LIST_TYPE, typeOfListType.typeOf(field));
+    }
+
+    @Test
+    final void returnTypeOf() throws NoSuchMethodException {
+        final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
+
+        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {};
+        assertEquals(STRING_TYPE, typeOfStringType.returnTypeOf(method));
+
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {};
+        assertEquals(LIST_TYPE, typeOfListType.returnTypeOf(method));
+    }
+
+    @Test
+    final void parameterTypesOf() throws NoSuchMethodException {
+        final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
+        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {};
+        assertEquals(emptyList(), typeOfStringType.parameterTypesOf(method));
+    }
+
+    @Test
+    final void exceptionTypesOf() throws NoSuchMethodException {
+        final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {};
+        assertEquals(emptyList(), typeOfListType.exceptionTypesOf(method));
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")
@@ -99,9 +175,43 @@ class TypeTest {
         assertEquals(MAP_TYPE.hashCode(), new Type<Map<String, List<String>>>() {}.hashCode());
     }
 
-    @Test
-    final void testToString() {
-        assertEquals("java.lang.String", STRING_TYPE.toString());
-        assertEquals("java.util.Map<java.lang.String, java.util.List<java.lang.String>>", MAP_TYPE.toString());
+    @ParameterizedTest
+    @EnumSource
+    final void testToString(final ToStringCase testCase) {
+        assertEquals(testCase.string, testCase.type.toString());
+    }
+
+    enum ToStringCase {
+        INTEGER(Type.of(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
+        STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
+        LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
+        MAP(MAP_TYPE,
+            "java.util.Map<java.lang.String, java.util.List<java.lang.String>>",
+            Arrays.asList("K", "V"),
+            Map.class),
+
+        INT_ARRAY(Type.of(int[].class), "int[]", singletonList("E"), int[].class),
+
+        INTEGER_ARRAY(Type.of(Integer[].class), "java.lang.Integer[]", singletonList("E"), Integer[].class),
+
+        LIST_ARRAY(new Type<List<String>[]>(){},
+                   "java.util.List<java.lang.String>[]",
+                   singletonList("E"),
+                   List[].class);
+
+        private final Type<?> type;
+        private final String string;
+        private final List<String> formalParameters;
+        private final Class<?> asClass;
+
+        ToStringCase(final Type<?> type,
+                     final String string,
+                     final List<String> formalParameters,
+                     final Class<?> asClass) {
+            this.type = type;
+            this.string = string;
+            this.formalParameters = formalParameters;
+            this.asClass = asClass;
+        }
     }
 }

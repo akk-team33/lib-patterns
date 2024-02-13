@@ -9,10 +9,7 @@ class TypeVariableAssembly extends SingleAssembly {
     private final Assembly definite;
 
     TypeVariableAssembly(final TypeVariable<?> type, final Assembly context) {
-        final String name = type.getName();
-        this.definite = Optional.ofNullable(context.getActualParameter(name))
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                        String.format("Variable <%s> not found in parameters %s", name, context)));
+        this.definite = context.getActualParameter(type.getName());
     }
 
     @Override
