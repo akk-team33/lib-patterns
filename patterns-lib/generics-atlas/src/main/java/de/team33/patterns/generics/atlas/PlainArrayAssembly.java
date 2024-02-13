@@ -3,11 +3,11 @@ package de.team33.patterns.generics.atlas;
 import java.util.Collections;
 import java.util.List;
 
-class PlainArraySetup extends ArraySetup {
+class PlainArrayAssembly extends ArrayAssembly {
 
     private final Class<?> underlyingClass;
 
-    PlainArraySetup(final Class<?> underlyingClass) {
+    PlainArrayAssembly(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
@@ -17,7 +17,7 @@ class PlainArraySetup extends ArraySetup {
     }
 
     @Override
-    final List<Setup> getActualParameters() {
-        return Collections.singletonList(ClassCase.toStage(underlyingClass.getComponentType()));
+    final List<Assembly> getActualParameters() {
+        return Collections.singletonList(ClassCase.toAssembly(underlyingClass.getComponentType()));
     }
 }

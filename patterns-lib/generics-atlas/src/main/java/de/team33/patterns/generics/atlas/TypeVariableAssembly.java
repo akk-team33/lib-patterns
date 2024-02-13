@@ -4,11 +4,11 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.Optional;
 
-class TypeVariableSetup extends SingleSetup {
+class TypeVariableAssembly extends SingleAssembly {
 
-    private final Setup definite;
+    private final Assembly definite;
 
-    TypeVariableSetup(final TypeVariable<?> type, final Setup context) {
+    TypeVariableAssembly(final TypeVariable<?> type, final Assembly context) {
         final String name = type.getName();
         this.definite = Optional.ofNullable(context.getActualParameter(name))
                                 .orElseThrow(() -> new IllegalArgumentException(
@@ -21,7 +21,7 @@ class TypeVariableSetup extends SingleSetup {
     }
 
     @Override
-    final List<Setup> getActualParameters() {
+    final List<Assembly> getActualParameters() {
         return definite.getActualParameters();
     }
 }

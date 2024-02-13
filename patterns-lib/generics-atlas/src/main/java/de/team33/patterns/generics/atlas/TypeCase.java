@@ -10,23 +10,23 @@ import java.util.stream.Stream;
 
 enum TypeCase {
 
-    CLASS(Class.class, (type, context) -> ClassCase.toStage(type)),
+    CLASS(Class.class, (type, context) -> ClassCase.toAssembly(type)),
 
-    GENERIC_ARRAY(GenericArrayType.class, GenericArraySetup::new),
+    GENERIC_ARRAY(GenericArrayType.class, GenericArrayAssembly::new),
 
-    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSetup::new),
+    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedAssembly::new),
 
-    TYPE_VARIABLE(TypeVariable.class, TypeVariableSetup::new);
+    TYPE_VARIABLE(TypeVariable.class, TypeVariableAssembly::new);
 
     private final Predicate<Type> matching;
-    private final BiFunction<Type, Setup, Setup> mapping;
+    private final BiFunction<Type, Assembly, Assembly> mapping;
 
-    <T extends Type> TypeCase(final Class<T> typeClass, final BiFunction<T, Setup, Setup> mapping) {
+    <T extends Type> TypeCase(final Class<T> typeClass, final BiFunction<T, Assembly, Assembly> mapping) {
         this.matching = typeClass::isInstance;
         this.mapping = (t, u) -> mapping.apply(typeClass.cast(t), u);
     }
 
-    static Setup toStage(final Type type, final Setup context) {
+    static Assembly toAssembly(final Type type, final Assembly context) {
         return Stream.of(values())
                      .filter(typeType -> typeType.matching.test(type)).findAny()
                      .map(typeType -> typeType.mapping.apply(type, context))

@@ -4,16 +4,16 @@ import java.util.function.Function;
 
 enum ClassCase {
 
-    CLASS(ClassSetup::new),
-    ARRAY(PlainArraySetup::new);
+    CLASS(ClassAssembly::new),
+    ARRAY(PlainArrayAssembly::new);
 
-    private final Function<Class<?>, Setup> mapping;
+    private final Function<Class<?>, Assembly> mapping;
 
-    ClassCase(final Function<Class<?>, Setup> mapping) {
+    ClassCase(final Function<Class<?>, Assembly> mapping) {
         this.mapping = mapping;
     }
 
-    static Setup toStage(final Class<?> underlyingClass) {
+    static Assembly toAssembly(final Class<?> underlyingClass) {
         return (underlyingClass.isArray() ? ARRAY : CLASS).mapping.apply(underlyingClass);
     }
 }

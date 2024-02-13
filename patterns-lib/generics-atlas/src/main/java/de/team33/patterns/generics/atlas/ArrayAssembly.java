@@ -3,7 +3,7 @@ package de.team33.patterns.generics.atlas;
 import java.util.Collections;
 import java.util.List;
 
-abstract class ArraySetup extends Setup {
+abstract class ArrayAssembly extends Assembly {
 
     private static final List<String> FORMAL_PARAMETERS = Collections.singletonList("E");
 
@@ -13,7 +13,7 @@ abstract class ArraySetup extends Setup {
     }
 
     @Override
-    public final String toString() {
+    final String toStringValue() {
         return getActualParameters().get(0) + "[]";
     }
 }

@@ -57,7 +57,7 @@ public abstract class Type<T> {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Setup setup;
+    private final Assembly assembly;
     private final Lazy<String> stringView = Lazy.init(this::newStringView);
     private final Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
     private final Lazy<List<Object>> listView = Lazy.init(this::newListView);
@@ -75,16 +75,16 @@ public abstract class Type<T> {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.setup = extract(ClassCase.toStage(thisClass));
+        this.assembly = extract(ClassCase.toAssembly(thisClass));
     }
 
-    private static Setup extract(final Setup thisSetup) {
-        final Class<?> thisClass = thisSetup.asClass();
+    private static Assembly extract(final Assembly thisAssembly) {
+        final Class<?> thisClass = thisAssembly.asClass();
         if (Type.class.equals(thisClass))
-            return thisSetup.getActualParameters().get(0);
+            return thisAssembly.getActualParameters().get(0);
 
-        final Setup superSetup = thisSetup.getMemberSetup(thisClass.getGenericSuperclass());
-        return extract(superSetup);
+        final Assembly superAssembly = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
+        return extract(superAssembly);
     }
 
     private static void ensureNonGeneric(final Class<?> thisClass) {
@@ -100,8 +100,8 @@ public abstract class Type<T> {
         }
     }
 
-    private Type(final Setup setup) {
-        this.setup = setup;
+    private Type(final Assembly assembly) {
+        this.assembly = assembly;
     }
 
     /**
@@ -113,12 +113,12 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toStage(simpleClass)) {
+        return new Type<T>(ClassCase.toAssembly(simpleClass)) {
         };
     }
 
-    private static Type<?> of(final Setup setup) {
-        return new Type(setup) {
+    private static Type<?> of(final Assembly assembly) {
+        return new Type(assembly) {
         };
     }
 
@@ -127,7 +127,7 @@ public abstract class Type<T> {
     }
 
     private String newStringView() {
-        return setup.toString();
+        return assembly.toString();
     }
 
     private Integer newHashCode() {
@@ -136,9 +136,9 @@ public abstract class Type<T> {
 
     private List<Type<?>> newActualParameters() {
         return Collections.unmodifiableList(
-                setup.getActualParameters().stream()
-                     .map(Type::of)
-                     .collect(Collectors.toList())
+                assembly.getActualParameters().stream()
+                        .map(Type::of)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -146,7 +146,7 @@ public abstract class Type<T> {
      * Returns the {@link Class} on which this Type is based.
      */
     public final Class<?> asClass() {
-        return setup.asClass();
+        return assembly.asClass();
     }
 
     /**
@@ -155,7 +155,7 @@ public abstract class Type<T> {
      * @see #getActualParameters()
      */
     public final List<String> getFormalParameters() {
-        return setup.getFormalParameters();
+        return assembly.getFormalParameters();
     }
 
     /**
@@ -183,7 +183,7 @@ public abstract class Type<T> {
      */
     public final Type<?> getMemberType(final java.lang.reflect.Type type) {
         //noinspection rawtypes
-        return new Type(setup.getMemberSetup(type)) {
+        return new Type(assembly.getMemberAssembly(type)) {
         };
     }
 

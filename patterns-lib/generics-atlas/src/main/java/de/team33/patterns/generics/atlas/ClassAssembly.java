@@ -4,11 +4,11 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-class ClassSetup extends SingleSetup {
+class ClassAssembly extends SingleAssembly {
 
     private final Class<?> underlyingClass;
 
-    ClassSetup(final Class<?> underlyingClass) {
+    ClassAssembly(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
@@ -18,7 +18,7 @@ class ClassSetup extends SingleSetup {
     }
 
     @Override
-    final List<Setup> getActualParameters() {
+    final List<Assembly> getActualParameters() {
         return emptyList();
     }
 }

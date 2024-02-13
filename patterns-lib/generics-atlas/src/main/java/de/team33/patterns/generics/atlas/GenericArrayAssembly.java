@@ -6,12 +6,12 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-class GenericArraySetup extends ArraySetup {
+class GenericArrayAssembly extends ArrayAssembly {
 
-    private final Setup componentType;
+    private final Assembly componentType;
 
-    GenericArraySetup(final GenericArrayType type, final Setup context) {
-        this.componentType = (TypeCase.toStage(type.getGenericComponentType(), context));
+    GenericArrayAssembly(final GenericArrayType type, final Assembly context) {
+        this.componentType = (TypeCase.toAssembly(type.getGenericComponentType(), context));
     }
 
     private static Class<?> arrayClass(final Class<?> componentClass) {
@@ -24,7 +24,7 @@ class GenericArraySetup extends ArraySetup {
     }
 
     @Override
-    final List<Setup> getActualParameters() {
+    final List<Assembly> getActualParameters() {
         return singletonList(componentType);
     }
 }
