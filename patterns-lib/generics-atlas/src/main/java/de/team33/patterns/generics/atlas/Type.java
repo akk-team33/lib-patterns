@@ -156,8 +156,8 @@ public abstract class Type<T> {
     }
 
     /**
-     * Converts a (possibly generic) {@link java.lang.reflect.Type} that exists in the context of the
-     * {@linkplain #asClass() underlying class} of this Type into a definite Type (like this).
+     * Converts a (possibly generic) {@link java.lang.reflect.Type} that somehow resides in the context of the
+     * {@linkplain #asClass() underlying class} of this Type into a definite {@link Type}.
      *
      * @see Class#getGenericSuperclass()
      * @see Class#getGenericInterfaces()

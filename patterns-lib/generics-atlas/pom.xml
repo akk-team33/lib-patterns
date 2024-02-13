@@ -12,7 +12,8 @@
     <packaging>jar</packaging>
 
     <name>Team33 Generic Type Library - Edition "atlas"</name>
-    <description>Provides types to handle (fully qualified) types based on generic classes.</description>
+    <description>Provides representation and identification of definite types
+        based on generic or non-generic classes.</description>
 
     <dependencies>
         <dependency>
