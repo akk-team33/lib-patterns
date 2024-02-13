@@ -58,10 +58,7 @@ public abstract class Type<T> {
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
     private final Assembly assembly;
-    private final Lazy<String> stringView = Lazy.init(this::newStringView);
-    private final Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
-    private final Lazy<List<Object>> listView = Lazy.init(this::newListView);
-    private final Lazy<Integer> hashCode = Lazy.init(this::newHashCode);
+    private final transient Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -122,21 +119,10 @@ public abstract class Type<T> {
         };
     }
 
-    private List<Object> newListView() {
-        return Arrays.asList(asClass(), getActualParameters());
-    }
-
-    private String newStringView() {
-        return assembly.toString();
-    }
-
-    private Integer newHashCode() {
-        return listView.get().hashCode();
-    }
-
     private List<Type<?>> newActualParameters() {
         return Collections.unmodifiableList(
-                assembly.getActualParameters().stream()
+                assembly.getActualParameters()
+                        .stream()
                         .map(Type::of)
                         .collect(Collectors.toList())
         );
@@ -310,20 +296,20 @@ public abstract class Type<T> {
      */
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Type) && isEqual((Type<?>) obj));
+        return (this == obj) || ((obj instanceof Type) && equals((Type<?>) obj));
     }
 
-    private boolean isEqual(final Type<?> other) {
-        return listView.get().equals(other.listView.get());
+    private boolean equals(final Type<?> other) {
+        return assembly.equals(other.assembly);
     }
 
     @Override
     public final int hashCode() {
-        return hashCode.get();
+        return assembly.hashCode();
     }
 
     @Override
     public final String toString() {
-        return stringView.get();
+        return assembly.toString();
     }
 }
