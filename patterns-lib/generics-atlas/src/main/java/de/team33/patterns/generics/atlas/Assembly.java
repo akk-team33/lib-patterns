@@ -29,9 +29,18 @@ abstract class Assembly {
         final List<String> formalParameters = getFormalParameters();
         return Optional.of(formalParameters.indexOf(name))
                        .filter(index -> 0 <= index)
-                       .map(index -> getActualParameters().get(index))
+                       .map(index -> getActualParameterByIndex(name, index))
                        .orElseThrow(() -> new IllegalArgumentException(
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
+    }
+
+    private Assembly getActualParameterByIndex(final String name, final int index) {
+        final List<Assembly> actualParameters = getActualParameters();
+        if (index < actualParameters.size())
+            return actualParameters.get(index);
+        else
+            throw new IllegalStateException(
+                    String.format("actual parameter for <%s> not found in %s", name, actualParameters));
     }
 
     final Assembly getMemberAssembly(final Type type) {
