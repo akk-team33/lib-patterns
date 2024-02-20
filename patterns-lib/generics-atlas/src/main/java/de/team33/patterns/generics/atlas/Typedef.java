@@ -41,7 +41,7 @@ public abstract class Typedef {
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
     }
 
-    public static Typedef of(final Class<?> tClass) {
+    public static Typedef by(final Class<?> tClass) {
         return ClassCase.toTypedef(tClass);
     }
 

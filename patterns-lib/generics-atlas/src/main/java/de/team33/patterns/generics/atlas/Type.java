@@ -1,16 +1,7 @@
 package de.team33.patterns.generics.atlas;
 
-import de.team33.patterns.lazy.narvi.Lazy;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,11 +33,8 @@ import java.util.stream.Stream;
  * @see #Type()
  * @see #of(Class)
  */
-@SuppressWarnings({"AbstractClassWithoutAbstractMethods", "unused"})
-public abstract class Type<T> {
+public abstract class Type<T> extends Typedef {
 
-    private static final Stream<? extends Type<?>> EMPTY = Stream.empty();
-    private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
     private static final String ILLEGAL_INSTANTIATION = //
             "Do not directly instantiate %1$s%n" +
             "  In fact, it just doesn't work.%n" +
@@ -56,8 +44,7 @@ public abstract class Type<T> {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Typedef typedef;
-    private final transient Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
+    private final Typedef backing;
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -71,16 +58,17 @@ public abstract class Type<T> {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.typedef = extract(ClassCase.toTypedef(thisClass));
+        this.backing = extract(ClassCase.toTypedef(thisClass));
     }
 
-    private static Typedef extract(final Typedef thisAssembly) {
-        final Class<?> thisClass = thisAssembly.asClass();
-        if (Type.class.equals(thisClass))
-            return thisAssembly.getActualParameters().get(0);
-
-        final Typedef superType = thisAssembly.getMemberType(thisClass.getGenericSuperclass());
-        return extract(superType);
+    @SuppressWarnings({"TailRecursion", "OptionalGetWithoutIsPresent"})
+    private static Typedef extract(final Typedef typedef) {
+        final Class<?> thisClass = typedef.asClass();
+        if (Type.class.equals(thisClass)) {
+            return typedef.getActualParameters().get(0);
+        } else {
+            return extract(typedef.getSuperType().get());
+        }
     }
 
     private static void ensureNonGeneric(final Class<?> thisClass) {
@@ -96,8 +84,8 @@ public abstract class Type<T> {
         }
     }
 
-    private Type(final Typedef typedef) {
-        this.typedef = typedef;
+    private Type(final Typedef backing) {
+        this.backing = backing;
     }
 
     /**
@@ -113,202 +101,23 @@ public abstract class Type<T> {
         };
     }
 
-    private static Type<?> of(final Typedef typedef) {
-        return new Type(typedef) {
-        };
-    }
-
-    private List<Type<?>> newActualParameters() {
-        return Collections.unmodifiableList(
-                typedef.getActualParameters()
-                       .stream()
-                       .map(Type::of)
-                       .collect(Collectors.toList())
-        );
-    }
-
-    /**
-     * Returns the {@link Class} on which this Type is based.
-     */
+    @Override
     public final Class<?> asClass() {
-        return typedef.asClass();
+        return backing.asClass();
     }
 
-    /**
-     * Returns the formal type parameter of the generic type underlying this Type.
-     *
-     * @see #getActualParameters()
-     */
+    @Override
     public final List<String> getFormalParameters() {
-        return typedef.getFormalParameters();
-    }
-
-    /**
-     * <p>Returns the actual type parameters defining this Type.
-     * <p>The result may be empty even if the formal parameter list is not. Otherwise the formal
-     * and actual parameter list are of the same size and order.
-     *
-     * @see #getFormalParameters()
-     */
-    public final List<Type<?>> getActualParameters() {
-        return actualParameters.get();
-    }
-
-    /**
-     * Converts a (possibly generic) {@link java.lang.reflect.Type} that somehow resides in the context of the
-     * {@linkplain #asClass() underlying class} of this Type into a definite {@link Type}.
-     *
-     * @see Class#getGenericSuperclass()
-     * @see Class#getGenericInterfaces()
-     * @see Class#getFields()
-     * @see Class#getMethods()
-     * @see Field#getGenericType()
-     * @see Method#getGenericReturnType()
-     * @see Method#getGenericParameterTypes()
-     */
-    public final Type<?> getMemberType(final java.lang.reflect.Type type) {
-        //noinspection rawtypes
-        return new Type(typedef.getMemberType(type)) {
-        };
-    }
-
-    /**
-     * Returns the type from which this type is derived (if so).
-     *
-     * @see Class#getSuperclass()
-     * @see Class#getGenericSuperclass()
-     */
-    public final Optional<Type<?>> getSuperType() {
-        return Optional.ofNullable(asClass().getGenericSuperclass())
-                       .map(this::getMemberType);
-    }
-
-    private Stream<Type<?>> streamSuperType() {
-        return getSuperType().map(Stream::<Type<?>>of)
-                             .orElseGet(Stream::empty);
-    }
-
-    /**
-     * Returns the interfaces from which this type are derived (if so).
-     *
-     * @see Class#getInterfaces()
-     * @see Class#getGenericInterfaces()
-     */
-    public final List<Type<?>> getInterfaces() {
-        return streamInterfaces().collect(Collectors.toList());
-    }
-
-    private Stream<Type<?>> streamInterfaces() {
-        return Stream.of(asClass().getGenericInterfaces())
-                     .map(this::getMemberType);
-    }
-
-    /**
-     * Returns all the types (class, interfaces) from which this type is derived (if so).
-     *
-     * @see #getSuperType()
-     * @see #getInterfaces()
-     */
-    public final List<Type<?>> getSuperTypes() {
-        return streamSuperTypes().collect(Collectors.toList());
-    }
-
-    private Stream<Type<?>> streamSuperTypes() {
-        return Stream.concat(streamSuperType(), streamInterfaces());
-    }
-
-    /**
-     * Returns the type of a given {@link Field} if it is defined in the type hierarchy of this type.
-     *
-     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy of this type.
-     */
-    public final Type<?> typeOf(final Field field) {
-        return Optional
-                .ofNullable(nullableTypeOf(field, Field::getGenericType))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, field, this)));
-    }
-
-    /**
-     * Returns the return type of a given {@link Method} if it is defined in the type hierarchy of this type.
-     *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
-     */
-    public final Type<?> returnTypeOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypeOf(method, Method::getGenericReturnType))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
-    }
-
-    private <M extends Member> Type<?> nullableTypeOf(final M member,
-                                                      final Function<M, java.lang.reflect.Type> toGenericType) {
-        if (asClass().equals(member.getDeclaringClass())) {
-            return getMemberType(toGenericType.apply(member));
-        } else {
-            return streamSuperTypes().map(st -> st.nullableTypeOf(member, toGenericType))
-                                     .filter(Objects::nonNull)
-                                     .findAny()
-                                     .orElse(null);
-        }
-    }
-
-    /**
-     * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of this type.
-     *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
-     */
-    public final List<Type<?>> parameterTypesOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypesOf(method, Method::getGenericParameterTypes))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
-    }
-
-    /**
-     * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of this type.
-     *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
-     */
-    public final List<Type<?>> exceptionTypesOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypesOf(method, Method::getGenericExceptionTypes))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
-    }
-
-    private List<Type<?>> nullableTypesOf(final Method member,
-                                          final Function<Method, java.lang.reflect.Type[]> toGenericTypes) {
-        if (asClass().equals(member.getDeclaringClass())) {
-            return Stream.of(toGenericTypes.apply(member))
-                         .map(this::getMemberType)
-                         .collect(Collectors.toList());
-        } else {
-            return streamSuperTypes().map(st -> st.nullableTypesOf(member, toGenericTypes))
-                                     .filter(Objects::nonNull)
-                                     .findAny()
-                                     .orElse(null);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Two instances of Type are equal if they are {@linkplain #asClass() based} on the same class
-     * and defined by the same {@linkplain #getActualParameters() actual parameters}.
-     */
-    @Override
-    public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Type) && equals((Type<?>) obj));
-    }
-
-    private boolean equals(final Type<?> other) {
-        return typedef.equals(other.typedef);
+        return backing.getFormalParameters();
     }
 
     @Override
-    public final int hashCode() {
-        return typedef.hashCode();
+    public final List<Typedef> getActualParameters() {
+        return backing.getActualParameters();
     }
 
     @Override
     public final String toString() {
-        return typedef.toString();
+        return backing.toString();
     }
 }
