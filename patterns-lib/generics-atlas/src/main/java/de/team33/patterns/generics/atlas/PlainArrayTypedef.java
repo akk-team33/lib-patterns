@@ -18,6 +18,6 @@ class PlainArrayTypedef extends ArrayTypedef {
 
     @Override
     final List<Typedef> getActualParameters() {
-        return Collections.singletonList(ClassCase.toAssembly(underlyingClass.getComponentType()));
+        return Collections.singletonList(ClassCase.toTypedef(underlyingClass.getComponentType()));
     }
 }

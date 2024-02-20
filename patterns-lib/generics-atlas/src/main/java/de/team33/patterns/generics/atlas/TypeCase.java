@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 enum TypeCase {
 
-    CLASS(Class.class, (type, context) -> ClassCase.toAssembly(type)),
+    CLASS(Class.class, (type, context) -> ClassCase.toTypedef(type)),
 
     GENERIC_ARRAY(GenericArrayType.class, GenericArrayTypedef::new),
 

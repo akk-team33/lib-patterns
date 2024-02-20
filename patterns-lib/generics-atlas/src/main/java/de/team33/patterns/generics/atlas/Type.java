@@ -71,7 +71,7 @@ public abstract class Type<T> {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.typedef = extract(ClassCase.toAssembly(thisClass));
+        this.typedef = extract(ClassCase.toTypedef(thisClass));
     }
 
     private static Typedef extract(final Typedef thisAssembly) {
@@ -79,7 +79,7 @@ public abstract class Type<T> {
         if (Type.class.equals(thisClass))
             return thisAssembly.getActualParameters().get(0);
 
-        final Typedef superType = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
+        final Typedef superType = thisAssembly.getMemberType(thisClass.getGenericSuperclass());
         return extract(superType);
     }
 
@@ -109,7 +109,7 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toAssembly(simpleClass)) {
+        return new Type<T>(ClassCase.toTypedef(simpleClass)) {
         };
     }
 
@@ -168,7 +168,7 @@ public abstract class Type<T> {
      */
     public final Type<?> getMemberType(final java.lang.reflect.Type type) {
         //noinspection rawtypes
-        return new Type(typedef.getMemberAssembly(type)) {
+        return new Type(typedef.getMemberType(type)) {
         };
     }
 
