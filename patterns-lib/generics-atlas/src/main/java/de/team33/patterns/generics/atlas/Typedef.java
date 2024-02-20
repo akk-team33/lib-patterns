@@ -7,13 +7,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-abstract class Assembly {
+abstract class Typedef {
 
     private final transient Lazy<List<Object>> listView;
     private final transient Lazy<Integer> hashValue;
     private final transient Lazy<String> stringValue;
 
-    Assembly() {
+    Typedef() {
         this.listView = Lazy.init(() -> Arrays.asList(asClass(), getActualParameters()));
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
         this.stringValue = Lazy.init(this::toStringValue);
@@ -23,9 +23,9 @@ abstract class Assembly {
 
     abstract List<String> getFormalParameters();
 
-    abstract List<Assembly> getActualParameters();
+    abstract List<Typedef> getActualParameters();
 
-    final Assembly getActualParameter(final String name) {
+    final Typedef getActualParameter(final String name) {
         final List<String> formalParameters = getFormalParameters();
         return Optional.of(formalParameters.indexOf(name))
                        .filter(index -> 0 <= index)
@@ -34,8 +34,8 @@ abstract class Assembly {
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
     }
 
-    private Assembly getActualParameterByIndex(final String name, final int index) {
-        final List<Assembly> actualParameters = getActualParameters();
+    private Typedef getActualParameterByIndex(final String name, final int index) {
+        final List<Typedef> actualParameters = getActualParameters();
         if (index < actualParameters.size())
             return actualParameters.get(index);
         else
@@ -43,17 +43,17 @@ abstract class Assembly {
                     String.format("actual parameter for <%s> not found in %s", name, actualParameters));
     }
 
-    final Assembly getMemberAssembly(final Type type) {
+    final Typedef getMemberAssembly(final Type type) {
         return TypeCase.toAssembly(type, this);
     }
 
-    private boolean equals(final Assembly other) {
+    private boolean equals(final Typedef other) {
         return listView.get().equals(other.listView.get());
     }
 
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Assembly) && equals((Assembly) obj));
+        return (this == obj) || ((obj instanceof Typedef) && equals((Typedef) obj));
     }
 
     @Override

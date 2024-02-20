@@ -2,13 +2,12 @@ package de.team33.patterns.generics.atlas;
 
 import java.lang.reflect.TypeVariable;
 import java.util.List;
-import java.util.Optional;
 
-class TypeVariableAssembly extends SingleAssembly {
+class TypeVariableTypedef extends SingleTypedef {
 
-    private final Assembly definite;
+    private final Typedef definite;
 
-    TypeVariableAssembly(final TypeVariable<?> type, final Assembly context) {
+    TypeVariableTypedef(final TypeVariable<?> type, final Typedef context) {
         this.definite = context.getActualParameter(type.getName());
     }
 
@@ -18,7 +17,7 @@ class TypeVariableAssembly extends SingleAssembly {
     }
 
     @Override
-    final List<Assembly> getActualParameters() {
+    final List<Typedef> getActualParameters() {
         return definite.getActualParameters();
     }
 }

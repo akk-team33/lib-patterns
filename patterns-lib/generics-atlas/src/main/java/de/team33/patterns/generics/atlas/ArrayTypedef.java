@@ -3,7 +3,7 @@ package de.team33.patterns.generics.atlas;
 import java.util.Collections;
 import java.util.List;
 
-abstract class ArrayAssembly extends Assembly {
+abstract class ArrayTypedef extends Typedef {
 
     private static final List<String> FORMAL_PARAMETERS = Collections.singletonList("E");
 

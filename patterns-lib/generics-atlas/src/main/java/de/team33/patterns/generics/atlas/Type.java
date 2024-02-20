@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -57,7 +56,7 @@ public abstract class Type<T> {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Assembly assembly;
+    private final Typedef typedef;
     private final transient Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
 
     /**
@@ -72,16 +71,16 @@ public abstract class Type<T> {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.assembly = extract(ClassCase.toAssembly(thisClass));
+        this.typedef = extract(ClassCase.toAssembly(thisClass));
     }
 
-    private static Assembly extract(final Assembly thisAssembly) {
+    private static Typedef extract(final Typedef thisAssembly) {
         final Class<?> thisClass = thisAssembly.asClass();
         if (Type.class.equals(thisClass))
             return thisAssembly.getActualParameters().get(0);
 
-        final Assembly superAssembly = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
-        return extract(superAssembly);
+        final Typedef superType = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
+        return extract(superType);
     }
 
     private static void ensureNonGeneric(final Class<?> thisClass) {
@@ -97,8 +96,8 @@ public abstract class Type<T> {
         }
     }
 
-    private Type(final Assembly assembly) {
-        this.assembly = assembly;
+    private Type(final Typedef typedef) {
+        this.typedef = typedef;
     }
 
     /**
@@ -114,17 +113,17 @@ public abstract class Type<T> {
         };
     }
 
-    private static Type<?> of(final Assembly assembly) {
-        return new Type(assembly) {
+    private static Type<?> of(final Typedef typedef) {
+        return new Type(typedef) {
         };
     }
 
     private List<Type<?>> newActualParameters() {
         return Collections.unmodifiableList(
-                assembly.getActualParameters()
-                        .stream()
-                        .map(Type::of)
-                        .collect(Collectors.toList())
+                typedef.getActualParameters()
+                       .stream()
+                       .map(Type::of)
+                       .collect(Collectors.toList())
         );
     }
 
@@ -132,7 +131,7 @@ public abstract class Type<T> {
      * Returns the {@link Class} on which this Type is based.
      */
     public final Class<?> asClass() {
-        return assembly.asClass();
+        return typedef.asClass();
     }
 
     /**
@@ -141,7 +140,7 @@ public abstract class Type<T> {
      * @see #getActualParameters()
      */
     public final List<String> getFormalParameters() {
-        return assembly.getFormalParameters();
+        return typedef.getFormalParameters();
     }
 
     /**
@@ -169,7 +168,7 @@ public abstract class Type<T> {
      */
     public final Type<?> getMemberType(final java.lang.reflect.Type type) {
         //noinspection rawtypes
-        return new Type(assembly.getMemberAssembly(type)) {
+        return new Type(typedef.getMemberAssembly(type)) {
         };
     }
 
@@ -300,16 +299,16 @@ public abstract class Type<T> {
     }
 
     private boolean equals(final Type<?> other) {
-        return assembly.equals(other.assembly);
+        return typedef.equals(other.typedef);
     }
 
     @Override
     public final int hashCode() {
-        return assembly.hashCode();
+        return typedef.hashCode();
     }
 
     @Override
     public final String toString() {
-        return assembly.toString();
+        return typedef.toString();
     }
 }

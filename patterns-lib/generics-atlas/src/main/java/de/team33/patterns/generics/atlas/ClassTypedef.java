@@ -4,11 +4,11 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-class ClassAssembly extends SingleAssembly {
+class ClassTypedef extends SingleTypedef {
 
     private final Class<?> underlyingClass;
 
-    ClassAssembly(final Class<?> underlyingClass) {
+    ClassTypedef(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
@@ -18,7 +18,7 @@ class ClassAssembly extends SingleAssembly {
     }
 
     @Override
-    final List<Assembly> getActualParameters() {
+    final List<Typedef> getActualParameters() {
         return emptyList();
     }
 }

@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-abstract class SingleAssembly extends Assembly {
+abstract class SingleTypedef extends Typedef {
 
     @Override
     final List<String> getFormalParameters() {
@@ -21,10 +21,10 @@ abstract class SingleAssembly extends Assembly {
 
     @Override
     final String toStringValue() {
-        final List<Assembly> actual = getActualParameters();
+        final List<Typedef> actual = getActualParameters();
         return asClass().getCanonicalName() + (
                 actual.isEmpty() ? "" : actual.stream()
-                                              .map(Assembly::toString)
+                                              .map(Typedef::toString)
                                               .collect(joining(", ", "<", ">")));
     }
 }

@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ParameterizedAssembly extends SingleAssembly {
+class ParameterizedTypedef extends SingleTypedef {
 
     private final ParameterizedType type;
-    private final Assembly context;
+    private final Typedef context;
 
-    ParameterizedAssembly(final ParameterizedType type, final Assembly context) {
+    ParameterizedTypedef(final ParameterizedType type, final Typedef context) {
         this.type = type;
         this.context = context;
     }
@@ -21,7 +21,7 @@ class ParameterizedAssembly extends SingleAssembly {
     }
 
     @Override
-    final List<Assembly> getActualParameters() {
+    final List<Typedef> getActualParameters() {
         return Stream.of(type.getActualTypeArguments())
                      .map(type1 -> TypeCase.toAssembly(type1, context))
                      .collect(Collectors.toList());
