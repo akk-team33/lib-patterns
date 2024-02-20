@@ -11,7 +11,7 @@ import static java.util.stream.Collectors.joining;
 abstract class SingleTypedef extends Typedef {
 
     @Override
-    final List<String> getFormalParameters() {
+    public final List<String> getFormalParameters() {
         return unmodifiableList(
                 Stream.of(asClass().getTypeParameters())
                       .map(TypeVariable::getName)

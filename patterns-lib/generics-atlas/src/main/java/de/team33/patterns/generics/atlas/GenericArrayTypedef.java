@@ -19,12 +19,12 @@ class GenericArrayTypedef extends ArrayTypedef {
     }
 
     @Override
-    final Class<?> asClass() {
+    public final Class<?> asClass() {
         return arrayClass(componentType.asClass());
     }
 
     @Override
-    final List<Typedef> getActualParameters() {
+    public final List<Typedef> getActualParameters() {
         return singletonList(componentType);
     }
 }

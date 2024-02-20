@@ -12,12 +12,12 @@ class PlainArrayTypedef extends ArrayTypedef {
     }
 
     @Override
-    final Class<?> asClass() {
+    public final Class<?> asClass() {
         return underlyingClass;
     }
 
     @Override
-    final List<Typedef> getActualParameters() {
+    public final List<Typedef> getActualParameters() {
         return Collections.singletonList(ClassCase.toTypedef(underlyingClass.getComponentType()));
     }
 }

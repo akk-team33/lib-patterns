@@ -16,8 +16,20 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
+/**
+ * {@code Typedef} represents a specific <em>type</em>, just as {@link Class}{@code <?>} represents a specific
+ * <em>class</em>.
+ * <p>
+ * For example, an instance of {@code Class<?>} may uniquely represent the <em>class</em> {@link String}
+ * and an instance of {@code Type} may uniquely represent the <em>type</em> {@link String}.
+ * <p>
+ * However, while there cannot be an instance of {@code Class<?>} e.g. representing {@code List<String>}, an instance
+ * of {@code Type} representing the <em>type</em> {@code List<String>} is absolutely possible.
+ * <p>
+ * To get an instance of Typedef, ... (to be continued)
+ */
 @SuppressWarnings("ClassWithTooManyMethods")
-abstract class Typedef {
+public abstract class Typedef {
 
     private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
 
@@ -35,11 +47,26 @@ abstract class Typedef {
         return ClassCase.toTypedef(tClass);
     }
 
-    abstract Class<?> asClass();
+    /**
+     * Returns the {@link Class} on which this <em>type</em>> is based.
+     */
+    public abstract Class<?> asClass();
 
-    abstract List<String> getFormalParameters();
+    /**
+     * Returns the formal type parameters of the generic type underlying this <em>type</em>.
+     *
+     * @see #getActualParameters()
+     */
+    public abstract List<String> getFormalParameters();
 
-    abstract List<Typedef> getActualParameters();
+    /**
+     * <p>Returns the actual type parameters defining this <em>type</em>.
+     * <p>The result may be empty even if the formal parameter list is not. Otherwise, the formal
+     * and actual parameter list are of the same size and order.
+     *
+     * @see #getFormalParameters()
+     */
+    public abstract List<Typedef> getActualParameters();
 
     final Typedef getActualParameter(final String name) {
         final List<String> formalParameters = getFormalParameters();

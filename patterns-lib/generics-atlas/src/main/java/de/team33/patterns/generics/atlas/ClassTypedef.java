@@ -13,12 +13,12 @@ class ClassTypedef extends SingleTypedef {
     }
 
     @Override
-    final Class<?> asClass() {
+    public final Class<?> asClass() {
         return underlyingClass;
     }
 
     @Override
-    final List<Typedef> getActualParameters() {
+    public final List<Typedef> getActualParameters() {
         return emptyList();
     }
 }

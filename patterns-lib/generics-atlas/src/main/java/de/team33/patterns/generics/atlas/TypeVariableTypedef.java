@@ -12,12 +12,12 @@ class TypeVariableTypedef extends SingleTypedef {
     }
 
     @Override
-    final Class<?> asClass() {
+    public final Class<?> asClass() {
         return definite.asClass();
     }
 
     @Override
-    final List<Typedef> getActualParameters() {
+    public final List<Typedef> getActualParameters() {
         return definite.getActualParameters();
     }
 }

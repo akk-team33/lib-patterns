@@ -1,5 +1,6 @@
-package de.team33.patterns.generics.atlas;
+package de.team33.patterns.generics.atlas.publics;
 
+import de.team33.patterns.generics.atlas.Typedef;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -33,10 +34,10 @@ class TypedefTest {
     private static final Field COMPARABLE_FIELD = getDeclaredField("COMPARABLE");
     private static final Field STRING_LIST_FIELD = getDeclaredField("STRING_LIST");
     private static final Field STRING_LIST_MAP_FIELD = getDeclaredField("STRING_LIST_MAP");
-    private static final Typedef COMPARABLE_TYPE = TYPE.getMemberType(COMPARABLE_FIELD.getGenericType());
+    private static final Typedef COMPARABLE_TYPE = TYPE.typeOf(COMPARABLE_FIELD);
     private static final Typedef STRING_TYPE = Typedef.of(String.class);
-    private static final Typedef LIST_TYPE = TYPE.getMemberType(STRING_LIST_FIELD.getGenericType());
-    private static final Typedef MAP_TYPE = TYPE.getMemberType(STRING_LIST_MAP_FIELD.getGenericType());
+    private static final Typedef LIST_TYPE = TYPE.typeOf(STRING_LIST_FIELD);
+    private static final Typedef MAP_TYPE = TYPE.typeOf(STRING_LIST_MAP_FIELD);
 
     private static Field getDeclaredField(final String name) {
         try {
