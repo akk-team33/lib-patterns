@@ -35,12 +35,10 @@ public abstract class Typedef {
 
     private final transient Lazy<List<Object>> listView;
     private final transient Lazy<Integer> hashValue;
-    private final transient Lazy<String> stringValue;
 
     Typedef() {
         this.listView = Lazy.init(() -> Arrays.asList(asClass(), getActualParameters()));
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
-        this.stringValue = Lazy.init(this::toStringValue);
     }
 
     public static Typedef of(final Class<?> tClass) {
@@ -214,10 +212,6 @@ public abstract class Typedef {
         return hashValue.get();
     }
 
-    abstract String toStringValue();
-
     @Override
-    public final String toString() {
-        return stringValue.get();
-    }
+    public abstract String toString();
 }

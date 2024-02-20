@@ -9,7 +9,6 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class ArrayTest {
@@ -38,12 +37,12 @@ class ArrayTest {
     final void generic_2() throws NoSuchFieldException {
         final Base<Integer, List<Integer>, Map<Integer, List<Integer>>> sample = new Base<>(
                 array(1, 2, 3),
-                array(asList(1,2,3), asList(4,5,6), asList(7,8,9)),
-                array(singletonMap(1, asList(2,3,4)),
+                array(asList(1, 2, 3), asList(4, 5, 6), asList(7, 8, 9)),
+                array(singletonMap(1, asList(2, 3, 4)),
                       singletonMap(5, asList(6, 7, 8)),
-                      singletonMap(9, asList(10,11,12))));
-        assertEquals(Object[].class, sample.getClass().getField("tArray").getType());
-        assertEquals(Integer[].class, sample.tArray.getClass());
+                      singletonMap(9, asList(10, 11, 12))));
+        assertSame(Object[].class, sample.getClass().getField("tArray").getType());
+        assertSame(Integer[].class, sample.tArray.getClass());
     }
 
     @SafeVarargs
@@ -51,23 +50,18 @@ class ArrayTest {
         return Arrays.copyOf(values, values.length);
     }
 
+    @SuppressWarnings("PublicField")
     public static class Base<T, U, V> {
 
         public final T[] tArray;
         public final U[] uArray;
         public final V[] vArray;
 
+        @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
         Base(final T[] tArray, final U[] uArray, final V[] vArray) {
             this.tArray = tArray;
             this.uArray = uArray;
             this.vArray = vArray;
-        }
-    }
-
-    public static class Qualified extends Base<String, List<String>, Map<String, List<String>>> {
-
-        Qualified(String[] tArray, List<String>[] uArray, Map<String, List<String>>[] vArray) {
-            super(tArray, uArray, vArray);
         }
     }
 }
