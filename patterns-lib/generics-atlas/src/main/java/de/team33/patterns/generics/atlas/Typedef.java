@@ -17,16 +17,24 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 /**
- * {@code Typedef} represents a specific <em>type</em>, just as {@link Class}{@code <?>} represents a specific
- * <em>class</em>.
+ * Represents a specific <em>type</em>, just as {@link Class}{@code <?>} represents a specific <em>class</em>.
  * <p>
- * For example, an instance of {@code Class<?>} may uniquely represent the <em>class</em> {@link String}
- * and an instance of {@code Type} may uniquely represent the <em>type</em> {@link String}.
+ * For example, an instance of {@link Class}{@code <?>} may uniquely represent the <em>class</em> {@link String}
+ * and an instance of {@link Typedef} may uniquely represent the <em>type</em> {@link String}.
  * <p>
- * However, while there cannot be an instance of {@code Class<?>} e.g. representing {@code List<String>}, an instance
- * of {@code Type} representing the <em>type</em> {@code List<String>} is absolutely possible.
+ * However, while there cannot be an instance of {@link Class}{@code <?>} e.g. representing a <em>class</em>
+ * {@code List<String>}, an instance of {@link Typedef} representing the <em>type</em>
+ * {@code List<String>} is absolutely possible.
  * <p>
- * To get an instance of Typedef, ... (to be continued)
+ * To get an instance of {@link Typedef} see {@link de.team33.patterns.generics.atlas.Type}.
+ * If a simple class already fully defines the <em>type</em> concerned, there is a convenience method to
+ * get a corresponding {@link Typedef} instance. Example:
+ * <pre>
+ * final Typedef stringType = Typedef.by(String.class);
+ * </pre>
+ *
+ * @see de.team33.patterns.generics.atlas.Type
+ * @see #by(Class)
  */
 @SuppressWarnings("ClassWithTooManyMethods")
 public abstract class Typedef {
@@ -41,26 +49,37 @@ public abstract class Typedef {
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
     }
 
+    /**
+     * Returns a {@link Typedef} based on a simple {@link Class}. Example:
+     * <pre>
+     * final Typedef stringType = Typedef.by(String.class);
+     * </pre>
+     *
+     * @see Typedef
+     */
     public static Typedef by(final Class<?> tClass) {
         return ClassCase.toTypedef(tClass);
     }
 
     /**
-     * Returns the {@link Class} on which this <em>type</em>> is based.
+     * Returns the {@link Class} on which this {@link Typedef} is based.
      */
     public abstract Class<?> asClass();
 
     /**
-     * Returns the formal type parameters of the generic type underlying this <em>type</em>.
+     * Returns the names of the formal <em>type parameters</em> of the generic {@linkplain #asClass() class underlying}
+     * <em>this</em> {@link Typedef}.
+     * <p>
+     * Returns an empty {@link List} if the {@linkplain #asClass() underlying class} is not generic.
      *
      * @see #getActualParameters()
      */
     public abstract List<String> getFormalParameters();
 
     /**
-     * <p>Returns the actual type parameters defining this <em>type</em>.
+     * <p>Returns the actual <em>type parameters</em> defining this {@link Typedef}.
      * <p>The result may be empty even if the formal parameter list is not. Otherwise, the formal
-     * and actual parameter list are of the same size and order.
+     * and actual parameter list are of the same size and corresponding order.
      *
      * @see #getFormalParameters()
      */
@@ -86,11 +105,11 @@ public abstract class Typedef {
     }
 
     final Typedef getMemberType(final Type type) {
-        return TypeCase.toAssembly(type, this);
+        return TypeCase.toTypedef(type, this);
     }
 
     /**
-     * Returns the type from which this type is derived (if so).
+     * Returns the <em>type</em> from which this <em>type</em> is derived (if so).
      *
      * @see Class#getSuperclass()
      * @see Class#getGenericSuperclass()
@@ -106,7 +125,7 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns the interfaces from which this type are derived (if so).
+     * Returns the interfaces from which this <em>type</em> are derived (if so).
      *
      * @see Class#getInterfaces()
      * @see Class#getGenericInterfaces()
@@ -121,7 +140,7 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns all the types (class, interfaces) from which this type is derived (if so).
+     * Returns all the types (class, interfaces) from which this <em>type</em> is derived (if so).
      *
      * @see #getSuperType()
      * @see #getInterfaces()
@@ -135,9 +154,11 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns the type of given {@link Field} if it is defined in the type hierarchy of this type.
+     * Returns the <em>type</em> of given {@link Field} if it is defined in the <em>type hierarchy</em> of this
+     * <em>type</em>.
      *
-     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Field} is not defined in the <em>type hierarchy</em> of
+     * this <em>type</em>.
      */
     public final Typedef typeOf(final Field field) {
         return Optional.ofNullable(nullableTypeOf(field, Field::getGenericType))
@@ -156,9 +177,11 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns the return type of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the <em>return type</em> of a given {@link Method} if it is defined in the <em>type hierarchy</em> of
+     * this <em>type</em>.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the <em>type hierarchy</em> of
+     * this <em>type</em>.
      */
     public final Typedef returnTypeOf(final Method method) {
         return Optional.ofNullable(nullableTypeOf(method, Method::getGenericReturnType))
@@ -166,9 +189,11 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the parameter types of a given {@link Method} if it is defined in the <em>type hierarchy</em> of this
+     * <em>type</em>.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the <em>type hierarchy</em> of
+     * this <em>type</em>.
      */
     public final List<Typedef> parameterTypesOf(final Method method) {
         return Optional.ofNullable(nullableTypesOf(method, Method::getGenericParameterTypes))
@@ -176,9 +201,11 @@ public abstract class Typedef {
     }
 
     /**
-     * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the exception types of a given {@link Method} if it is defined in the <em>type hierarchy</em> of this
+     * <em>type</em>.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the <em>type hierarchy</em> of
+     * this <em>type</em>.
      */
     public final List<Typedef> exceptionTypesOf(final Method method) {
         return Optional.ofNullable(nullableTypesOf(method, Method::getGenericExceptionTypes))
@@ -202,6 +229,11 @@ public abstract class Typedef {
         return listView.get().equals(other.listView.get());
     }
 
+    /**
+     * The <em>obj</em> is equal to <em>this</em> if and only if the <em>obj</em> is an instance of {@link Typedef}
+     * and their {@linkplain #asClass() underlying classes} are the same and their
+     * {@linkplain #getActualParameters() actual type parameters} are equal.
+     */
     @Override
     public final boolean equals(final Object obj) {
         return (this == obj) || ((obj instanceof Typedef) && equals((Typedef) obj));

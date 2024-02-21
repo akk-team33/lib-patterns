@@ -30,9 +30,12 @@ import java.util.stream.Stream;
  * final Type&lt;String&gt; stringType = Type.of(String.class);
  * </pre>
  *
+ * @param <T> The <em>type</em> to be represented.
+ *
  * @see #Type()
  * @see #of(Class)
  */
+@SuppressWarnings("unused")
 public abstract class Type<T> extends Typedef {
 
     private static final String ILLEGAL_INSTANTIATION = //

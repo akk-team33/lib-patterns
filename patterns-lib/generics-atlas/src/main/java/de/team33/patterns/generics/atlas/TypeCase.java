@@ -26,7 +26,7 @@ enum TypeCase {
         this.mapping = (t, u) -> mapping.apply(typeClass.cast(t), u);
     }
 
-    static Typedef toAssembly(final Type type, final Typedef context) {
+    static Typedef toTypedef(final Type type, final Typedef context) {
         return Stream.of(values())
                      .filter(typeType -> typeType.matching.test(type)).findAny()
                      .map(typeType -> typeType.mapping.apply(type, context))

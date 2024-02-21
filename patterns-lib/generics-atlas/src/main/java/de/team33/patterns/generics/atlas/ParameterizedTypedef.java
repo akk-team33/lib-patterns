@@ -23,7 +23,7 @@ class ParameterizedTypedef extends SingleTypedef {
     @Override
     public final List<Typedef> getActualParameters() {
         return Stream.of(type.getActualTypeArguments())
-                     .map(type1 -> TypeCase.toAssembly(type1, context))
+                     .map(type1 -> TypeCase.toTypedef(type1, context))
                      .collect(Collectors.toList());
     }
 }
