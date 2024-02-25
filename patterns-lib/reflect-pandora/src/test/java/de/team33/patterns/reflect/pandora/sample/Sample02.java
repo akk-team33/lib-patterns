@@ -1,4 +1,4 @@
-package de.team33.patterns.sample.reflect.pandora;
+package de.team33.patterns.reflect.pandora.sample;
 
 import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Mapper;

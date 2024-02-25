@@ -1,9 +1,9 @@
-package de.team33.patterns.test.reflect.pandora;
+package de.team33.patterns.reflect.pandora.publics;
 
 import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Setters;
-import de.team33.patterns.testing.reflect.pandora.BeanClass;
-import de.team33.patterns.testing.reflect.pandora.Supply;
+import de.team33.patterns.reflect.pandora.testing.BeanClass;
+import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;

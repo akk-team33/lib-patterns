@@ -1,7 +1,7 @@
-package de.team33.patterns.test.reflect.pandora;
+package de.team33.patterns.reflect.pandora.publics;
 
-import de.team33.patterns.testing.reflect.pandora.Supply;
-import de.team33.patterns.sample.reflect.pandora.Sample02;
+import de.team33.patterns.reflect.pandora.testing.Supply;
+import de.team33.patterns.reflect.pandora.sample.Sample02;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

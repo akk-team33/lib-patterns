@@ -1,9 +1,9 @@
-package de.team33.patterns.testing.reflect.pandora;
+package de.team33.patterns.reflect.pandora.testing;
 
 import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Generator;
-import de.team33.patterns.sample.reflect.pandora.Sample01;
-import de.team33.patterns.sample.reflect.pandora.Sample02;
+import de.team33.patterns.reflect.pandora.sample.Sample01;
+import de.team33.patterns.reflect.pandora.sample.Sample02;
 
 import java.math.BigInteger;
 import java.time.Instant;
