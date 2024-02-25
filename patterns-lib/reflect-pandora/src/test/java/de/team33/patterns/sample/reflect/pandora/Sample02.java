@@ -57,27 +57,27 @@ public abstract class Sample02 {
         }
 
         @Override
-        public int getIntValue() {
+        public final int getIntValue() {
             return backing.getIntValue();
         }
 
         @Override
-        public Long getLongValue() {
+        public final Long getLongValue() {
             return backing.getLongValue();
         }
 
         @Override
-        public String getStringValue() {
+        public final String getStringValue() {
             return backing.getStringValue();
         }
 
         @Override
-        public Instant getInstantValue() {
+        public final Instant getInstantValue() {
             return backing.getInstantValue();
         }
 
         @Override
-        public List<Object> getListValue() {
+        public final List<Object> getListValue() {
             return backing.getListValue();
         }
     }

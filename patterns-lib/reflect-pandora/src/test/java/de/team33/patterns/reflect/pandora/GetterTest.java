@@ -4,14 +4,13 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class GetterTest {
 
     @Test
-    void apply_IllegalAccessException() throws NoSuchMethodException {
+    final void apply_IllegalAccessException() throws NoSuchMethodException {
         final String name = "writeReplace";
         final Getter<Instant> getter = new Getter<>(Instant.class.getDeclaredMethod(name));
         final Instant target = Instant.now();
@@ -28,7 +27,7 @@ class GetterTest {
     }
 
     @Test
-    void apply_InvocationTargetException() throws NoSuchMethodException {
+    final void apply_InvocationTargetException() throws NoSuchMethodException {
         final String name = "getLeadsToInvocationTargetException";
         final Getter<GetterTest> getter = new Getter<>(getClass().getDeclaredMethod(name));
 

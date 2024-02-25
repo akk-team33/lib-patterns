@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 class Sample02Test extends Supply {
 
     @Test
-    void getIntValue() {
+    final void getIntValue() {
         final Sample02 origin = nextSample02();
         final Sample02 result = origin.toMutable();
         assertNotSame(origin, result);

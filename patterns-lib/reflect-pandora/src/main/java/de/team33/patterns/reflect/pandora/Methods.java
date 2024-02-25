@@ -1,14 +1,17 @@
 package de.team33.patterns.reflect.pandora;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Collectors.toSet;
 
 final class Methods {
@@ -17,6 +20,9 @@ final class Methods {
     private static final int NON_INHERENT_MODIFIERS = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
     private static final Set<Signature> NON_INHERENT_SIGNATURES = publicOf(Object.class).map(Signature::new)
                                                                                         .collect(toSet());
+
+    private Methods() {
+    }
 
     static Stream<Method> publicOf(final Class<?> subjectClass) {
         return Stream.of(subjectClass.getMethods());
@@ -36,6 +42,15 @@ final class Methods {
 
     static <T> Stream<Method> classicGettersOf(final Class<?> subjectClass) {
         return publicGettersOf(subjectClass).filter(Methods::isGetterPrefixed);
+    }
+
+    static <T> Stream<Method> recordGettersOf(final Class<?> subjectClass) {
+        final Map<String, Class<?>> properties = Stream.of(subjectClass.getDeclaredFields())
+                                                       .collect(toMap(Field::getName, Field::getType));
+        return publicGettersOf(subjectClass).filter(method -> {
+            final String name = method.getName();
+            return properties.containsKey(name) && method.getReturnType().isAssignableFrom(properties.get(name));
+        });
     }
 
     static <T> Stream<Method> classicSettersOf(final Class<?> subjectClass) {

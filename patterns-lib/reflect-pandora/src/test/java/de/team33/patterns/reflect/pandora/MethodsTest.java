@@ -2,6 +2,7 @@ package de.team33.patterns.reflect.pandora;
 
 import de.team33.patterns.testing.reflect.pandora.BeanClass;
 import de.team33.patterns.testing.reflect.pandora.BeanInterface;
+import de.team33.patterns.testing.reflect.pandora.RecordClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -78,6 +79,16 @@ class MethodsTest {
 
     @ParameterizedTest
     @EnumSource
+    final void recordGettersOf(final Case cs) {
+        final Set<String> result = Methods.recordGettersOf(cs.subjectClass)
+                                          .map(Methods::signatureOf)
+                                          .collect(toCollection(TreeSet::new));
+
+        assertEquals(cs.expectedRecordGettersOf, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
     final void classicSettersOf(final Case cs) {
         final Set<String> result = Methods.classicSettersOf(cs.subjectClass)
                                           .map(Methods::signatureOf)
@@ -86,6 +97,7 @@ class MethodsTest {
         assertEquals(cs.expectedClassicSettersOf, result);
     }
 
+    @SuppressWarnings("unused")
     enum Case {
 
         OBJECT(Object.class,
@@ -94,9 +106,11 @@ class MethodsTest {
                Collections.emptyList(),
                Collections.emptyList(),
                Collections.emptyList(),
+               Collections.emptyList(),
                asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                       "toString()", "wait()", "wait(long)", "wait(long, int)")),
         PRIVATE_CLASS(PrivateClass.class,
+                      Collections.emptyList(),
                       Collections.emptyList(),
                       Collections.emptyList(),
                       Collections.emptyList(),
@@ -110,12 +124,14 @@ class MethodsTest {
                       Collections.emptyList(),
                       Collections.emptyList(),
                       Collections.emptyList(),
+                      Collections.emptyList(),
                       asList("publicMethod()"),
                       asList("equals(java.lang.Object)", "getClass()", "hashCode()", "notify()", "notifyAll()",
                              "publicMethod()", "publicStaticMethod()", "toString()", "wait()", "wait(long)",
                              "wait(long, int)")),
         BEAN_INTERFACE(BeanInterface.class,
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                       Collections.emptyList(),
                        Collections.emptyList(),
                        asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                        Collections.emptyList(),
@@ -125,6 +141,7 @@ class MethodsTest {
                    asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                    asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)"),
+                   Collections.emptyList(),
                    asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
                    asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)"),
@@ -135,8 +152,23 @@ class MethodsTest {
                           "getLongValue()", "getStringValue()", "hashCode()", "notify()", "notifyAll()",
                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
                           "setStringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
+        RECORD_CLASS(RecordClass.class,
+                     Collections.emptyList(),
+                     Collections.emptyList(),
+                     asList("instantValue()", "intValue()", "longValue()", "stringValue()"),
+                     asList("instantValue()", "intValue()", "longValue()", "stringValue()"),
+                     asList("instantValue(java.time.Instant)", "intValue(int)", "longValue(java.lang.Long)",
+                          "stringValue(java.lang.String)"),
+                     asList("instantValue()", "intValue()", "longValue()", "stringValue()",
+                          "instantValue(java.time.Instant)", "intValue(int)", "longValue(java.lang.Long)",
+                          "stringValue(java.lang.String)"),
+                     asList("equals(java.lang.Object)", "getClass()", "instantValue()", "intValue()",
+                          "longValue()", "stringValue()", "hashCode()", "notify()", "notifyAll()",
+                          "instantValue(java.time.Instant)", "intValue(int)", "longValue(java.lang.Long)",
+                          "stringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
         INSTANT(Instant.class,
                 asList("getEpochSecond()", "getNano()"),
+                Collections.emptyList(),
                 Collections.emptyList(),
                 asList("getEpochSecond()", "getNano()", "toEpochMilli()"),
                 asList("minus(java.time.temporal.TemporalAmount)", "minusMillis(long)", "minusNanos(long)",
@@ -178,6 +210,7 @@ class MethodsTest {
         NUMBER(Number.class,
                Collections.emptyList(),
                Collections.emptyList(),
+               Collections.emptyList(),
                asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
                Collections.emptyList(),
                asList("byteValue()", "doubleValue()", "floatValue()", "intValue()", "longValue()", "shortValue()"),
@@ -188,6 +221,7 @@ class MethodsTest {
         final Class<?> subjectClass;
         final Set<String> expectedClassicGettersOf;
         final Set<String> expectedClassicSettersOf;
+        final Set<String> expectedRecordGettersOf;
         final Set<String> expectedGettersOf;
         final Set<String> expectedSettersOf;
         final Set<String> expectedInherentOf;
@@ -196,6 +230,7 @@ class MethodsTest {
         Case(final Class<?> subjectClass,
              final List<String> expectedClassicGettersOf,
              final List<String> expectedClassicSettersOf,
+             final List<String> expectedRecordGettersOf,
              final List<String> expectedGettersOf,
              final List<String> expectedSettersOf,
              final List<String> expectedInherentOf,
@@ -203,6 +238,7 @@ class MethodsTest {
             this.subjectClass = subjectClass;
             this.expectedClassicGettersOf = new TreeSet<>(expectedClassicGettersOf);
             this.expectedClassicSettersOf = new TreeSet<>(expectedClassicSettersOf);
+            this.expectedRecordGettersOf = new TreeSet<>(expectedRecordGettersOf);
             this.expectedGettersOf = new TreeSet<>(expectedGettersOf);
             this.expectedSettersOf = new TreeSet<>(expectedSettersOf);
             this.expectedInherentOf = new TreeSet<>(expectedInherentOf);

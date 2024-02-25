@@ -14,41 +14,41 @@ public class BeanClass implements BeanInterface {
     private Instant instantValue;
 
     @Override
-    public int getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 
-    public BeanClass setIntValue(int intValue) {
+    public final BeanClass setIntValue(final int intValue) {
         this.intValue = intValue;
         return this;
     }
 
     @Override
-    public Long getLongValue() {
+    public final Long getLongValue() {
         return longValue;
     }
 
-    public BeanClass setLongValue(Long longValue) {
+    public final BeanClass setLongValue(final Long longValue) {
         this.longValue = longValue;
         return this;
     }
 
     @Override
-    public String getStringValue() {
+    public final String getStringValue() {
         return stringValue;
     }
 
-    public BeanClass setStringValue(String stringValue) {
+    public final BeanClass setStringValue(final String stringValue) {
         this.stringValue = stringValue;
         return this;
     }
 
     @Override
-    public Instant getInstantValue() {
+    public final Instant getInstantValue() {
         return instantValue;
     }
 
-    public BeanClass setInstantValue(Instant instantValue) {
+    public final BeanClass setInstantValue(final Instant instantValue) {
         this.instantValue = instantValue;
         return this;
     }

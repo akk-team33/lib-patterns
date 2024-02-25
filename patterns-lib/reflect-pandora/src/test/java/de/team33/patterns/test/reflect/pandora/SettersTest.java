@@ -21,7 +21,7 @@ class SettersTest {
     private static final Supply SUPPLY = new Supply();
 
     @Test
-    void names() {
+    final void names() {
         final Setters<BeanClass> setters = Setters.of(BeanClass.class);
         final Set<String> expected = new TreeSet<String>() {{
             add("intValue");
