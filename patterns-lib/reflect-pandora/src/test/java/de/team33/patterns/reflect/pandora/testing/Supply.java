@@ -2,6 +2,7 @@ package de.team33.patterns.reflect.pandora.testing;
 
 import de.team33.patterns.random.tarvos.Charger;
 import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.random.tarvos.Initiator;
 import de.team33.patterns.reflect.pandora.sample.Sample01;
 import de.team33.patterns.reflect.pandora.sample.Sample02;
 
@@ -12,7 +13,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Supply implements Generator, Charger {
+public class Supply implements Generator, Charger, Initiator {
 
     private final Random random = new Random();
 
@@ -31,6 +32,10 @@ public class Supply implements Generator, Charger {
 
     public final BeanClass nextBean() {
         return charge(new BeanClass());
+    }
+
+    public final RecordClass nextRecord() {
+        return initiate(RecordClass.class);
     }
 
     public final Sample01 nextSample01() {

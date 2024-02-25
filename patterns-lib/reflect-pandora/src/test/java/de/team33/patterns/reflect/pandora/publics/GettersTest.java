@@ -1,8 +1,10 @@
 package de.team33.patterns.reflect.pandora.publics;
 
 import de.team33.patterns.reflect.pandora.Getters;
+import de.team33.patterns.reflect.pandora.Getters.Policy;
 import de.team33.patterns.reflect.pandora.testing.BeanClass;
 import de.team33.patterns.reflect.pandora.testing.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.RecordClass;
 import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
@@ -67,6 +69,27 @@ class GettersTest {
             put("longValue", origin.getLongValue());
             put("stringValue", origin.getStringValue());
             put("instantValue", origin.getInstantValue());
+        }};
+
+        final Map<String, Object> result = getters.names()
+                                                  .stream()
+                                                  .collect(HashMap::new,
+                                                           (map, name) -> map.put(name, getters.getter(name)
+                                                                                               .apply(origin)),
+                                                           Map::putAll);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void getter_RecordClass() {
+        final RecordClass origin = SUPPLY.nextRecord();
+        final Getters<RecordClass> getters = Getters.of(RecordClass.class, Policy.RECORD);
+        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+            put("intValue", origin.intValue());
+            put("longValue", origin.longValue());
+            put("stringValue", origin.stringValue());
+            put("instantValue", origin.instantValue());
         }};
 
         final Map<String, Object> result = getters.names()
