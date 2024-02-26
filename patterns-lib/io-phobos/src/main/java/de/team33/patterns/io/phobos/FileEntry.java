@@ -37,10 +37,32 @@ public abstract class FileEntry {
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path}.
+     * <p>
+     * If the specified {@link Path} points to a symbolic link,
+     * the {@link #type() result type} is {@link FileType#SYMBOLIC}.
      */
+    public static FileEntry primary(final Path path) {
+        return of(path, LinkOption.NOFOLLOW_LINKS);
+    }
+
+    /**
+     * Returns a new {@link FileEntry} based on a given {@link Path}.
+     * <p>
+     * If the specified {@link Path} points to a symbolic link,
+     * the {@link #type() result type} corresponds to the linked file.
+     */
+    public static FileEntry evaluated(final Path path) {
+        return of(path);
+    }
+
+    /**
+     * @deprecated use {@link #primary(Path)} or {@link #evaluated(Path)} instead.
+     */
+    @Deprecated
     public static FileEntry of(final Path path, final LinkOption... linkOptions) {
         try {
-            final BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
+            final BasicFileAttributes attributes = //
+                    Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
             return of(path, attributes);
         } catch (final IOException e) {
             return new Missing(path, e);

@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.17.1-SNAPSHOT</version>
+        <version>1.18.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-bom</artifactId>
@@ -98,6 +98,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-telesto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>collection-ceres</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

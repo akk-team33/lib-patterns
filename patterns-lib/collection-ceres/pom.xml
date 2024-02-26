@@ -8,16 +8,25 @@
         <version>1.18.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>execution-metis</artifactId>
+    <artifactId>collection-ceres</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Execution Library - Edition "metis"</name>
-    <description>Provides simple Executor and ExecutorService implementations.</description>
+    <name>Team33 Collection Library - Edition "ceres"</name>
+    <description>Provides tools and utilities for handling collections.</description>
 
     <dependencies>
         <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>building-elara</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>random-tarvos</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

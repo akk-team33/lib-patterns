@@ -65,34 +65,6 @@ class RevisionTest {
         }
     }
 
-    @Deprecated
-    @Test
-    final void reThrow() {
-        for (final Exception exception : EXCEPTION_LIST) {
-            try {
-                try {
-                    doThrow(() -> exception);
-                    fail(EXPECTED_AN_EXCEPTION);
-                } catch (final Exception caught) {
-                    Revision.of(caught)
-                            .reThrow(IOException.class)
-                            .reThrow(SQLException.class)
-                            .reThrow(IllegalArgumentException.class)
-                            .reThrow(IllegalStateException.class);
-                    fail(EXPECTED_AN_EXCEPTION);
-                }
-            } catch (final IOException caught) {
-                assertSame(EXCEPTION_LIST.get(0), caught);
-            } catch (final SQLException caught) {
-                assertSame(EXCEPTION_LIST.get(1), caught);
-            } catch (final IllegalArgumentException caught) {
-                assertSame(EXCEPTION_LIST.get(2), caught);
-            } catch (final IllegalStateException caught) {
-                assertSame(EXCEPTION_LIST.get(3), caught);
-            }
-        }
-    }
-
     @Test
     final void throwIf() {
         for (final Exception exception : EXCEPTION_LIST) {
@@ -133,24 +105,6 @@ class RevisionTest {
         final IOException original = new IOException("test");
         final IOException result = Revision.of(original)
                                            .close(Function.identity());
-        assertSame(original, result);
-    }
-
-    @Deprecated
-    @Test
-    final void finish() {
-        final IOException original = new IOException("test");
-        final IOException result = Revision.of(original)
-                                           .finish();
-        assertSame(original, result);
-    }
-
-    @Deprecated
-    @Test
-    final void finishMapped() {
-        final IOException original = new IOException("test");
-        final IOException result = Revision.of(original)
-                                           .finish(Function.identity());
         assertSame(original, result);
     }
 }

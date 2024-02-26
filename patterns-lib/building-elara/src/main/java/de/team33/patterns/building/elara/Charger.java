@@ -60,12 +60,4 @@ public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implemen
         isCharged = true;
         return target;
     }
-
-    /**
-     * @deprecated use {@link #charged()} instead.
-     */
-    @Deprecated()
-    public final T release() {
-        return charged();
-    }
 }

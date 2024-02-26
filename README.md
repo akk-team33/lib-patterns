@@ -29,9 +29,18 @@ http://www.team33.de/dev/patterns/1.x
   * execution-metis (Team33 Execution Library - Edition "metis")
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
   * decision-telesto (Team33 Decision Library - Edition "telesto")
+  * collection-ceres (Team33 Collection Library - Edition "ceres")
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### 1.18.0
+
+* Added module collection-ceres
+* Removed some deprecated methods from non-deprecated classes
+  * de.team33.patterns.building.elara.Charger.release()
+  * de.team33.patterns.exceptional.dione.Revision.finish()
+  * de.team33.patterns.exceptional.dione.Revision.finish(Function)
 
 ### 1.17.0
 

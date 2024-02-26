@@ -28,7 +28,7 @@ class FileIndexTest {
     @Test
     final void skipPath() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipPath.txt");
-        final String result = collected(FileIndex.of(TEST_PATH.toString())
+        final String result = collected(FileIndex.primary(TEST_PATH.toString())
                                                  .skipPath(entry -> "main".equals(entry.getFileName().toString()))
                                                  .stream());
         assertEquals(expected, result);
@@ -37,7 +37,7 @@ class FileIndexTest {
     @Test
     final void skipEntry() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
-        final String result = collected(FileIndex.of(TEST_PATH)
+        final String result = collected(FileIndex.evaluated(TEST_PATH)
                                                  .skipEntry(entry -> "test".equals(entry.name()))
                                                  .stream());
         assertEquals(expected, result);
@@ -46,7 +46,7 @@ class FileIndexTest {
     @Test
     final void stream() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
-        final String result = collected(FileIndex.of(TEST_PATH.toString())
+        final String result = collected(FileIndex.evaluated(TEST_PATH.toString())
                                                  .stream());
         assertEquals(expected, result);
     }
@@ -56,7 +56,7 @@ class FileIndexTest {
         final String expected = String.format(TextIO.read(getClass(), "FileIndexTest.toString.txt"),
                                               TEST_PATH.toAbsolutePath().normalize());
 
-        final String result = FileIndex.of(TEST_PATH).toString();
+        final String result = FileIndex.evaluated(TEST_PATH).toString();
         // System.out.println(result);
 
         assertEquals(expected, result);
