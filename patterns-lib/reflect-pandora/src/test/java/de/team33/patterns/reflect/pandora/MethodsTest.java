@@ -2,6 +2,7 @@ package de.team33.patterns.reflect.pandora;
 
 import de.team33.patterns.reflect.pandora.testing.BeanClass;
 import de.team33.patterns.reflect.pandora.testing.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.MixedClass;
 import de.team33.patterns.reflect.pandora.testing.RecordClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -166,6 +167,24 @@ class MethodsTest {
                           "longValue()", "stringValue()", "hashCode()", "notify()", "notifyAll()",
                           "instantValue(java.time.Instant)", "intValue(int)", "longValue(java.lang.Long)",
                           "stringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
+        MIXED_CLASS(MixedClass.class,
+                    asList("getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                    asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                           "setStringValue(java.lang.String)"),
+                    asList("instantValue()", "intValue()", "longValue()", "stringValue()"),
+                    asList("instantValue()", "intValue()", "longValue()", "stringValue()",
+                           "getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()"),
+                    asList("setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                           "setStringValue(java.lang.String)"),
+                    asList("instantValue()", "intValue()", "longValue()", "stringValue()",
+                           "getInstantValue()", "getIntValue()", "getLongValue()", "getStringValue()",
+                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                           "setStringValue(java.lang.String)"),
+                    asList("equals(java.lang.Object)", "getClass()", "getInstantValue()", "getIntValue()",
+                           "instantValue()", "intValue()", "longValue()", "stringValue()",
+                           "getLongValue()", "getStringValue()", "hashCode()", "notify()", "notifyAll()",
+                           "setInstantValue(java.time.Instant)", "setIntValue(int)", "setLongValue(java.lang.Long)",
+                           "setStringValue(java.lang.String)", "toString()", "wait()", "wait(long)", "wait(long, int)")),
         INSTANT(Instant.class,
                 asList("getEpochSecond()", "getNano()"),
                 Collections.emptyList(),
