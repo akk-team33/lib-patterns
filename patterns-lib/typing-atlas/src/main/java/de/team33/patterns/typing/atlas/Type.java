@@ -6,8 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * {@code Type<T>} represents a specific <em>type</em>, just as {@link Class}{@code <T>} represents a specific
- * <em>class</em>.
+ * Like the underlying {@link DType}, represents a <em>"definite type"</em>.
+ * In addition, the represented <em>type</em> is already formally reflected by the type parameter used.
  * <p>
  * For example, an instance of {@code Class<String>} uniquely represents the <em>class</em> {@link String}
  * and an instance of {@code Type<String>} uniquely represents the <em>type</em> {@link String}.

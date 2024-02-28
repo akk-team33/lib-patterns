@@ -27,7 +27,7 @@ import static java.lang.String.format;
  * {@code List<String>}, an instance of {@link DType} representing the <em>type</em>
  * {@code List<String>} is absolutely possible.
  * <p>
- * In particular, for example, the types {@code List<String>} and {@code List<Integer>} are
+ * In particular, for example, the <em>types</em> {@code List<String>} and {@code List<Integer>} are
  * {@linkplain #equals(Object) distinguishable} if they are represented by instances of {@link DType}.
  * <p>
  * To get an instance of {@link DType} see {@link de.team33.patterns.typing.atlas.Type}.
