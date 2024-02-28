@@ -4,11 +4,11 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-class ClassTypedef extends SingleTypedef {
+class ClassType extends SingleType {
 
     private final Class<?> underlyingClass;
 
-    ClassTypedef(final Class<?> underlyingClass) {
+    ClassType(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
@@ -18,7 +18,7 @@ class ClassTypedef extends SingleTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<Type> getActualParameters() {
         return emptyList();
     }
 }

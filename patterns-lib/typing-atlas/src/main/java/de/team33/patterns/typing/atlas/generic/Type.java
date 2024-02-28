@@ -1,7 +1,5 @@
 package de.team33.patterns.typing.atlas.generic;
 
-import de.team33.patterns.typing.atlas.Typedef;
-
 import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,7 +36,7 @@ import java.util.stream.Stream;
  * @see #of(Class)
  */
 @SuppressWarnings("unused")
-public abstract class Type<T> extends Typedef {
+public abstract class Type<T> extends de.team33.patterns.typing.atlas.Type {
 
     private static final String ILLEGAL_INSTANTIATION = //
             "Do not directly instantiate %1$s%n" +
@@ -49,7 +47,7 @@ public abstract class Type<T> extends Typedef {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Typedef backing;
+    private final de.team33.patterns.typing.atlas.Type backing;
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -63,16 +61,16 @@ public abstract class Type<T> extends Typedef {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.backing = extract(Typedef.by(thisClass));
+        this.backing = extract(de.team33.patterns.typing.atlas.Type.by(thisClass));
     }
 
     @SuppressWarnings({"TailRecursion", "OptionalGetWithoutIsPresent"})
-    private static Typedef extract(final Typedef typedef) {
-        final Class<?> thisClass = typedef.asClass();
+    private static de.team33.patterns.typing.atlas.Type extract(final de.team33.patterns.typing.atlas.Type type) {
+        final Class<?> thisClass = type.asClass();
         if (Type.class.equals(thisClass)) {
-            return typedef.getActualParameters().get(0);
+            return type.getActualParameters().get(0);
         } else {
-            return extract(typedef.getSuperType().get());
+            return extract(type.getSuperType().get());
         }
     }
 
@@ -89,7 +87,7 @@ public abstract class Type<T> extends Typedef {
         }
     }
 
-    private Type(final Typedef backing) {
+    private Type(final de.team33.patterns.typing.atlas.Type backing) {
         this.backing = backing;
     }
 
@@ -102,7 +100,7 @@ public abstract class Type<T> extends Typedef {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(Typedef.by(simpleClass)) {
+        return new Type<T>(de.team33.patterns.typing.atlas.Type.by(simpleClass)) {
         };
     }
 
@@ -117,7 +115,7 @@ public abstract class Type<T> extends Typedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<de.team33.patterns.typing.atlas.Type> getActualParameters() {
         return backing.getActualParameters();
     }
 

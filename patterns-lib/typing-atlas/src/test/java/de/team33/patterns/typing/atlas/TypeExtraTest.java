@@ -6,12 +6,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TypedefExtraTest {
+class TypeExtraTest {
 
     @Test
     void getActualParameter_unknown() {
         try {
-            final Typedef result = ClassCase.toTypedef(Integer.class).getActualParameter("E");
+            final Type result = ClassCase.toTypedef(Integer.class).getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();
@@ -23,17 +23,17 @@ class TypedefExtraTest {
 
     @Test
     void getActualParameter_definite() {
-        final Typedef result = ClassCase.toTypedef(StringList.class)
-                                        .getMemberType(StringList.class.getGenericInterfaces()[0])
-                                        .getActualParameter("E");
+        final Type result = ClassCase.toTypedef(StringList.class)
+                                     .getMemberType(StringList.class.getGenericInterfaces()[0])
+                                     .getActualParameter("E");
         assertEquals(ClassCase.toTypedef(String.class), result);
     }
 
     @Test
     void getActualParameter_indefinite() {
         try {
-            final Typedef result = ClassCase.toTypedef(List.class)
-                                            .getActualParameter("E");
+            final Type result = ClassCase.toTypedef(List.class)
+                                         .getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalStateException e) {
             // e.printStackTrace();

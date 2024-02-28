@@ -4,16 +4,16 @@ import java.util.function.Function;
 
 enum ClassCase {
 
-    CLASS(ClassTypedef::new),
-    ARRAY(PlainArrayTypedef::new);
+    CLASS(ClassType::new),
+    ARRAY(PlainArrayType::new);
 
-    private final Function<Class<?>, Typedef> mapping;
+    private final Function<Class<?>, Type> mapping;
 
-    ClassCase(final Function<Class<?>, Typedef> mapping) {
+    ClassCase(final Function<Class<?>, Type> mapping) {
         this.mapping = mapping;
     }
 
-    static Typedef toTypedef(final Class<?> underlyingClass) {
+    static Type toTypedef(final Class<?> underlyingClass) {
         return (underlyingClass.isArray() ? ARRAY : CLASS).mapping.apply(underlyingClass);
     }
 }

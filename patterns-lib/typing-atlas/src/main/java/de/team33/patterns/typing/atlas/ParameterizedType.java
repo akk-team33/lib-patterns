@@ -1,16 +1,15 @@
 package de.team33.patterns.typing.atlas;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ParameterizedTypedef extends SingleTypedef {
+class ParameterizedType extends SingleType {
 
-    private final ParameterizedType type;
-    private final Typedef context;
+    private final java.lang.reflect.ParameterizedType type;
+    private final Type context;
 
-    ParameterizedTypedef(final ParameterizedType type, final Typedef context) {
+    ParameterizedType(final java.lang.reflect.ParameterizedType type, final Type context) {
         this.type = type;
         this.context = context;
     }
@@ -21,7 +20,7 @@ class ParameterizedTypedef extends SingleTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<Type> getActualParameters() {
         return Stream.of(type.getActualTypeArguments())
                      .map(type1 -> TypeCase.toTypedef(type1, context))
                      .collect(Collectors.toList());

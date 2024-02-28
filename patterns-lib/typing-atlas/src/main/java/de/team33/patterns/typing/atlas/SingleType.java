@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-abstract class SingleTypedef extends Typedef {
+abstract class SingleType extends Type {
 
     private final transient Lazy<String> stringValue = Lazy.init(this::toStringValue);
 
@@ -29,10 +29,10 @@ abstract class SingleTypedef extends Typedef {
     }
 
     private String toStringValue() {
-        final List<Typedef> actual = getActualParameters();
+        final List<Type> actual = getActualParameters();
         return asClass().getCanonicalName() + (
                 actual.isEmpty() ? "" : actual.stream()
-                                              .map(Typedef::toString)
+                                              .map(Type::toString)
                                               .collect(joining(", ", "<", ">")));
     }
 }

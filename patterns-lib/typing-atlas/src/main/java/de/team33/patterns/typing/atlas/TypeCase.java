@@ -1,8 +1,5 @@
 package de.team33.patterns.typing.atlas;
 
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
@@ -12,21 +9,21 @@ enum TypeCase {
 
     CLASS(Class.class, (type, context) -> ClassCase.toTypedef(type)),
 
-    GENERIC_ARRAY(GenericArrayType.class, GenericArrayTypedef::new),
+    GENERIC_ARRAY(java.lang.reflect.GenericArrayType.class, GenericArrayType::new),
 
-    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedTypedef::new),
+    PARAMETERIZED_TYPE(java.lang.reflect.ParameterizedType.class, ParameterizedType::new),
 
-    TYPE_VARIABLE(TypeVariable.class, TypeVariableTypedef::new);
+    TYPE_VARIABLE(TypeVariable.class, TypeVariableType::new);
 
-    private final Predicate<Type> matching;
-    private final BiFunction<Type, Typedef, Typedef> mapping;
+    private final Predicate<java.lang.reflect.Type> matching;
+    private final BiFunction<java.lang.reflect.Type, Type, Type> mapping;
 
-    <T extends Type> TypeCase(final Class<T> typeClass, final BiFunction<T, Typedef, Typedef> mapping) {
+    <T extends java.lang.reflect.Type> TypeCase(final Class<T> typeClass, final BiFunction<T, Type, Type> mapping) {
         this.matching = typeClass::isInstance;
         this.mapping = (t, u) -> mapping.apply(typeClass.cast(t), u);
     }
 
-    static Typedef toTypedef(final Type type, final Typedef context) {
+    static Type toTypedef(final java.lang.reflect.Type type, final Type context) {
         return Stream.of(values())
                      .filter(typeType -> typeType.matching.test(type)).findAny()
                      .map(typeType -> typeType.mapping.apply(type, context))

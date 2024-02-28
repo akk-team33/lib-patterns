@@ -1,16 +1,15 @@
 package de.team33.patterns.typing.atlas;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.GenericArrayType;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-class GenericArrayTypedef extends ArrayTypedef {
+class GenericArrayType extends ArrayType {
 
-    private final Typedef componentType;
+    private final Type componentType;
 
-    GenericArrayTypedef(final GenericArrayType type, final Typedef context) {
+    GenericArrayType(final java.lang.reflect.GenericArrayType type, final Type context) {
         this.componentType = TypeCase.toTypedef(type.getGenericComponentType(), context);
     }
 
@@ -24,7 +23,7 @@ class GenericArrayTypedef extends ArrayTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<Type> getActualParameters() {
         return singletonList(componentType);
     }
 }
