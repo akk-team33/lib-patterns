@@ -1,6 +1,6 @@
-package de.team33.patterns.generics.atlas.publics;
+package de.team33.patterns.typing.atlas.publics;
 
-import de.team33.patterns.generics.atlas.Typedef;
+import de.team33.patterns.typing.atlas.Typedef;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;

@@ -1,4 +1,4 @@
-package de.team33.patterns.generics.atlas.testing;
+package de.team33.patterns.typing.atlas.testing;
 
 public class StringListType extends ListType<String> {
 }

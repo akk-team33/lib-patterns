@@ -1,4 +1,4 @@
-package de.team33.patterns.generics.atlas;
+package de.team33.patterns.typing.atlas;
 
 import de.team33.patterns.lazy.narvi.Lazy;
 
@@ -26,14 +26,14 @@ import static java.lang.String.format;
  * {@code List<String>}, an instance of {@link Typedef} representing the <em>type</em>
  * {@code List<String>} is absolutely possible.
  * <p>
- * To get an instance of {@link Typedef} see {@link de.team33.patterns.generics.atlas.Type}.
+ * To get an instance of {@link Typedef} see {@link de.team33.patterns.typing.atlas.Type}.
  * If a simple class already fully defines the <em>type</em> concerned, there is a convenience method to
  * get a corresponding {@link Typedef} instance. Example:
  * <pre>
  * final Typedef stringType = Typedef.by(String.class);
  * </pre>
  *
- * @see de.team33.patterns.generics.atlas.Type
+ * @see de.team33.patterns.typing.atlas.Type
  * @see #by(Class)
  */
 @SuppressWarnings("ClassWithTooManyMethods")
