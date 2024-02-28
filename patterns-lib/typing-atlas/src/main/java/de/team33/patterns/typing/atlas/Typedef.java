@@ -17,14 +17,18 @@ import java.util.stream.Stream;
 import static java.lang.String.format;
 
 /**
- * Represents a specific <em>type</em>, just as {@link Class}{@code <?>} represents a specific <em>class</em>.
+ * Represents a <em>"definite type"</em> - a specific <em>type</em>, just as {@link Class} represents a
+ * specific <em>class</em>.
  * <p>
- * For example, an instance of {@link Class}{@code <?>} may uniquely represent the <em>class</em> {@link String}
+ * For example, an instance of {@link Class} may uniquely represent the <em>class</em> {@link String}
  * and an instance of {@link Typedef} may uniquely represent the <em>type</em> {@link String}.
  * <p>
- * However, while there cannot be an instance of {@link Class}{@code <?>} e.g. representing a <em>class</em>
+ * However, while there cannot be an instance of {@link Class} e.g. representing a <em>"class"</em>
  * {@code List<String>}, an instance of {@link Typedef} representing the <em>type</em>
  * {@code List<String>} is absolutely possible.
+ * <p>
+ * In particular, for example, the types {@code List<String>} and {@code List<Integer>} are
+ * {@linkplain #equals(Object) distinguishable} if they are represented by instances of {@link Typedef}.
  * <p>
  * To get an instance of {@link Typedef} see {@link de.team33.patterns.typing.atlas.Type}.
  * If a simple class already fully defines the <em>type</em> concerned, there is a convenience method to
