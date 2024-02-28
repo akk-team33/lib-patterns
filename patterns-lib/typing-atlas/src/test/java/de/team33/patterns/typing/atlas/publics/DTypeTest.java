@@ -1,6 +1,6 @@
 package de.team33.patterns.typing.atlas.publics;
 
-import de.team33.patterns.typing.atlas.Typedef;
+import de.team33.patterns.typing.atlas.DType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 @SuppressWarnings("ClassWithTooManyFields")
-class TypedefTest {
+class DTypeTest {
 
     @SuppressWarnings("unused")
     private static final List<String> STRING_LIST = null;
@@ -29,15 +29,15 @@ class TypedefTest {
     private static final Map<String, List<String>> STRING_LIST_MAP = null;
     @SuppressWarnings("unused")
     private static final Comparable<String> COMPARABLE = null;
-    public static final Class<TypedefTest> CLASS = TypedefTest.class;
-    private static final Typedef TYPE = Typedef.by(CLASS);
+    public static final Class<DTypeTest> CLASS = DTypeTest.class;
+    private static final DType TYPE = DType.by(CLASS);
     private static final Field COMPARABLE_FIELD = getDeclaredField("COMPARABLE");
     private static final Field STRING_LIST_FIELD = getDeclaredField("STRING_LIST");
     private static final Field STRING_LIST_MAP_FIELD = getDeclaredField("STRING_LIST_MAP");
-    private static final Typedef COMPARABLE_TYPE = TYPE.typeOf(COMPARABLE_FIELD);
-    private static final Typedef STRING_TYPE = Typedef.by(String.class);
-    private static final Typedef LIST_TYPE = TYPE.typeOf(STRING_LIST_FIELD);
-    private static final Typedef MAP_TYPE = TYPE.typeOf(STRING_LIST_MAP_FIELD);
+    private static final DType COMPARABLE_TYPE = TYPE.typeOf(COMPARABLE_FIELD);
+    private static final DType STRING_TYPE = DType.by(String.class);
+    private static final DType LIST_TYPE = TYPE.typeOf(STRING_LIST_FIELD);
+    private static final DType MAP_TYPE = TYPE.typeOf(STRING_LIST_MAP_FIELD);
 
     private static Field getDeclaredField(final String name) {
         try {
@@ -68,17 +68,17 @@ class TypedefTest {
     @Test
     final void getSuperType() {
         //noinspection OptionalGetWithoutIsPresent
-        assertEquals(Typedef.by(Object.class), STRING_TYPE.getSuperType().get());
+        assertEquals(DType.by(Object.class), STRING_TYPE.getSuperType().get());
         assertEquals(Optional.empty(), MAP_TYPE.getSuperType());
     }
 
     @Test
     final void getSuperTypes() {
         assertEquals(new HashSet<>(Arrays.asList(
-                             Typedef.by(Object.class),
-                             Typedef.by(Serializable.class),
+                             DType.by(Object.class),
+                             DType.by(Serializable.class),
                              COMPARABLE_TYPE,
-                             Typedef.by(CharSequence.class))),
+                             DType.by(CharSequence.class))),
                      new HashSet<>(STRING_TYPE.getSuperTypes()));
         assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
     }
@@ -86,9 +86,9 @@ class TypedefTest {
     @Test
     final void getInterfaces() {
         assertEquals(new HashSet<>(Arrays.asList(
-                             Typedef.by(Serializable.class),
+                             DType.by(Serializable.class),
                              COMPARABLE_TYPE,
-                             Typedef.by(CharSequence.class))),
+                             DType.by(CharSequence.class))),
                      new HashSet<>(STRING_TYPE.getInterfaces()));
         assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
     }
@@ -121,14 +121,14 @@ class TypedefTest {
         final Class<?> c1 = new TypeOf<String>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfStringType = Typedef.by(c1).getSuperType().get();
+        final DType typeOfStringType = DType.by(c1).getSuperType().get();
         assertEquals(STRING_TYPE, typeOfStringType.typeOf(field));
 
         //noinspection EmptyClass
         final Class<?> c2 = new TypeOf<List<String>>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfListType = Typedef.by(c2).getSuperType().get();
+        final DType typeOfListType = DType.by(c2).getSuperType().get();
         assertEquals(LIST_TYPE, typeOfListType.typeOf(field));
     }
 
@@ -140,14 +140,14 @@ class TypedefTest {
         final Class<?> c1 = new TypeOf<String>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfStringType = Typedef.by(c1).getSuperType().get();
+        final DType typeOfStringType = DType.by(c1).getSuperType().get();
         assertEquals(STRING_TYPE, typeOfStringType.returnTypeOf(method));
 
         //noinspection EmptyClass
         final Class<?> c2 = new TypeOf<List<String>>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfListType = Typedef.by(c2).getSuperType().get();
+        final DType typeOfListType = DType.by(c2).getSuperType().get();
         assertEquals(LIST_TYPE, typeOfListType.returnTypeOf(method));
     }
 
@@ -158,7 +158,7 @@ class TypedefTest {
         final Class<?> c = new TypeOf<String>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfStringType = Typedef.by(c).getSuperType().get();
+        final DType typeOfStringType = DType.by(c).getSuperType().get();
         assertEquals(emptyList(), typeOfStringType.parameterTypesOf(method));
     }
 
@@ -169,22 +169,22 @@ class TypedefTest {
         final Class<?> c2 = new TypeOf<List<String>>(null) {
         }.getClass();
         //noinspection OptionalGetWithoutIsPresent
-        final Typedef typeOfListType = Typedef.by(c2).getSuperType().get();
+        final DType typeOfListType = DType.by(c2).getSuperType().get();
         assertEquals(emptyList(), typeOfListType.exceptionTypesOf(method));
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")
     @Test
     final void testEquals() {
-        assertEquals(STRING_TYPE, Typedef.by(String.class));
-        // TODO: assertEquals(MAP_TYPE, new Typedef<Map<String, List<String>>>() {});
+        assertEquals(STRING_TYPE, DType.by(String.class));
+        // TODO: assertEquals(MAP_TYPE, new DType<Map<String, List<String>>>() {});
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")
     @Test
     final void testHashCode() {
-        assertEquals(STRING_TYPE.hashCode(), Typedef.by(String.class).hashCode());
-        // TODO: assertEquals(MAP_TYPE.hashCode(), new Typedef<Map<String, List<String>>>() {}.hashCode());
+        assertEquals(STRING_TYPE.hashCode(), DType.by(String.class).hashCode());
+        // TODO: assertEquals(MAP_TYPE.hashCode(), new DType<Map<String, List<String>>>() {}.hashCode());
     }
 
     @ParameterizedTest
@@ -194,7 +194,7 @@ class TypedefTest {
     }
 
     enum Case {
-        INTEGER(Typedef.by(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
+        INTEGER(DType.by(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
         STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
         LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
         MAP(MAP_TYPE,
@@ -202,21 +202,21 @@ class TypedefTest {
             Arrays.asList("K", "V"),
             Map.class),
 
-        INT_ARRAY(Typedef.by(int[].class), "int[]", singletonList("E"), int[].class),
+        INT_ARRAY(DType.by(int[].class), "int[]", singletonList("E"), int[].class),
 
-        INTEGER_ARRAY(Typedef.by(Integer[].class), "java.lang.Integer[]", singletonList("E"), Integer[].class),
+        INTEGER_ARRAY(DType.by(Integer[].class), "java.lang.Integer[]", singletonList("E"), Integer[].class),
 
         LIST_ARRAY(Helper.stringListArrayType(),
                    "java.util.List<java.lang.String>[]",
                    singletonList("E"),
                    List[].class);
 
-        private final Typedef type;
+        private final DType type;
         private final String string;
         private final List<String> formalParameters;
         private final Class<?> asClass;
 
-        Case(final Typedef type,
+        Case(final DType type,
              final String string,
              final List<String> formalParameters,
              final Class<?> asClass) {
@@ -233,9 +233,9 @@ class TypedefTest {
         @SuppressWarnings("unused")
         private static final List<String>[] STRING_LIST_ARRAY = null;
 
-        static Typedef stringListArrayType() {
-            return Typedef.by(Helper.class)
-                          .typeOf(getDeclaredField("STRING_LIST_ARRAY"));
+        static DType stringListArrayType() {
+            return DType.by(Helper.class)
+                        .typeOf(getDeclaredField("STRING_LIST_ARRAY"));
         }
 
         private static Field getDeclaredField(final String name) {

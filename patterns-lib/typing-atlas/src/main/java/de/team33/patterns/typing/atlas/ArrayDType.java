@@ -5,7 +5,7 @@ import de.team33.patterns.lazy.narvi.Lazy;
 import java.util.Collections;
 import java.util.List;
 
-abstract class ArrayTypedef extends Typedef {
+abstract class ArrayDType extends DType {
 
     private final transient Lazy<String> stringValue = Lazy.init(this::toStringValue);
 

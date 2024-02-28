@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ParameterizedTypedef extends SingleTypedef {
+class ParameterizedDType extends SingleDType {
 
     private final ParameterizedType type;
-    private final Typedef context;
+    private final DType context;
 
-    ParameterizedTypedef(final ParameterizedType type, final Typedef context) {
+    ParameterizedDType(final ParameterizedType type, final DType context) {
         this.type = type;
         this.context = context;
     }
@@ -21,7 +21,7 @@ class ParameterizedTypedef extends SingleTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<DType> getActualParameters() {
         return Stream.of(type.getActualTypeArguments())
                      .map(type1 -> TypeCase.toTypedef(type1, context))
                      .collect(Collectors.toList());

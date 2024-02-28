@@ -3,11 +3,11 @@ package de.team33.patterns.typing.atlas;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
 
-class TypeVariableTypedef extends SingleTypedef {
+class TypeVariableDType extends SingleDType {
 
-    private final Typedef definite;
+    private final DType definite;
 
-    TypeVariableTypedef(final TypeVariable<?> type, final Typedef context) {
+    TypeVariableDType(final TypeVariable<?> type, final DType context) {
         this.definite = context.getActualParameter(type.getName());
     }
 
@@ -17,7 +17,7 @@ class TypeVariableTypedef extends SingleTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<DType> getActualParameters() {
         return definite.getActualParameters();
     }
 }

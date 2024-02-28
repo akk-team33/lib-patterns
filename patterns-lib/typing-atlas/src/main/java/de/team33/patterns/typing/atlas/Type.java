@@ -36,7 +36,7 @@ import java.util.stream.Stream;
  * @see #of(Class)
  */
 @SuppressWarnings("unused")
-public abstract class Type<T> extends Typedef {
+public abstract class Type<T> extends DType {
 
     private static final String ILLEGAL_INSTANTIATION = //
             "Do not directly instantiate %1$s%n" +
@@ -47,7 +47,7 @@ public abstract class Type<T> extends Typedef {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Typedef backing;
+    private final DType backing;
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -65,12 +65,12 @@ public abstract class Type<T> extends Typedef {
     }
 
     @SuppressWarnings({"TailRecursion", "OptionalGetWithoutIsPresent"})
-    private static Typedef extract(final Typedef typedef) {
-        final Class<?> thisClass = typedef.asClass();
+    private static DType extract(final DType type) {
+        final Class<?> thisClass = type.asClass();
         if (Type.class.equals(thisClass)) {
-            return typedef.getActualParameters().get(0);
+            return type.getActualParameters().get(0);
         } else {
-            return extract(typedef.getSuperType().get());
+            return extract(type.getSuperType().get());
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class Type<T> extends Typedef {
         }
     }
 
-    private Type(final Typedef backing) {
+    private Type(final DType backing) {
         this.backing = backing;
     }
 
@@ -115,7 +115,7 @@ public abstract class Type<T> extends Typedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<DType> getActualParameters() {
         return backing.getActualParameters();
     }
 

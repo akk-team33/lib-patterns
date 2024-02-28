@@ -3,11 +3,11 @@ package de.team33.patterns.typing.atlas;
 import java.util.Collections;
 import java.util.List;
 
-class PlainArrayTypedef extends ArrayTypedef {
+class PlainArrayDType extends ArrayDType {
 
     private final Class<?> underlyingClass;
 
-    PlainArrayTypedef(final Class<?> underlyingClass) {
+    PlainArrayDType(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
@@ -17,7 +17,7 @@ class PlainArrayTypedef extends ArrayTypedef {
     }
 
     @Override
-    public final List<Typedef> getActualParameters() {
+    public final List<DType> getActualParameters() {
         return Collections.singletonList(ClassCase.toTypedef(underlyingClass.getComponentType()));
     }
 }
