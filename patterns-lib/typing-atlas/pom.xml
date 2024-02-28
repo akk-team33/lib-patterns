@@ -8,7 +8,7 @@
         <version>1.18.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>generics-atlas</artifactId>
+    <artifactId>typing-atlas</artifactId>
     <packaging>jar</packaging>
 
     <name>Team33 Generic Type Library - Edition "atlas"</name>

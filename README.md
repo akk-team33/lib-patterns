@@ -30,14 +30,14 @@ http://www.team33.de/dev/patterns/1.x
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
   * decision-telesto (Team33 Decision Library - Edition "telesto")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
-  * generics-atlas (Team33 Generic Type Library - Edition "atlas")
+  * typing-atlas (Team33 Generic Type Library - Edition "atlas")
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
 
 ### next
 
-* Added module generics-atlas
+* Added module typing-atlas
 
 ### 1.18.0
 

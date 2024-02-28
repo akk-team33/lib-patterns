@@ -32,7 +32,7 @@
         <module>serial-charon</module>
         <module>decision-telesto</module>
         <module>collection-ceres</module>
-        <module>generics-atlas</module>
+        <module>typing-atlas</module>
     </modules>
 
     <dependencyManagement>
