@@ -1,4 +1,6 @@
-package de.team33.patterns.typing.atlas;
+package de.team33.patterns.typing.atlas.generic;
+
+import de.team33.patterns.typing.atlas.Typedef;
 
 import java.lang.reflect.TypeVariable;
 import java.util.List;
@@ -61,7 +63,7 @@ public abstract class Type<T> extends Typedef {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.backing = extract(ClassCase.toTypedef(thisClass));
+        this.backing = extract(Typedef.by(thisClass));
     }
 
     @SuppressWarnings({"TailRecursion", "OptionalGetWithoutIsPresent"})
@@ -100,7 +102,7 @@ public abstract class Type<T> extends Typedef {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toTypedef(simpleClass)) {
+        return new Type<T>(Typedef.by(simpleClass)) {
         };
     }
 

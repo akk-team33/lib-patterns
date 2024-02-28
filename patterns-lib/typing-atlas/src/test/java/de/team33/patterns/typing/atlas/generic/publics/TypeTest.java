@@ -1,6 +1,6 @@
-package de.team33.patterns.typing.atlas.publics;
+package de.team33.patterns.typing.atlas.generic.publics;
 
-import de.team33.patterns.typing.atlas.Type;
+import de.team33.patterns.typing.atlas.generic.Type;
 import de.team33.patterns.typing.atlas.testing.ListType;
 import de.team33.patterns.typing.atlas.testing.StringListType;
 import de.team33.patterns.typing.atlas.testing.MapType;

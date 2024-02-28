@@ -26,14 +26,14 @@ import static java.lang.String.format;
  * {@code List<String>}, an instance of {@link Typedef} representing the <em>type</em>
  * {@code List<String>} is absolutely possible.
  * <p>
- * To get an instance of {@link Typedef} see {@link de.team33.patterns.typing.atlas.Type}.
+ * To get an instance of {@link Typedef} see {@link de.team33.patterns.typing.atlas.generic.Type}.
  * If a simple class already fully defines the <em>type</em> concerned, there is a convenience method to
  * get a corresponding {@link Typedef} instance. Example:
  * <pre>
  * final Typedef stringType = Typedef.by(String.class);
  * </pre>
  *
- * @see de.team33.patterns.typing.atlas.Type
+ * @see de.team33.patterns.typing.atlas.generic.Type
  * @see #by(Class)
  */
 @SuppressWarnings("ClassWithTooManyMethods")
@@ -44,7 +44,7 @@ public abstract class Typedef {
     private final transient Lazy<List<Object>> listView;
     private final transient Lazy<Integer> hashValue;
 
-    Typedef() {
+    protected Typedef() {
         this.listView = Lazy.init(() -> Arrays.asList(asClass(), getActualParameters()));
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
     }
