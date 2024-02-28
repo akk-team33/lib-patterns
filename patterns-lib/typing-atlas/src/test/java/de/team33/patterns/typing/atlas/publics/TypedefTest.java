@@ -49,13 +49,13 @@ class TypedefTest {
 
     @ParameterizedTest
     @EnumSource
-    final void asClass(final ToStringCase testCase) {
+    final void asClass(final Case testCase) {
         assertSame(testCase.asClass, testCase.type.asClass());
     }
 
     @ParameterizedTest
     @EnumSource
-    final void getFormalParameters(final ToStringCase testCase) {
+    final void getFormalParameters(final Case testCase) {
         assertEquals(testCase.formalParameters, testCase.type.getFormalParameters());
     }
 
@@ -189,11 +189,11 @@ class TypedefTest {
 
     @ParameterizedTest
     @EnumSource
-    final void testToString(final ToStringCase testCase) {
+    final void testToString(final Case testCase) {
         assertEquals(testCase.string, testCase.type.toString());
     }
 
-    enum ToStringCase {
+    enum Case {
         INTEGER(Typedef.by(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
         STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
         LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
@@ -216,10 +216,10 @@ class TypedefTest {
         private final List<String> formalParameters;
         private final Class<?> asClass;
 
-        ToStringCase(final Typedef type,
-                     final String string,
-                     final List<String> formalParameters,
-                     final Class<?> asClass) {
+        Case(final Typedef type,
+             final String string,
+             final List<String> formalParameters,
+             final Class<?> asClass) {
             this.type = type;
             this.string = string;
             this.formalParameters = formalParameters;

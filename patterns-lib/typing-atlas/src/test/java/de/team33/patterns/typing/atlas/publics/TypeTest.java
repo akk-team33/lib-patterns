@@ -17,7 +17,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,13 +63,13 @@ class TypeTest {
 
     @ParameterizedTest
     @EnumSource
-    final void asClass(final ToStringCase testCase) {
+    final void asClass(final Case testCase) {
         assertSame(testCase.asClass, testCase.type.asClass());
     }
 
     @ParameterizedTest
     @EnumSource
-    final void getFormalParameters(final ToStringCase testCase) {
+    final void getFormalParameters(final Case testCase) {
         assertEquals(testCase.formalParameters, testCase.type.getFormalParameters());
     }
 
@@ -176,11 +178,11 @@ class TypeTest {
 
     @ParameterizedTest
     @EnumSource
-    final void testToString(final ToStringCase testCase) {
+    final void testToString(final Case testCase) {
         assertEquals(testCase.string, testCase.type.toString());
     }
 
-    enum ToStringCase {
+    enum Case {
         INTEGER(Type.of(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
         STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
         LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
@@ -203,10 +205,10 @@ class TypeTest {
         private final List<String> formalParameters;
         private final Class<?> asClass;
 
-        ToStringCase(final Type<?> type,
-                     final String string,
-                     final List<String> formalParameters,
-                     final Class<?> asClass) {
+        Case(final Type<?> type,
+             final String string,
+             final List<String> formalParameters,
+             final Class<?> asClass) {
             this.type = type;
             this.string = string;
             this.formalParameters = formalParameters;
