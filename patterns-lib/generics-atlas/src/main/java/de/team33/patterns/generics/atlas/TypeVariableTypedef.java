@@ -17,7 +17,7 @@ class TypeVariableTypedef extends SingleTypedef {
     }
 
     @Override
-    final List<Typedef> getActualParameters() {
+    final List<? extends Typedef> getActualParameters() {
         return definite.getActualParameters();
     }
 }

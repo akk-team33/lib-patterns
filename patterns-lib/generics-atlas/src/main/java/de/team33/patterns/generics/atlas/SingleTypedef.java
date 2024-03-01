@@ -24,7 +24,7 @@ abstract class SingleTypedef extends Typedef {
     }
 
     private String toStringValue() {
-        final List<Typedef> actual = getActualParameters();
+        final List<? extends Typedef> actual = getActualParameters();
         return asClass().getCanonicalName() + (
                 actual.isEmpty() ? "" : actual.stream()
                                               .map(Typedef::toString)

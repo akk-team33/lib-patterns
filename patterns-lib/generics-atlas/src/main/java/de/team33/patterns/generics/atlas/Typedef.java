@@ -21,7 +21,7 @@ abstract class Typedef {
 
     abstract List<String> getFormalParameters();
 
-    abstract List<Typedef> getActualParameters();
+    abstract List<? extends Typedef> getActualParameters();
 
     final Typedef getActualParameter(final String name) {
         final List<String> formalParameters = getFormalParameters();
@@ -33,12 +33,13 @@ abstract class Typedef {
     }
 
     private Typedef getActualParameterByIndex(final String name, final int index) {
-        final List<Typedef> actualParameters = getActualParameters();
-        if (index < actualParameters.size())
+        final List<? extends Typedef> actualParameters = getActualParameters();
+        if (index < actualParameters.size()) {
             return actualParameters.get(index);
-        else
+        } else {
             throw new IllegalStateException(
                     String.format("actual parameter for <%s> not found in %s", name, actualParameters));
+        }
     }
 
     final Typedef getMemberAssembly(final Type type) {
