@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class TypedefTest {
 
     @Test
-    void getActualParameter_unknown() {
+    final void getActualParameter_unknown() {
         try {
             final Typedef result = ClassCase.toAssembly(Integer.class).getActualParameter("E");
             fail("expected to Fail - but was " + result);
@@ -22,7 +22,7 @@ class TypedefTest {
     static interface StringList extends List<String> {}
 
     @Test
-    void getActualParameter_definite() {
+    final void getActualParameter_definite() {
         final Typedef result = ClassCase.toAssembly(StringList.class)
                                         .getMemberAssembly(StringList.class.getGenericInterfaces()[0])
                                         .getActualParameter("E");
@@ -30,7 +30,7 @@ class TypedefTest {
     }
 
     @Test
-    void getActualParameter_indefinite() {
+    final void getActualParameter_indefinite() {
         try {
             final Typedef result = ClassCase.toAssembly(List.class)
                                             .getActualParameter("E");

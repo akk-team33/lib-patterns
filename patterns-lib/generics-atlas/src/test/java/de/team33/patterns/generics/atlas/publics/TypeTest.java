@@ -12,7 +12,6 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SuppressWarnings("EmptyClass")
 class TypeTest {
 
     private static final Type<String> STRING_TYPE = Type.of(String.class);
@@ -31,7 +31,7 @@ class TypeTest {
     private static final Type<Map<String, List<String>>> MAP_TYPE = new Type<Map<String, List<String>>>() {};
 
     @Test
-    void genericDerivative() {
+    final void genericDerivative() {
         try {
             final Type<Map<String, List<String>>> type = new MapType<>();
             fail("expected to fail - but was " + type);
@@ -42,13 +42,13 @@ class TypeTest {
     }
 
     @Test
-    void indirectAnonymousDerivative() {
+    final void indirectAnonymousDerivative() {
         final Type<List<String>> type = new ListType<String>(){};
         assertEquals(LIST_TYPE, type);
     }
 
     @Test
-    void indirectDerivative() {
+    final void indirectDerivative() {
         final Type<List<String>> type = new StringListType(){};
         assertEquals(LIST_TYPE, type);
     }
@@ -62,13 +62,13 @@ class TypeTest {
 
     @ParameterizedTest
     @EnumSource
-    final void asClass(final ToStringCase testCase) {
+    final void asClass(final TestCase testCase) {
         assertSame(testCase.asClass, testCase.type.asClass());
     }
 
     @ParameterizedTest
     @EnumSource
-    final void getFormalParameters(final ToStringCase testCase) {
+    final void getFormalParameters(final TestCase testCase) {
         assertEquals(testCase.formalParameters, testCase.type.getFormalParameters());
     }
 
@@ -109,7 +109,7 @@ class TypeTest {
 
         private final T field;
 
-        SuperTypeOf(T field) {
+        SuperTypeOf(final T field) {
             this.field = field;
         }
 
@@ -120,7 +120,7 @@ class TypeTest {
 
     static class TypeOf<T> extends SuperTypeOf<T> {
 
-        TypeOf(T field) {
+        TypeOf(final T field) {
             super(field);
         }
     }
@@ -177,11 +177,12 @@ class TypeTest {
 
     @ParameterizedTest
     @EnumSource
-    final void testToString(final ToStringCase testCase) {
+    final void testToString(final TestCase testCase) {
         assertEquals(testCase.string, testCase.type.toString());
     }
 
-    enum ToStringCase {
+    @SuppressWarnings({"unused", "QuestionableName"})
+    enum TestCase {
         INTEGER(Type.of(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
         STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
         LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
@@ -204,10 +205,10 @@ class TypeTest {
         private final List<String> formalParameters;
         private final Class<?> asClass;
 
-        ToStringCase(final Type<?> type,
-                     final String string,
-                     final List<String> formalParameters,
-                     final Class<?> asClass) {
+        TestCase(final Type<?> type,
+                 final String string,
+                 final List<String> formalParameters,
+                 final Class<?> asClass) {
             this.type = type;
             this.string = string;
             this.formalParameters = formalParameters;
