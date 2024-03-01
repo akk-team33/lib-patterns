@@ -13,14 +13,19 @@ import static java.util.stream.Collectors.joining;
 abstract class SingleTypedef extends Typedef {
 
     private final transient Lazy<String> stringValue = Lazy.init(this::toStringValue);
+    private final transient Lazy<List<String>> formalParameters = Lazy.init(this::newFormalParameters);
 
-    @Override
-    final List<String> getFormalParameters() {
+    private List<String> newFormalParameters() {
         return unmodifiableList(
                 Stream.of(asClass().getTypeParameters())
                       .map(TypeVariable::getName)
                       .collect(Collectors.toList())
         );
+    }
+
+    @Override
+    final List<String> getFormalParameters() {
+        return formalParameters.get();
     }
 
     private String toStringValue() {

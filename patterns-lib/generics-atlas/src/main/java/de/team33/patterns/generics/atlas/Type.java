@@ -74,6 +74,10 @@ public abstract class Type<T> {
         this.typedef = extract(ClassCase.toAssembly(thisClass));
     }
 
+    private Type(final Typedef typedef) {
+        this.typedef = typedef;
+    }
+
     private static Typedef extract(final Typedef thisAssembly) {
         final Class<?> thisClass = thisAssembly.asClass();
         if (Type.class.equals(thisClass))
@@ -96,10 +100,6 @@ public abstract class Type<T> {
         }
     }
 
-    private Type(final Typedef typedef) {
-        this.typedef = typedef;
-    }
-
     /**
      * Returns a {@link Type} based on a simple {@link Class}. Example:
      * <pre>
@@ -113,6 +113,7 @@ public abstract class Type<T> {
         };
     }
 
+    @SuppressWarnings("rawtypes")
     private static Type<?> of(final Typedef typedef) {
         return new Type(typedef) {
         };
