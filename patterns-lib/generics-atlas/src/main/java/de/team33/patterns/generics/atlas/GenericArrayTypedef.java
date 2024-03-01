@@ -11,7 +11,7 @@ class GenericArrayTypedef extends ArrayTypedef {
     private final Typedef componentType;
 
     GenericArrayTypedef(final GenericArrayType type, final Typedef context) {
-        this.componentType = (TypeCase.toAssembly(type.getGenericComponentType(), context));
+        this.componentType = TypeCase.toTypedef(type.getGenericComponentType(), context);
     }
 
     private static Class<?> arrayClass(final Class<?> componentClass) {

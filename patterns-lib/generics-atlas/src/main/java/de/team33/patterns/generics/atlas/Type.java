@@ -42,8 +42,8 @@ import java.util.stream.Stream;
  * @see #Type()
  * @see #of(Class)
  */
-@SuppressWarnings({"AbstractClassWithoutAbstractMethods", "unused"})
-public abstract class Type<T> {
+@SuppressWarnings({"AbstractClassWithoutAbstractMethods", "unused", "ClassWithTooManyMethods", "GrazieInspection"})
+public abstract class Type<T> extends Typedef {
 
     private static final Stream<? extends Type<?>> EMPTY = Stream.empty();
     private static final String NOT_DECLARED_IN_THIS = "member (%s) is not declared in the context of type (%s)";
@@ -56,7 +56,7 @@ public abstract class Type<T> {
             "    (of course, using definite types instead of type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Typedef typedef;
+    private final Typedef backing;
     private final transient Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
 
     /**
@@ -71,19 +71,21 @@ public abstract class Type<T> {
     protected Type() {
         final Class<?> thisClass = getClass();
         ensureNonGeneric(thisClass);
-        this.typedef = extract(ClassCase.toAssembly(thisClass));
+        this.backing = extract(ClassCase.toTypedef(thisClass));
     }
 
-    private Type(final Typedef typedef) {
-        this.typedef = typedef;
+    private Type(final Typedef backing) {
+        this.backing = backing;
     }
 
-    private static Typedef extract(final Typedef thisAssembly) {
-        final Class<?> thisClass = thisAssembly.asClass();
-        if (Type.class.equals(thisClass))
-            return thisAssembly.getActualParameters().get(0);
+    @SuppressWarnings("TailRecursion")
+    private static Typedef extract(final Typedef thisType) {
+        final Class<?> thisClass = thisType.asClass();
+        if (Type.class.equals(thisClass)) {
+            return thisType.getActualParameters().get(0);
+        }
 
-        final Typedef superType = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
+        final Typedef superType = thisType.getMemberType(thisClass.getGenericSuperclass());
         return extract(superType);
     }
 
@@ -109,19 +111,17 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toAssembly(simpleClass)) {
-        };
+        return new Type<T>(ClassCase.toTypedef(simpleClass)) {};
     }
 
     @SuppressWarnings("rawtypes")
     private static Type<?> of(final Typedef typedef) {
-        return new Type(typedef) {
-        };
+        return (typedef instanceof Type) ? (Type<?>) typedef : new Type(typedef) {};
     }
 
     private List<Type<?>> newActualParameters() {
         return Collections.unmodifiableList(
-                typedef.getActualParameters()
+                backing.getActualParameters()
                        .stream()
                        .map(Type::of)
                        .collect(Collectors.toList())
@@ -131,8 +131,9 @@ public abstract class Type<T> {
     /**
      * Returns the {@link Class} on which this Type is based.
      */
+    @Override
     public final Class<?> asClass() {
-        return typedef.asClass();
+        return backing.asClass();
     }
 
     /**
@@ -140,8 +141,9 @@ public abstract class Type<T> {
      *
      * @see #getActualParameters()
      */
+    @Override
     public final List<String> getFormalParameters() {
-        return typedef.getFormalParameters();
+        return backing.getFormalParameters();
     }
 
     /**
@@ -151,6 +153,7 @@ public abstract class Type<T> {
      *
      * @see #getFormalParameters()
      */
+    @Override
     public final List<Type<?>> getActualParameters() {
         return actualParameters.get();
     }
@@ -167,10 +170,9 @@ public abstract class Type<T> {
      * @see Method#getGenericReturnType()
      * @see Method#getGenericParameterTypes()
      */
+    @Override
     public final Type<?> getMemberType(final java.lang.reflect.Type type) {
-        //noinspection rawtypes
-        return new Type(typedef.getMemberAssembly(type)) {
-        };
+        return of(backing.getMemberType(type));
     }
 
     /**
@@ -288,28 +290,8 @@ public abstract class Type<T> {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * Two instances of Type are equal if they are {@linkplain #asClass() based} on the same class
-     * and defined by the same {@linkplain #getActualParameters() actual parameters}.
-     */
-    @Override
-    public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Type) && equals((Type<?>) obj));
-    }
-
-    private boolean equals(final Type<?> other) {
-        return typedef.equals(other.typedef);
-    }
-
-    @Override
-    public final int hashCode() {
-        return typedef.hashCode();
-    }
-
     @Override
     public final String toString() {
-        return typedef.toString();
+        return backing.toString();
     }
 }

@@ -11,7 +11,7 @@ class TypedefTest {
     @Test
     final void getActualParameter_unknown() {
         try {
-            final Typedef result = ClassCase.toAssembly(Integer.class).getActualParameter("E");
+            final Typedef result = ClassCase.toTypedef(Integer.class).getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();
@@ -19,20 +19,21 @@ class TypedefTest {
         }
     }
 
-    static interface StringList extends List<String> {}
+    @SuppressWarnings("InterfaceNeverImplemented")
+    interface StringList extends List<String> {}
 
     @Test
     final void getActualParameter_definite() {
-        final Typedef result = ClassCase.toAssembly(StringList.class)
-                                        .getMemberAssembly(StringList.class.getGenericInterfaces()[0])
+        final Typedef result = ClassCase.toTypedef(StringList.class)
+                                        .getMemberType(StringList.class.getGenericInterfaces()[0])
                                         .getActualParameter("E");
-        assertEquals(ClassCase.toAssembly(String.class), result);
+        assertEquals(ClassCase.toTypedef(String.class), result);
     }
 
     @Test
     final void getActualParameter_indefinite() {
         try {
-            final Typedef result = ClassCase.toAssembly(List.class)
+            final Typedef result = ClassCase.toTypedef(List.class)
                                             .getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalStateException e) {

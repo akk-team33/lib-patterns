@@ -42,14 +42,19 @@ abstract class Typedef {
         }
     }
 
-    final Typedef getMemberAssembly(final Type type) {
-        return TypeCase.toAssembly(type, this);
+    @SuppressWarnings("DesignForExtension")
+    Typedef getMemberType(final Type type) {
+        return TypeCase.toTypedef(type, this);
     }
 
     private boolean equals(final Typedef other) {
         return listView.get().equals(other.listView.get());
     }
 
+    /**
+     * Two instances of <em>Type</em> are equal if they are {@linkplain #asClass() based} on the same class
+     * and defined by the same {@linkplain #getActualParameters() actual parameters}.
+     */
     @Override
     public final boolean equals(final Object obj) {
         return (this == obj) || ((obj instanceof Typedef) && equals((Typedef) obj));

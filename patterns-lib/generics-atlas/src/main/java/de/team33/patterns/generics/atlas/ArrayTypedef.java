@@ -11,6 +11,7 @@ abstract class ArrayTypedef extends Typedef {
 
     private static final List<String> FORMAL_PARAMETERS = Collections.singletonList("E");
 
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     @Override
     final List<String> getFormalParameters() {
         return FORMAL_PARAMETERS;

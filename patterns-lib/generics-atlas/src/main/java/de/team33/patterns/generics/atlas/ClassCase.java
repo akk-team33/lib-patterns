@@ -13,7 +13,7 @@ enum ClassCase {
         this.mapping = mapping;
     }
 
-    static Typedef toAssembly(final Class<?> underlyingClass) {
+    static Typedef toTypedef(final Class<?> underlyingClass) {
         return (underlyingClass.isArray() ? ARRAY : CLASS).mapping.apply(underlyingClass);
     }
 }
