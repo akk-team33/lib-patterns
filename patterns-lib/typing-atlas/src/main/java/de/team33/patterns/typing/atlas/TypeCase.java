@@ -1,4 +1,4 @@
-package de.team33.patterns.generics.atlas;
+package de.team33.patterns.typing.atlas;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;

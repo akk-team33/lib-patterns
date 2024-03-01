@@ -3,4 +3,4 @@
  *
  * @see <a href="https://de.wikipedia.org/wiki/Atlas_(Mond)">Atlas</a>
  */
-package de.team33.patterns.generics.atlas;
+package de.team33.patterns.typing.atlas;

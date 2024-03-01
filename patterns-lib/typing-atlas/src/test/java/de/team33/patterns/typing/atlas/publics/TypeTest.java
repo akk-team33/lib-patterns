@@ -1,9 +1,9 @@
-package de.team33.patterns.generics.atlas.publics;
+package de.team33.patterns.typing.atlas.publics;
 
-import de.team33.patterns.generics.atlas.Type;
-import de.team33.patterns.generics.atlas.testing.ListType;
-import de.team33.patterns.generics.atlas.testing.StringListType;
-import de.team33.patterns.generics.atlas.testing.MapType;
+import de.team33.patterns.typing.atlas.Type;
+import de.team33.patterns.typing.atlas.testing.ListType;
+import de.team33.patterns.typing.atlas.testing.StringListType;
+import de.team33.patterns.typing.atlas.testing.MapType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
