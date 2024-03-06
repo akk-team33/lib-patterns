@@ -5,10 +5,24 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
 
 class CollectingTest {
 
@@ -28,15 +42,20 @@ class CollectingTest {
     final void add_more() {
         final List<String> expected = SUPPLY.nextStringList(4);
         final List<String> result = Collecting.add(new LinkedList<>(),
-                                                   expected.get(0), expected.get(1), expected.get(2), expected.get(3));
+                                                   expected.get(0),
+                                                   expected.get(1),
+                                                   expected.get(2),
+                                                   expected.get(3));
         assertEquals(expected, result);
     }
 
     @Test
     final void add_more_null() {
+        final LinkedList<String> subject = new LinkedList<>();
+        final String element0 = SUPPLY.nextString();
+        final String element1 = SUPPLY.nextString();
         try {
-            final List<String> result = Collecting.add(new LinkedList<>(),
-                                                       SUPPLY.nextString(), SUPPLY.nextString(), NULL_STRING_ARRAY);
+            final List<String> result = Collecting.add(subject, element0, element1, NULL_STRING_ARRAY);
             fail("expected to fail - but was " + result);
         } catch (final NullPointerException ignored) {
             // as expected
@@ -109,7 +128,10 @@ class CollectingTest {
         final List<String> expected = new ArrayList<String>(origin) {{
             removeAll(Arrays.asList(obsolete));
         }};
-        final List<String> result = Collecting.remove(new ArrayList<>(origin), obsolete[0], obsolete[1], obsolete[2]);
+        final List<String> result = Collecting.remove(new ArrayList<>(origin),
+                                                      obsolete[0],
+                                                      obsolete[1],
+                                                      obsolete[2]);
         assertEquals(expected, result);
     }
 
@@ -124,10 +146,10 @@ class CollectingTest {
         final Set<String> result = Collecting.removeAll(new TreeSet<>(origin), obsolete);
         assertEquals(expected, result);
 
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.removeAll(null, obsolete));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.removeAll(new TreeSet<>(), (Collection<?>) null));
+        assertThrows(NullPointerException.class, () -> Collecting.removeAll(null, obsolete));
+
+        final TreeSet<Object> subject = new TreeSet<>();
+        assertThrows(NullPointerException.class, () -> Collecting.removeAll(subject, (Collection<?>) null));
     }
 
     @Test
@@ -156,7 +178,8 @@ class CollectingTest {
     final void removeAll_Iterable() {
         final List<String> origin = SUPPLY.nextStringList(8);
         final Iterable<String> obsolete1 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
-        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"}) final Iterable<String> obsolete2 = () -> obsolete1.iterator();
+        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+        final Iterable<String> obsolete2 = () -> obsolete1.iterator();
         final List<String> expected = new ArrayList<String>(origin) {{
             obsolete1.forEach(item -> removeAll(Collections.singleton(item)));
         }};
@@ -177,10 +200,10 @@ class CollectingTest {
         final Set<String> result = Collecting.removeIf(new TreeSet<>(origin), obsolete::contains);
         assertEquals(expected, result);
 
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.removeIf(null, obsolete::contains));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.removeIf(new TreeSet<>(), null));
+        assertThrows(NullPointerException.class, () -> Collecting.removeIf(null, obsolete::contains));
+
+        final TreeSet<Object> subject = new TreeSet<>();
+        assertThrows(NullPointerException.class, () -> Collecting.removeIf(subject, null));
     }
 
     @ParameterizedTest
@@ -194,10 +217,10 @@ class CollectingTest {
         final Set<String> result = Collecting.retainAll(new TreeSet<>(origin), relevant);
         assertEquals(expected, result);
 
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.retainAll(null, relevant));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.retainAll(new TreeSet<>(), (Collection<?>) null));
+        assertThrows(NullPointerException.class, () -> Collecting.retainAll(null, relevant));
+
+        final TreeSet<Object> subject = new TreeSet<>();
+        assertThrows(NullPointerException.class, () -> Collecting.retainAll(subject, (Collection<?>) null));
     }
 
     @Test
@@ -226,8 +249,10 @@ class CollectingTest {
     final void retainAll_Iterable() {
         final List<String> origin = SUPPLY.nextStringList(8);
         final List<String> relevant0 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
-        @SuppressWarnings("UnnecessaryLocalVariable") final Iterable<String> relevant1 = relevant0;
-        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"}) final Iterable<String> relevant2 = () -> relevant0.iterator();
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        final Iterable<String> relevant1 = relevant0;
+        @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+        final Iterable<String> relevant2 = () -> relevant0.iterator();
         final List<String> expected = new ArrayList<String>(origin) {{
             retainAll(relevant0);
         }};
@@ -250,8 +275,8 @@ class CollectingTest {
         assertFalse(Collecting.contains(subject, noItem));
         assertFalse(Collecting.contains(subject, foreign));
 
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.contains(null, SUPPLY.nextString()));
+        final String element = SUPPLY.nextString();
+        assertThrows(NullPointerException.class, () -> Collecting.contains(null, element));
     }
 
     @Test
@@ -284,14 +309,11 @@ class CollectingTest {
 
         final Collection<String> missing = null;
         final Collection<String> empty = new ArrayList<>(0);
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.containsAll(missing, SUPPLY.nextStringList(4)));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.containsAll(missing, empty));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.containsAll(new ArrayList<>(SUPPLY.nextStringList(4)), missing));
-        assertThrows(NullPointerException.class,
-                     () -> Collecting.containsAll(empty, missing));
+        final List<String> elements = SUPPLY.nextStringList(4);
+        assertThrows(NullPointerException.class, () -> Collecting.containsAll(missing, elements));
+        assertThrows(NullPointerException.class, () -> Collecting.containsAll(missing, empty));
+        assertThrows(NullPointerException.class, () -> Collecting.containsAll(elements, missing));
+        assertThrows(NullPointerException.class, () -> Collecting.containsAll(empty, missing));
     }
 
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
