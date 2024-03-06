@@ -19,7 +19,7 @@ public class Generic<T> {
 
     @Override
     public final int hashCode() {
-        return tValue.hashCode();
+        return Objects.hashCode(tValue);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class Generic<T> {
 
     @Override
     public final String toString() {
-        return tValue.toString();
+        return Objects.toString(tValue);
     }
 }

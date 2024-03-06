@@ -1,6 +1,8 @@
 package de.team33.patterns.typing.atlas.sample.publics;
 
-import de.team33.patterns.typing.atlas.sample.*;
+import de.team33.patterns.typing.atlas.Type;
+import de.team33.patterns.typing.atlas.sample.Charger;
+import de.team33.patterns.typing.atlas.sample.UnfitConditionException;
 import de.team33.patterns.typing.atlas.sample.testing.Buildable;
 import de.team33.patterns.typing.atlas.sample.testing.Generic;
 import de.team33.patterns.typing.atlas.sample.testing.Sample;
@@ -36,7 +38,7 @@ public class ChargerTest implements Charger {
     @Test
     final void setterNotApplicable() {
         try {
-            final Sample result = charge(new SampleEx());
+            final Sample result = charge(SampleEx.class, new SampleEx());
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
             // e.printStackTrace();
@@ -48,7 +50,7 @@ public class ChargerTest implements Charger {
     @Test
     final void supplierNotFound() {
         try {
-            final Sample result = charge(new Sample(), "nextStrings");
+            final Sample result = charge(Sample.class, new Sample(), "nextStrings");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
             // e.printStackTrace();
@@ -60,26 +62,33 @@ public class ChargerTest implements Charger {
 
     @Test
     final void charge_Sample() {
-        final Sample result = charge(new Sample());
+        final Sample result = charge(Sample.class, new Sample());
         assertEquals(sample, result);
     }
 
     @Test
     final void charge_SampleEx() {
-        final Sample result = charge(new SampleEx(), "setDateValue");
+        final Sample result = charge(SampleEx.class, new SampleEx(), "setDateValue");
         assertEquals(sample, result);
     }
 
     @Test
     final void charge_Buildable() {
-        final Buildable result = charge(Buildable.builder()).build();
+        final Buildable result = charge(Buildable.Builder.class, Buildable.builder()).build();
         assertEquals(buildable, result);
     }
 
     @Test
     final void charge_Generic() {
-        final Generic<String> result = charge(new Generic<>(), "setTValue");
+        final Generic<String> result = charge(new Type<Generic<String>>() {}, new Generic<>(), "setTValue");
         assertEquals(new Generic<String>(), result);
+    }
+
+    @Test
+    final void charge_Generic_2() {
+        final Generic<String> expected = new Generic<String>().setTValue(sample.getStringValue());
+        final Generic<String> result = charge(new Type<Generic<String>>() {}, new Generic<>());
+        assertEquals(expected, result);
     }
 
     public final boolean nextBoolean() {

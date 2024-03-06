@@ -1,8 +1,9 @@
 package de.team33.patterns.typing.atlas.sample;
 
+import de.team33.patterns.typing.atlas.Type;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static de.team33.patterns.typing.atlas.sample.Types.naming;
 import static java.lang.String.format;
 
 final class Charging<S extends Charger, T> extends Supplying<S> {
@@ -40,19 +40,19 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             "%n" +
             "    Feel free to choose another name for that method.%n";
 
-    private static final Map<Class<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
+    private static final Map<Type<?>, List<Method>> SETTERS = new ConcurrentHashMap<>(0);
 
+    private final Type<T> targetType;
     private final T target;
-    private final Class<?> targetType;
 
-    Charging(final S source, final T target, final Collection<String> ignore) {
+    Charging(final S source, final Type<T> targetType, final T target, final Collection<String> ignore) {
         super(source, ignore);
+        this.targetType = targetType;
         this.target = target;
-        this.targetType = target.getClass();
     }
 
-    private static List<Method> newSettersOf(final Class<?> targetType) {
-        return Methods.publicSetters(targetType)
+    private static List<Method> newSettersOf(final Type<?> targetType) {
+        return Methods.publicSetters(targetType.asClass())
                       .collect(Collectors.toList());
     }
 
@@ -77,7 +77,8 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
 
     final T result() {
         desiredSetters().forEach(setter -> {
-            final Type valueType = setter.getGenericParameterTypes()[0];
+            final Type<?> valueType = targetType.parameterTypesOf(setter).get(0);
+            // final java.lang.reflect.Type valueType = setter.getGenericParameterTypes()[0];
             final Supplier<?> supplier = desiredSupplier(valueType, preference(setter));
             if (null == supplier) {
                 throw new LocalException(this, setter, valueType);
@@ -109,13 +110,14 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
             super(message, cause);
         }
 
-        LocalException(final Charging<?, ?> charging, final Method setter, final Type valueType) {
+        LocalException(final Charging<?, ?> charging, final Method setter, final Type<?> valueType) {
             super(missingMessage(charging, setter, valueType), null);
         }
 
-        private static String missingMessage(final Charging<?, ?> charging, final Method setter, final Type valueType) {
-            final Types.Naming naming = naming(valueType);
-            final String name1 = naming.parameterizedName(valueType);
+        private static String missingMessage(final Charging<?, ?> charging,
+                                             final Method setter,
+                                             final Type valueType) {
+            final String name1 = valueType.toString();
             final String name2 = Methods.normalName(setter);
             return format(NO_SUPPLIER, charging.sourceType, charging.targetType,
                           setter.toGenericString(), setter.getName(), name1, name2);
