@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class MappingTest extends Supply {
+class MappingTest extends Supply
+{
 
     private Map<String, String> samples;
 
@@ -90,11 +91,14 @@ class MappingTest extends Supply {
 
     @Test
     final void remove_subject_null() {
-        assertThrows(NullPointerException.class, () -> Mapping.remove(null, nextString()));
-        assertThrows(NullPointerException.class, () -> Mapping.remove(null, nextDouble()));
+        final String aString = nextString();
+        final double aDouble = nextDouble();
+        assertThrows(NullPointerException.class, () -> Mapping.remove(null, aString));
+        assertThrows(NullPointerException.class, () -> Mapping.remove(null, aDouble));
         assertThrows(NullPointerException.class, () -> Mapping.remove(null, null));
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     @Test
     final void remove_incompatible() {
         final Map<String, String> stage = new TreeMap<>(samples);
@@ -104,9 +108,8 @@ class MappingTest extends Supply {
         assertSame(stage, result);
 
         // cross-check ...
-
-        //noinspection SuspiciousMethodCalls
-        assertThrows(ClassCastException.class, () -> stage.remove(nextDouble()));
+        final double aDouble = nextDouble();
+        assertThrows(ClassCastException.class, () -> stage.remove(aDouble));
     }
 
     @Test
@@ -126,8 +129,10 @@ class MappingTest extends Supply {
 
     @Test
     final void containsKey_subject_null() {
-        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, nextString()));
-        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, nextLong()));
+        final String aString = nextString();
+        final long aLong = nextLong();
+        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, aString));
+        assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, aLong));
         assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, null));
     }
 
@@ -165,8 +170,10 @@ class MappingTest extends Supply {
 
     @Test
     final void containsValue_subject_null() {
-        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, nextString()));
-        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, nextDouble()));
+        final String aString = nextString();
+        final double aDouble = nextDouble();
+        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, aString));
+        assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, aDouble));
         assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, null));
     }
 
@@ -208,8 +215,10 @@ class MappingTest extends Supply {
 
     @Test
     final void get_subject_null() {
-        assertThrows(NullPointerException.class, () -> Mapping.get(null, nextString()));
-        assertThrows(NullPointerException.class, () -> Mapping.get(null, nextFloat()));
+        final String aString = nextString();
+        final float aFloat = nextFloat();
+        assertThrows(NullPointerException.class, () -> Mapping.get(null, aString));
+        assertThrows(NullPointerException.class, () -> Mapping.get(null, aFloat));
         assertThrows(NullPointerException.class, () -> Mapping.get(null, null));
     }
 
