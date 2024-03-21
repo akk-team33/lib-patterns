@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 /**
  * Serves as a base class for builder implementations {@code <B>} and as such provides a model that separates basic
- * builder concepts from the target data model {@code <T>}.
+ * builder concepts from the actual target data model {@code <T>}.
  * <p>
  * This implementation can be used as a base if instances of a target type are to be built that is itself mutable
  * but does not itself implement a builder pattern. The builder initially only collects the modifying operations
