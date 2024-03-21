@@ -1,4 +1,4 @@
-package de.team33.sample.patterns.building.elara;
+package de.team33.patterns.building.elara.sample;
 
 import de.team33.patterns.building.elara.ProtoBuilder;
 import de.team33.patterns.reflect.luna.Fields;
