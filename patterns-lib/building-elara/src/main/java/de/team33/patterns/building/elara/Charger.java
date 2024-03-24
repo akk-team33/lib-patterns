@@ -4,34 +4,34 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Serves as a base class for builder-like implementations {@code <B>} and as such provides a model that separates
- * basic builder concepts from the actual target data model {@code <T>}.
+ * Serves as a base class for builder-like charger implementations {@code <C>} and as such provides a model that
+ * separates basic builder concepts from the actual target data model {@code <T>}.
  * <p>
- * This implementation can be used as a base if an instance of the target type should be associated with the builder
- * instance from the start and also be used as the result of the build process.
+ * This implementation can be used as a base if an instance of the target type should be associated with the charger
+ * instance from the start and also be used as the result of the charging process.
  * <p>
- * An instance of this builder type is limited to single use.
+ * An instance of this charger type is limited to single use.
  * Once the terminating {@link #charged()} method has been used, subsequent calls to {@link #setup(Consumer)} throw an
  * {@link IllegalStateException}.
  *
- * @param <T> The target type: an instance of that type is associated with the builder instance
+ * @param <T> The target type: an instance of that type is associated with the charger instance
  *            to hold the data to be collected during the build process.
- *            That type is expected to be mutable, at least in the scope of the concrete builder implementation.
- * @param <B> The builder type: the intended effective type of the concrete builder implementation.
+ *            That type is expected to be mutable, at least in the scope of the concrete charger implementation.
+ * @param <C> The charger type: the intended effective type of the concrete charger implementation.
  */
-public class Charger<T, B extends Charger<T, B>> extends ProtoBuilder<T, B> implements Setup<T, B> {
+public class Charger<T, C extends Charger<T, C>> extends ProtoBuilder<T, C> implements Setup<T, C> {
 
     /**
      * Initializes a new instance.
      *
-     * @param target       The target instance to be associated with the builder.
-     *                     The implementation assumes that it is exclusively available to the builder
+     * @param target       The target instance to be associated with the charger.
+     *                     The implementation assumes that it is exclusively available to the charger
      *                     for the course of the build process.
-     * @param builderClass The {@link Class} representation of the intended effective builder type.
-     * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
+     * @param chargerClass The {@link Class} representation of the intended effective charger type.
+     * @throws IllegalArgumentException if the given charger class does not represent <em>this</em> instance.
      */
-    protected Charger(final T target, final Class<B> builderClass) {
-        super(target, newLifecycle(), builderClass);
+    protected Charger(final T target, final Class<C> chargerClass) {
+        super(target, newLifecycle(), chargerClass);
     }
 
     private static Lifecycle newLifecycle() {
