@@ -79,4 +79,36 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends BuilderBase<B
         lifecycle.increment();
         return mapping.apply(core);
     }
+
+    /**
+     * Abstracts a lifecycle controller for a {@link ProtoBuilder} implementation.
+     */
+    public interface Lifecycle {
+
+        /**
+         * Defines a simple lifecycle controller for implementations that don't actually need one.
+         */
+        Lifecycle INFINITE = new Lifecycle() {
+            @Override
+            public void check() {
+            }
+
+            @Override
+            public void increment() {
+            }
+        };
+
+        /**
+         * Will be called on any setup step.
+         *
+         * @throws IllegalStateException if the lifecycle does not allow further setup on the associated <em>core</em>
+         *                               instance.
+         */
+        void check();
+
+        /**
+         * Will be called on any final build step.
+         */
+        void increment();
+    }
 }
