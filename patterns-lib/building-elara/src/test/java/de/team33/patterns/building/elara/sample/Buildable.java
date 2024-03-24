@@ -1,6 +1,6 @@
 package de.team33.patterns.building.elara.sample;
 
-import de.team33.patterns.building.elara.POJOBuilder;
+import de.team33.patterns.building.elara.DataBuilder;
 import de.team33.patterns.reflect.luna.Fields;
 
 import java.time.Instant;
@@ -68,7 +68,7 @@ public class Buildable {
         return new Builder(this);
     }
 
-    public static final class Builder extends POJOBuilder<Buildable, Buildable, Builder> {
+    public static final class Builder extends DataBuilder<Buildable, Buildable, Builder> {
 
         private Builder(final Buildable origin) {
             super(new Buildable(origin), Buildable::new, Builder.class);

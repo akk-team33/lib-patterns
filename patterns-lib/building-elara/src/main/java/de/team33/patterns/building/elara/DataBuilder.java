@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @param <T> The target type: an instance of that type will be returned by {@link #build()}.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-public class POJOBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilder<C, B> {
+public class DataBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilder<C, B> {
 
     private final Function<C, T> mapping;
 
@@ -36,7 +36,7 @@ public class POJOBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilde
      * @param builderClass The {@link Class} representation of the intended effective builder type.
      * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
-    protected POJOBuilder(final C core, final Function<C, T> mapping, final Class<B> builderClass) {
+    protected DataBuilder(final C core, final Function<C, T> mapping, final Class<B> builderClass) {
         super(core, builderClass);
         this.mapping = mapping;
     }
