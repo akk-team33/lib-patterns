@@ -34,6 +34,12 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.18.1
+
+* building-elara
+  * Refined existing classes
+  * Added class DataBuilder
+
 ### 1.18.0
 
 * Added module collection-ceres
