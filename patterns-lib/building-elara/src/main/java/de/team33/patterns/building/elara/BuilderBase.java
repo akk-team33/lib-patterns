@@ -1,12 +1,12 @@
 package de.team33.patterns.building.elara;
 
 /**
- * Base class of a generic class hierarchy that has a type parameter intended to represent the effective type of a
+ * Base class of a generic class hierarchy that has a type parameter intended to represent the effective type of
  * concrete implementation.
  * <p>
  * The main purpose is the realization of a generic builder pattern, whereby there should be methods that should
  * result in <em>this</em> - i.e. the builder instance itself - in order to chain further method calls.
- *
+ * <p>
  * For this purpose, it should be ensured in the constructor that <em>this</em> actually corresponds to the
  * designated type.
  *
@@ -21,7 +21,7 @@ public class BuilderBase<B extends BuilderBase<B>> {
      * Initializes a new instance and checks the intended builder type for consistency.
      *
      * @param builderClass The {@link Class} representation of the intended effective builder type.
-     * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
+     * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
     protected BuilderBase(final Class<B> builderClass) {
         if (!builderClass.isAssignableFrom(getClass())) {

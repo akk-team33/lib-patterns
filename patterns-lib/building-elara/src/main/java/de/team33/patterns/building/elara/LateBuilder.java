@@ -27,7 +27,7 @@ public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> 
      *
      * @param newResult    A {@link Supplier} method to retrieve a new instance of the result type.
      * @param builderClass The {@link Class} representation of the intended effective builder type.
-     * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
+     * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
     protected LateBuilder(final Supplier<T> newResult, final Class<B> builderClass) {
         super(builderClass);

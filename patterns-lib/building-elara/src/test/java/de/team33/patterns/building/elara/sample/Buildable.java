@@ -1,12 +1,13 @@
 package de.team33.patterns.building.elara.sample;
 
-import de.team33.patterns.building.elara.ProtoBuilder;
+import de.team33.patterns.building.elara.POJOBuilder;
 import de.team33.patterns.reflect.luna.Fields;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Buildable {
 
     private static final Fields FIELDS = Fields.of(Buildable.class);
@@ -67,10 +68,10 @@ public class Buildable {
         return new Builder(this);
     }
 
-    public static final class Builder extends ProtoBuilder<Buildable, Builder> {
+    public static final class Builder extends POJOBuilder<Buildable, Buildable, Builder> {
 
         private Builder(final Buildable origin) {
-            super(new Buildable(origin), Builder.class);
+            super(new Buildable(origin), Buildable::new, Builder.class);
         }
 
         public final Builder setIntValue(final int value) {
@@ -87,10 +88,6 @@ public class Buildable {
 
         public final Builder setStringValue(final String value) {
             return setup(subject -> subject.stringValue = value);
-        }
-
-        public final Buildable build() {
-            return build(Buildable::new);
         }
     }
 }

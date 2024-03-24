@@ -1,6 +1,7 @@
 package de.team33.patterns.building.elara;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Serves as a base class for builder-like implementations {@code <B>} and as such provides a model that separates
@@ -18,10 +19,7 @@ import java.util.function.Consumer;
  *            That type is expected to be mutable, at least in the scope of the concrete builder implementation.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implements Setup<T, B> {
-
-    private final T target;
-    private boolean isCharged = false;
+public class Charger<T, B extends Charger<T, B>> extends ProtoBuilder<T, B> implements Setup<T, B> {
 
     /**
      * Initializes a new instance.
@@ -30,34 +28,37 @@ public class Charger<T, B extends Charger<T, B>> extends BuilderBase<B> implemen
      *                     The implementation assumes that it is exclusively available to the builder
      *                     for the course of the build process.
      * @param builderClass The {@link Class} representation of the intended effective builder type.
-     * @throws IllegalArgumentException if the specified builder class does not represent the instance to create.
+     * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
     protected Charger(final T target, final Class<B> builderClass) {
-        super(builderClass);
-        this.target = target;
+        super(target, newLifecycle(), builderClass);
     }
 
-    /**
-     * {@inheritDoc}
-     * <p>
-     * This implementation applies the given consumer directly to the associated target.
-     */
-    @Override
-    public final B setup(final Consumer<T> consumer) {
-        if (isCharged) {
-            throw new IllegalStateException("the associated target is already released");
-        }
-        consumer.accept(target);
-        return THIS();
+    private static Lifecycle newLifecycle() {
+        return new Lifecycle() {
+
+            private boolean charged = false;
+
+            @Override
+            public void check() {
+                if (charged) {
+                    throw new IllegalStateException("the associated target is already released");
+                }
+            }
+
+            @Override
+            public void increment() {
+                charged = true;
+            }
+        };
     }
 
     /**
      * Returns the associated target instance.
      * <p>
-     * Subsequent calls of {@link #setup(Consumer)} will lead to an {@link IllegalStateException}.
+     * Subsequent calls of {@link #setup(Consumer)} will lead to an {@link IllegalStateException}!
      */
     public final T charged() {
-        isCharged = true;
-        return target;
+        return build(Function.identity());
     }
 }
