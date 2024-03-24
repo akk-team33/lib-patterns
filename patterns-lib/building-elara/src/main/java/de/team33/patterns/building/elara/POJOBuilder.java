@@ -7,17 +7,17 @@ import java.util.function.Function;
  * builder concepts from the actual core data model {@code <C>}.
  * <p>
  * This implementation can be used as a base if an instance of the core type {@code <C>} should be linked to the
- * builder instance from the start, but the result of the build process shouldn't necessarily be of the core type,
- * but instead a mapping exists that converts the core type {@code <C>} to the final target type {@code <T>}.
+ * builder instance from the start, the result of the build process shouldn't necessarily be of the core type and
+ * a mapping exists that converts the core type {@code <C>} to the final target type {@code <T>}.
  * <p>
- * Core type {@code <C>} and target type {@code <T>} may also be identical, but avoid the final result to be identical
+ * Core type {@code <C>} and target type {@code <T>} may also be the same, but avoid the final result to be identical
  * to the originally associated target instance (e.g. when using {@link Function#identity()} as mapping).
  * You should prefer {@link Charger} in this particular case!
  *
- * @param <T> The target type: an instance of that type will be returned by {@link #build()}.
  * @param <C> The core type: an instance of that type is associated with the builder instance
  *            to hold the data to be collected during the build process.
  *            That type is expected to be mutable, at least in the scope of the concrete builder implementation.
+ * @param <T> The target type: an instance of that type will be returned by {@link #build()}.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
 public class POJOBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilder<C, B> {
@@ -45,12 +45,16 @@ public class POJOBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilde
      * Applies the <em>core</em> of <em>this</em> builder to the given {@link Function} and returns the result.
      * <p>
      * While the {@link Function} is being called, the <em>core</em> is exclusively available to it,
-     * but must not be "hijacked" from the context of the call or the executing thread!
+     * but must not be "hijacked" from the context of the call or the executing thread.
+     * Otherwise, you may produce uncontrollable side effects!
      */
     public final <R> R peek(final Function<C, R> function) {
         return build(function);
     }
 
+    /**
+     * Returns the build result.
+     */
     public final T build() {
         return build(mapping);
     }
