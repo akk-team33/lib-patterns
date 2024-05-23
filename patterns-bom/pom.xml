@@ -52,11 +52,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>io-phobos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-ariel</artifactId>
                 <version>${project.version}</version>
             </dependency>
