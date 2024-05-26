@@ -8,51 +8,11 @@ import java.util.stream.Stream;
 
 /**
  * A utility interface:
- * represents an interface of a basic random generator that defines methods for primitive values as well as
+ * represents an interface of a basic arbitrary generator that defines methods for primitive values as well as
  * values of some other basic types, including {@code enum} types, {@link String} and {@link BigInteger}.
  * <p>
- * Most methods provide a default implementation that (directly or indirectly) uses {@link #nextBits(int)}.
+ * Most methods provide a default implementation that (directly or indirectly) uses {@link #anyBits(int)}.
  * The latter is the only method without a default implementation.
- * <p>
- * This interface is primarily intended to extend a derivation of {@link Random} with basic methods, example:
- * <pre>
- * import de.team33.patterns.arbitrary.mimas.Generator;
- *
- * import java.math.BigInteger;
- * import java.util.Random;
- *
- * public class Producer extends Random implements Generator {
- *
- *     &#64;Override
- *     public final BigInteger nextBits(final int numBits) {
- *         return new BigInteger(numBits, this);
- *     }
- * }
- * </pre>
- * <p>
- * In such a use case, some default implementations will be overwritten by existing implementations from
- * {@link Random}.
- * <p>
- * However, it can also be used in other ways. In particular, deterministic implementations are also conceivable.
- * <p>
- * *CAUTION: When used with Java 17 or higher, the above example will not work due to a new class hierarchy
- * underlying the {@link Random} class. In this case, you should use the following example as a guide:
- * <pre>
- * import de.team33.patterns.arbitrary.mimas.Generator;
- *
- * import java.math.BigInteger;
- * import java.util.Random;
- *
- * public class Producer implements Generator {
- *
- *     private final Random random = new Random();
- *
- *     &#64;Override
- *     public final BigInteger nextBits(final int numBits) {
- *         return new BigInteger(numBits, random);
- *     }
- * }
- * </pre>
  *
  * @see de.team33.patterns.arbitrary.mimas package
  */
@@ -77,51 +37,48 @@ public interface Generator {
      * Returns any non-negative {@link BigInteger} representing a sequence of significant bits of a given length.
      * In other words, the result is any value between zero (inclusive) and 2<sup>length</sup> (exclusive).
      * <p>
-     * A typical implementation will return a random value within the defined bounds, with each possible value being
-     * equally probable.
+     * A typical implementation will return an arbitrary value within the defined bounds, with each possible value
+     * being equally probable.
      */
-    BigInteger nextBits(final int numBits);
+    BigInteger anyBits(final int numBits);
 
     /**
      * Returns any {@code boolean} value.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextBoolean()}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
-    default boolean nextBoolean() {
-        return nextBits(1).equals(BigInteger.ONE);
+    default boolean anyBoolean() {
+        return anyBits(1).equals(BigInteger.ONE);
     }
 
     /**
      * Returns any {@code byte} value.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default byte nextByte() {
-        return nextBits(Byte.SIZE).byteValue();
+        return anyBits(Byte.SIZE).byteValue();
     }
 
     /**
      * Returns any {@code short} value.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default short nextShort() {
-        return nextBits(Short.SIZE).shortValue();
+        return anyBits(Short.SIZE).shortValue();
     }
 
     /**
      * Returns any {@code int} value.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      * <p>
      * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextInt()}.
      */
     default int nextInt() {
-        return nextBits(Integer.SIZE).intValue();
+        return anyBits(Integer.SIZE).intValue();
     }
 
     /**
@@ -148,13 +105,13 @@ public interface Generator {
     /**
      * Returns any {@code long} value.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      * <p>
      * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextLong()}.
      */
     default long nextLong() {
-        return nextBits(Long.SIZE).longValue();
+        return anyBits(Long.SIZE).longValue();
     }
 
     /**
@@ -178,13 +135,13 @@ public interface Generator {
     /**
      * Returns a {@code float} value between zero (incl.) and one (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      * <p>
      * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextFloat()}.
      */
     default float nextFloat() {
-        final float numerator = nextBits(Util.FLOAT_RESOLUTION).floatValue();
+        final float numerator = anyBits(Util.FLOAT_RESOLUTION).floatValue();
         final float denominator = BigInteger.ONE.shiftLeft(Util.FLOAT_RESOLUTION).floatValue();
         return numerator / denominator;
     }
@@ -192,13 +149,13 @@ public interface Generator {
     /**
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      * <p>
      * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
      * {@link Random#nextDouble()}.
      */
     default double nextDouble() {
-        final double numerator = nextBits(Util.DOUBLE_RESOLUTION).doubleValue();
+        final double numerator = anyBits(Util.DOUBLE_RESOLUTION).doubleValue();
         final double denominator = BigInteger.ONE.shiftLeft(Util.DOUBLE_RESOLUTION).doubleValue();
         return numerator / denominator;
     }
@@ -237,12 +194,12 @@ public interface Generator {
     /**
      * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBits(int)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger nextBigInteger(final BigInteger bound) {
         if (BigInteger.ZERO.compareTo(bound) < 0) {
             final int bitLength = bound.bitLength();
-            return Stream.generate(() -> nextBits(bitLength))
+            return Stream.generate(() -> anyBits(bitLength))
                          .filter(result -> result.compareTo(bound) < 0)
                          .findAny()
                          .orElseThrow(NoSuchElementException::new);

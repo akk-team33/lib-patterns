@@ -10,7 +10,7 @@ import java.util.Random;
 public class Producer extends Random implements Generator, Charger, Initiator {
 
     @Override
-    public final BigInteger nextBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, this);
     }
 

@@ -37,7 +37,7 @@ class TripTest extends TupleTestBase {
     final void testHashCode() {
         final Trip<Instant, String, BigInteger> expected = Trip.of(nextInstant(),
                                                                    nextString(),
-                                                                   nextBits(nextInt(1, 256)));
+                                                                   anyBits(nextInt(1, 256)));
         final Trip<Instant, String, BigInteger> result = new Trip<>(expected.red(),
                                                                     expected.green(),
                                                                     expected.blue());

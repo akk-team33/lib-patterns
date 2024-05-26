@@ -40,7 +40,7 @@ class QuadTest extends TupleTestBase {
     final void testHashCode() {
         final Quad<Instant, String, BigInteger, Float> expected = Quad.of(nextInstant(),
                                                                           nextString(),
-                                                                          nextBits(nextInt(1, 256)),
+                                                                          anyBits(nextInt(1, 256)),
                                                                           nextFloat());
         final Quad<Instant, String, BigInteger, Float> result = new Quad<>(expected.north(),
                                                                            expected.east(),

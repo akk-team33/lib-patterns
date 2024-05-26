@@ -15,7 +15,7 @@ public class Supply implements Generator {
     private final Random random = new Random();
 
     @Override
-    public BigInteger nextBits(int numBits) {
+    public BigInteger anyBits(int numBits) {
         return new BigInteger(numBits, random);
     }
 

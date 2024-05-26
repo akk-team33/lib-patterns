@@ -11,7 +11,7 @@ public class PWGen extends SecureRandom implements Generator {
     private static final String CHARS = "abcdefghijkmnopqrstuvwxyz-ABCDEFGHJKLMNPQRSTUVWXYZ_0123456789.&%$";
 
     @Override
-    public final BigInteger nextBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, this);
     }
 

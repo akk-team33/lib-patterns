@@ -19,7 +19,7 @@ public class Supply extends Random implements Generator, Charger {
     public static final String LETTERS = LOWER_LETTERS + UPPER_LETTERS;
 
     @Override
-    public final BigInteger nextBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, this);
     }
 

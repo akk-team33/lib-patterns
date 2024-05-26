@@ -15,7 +15,7 @@ import java.util.Random;
 public class Supply extends Random implements Generator, Charger {
 
     @Override
-    public final BigInteger nextBits(int numBits) {
+    public final BigInteger anyBits(int numBits) {
         return new BigInteger(numBits, this);
     }
 

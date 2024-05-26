@@ -33,7 +33,7 @@ class GeneratorTest {
     final void simple() {
         final Generator simple = Generator.simple();
         assertInstanceOf(Generator.class, simple);
-        assertInstanceOf(Boolean.class, simple.nextBoolean());
+        assertInstanceOf(Boolean.class, simple.anyBoolean());
         assertInstanceOf(Byte.class, simple.nextByte());
         // etc. ...
     }
@@ -41,7 +41,7 @@ class GeneratorTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})
     final void nextBits(final int numBits) {
-        final BigInteger result = random.nextBits(numBits);
+        final BigInteger result = random.anyBits(numBits);
         assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
 
@@ -53,7 +53,7 @@ class GeneratorTest {
     @Test
     final void nextBoolean() {
         assertInstanceOf(Boolean.class, random.nextBoolean());
-        assertFalse(fixed.nextBoolean());
+        assertFalse(fixed.anyBoolean());
     }
 
     @Test

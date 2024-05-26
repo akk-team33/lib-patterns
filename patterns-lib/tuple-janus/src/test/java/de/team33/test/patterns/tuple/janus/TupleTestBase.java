@@ -16,7 +16,7 @@ class TupleTestBase extends Random implements Generator {
     private static final String CHARS = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     @Override
-    public final BigInteger nextBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, this);
     }
 
