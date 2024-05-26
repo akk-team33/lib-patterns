@@ -1,7 +1,7 @@
 package de.team33.test.patterns.reflect.luna;
 
-import de.team33.patterns.random.tarvos.Charger;
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Charger;
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.sample.patterns.reflect.luna.Level0;
 import de.team33.sample.patterns.reflect.luna.Level1;
 import de.team33.sample.patterns.reflect.luna.Level2;

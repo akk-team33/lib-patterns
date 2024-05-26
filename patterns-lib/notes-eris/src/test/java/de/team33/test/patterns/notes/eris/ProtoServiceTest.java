@@ -2,7 +2,7 @@ package de.team33.test.patterns.notes.eris;
 
 import de.team33.patterns.notes.eris.Audience;
 import de.team33.patterns.notes.eris.ProtoService;
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Generator;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;

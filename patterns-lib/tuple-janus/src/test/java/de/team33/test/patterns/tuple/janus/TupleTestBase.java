@@ -1,6 +1,6 @@
 package de.team33.test.patterns.tuple.janus;
 
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Generator;
 
 import java.math.BigInteger;
 import java.time.Instant;

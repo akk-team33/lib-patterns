@@ -1,6 +1,6 @@
 package de.team33.patterns.shared.serial.charon;
 
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Generator;
 
 import java.math.BigInteger;
 import java.util.List;

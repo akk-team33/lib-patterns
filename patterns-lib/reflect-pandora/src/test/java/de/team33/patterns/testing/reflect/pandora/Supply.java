@@ -1,7 +1,7 @@
 package de.team33.patterns.testing.reflect.pandora;
 
-import de.team33.patterns.random.tarvos.Charger;
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Charger;
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.sample.reflect.pandora.Sample01;
 import de.team33.patterns.sample.reflect.pandora.Sample02;
 
