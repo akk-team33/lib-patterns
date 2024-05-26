@@ -20,12 +20,12 @@ public class Supply implements Generator {
     }
 
     public String nextString() {
-        return nextString(nextInt(16), CHARS);
+        return anyString(anyInt(16), CHARS);
     }
 
     public List<String> nextList(final int minSize, final int maxSize) {
         return Stream.generate(this::nextString)
-                     .limit(nextInt(minSize, maxSize + 1))
+                     .limit(anyInt(minSize, maxSize + 1))
                      .collect(Collectors.toList());
     }
 
@@ -36,6 +36,6 @@ public class Supply implements Generator {
     }
 
     public List<String> nextChargedList() {
-        return nextList(nextInt(1, 4));
+        return nextList(anyInt(1, 4));
     }
 }

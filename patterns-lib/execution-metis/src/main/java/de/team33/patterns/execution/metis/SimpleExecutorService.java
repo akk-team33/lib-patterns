@@ -16,7 +16,7 @@ public class SimpleExecutorService extends AbstractExecutorService {
     private static final AtomicLong NEXT_INDEX = new AtomicLong(0L);
 
     private final String namePrefix = getClass().getCanonicalName() + "#" + NEXT_INDEX.getAndIncrement() + "#";
-    private final AtomicLong nextIndex = new AtomicLong(0L);
+    private final AtomicLong anyIndex = new AtomicLong(0L);
     private final Condition condition = new Condition();
 
     @Override
@@ -49,15 +49,15 @@ public class SimpleExecutorService extends AbstractExecutorService {
     @Override
     public final void execute(final Runnable command) {
         if (condition.isNormal()) {
-            final String name = nextThreadName();
+            final String name = anyThreadName();
             new Thread(() -> run(command, name), name).start();
         } else {
             LOG.log(WARNING, () -> "this executor service is terminated - command ignored: " + command);
         }
     }
 
-    private String nextThreadName() {
-        return namePrefix + nextIndex.getAndIncrement();
+    private String anyThreadName() {
+        return namePrefix + anyIndex.getAndIncrement();
     }
 
     private void run(final Runnable command, final String name) {

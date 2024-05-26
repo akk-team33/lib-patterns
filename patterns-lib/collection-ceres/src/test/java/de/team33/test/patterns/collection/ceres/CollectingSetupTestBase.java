@@ -18,7 +18,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void add_single() {
-        final List<String> expected = SUPPLY.nextStringList(3);
+        final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = resultOf(setup().add(expected.get(0))
                                                     .add(expected.get(1))
                                                     .add(expected.get(2)));
@@ -27,7 +27,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void add_more() {
-        final List<String> original = SUPPLY.nextStringList(9);
+        final List<String> original = SUPPLY.anyStringList(9);
         final List<String> expected = new ArrayList<String>(original) {{
             addAll(2, Arrays.asList(null, null, null, null, null));
         }};
@@ -45,7 +45,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @SuppressWarnings("Convert2MethodRef")
     @Test
     final void addAll() {
-        final List<String> expected = SUPPLY.nextStringList(20);
+        final List<String> expected = SUPPLY.anyStringList(20);
         final Collection<String> head = expected.subList(0, 4);
         final Stream<String> stream = expected.stream().skip(4).limit(4);
         final Iterable<String> iterable1 = expected.subList(8, 11);
@@ -68,7 +68,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void remove_single() {
-        final List<String> original = SUPPLY.nextStringList(20);
+        final List<String> original = SUPPLY.anyStringList(20);
         final List<String> expected = new ArrayList<String>(original) {{
             removeAll(original.subList(0, 1));
             removeAll(original.subList(3, 4));
@@ -83,7 +83,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void remove_more() {
-        final List<String> original = SUPPLY.nextStringList(20);
+        final List<String> original = SUPPLY.anyStringList(20);
         final List<String> expected = new ArrayList<String>(original) {{
             removeAll(original.subList(1, 3));
             removeAll(original.subList(4, 6));
@@ -102,7 +102,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     @Test
     final void removeAll() {
-        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> original = SUPPLY.anyStringList(36);
         final Collection<String> head = original.subList(0, 5);
         final Stream<String> stream = original.stream().skip(4).limit(6);
         final Iterable<String> iterable1 = original.subList(8, 15);
@@ -126,7 +126,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void removeIf() {
-        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> original = SUPPLY.anyStringList(36);
         final Collection<String> removable = original.subList(0, 18);
 
         final List<String> expected = new ArrayList<String>(original) {{
@@ -139,7 +139,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void removeAll_null() {
-        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> original = SUPPLY.anyStringList(36);
         final List<String> result = resultOf(setup().addAll(original)
                                                     .removeAll((Collection<?>) null)
                                                     .removeAll((Stream<?>) null)
@@ -152,7 +152,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     @Test
     final void retainAll() {
-        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> original = SUPPLY.anyStringList(36);
         final Collection<String> head = original.subList(0, 25);
         final Stream<String> stream = original.stream().skip(10);
         final Iterable<String> iterable1 = original.subList(3, 28);
@@ -180,7 +180,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
 
     @Test
     final void retainAll_null() {
-        final List<String> original = SUPPLY.nextStringList(36);
+        final List<String> original = SUPPLY.anyStringList(36);
         final List<String> expected = Collections.emptyList();
         final List<String> result = resultOf(setup().addAll(original)
                                                     .retainAll((Collection<?>) null)
@@ -194,7 +194,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @Test
     final void clear() {
         final List<String> expected = Collections.emptyList();
-        final List<String> result = resultOf(setup().addAll(SUPPLY.nextStringList(20))
+        final List<String> result = resultOf(setup().addAll(SUPPLY.anyStringList(20))
                                                     .clear());
         assertEquals(expected, result);
     }

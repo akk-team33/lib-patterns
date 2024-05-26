@@ -34,9 +34,9 @@ class ProtoServiceTest extends ProtoService<ProtoServiceTest> {
         registry().add(Channel.SET_STRING, stringMutable::setValue);
         registry().add(Channel.SET_INSTANT, instantMutable::setValue);
 
-        intValue = GENERATOR.nextInt();
-        stringValue = GENERATOR.nextString(16, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        instantValue = Instant.now().plusSeconds(GENERATOR.nextInt());
+        intValue = GENERATOR.anyInt();
+        stringValue = GENERATOR.anyString(16, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        instantValue = Instant.now().plusSeconds(GENERATOR.anyInt());
 
         fire(Channel.SET_INTEGER, Channel.SET_STRING, Channel.SET_INSTANT);
 

@@ -21,11 +21,11 @@ public class Supply extends Random implements Generator, Charger {
 
     public final Instant nextInstant() {
         return Instant.now()
-                      .plusSeconds(nextLong(-100000L, 100000L));
+                      .plusSeconds(anyLong(-100000L, 100000L));
     }
 
     public final String nextString() {
-        return nextString(nextInt(0, 24), "abc");
+        return anyString(anyInt(0, 24), "abc");
     }
 
     public final Simple nextSimple() {

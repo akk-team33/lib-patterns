@@ -32,7 +32,7 @@ class CollectingTest {
 
     @Test
     final void add_single() {
-        final String element = SUPPLY.nextString();
+        final String element = SUPPLY.anyString();
         final List<String> expected = Collections.singletonList(element);
         final List<String> result = Collecting.add(new LinkedList<>(), element);
         assertEquals(expected, result);
@@ -40,7 +40,7 @@ class CollectingTest {
 
     @Test
     final void add_more() {
-        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> expected = SUPPLY.anyStringList(4);
         final List<String> result = Collecting.add(new LinkedList<>(),
                                                    expected.get(0),
                                                    expected.get(1),
@@ -52,8 +52,8 @@ class CollectingTest {
     @Test
     final void add_more_null() {
         final LinkedList<String> subject = new LinkedList<>();
-        final String element0 = SUPPLY.nextString();
-        final String element1 = SUPPLY.nextString();
+        final String element0 = SUPPLY.anyString();
+        final String element1 = SUPPLY.anyString();
         try {
             final List<String> result = Collecting.add(subject, element0, element1, NULL_STRING_ARRAY);
             fail("expected to fail - but was " + result);
@@ -65,21 +65,21 @@ class CollectingTest {
 
     @Test
     final void addAll_Collection() {
-        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> expected = SUPPLY.anyStringList(4);
         final List<String> result = Collecting.addAll(new LinkedList<>(), expected);
         assertEquals(expected, result);
     }
 
     @Test
     final void addAll_Stream() {
-        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> expected = SUPPLY.anyStringList(4);
         final List<String> result = Collecting.addAll(new LinkedList<>(), expected.stream());
         assertEquals(expected, result);
     }
 
     @Test
     final void addAll_array() {
-        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> expected = SUPPLY.anyStringList(4);
         final String[] elements = expected.toArray(EMPTY_STRING_ARRAY);
         final List<String> result = Collecting.addAll(new LinkedList<>(), elements);
         assertEquals(expected, result);
@@ -87,7 +87,7 @@ class CollectingTest {
 
     @Test
     final void addAll_Iterable_noCollection() {
-        final List<String> expected = SUPPLY.nextStringList(4);
+        final List<String> expected = SUPPLY.anyStringList(4);
         @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
         final Iterable<String> elements = () -> expected.iterator();
         final List<String> result = Collecting.addAll(new LinkedList<>(), elements);
@@ -96,14 +96,14 @@ class CollectingTest {
 
     @Test
     final void addAll_Iterable_Collection() {
-        final Iterable<String> expected = SUPPLY.nextStringList(4);
+        final Iterable<String> expected = SUPPLY.anyStringList(4);
         final List<String> result = Collecting.addAll(new LinkedList<>(), expected);
         assertEquals(expected, result);
     }
 
     @Test
     final void clear() {
-        final List<String> origin = SUPPLY.nextStringList(4);
+        final List<String> origin = SUPPLY.anyStringList(4);
         final List<String> result = Collecting.clear(new ArrayList<>(origin));
         assertEquals(Collections.emptyList(), result);
     }
@@ -111,7 +111,7 @@ class CollectingTest {
     @ParameterizedTest
     @EnumSource
     final void remove_single(final RemoveCase rmCase) {
-        final List<String> origin = SUPPLY.nextStringList(4);
+        final List<String> origin = SUPPLY.anyStringList(4);
         final Object obsolete = rmCase.obsolete.apply(origin);
         final Set<String> expected = new HashSet<String>(origin) {{
             remove(obsolete);
@@ -123,7 +123,7 @@ class CollectingTest {
 
     @Test
     final void remove_more() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final String[] obsolete = {origin.get(1), origin.get(6), origin.get(3)};
         final List<String> expected = new ArrayList<String>(origin) {{
             removeAll(Arrays.asList(obsolete));
@@ -138,7 +138,7 @@ class CollectingTest {
     @ParameterizedTest
     @EnumSource
     final void removeAll_Collection(final RemoveCase rmCase) {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> obsolete = rmCase.obsoleteList.apply(origin);
         final Set<String> expected = new HashSet<String>(origin) {{
             removeAll(obsolete);
@@ -154,7 +154,7 @@ class CollectingTest {
 
     @Test
     final void removeAll_Stream() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<String> obsolete = Arrays.asList(origin.get(1), origin.get(2), origin.get(5));
         final List<String> expected = new ArrayList<String>(origin) {{
             removeAll(obsolete);
@@ -165,7 +165,7 @@ class CollectingTest {
 
     @Test
     final void removeAll_array() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final String[] obsolete = {origin.get(1), origin.get(3), origin.get(4)};
         final List<String> expected = new ArrayList<String>(origin) {{
             removeAll(Arrays.asList(obsolete));
@@ -176,7 +176,7 @@ class CollectingTest {
 
     @Test
     final void removeAll_Iterable() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Iterable<String> obsolete1 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
         @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
         final Iterable<String> obsolete2 = () -> obsolete1.iterator();
@@ -192,7 +192,7 @@ class CollectingTest {
     @ParameterizedTest
     @EnumSource
     final void removeIf(final RemoveCase rmCase) {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> obsolete = rmCase.obsoleteList.apply(origin);
         final Set<String> expected = new HashSet<String>(origin) {{
             removeAll(obsolete);
@@ -209,7 +209,7 @@ class CollectingTest {
     @ParameterizedTest
     @EnumSource
     final void retainAll_Collection(final RemoveCase rmCase) {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> relevant = rmCase.obsoleteList.apply(origin);
         final Set<String> expected = new TreeSet<String>(origin) {{
             retainAll(relevant);
@@ -225,7 +225,7 @@ class CollectingTest {
 
     @Test
     final void retainAll_Stream() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<String> relevant = Arrays.asList(origin.get(1), origin.get(5), origin.get(3));
         final List<String> expected = new ArrayList<String>(origin) {{
             retainAll(relevant);
@@ -236,7 +236,7 @@ class CollectingTest {
 
     @Test
     final void retainAll_array() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final String[] relevant = {origin.get(1), origin.get(3), origin.get(4)};
         final List<String> expected = new ArrayList<String>(origin) {{
             retainAll(Arrays.asList(relevant));
@@ -247,7 +247,7 @@ class CollectingTest {
 
     @Test
     final void retainAll_Iterable() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final List<String> relevant0 = Arrays.asList(origin.get(1), origin.get(3), origin.get(4));
         @SuppressWarnings("UnnecessaryLocalVariable")
         final Iterable<String> relevant1 = relevant0;
@@ -264,29 +264,29 @@ class CollectingTest {
 
     @Test
     final void contains_single() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Set<String> subject = new TreeSet<>(origin);
         final String item1 = origin.get(2);
-        final String item2 = SUPPLY.nextStringExcluding(subject);
+        final String item2 = SUPPLY.anyStringExcluding(subject);
         final String noItem = null;
-        final int foreign = SUPPLY.nextInt();
+        final int foreign = SUPPLY.anyInt();
         assertTrue(Collecting.contains(subject, item1));
         assertFalse(Collecting.contains(subject, item2));
         assertFalse(Collecting.contains(subject, noItem));
         assertFalse(Collecting.contains(subject, foreign));
 
-        final String element = SUPPLY.nextString();
+        final String element = SUPPLY.anyString();
         assertThrows(NullPointerException.class, () -> Collecting.contains(null, element));
     }
 
     @Test
     final void contains_more() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Set<String> subject = new TreeSet<>(origin);
         final String item1 = origin.get(2);
-        final String item2 = SUPPLY.nextStringExcluding(subject);
+        final String item2 = SUPPLY.anyStringExcluding(subject);
         final String noItem = null;
-        final int foreign = SUPPLY.nextInt();
+        final int foreign = SUPPLY.anyInt();
         assertTrue(Collecting.contains(subject, item1, item1, item1, item1));
         assertFalse(Collecting.contains(subject, item1, item1, item2, item1));
         assertFalse(Collecting.contains(subject, item1, item1, noItem, item1));
@@ -296,12 +296,12 @@ class CollectingTest {
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
     @Test
     final void containsAll_Collection() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Set<String> subject = new TreeSet<>(origin);
         final List<?> items1 = origin.subList(2, 6);
-        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyStringExcluding(origin));
         final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
-        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyInt());
         assertTrue(Collecting.containsAll(subject, items1));
         assertFalse(Collecting.containsAll(subject, items2));
         assertFalse(Collecting.containsAll(subject, items3));
@@ -309,7 +309,7 @@ class CollectingTest {
 
         final Collection<String> missing = null;
         final Collection<String> empty = new ArrayList<>(0);
-        final List<String> elements = SUPPLY.nextStringList(4);
+        final List<String> elements = SUPPLY.anyStringList(4);
         assertThrows(NullPointerException.class, () -> Collecting.containsAll(missing, elements));
         assertThrows(NullPointerException.class, () -> Collecting.containsAll(missing, empty));
         assertThrows(NullPointerException.class, () -> Collecting.containsAll(elements, missing));
@@ -319,12 +319,12 @@ class CollectingTest {
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
     @Test
     final void containsAll_array() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Set<String> subject = new TreeSet<>(origin);
         final List<?> items1 = origin.subList(2, 6);
-        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyStringExcluding(origin));
         final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
-        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyInt());
         assertTrue(Collecting.containsAll(subject, items1.toArray()));
         assertFalse(Collecting.containsAll(subject, items2.toArray()));
         assertFalse(Collecting.containsAll(subject, items3.toArray()));
@@ -334,12 +334,12 @@ class CollectingTest {
     @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection"})
     @Test
     final void containsAll_Iterable() {
-        final List<String> origin = SUPPLY.nextStringList(8);
+        final List<String> origin = SUPPLY.anyStringList(8);
         final Set<String> subject = new TreeSet<>(origin);
         final List<?> items1 = origin.subList(2, 6);
-        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextStringExcluding(origin));
+        final List<?> items2 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyStringExcluding(origin));
         final List<?> items3 = Collecting.add(new ArrayList<>(items1), null);
-        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.nextInt());
+        final List<?> items4 = Collecting.add(new ArrayList<>(items1), SUPPLY.anyInt());
         assertTrue(Collecting.containsAll(subject, toIterable(items1)));
         assertTrue(Collecting.containsAll(subject, asIterable(items1)));
         assertFalse(Collecting.containsAll(subject, toIterable(items2)));
@@ -361,7 +361,7 @@ class CollectingTest {
 
     @Test
     final void proxy_Collection() {
-        final Collection<String> origin = SUPPLY.nextStringList(4);
+        final Collection<String> origin = SUPPLY.anyStringList(4);
         final Collection<String> proxy = Collecting.proxy(origin);
         assertEquals(origin.size(), proxy.size());
         assertEquals(origin.toString(), proxy.toString());
@@ -370,7 +370,7 @@ class CollectingTest {
 
     @Test
     final void proxy_List() {
-        final List<String> origin = SUPPLY.nextStringList(4);
+        final List<String> origin = SUPPLY.anyStringList(4);
         final List<String> copy = new ArrayList<>(origin);
         final List<String> proxy = Collecting.proxy(origin);
         assertEquals(origin.size(), proxy.size());
@@ -382,7 +382,7 @@ class CollectingTest {
 
     @Test
     final void proxy_Set() {
-        final Set<String> origin = SUPPLY.nextStringSet(4);
+        final Set<String> origin = SUPPLY.anyStringSet(4);
         final Set<String> copy = new HashSet<>(origin);
         final Set<String> proxy = Collecting.proxy(origin);
         assertEquals(origin.size(), proxy.size());
@@ -396,12 +396,12 @@ class CollectingTest {
     enum RemoveCase {
         PRESENT(origin -> origin.get(2),
                 origin -> origin.subList(0, 4)),
-        ABSENT(origin -> SUPPLY.nextStringExcluding(origin),
-               origin -> Arrays.asList(origin.get(1), SUPPLY.nextStringExcluding(origin), origin.get(3))),
+        ABSENT(origin -> SUPPLY.anyStringExcluding(origin),
+               origin -> Arrays.asList(origin.get(1), SUPPLY.anyStringExcluding(origin), origin.get(3))),
         NULL(origin -> null,
              origin -> Arrays.asList(origin.get(1), null, origin.get(3))),
-        FOREIGN(origin -> SUPPLY.nextInt(),
-                origin -> Arrays.asList(origin.get(1), SUPPLY.nextInt(), origin.get(3)));
+        FOREIGN(origin -> SUPPLY.anyInt(),
+                origin -> Arrays.asList(origin.get(1), SUPPLY.anyInt(), origin.get(3)));
 
         private final Function<List<String>, Object> obsolete;
         private final Function<List<String>, List<?>> obsoleteList;

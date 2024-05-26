@@ -18,6 +18,6 @@ public class PWGen extends SecureRandom implements Generator {
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void main(final String[] args) {
         final PWGen pwGen = new PWGen();
-        Stream.generate(() -> pwGen.nextString(20, CHARS)).limit(20).forEach(System.out::println);
+        Stream.generate(() -> pwGen.anyString(20, CHARS)).limit(20).forEach(System.out::println);
     }
 }

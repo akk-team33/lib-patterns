@@ -77,23 +77,23 @@ public class InitiatorTest implements Initiator {
         }
     }
 
-    public final boolean nextBoolean() {
+    public final boolean anyBoolean() {
         return expected.booleanValue();
     }
 
-    public final String nextString() {
+    public final String anyString() {
         return expected.stringValue();
     }
 
-    public final long nextLong() {
+    public final long anyLong() {
         return expected.longValue();
     }
 
-    public final List<String> nextStringList() {
+    public final List<String> anyStringList() {
         return expected.stringList();
     }
 
-    public final List<Long> nextLongList() {
+    public final List<Long> anyLongList() {
         return expected.longList();
     }
 }

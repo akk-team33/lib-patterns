@@ -24,13 +24,13 @@ class MappingTest extends Supply
 
     @BeforeEach
     final void before() {
-        samples = Collections.unmodifiableMap(nextMap(3));
+        samples = Collections.unmodifiableMap(anyMap(3));
     }
 
     @Test
     final void put() {
-        final String key = nextString();
-        final String value = nextString();
+        final String key = anyString();
+        final String value = anyString();
         final Map<String, String> expected = Collections.singletonMap(key, value);
         final HashMap<String, String> stage = new HashMap<>(1);
 
@@ -91,8 +91,8 @@ class MappingTest extends Supply
 
     @Test
     final void remove_subject_null() {
-        final String aString = nextString();
-        final double aDouble = nextDouble();
+        final String aString = anyString();
+        final double aDouble = anyDouble();
         assertThrows(NullPointerException.class, () -> Mapping.remove(null, aString));
         assertThrows(NullPointerException.class, () -> Mapping.remove(null, aDouble));
         assertThrows(NullPointerException.class, () -> Mapping.remove(null, null));
@@ -102,13 +102,13 @@ class MappingTest extends Supply
     @Test
     final void remove_incompatible() {
         final Map<String, String> stage = new TreeMap<>(samples);
-        final Map<String, String> result = Mapping.remove(stage, nextDouble());
+        final Map<String, String> result = Mapping.remove(stage, anyDouble());
 
         assertEquals(samples, result);
         assertSame(stage, result);
 
         // cross-check ...
-        final double aDouble = nextDouble();
+        final double aDouble = anyDouble();
         assertThrows(ClassCastException.class, () -> stage.remove(aDouble));
     }
 
@@ -129,8 +129,8 @@ class MappingTest extends Supply
 
     @Test
     final void containsKey_subject_null() {
-        final String aString = nextString();
-        final long aLong = nextLong();
+        final String aString = anyString();
+        final long aLong = anyLong();
         assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, aString));
         assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, aLong));
         assertThrows(NullPointerException.class, () -> Mapping.containsKey(null, null));
@@ -138,7 +138,7 @@ class MappingTest extends Supply
 
     @Test
     final void containsKey_incompatible() {
-        final long longKey = nextLong();
+        final long longKey = anyLong();
         final Map<String, String> subject = new TreeMap<>(samples);
 
         assertFalse(Mapping.containsKey(subject, longKey));
@@ -170,8 +170,8 @@ class MappingTest extends Supply
 
     @Test
     final void containsValue_subject_null() {
-        final String aString = nextString();
-        final double aDouble = nextDouble();
+        final String aString = anyString();
+        final double aDouble = anyDouble();
         assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, aString));
         assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, aDouble));
         assertThrows(NullPointerException.class, () -> Mapping.containsValue(null, null));
@@ -179,7 +179,7 @@ class MappingTest extends Supply
 
     @Test
     final void containsValue_incompatible() {
-        final long longValue = nextLong();
+        final long longValue = anyLong();
         final Map<String, String> subject = new TreeMap<String, String>(samples) {
             @Override
             public boolean containsValue(Object value) {
@@ -215,8 +215,8 @@ class MappingTest extends Supply
 
     @Test
     final void get_subject_null() {
-        final String aString = nextString();
-        final float aFloat = nextFloat();
+        final String aString = anyString();
+        final float aFloat = anyFloat();
         assertThrows(NullPointerException.class, () -> Mapping.get(null, aString));
         assertThrows(NullPointerException.class, () -> Mapping.get(null, aFloat));
         assertThrows(NullPointerException.class, () -> Mapping.get(null, null));
@@ -224,7 +224,7 @@ class MappingTest extends Supply
 
     @Test
     final void get_incompatible() {
-        final long longKey = nextLong();
+        final long longKey = anyLong();
         final Map<String, String> subject = new TreeMap<>(samples);
         assertNull(Mapping.get(subject, longKey));
 
@@ -235,7 +235,7 @@ class MappingTest extends Supply
 
     @Test
     final void proxy() {
-        final Map<String, String> origin = nextMap(4);
+        final Map<String, String> origin = anyMap(4);
         final Map<String, String> copy = new TreeMap<>(origin);
         final Map<String, String> proxy = Mapping.proxy(origin);
 

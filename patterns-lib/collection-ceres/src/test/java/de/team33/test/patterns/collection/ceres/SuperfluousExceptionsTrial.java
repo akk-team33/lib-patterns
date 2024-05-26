@@ -23,7 +23,7 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void contains_null(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
             final boolean result = subject.contains(null);
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
@@ -37,9 +37,9 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void contains_foreign(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
-            final boolean result = subject.contains(SUPPLY.nextInt());
+            final boolean result = subject.contains(SUPPLY.anyInt());
             assertFalse(testCase.fail, () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
@@ -51,7 +51,7 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void containsAll_null(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         final Collection<Object> other = Collections.singleton(null);
         try {
             final boolean result = subject.containsAll(other);
@@ -66,8 +66,8 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void containsAll_foreign(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
-        final Collection<Object> other = Collections.singleton(SUPPLY.nextInt());
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
+        final Collection<Object> other = Collections.singleton(SUPPLY.anyInt());
         try {
             final boolean result = subject.containsAll(other);
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
@@ -81,7 +81,7 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void remove_null(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
             final boolean result = subject.remove(null);
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
@@ -95,9 +95,9 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void remove_foreign(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
-            final boolean result = subject.remove(SUPPLY.nextInt());
+            final boolean result = subject.remove(SUPPLY.anyInt());
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
@@ -109,7 +109,7 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void removeAll_null(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
         final Collection<Object> other = Collections.singleton(null);
         try {
             final boolean result = subject.removeAll(other);
@@ -124,8 +124,8 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void removeAll_foreign(final ContainsCase testCase) {
-        final Collection<String> subject = testCase.toSubject(SUPPLY.nextStringList(16));
-        final Collection<Object> other = Collections.singleton(SUPPLY.nextInt());
+        final Collection<String> subject = testCase.toSubject(SUPPLY.anyStringList(16));
+        final Collection<Object> other = Collections.singleton(SUPPLY.anyInt());
         try {
             final boolean result = subject.removeAll(other);
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
@@ -140,7 +140,7 @@ class SuperfluousExceptionsTrial {
     @EnumSource
     final void retainAll_null(final ContainsCase testCase) {
         final Collection<Object> subject = new HashSet<>(Collections.singleton(null));
-        final Collection<String> other = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<String> other = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
             final boolean result = subject.retainAll(other);
             assertFalse(testCase.fail, () -> "expected to fail: " + testCase.subjectClass);
@@ -154,8 +154,8 @@ class SuperfluousExceptionsTrial {
     @ParameterizedTest
     @EnumSource
     final void retainAll_foreign(final ContainsCase testCase) {
-        final Collection<Object> subject = new HashSet<>(Collections.singleton(SUPPLY.nextInt()));
-        final Collection<String> other = testCase.toSubject(SUPPLY.nextStringList(16));
+        final Collection<Object> subject = new HashSet<>(Collections.singleton(SUPPLY.anyInt()));
+        final Collection<String> other = testCase.toSubject(SUPPLY.anyStringList(16));
         try {
             final boolean result = subject.retainAll(other);
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);

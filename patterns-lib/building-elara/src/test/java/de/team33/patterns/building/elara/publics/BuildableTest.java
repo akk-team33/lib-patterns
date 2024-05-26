@@ -20,7 +20,7 @@ class BuildableTest {
 
     @Test
     final void isolation() {
-        final Buildable origin = SUPPLY.nextBuildable();
+        final Buildable origin = SUPPLY.anyBuildable();
         final Buildable.Builder builder = origin.toBuilder();
         final String peekedStringValue = builder.peek(Buildable::getStringValue);
         assertEquals(origin.getStringValue(), peekedStringValue);
@@ -30,7 +30,7 @@ class BuildableTest {
         assertEquals(peekedStringValue, stage.getStringValue());
 
         final Buildable result = stage.toBuilder()
-                                      .setStringValue(SUPPLY.nextString())
+                                      .setStringValue(SUPPLY.anyString())
                                       .build();
         assertEquals(origin, stage, "<stage> is still expected to be equal to <origin>.");
         assertNotEquals(stage, result, "<result> is not expected to be equal to <stage>.");

@@ -56,7 +56,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
-    default byte nextByte() {
+    default byte anyByte() {
         return anyBits(Byte.SIZE).byteValue();
     }
 
@@ -65,7 +65,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
-    default short nextShort() {
+    default short anyShort() {
         return anyBits(Short.SIZE).shortValue();
     }
 
@@ -73,74 +73,62 @@ public interface Generator {
      * Returns any {@code int} value.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextInt()}.
      */
-    default int nextInt() {
+    default int anyInt() {
         return anyBits(Integer.SIZE).intValue();
     }
 
     /**
      * Returns an {@code int} value between {@code zero} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextInt(int)}.
+     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
-    default int nextInt(final int bound) {
-        return nextBigInteger(BigInteger.valueOf(bound)).intValue();
+    default int anyInt(final int bound) {
+        return anyBigInteger(BigInteger.valueOf(bound)).intValue();
     }
 
     /**
      * Returns an {@code int} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger, BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
      */
-    default int nextInt(final int min, final int bound) {
-        return nextBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
+    default int anyInt(final int min, final int bound) {
+        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
     }
 
     /**
      * Returns any {@code long} value.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextLong()}.
      */
-    default long nextLong() {
+    default long anyLong() {
         return anyBits(Long.SIZE).longValue();
     }
 
     /**
      * Returns any {@code long} value between {@code zero} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
-    default long nextLong(final long bound) {
-        return nextBigInteger(BigInteger.valueOf(bound)).longValue();
+    default long anyLong(final long bound) {
+        return anyBigInteger(BigInteger.valueOf(bound)).longValue();
     }
 
     /**
      * Returns any {@code long} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger, BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
      */
-    default long nextLong(final long min, final long bound) {
-        return nextBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).longValue();
+    default long anyLong(final long min, final long bound) {
+        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).longValue();
     }
 
     /**
      * Returns a {@code float} value between zero (incl.) and one (excl.).
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextFloat()}.
      */
-    default float nextFloat() {
+    default float anyFloat() {
         final float numerator = anyBits(Util.FLOAT_RESOLUTION).floatValue();
         final float denominator = BigInteger.ONE.shiftLeft(Util.FLOAT_RESOLUTION).floatValue();
         return numerator / denominator;
@@ -150,11 +138,8 @@ public interface Generator {
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
-     * <p>
-     * When used as extension of a {@link Random} derivation, this method will (at least) be overridden by
-     * {@link Random#nextDouble()}.
      */
-    default double nextDouble() {
+    default double anyDouble() {
         final double numerator = anyBits(Util.DOUBLE_RESOLUTION).doubleValue();
         final double denominator = BigInteger.ONE.shiftLeft(Util.DOUBLE_RESOLUTION).doubleValue();
         return numerator / denominator;
@@ -163,25 +148,25 @@ public interface Generator {
     /**
      * Returns any {@code char} value of the given {@code characters}.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextInt(int)}.
+     * The default implementation depends on the implementation of {@link #anyInt(int)}.
      *
      * @param characters A {@link String} made up of the characters that are a possible result.
      */
-    default char nextChar(final String characters) {
-        return characters.charAt(nextInt(characters.length()));
+    default char anyChar(final String characters) {
+        return characters.charAt(anyInt(characters.length()));
     }
 
     /**
      * Returns a {@link String} with the given {@code length} consisting of the given {@code characters}.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextInt(int)}.
+     * The default implementation depends on the implementation of {@link #anyInt(int)}.
      *
      * @param length     The length of the resulting string.
      * @param characters A string made up of the characters that make up a possible result.
      */
-    default String nextString(final int length, final String characters) {
+    default String anyString(final int length, final String characters) {
         if (0 <= length) {
-            return IntStream.generate(() -> nextInt(characters.length()))
+            return IntStream.generate(() -> anyInt(characters.length()))
                             .limit(length)
                             .collect(StringBuilder::new,
                                      (sb, i) -> sb.append(characters.charAt(i)),
@@ -196,7 +181,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
-    default BigInteger nextBigInteger(final BigInteger bound) {
+    default BigInteger anyBigInteger(final BigInteger bound) {
         if (BigInteger.ZERO.compareTo(bound) < 0) {
             final int bitLength = bound.bitLength();
             return Stream.generate(() -> anyBits(bitLength))
@@ -210,27 +195,27 @@ public interface Generator {
     /**
      * Returns a {@link BigInteger} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #nextBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
-    default BigInteger nextBigInteger(final BigInteger min, final BigInteger bound) {
-        return nextBigInteger(bound.subtract(min)).add(min);
+    default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
+        return anyBigInteger(bound.subtract(min)).add(min);
     }
 
     /**
      * Returns one of the given {@code values}.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextInt(int)}.
+     * The default implementation depends on the implementation of {@link #anyInt(int)}.
      */
-    default <T> T nextOf(final T... values) {
-        return values[nextInt(values.length)];
+    default <T> T anyOf(final T... values) {
+        return values[anyInt(values.length)];
     }
 
     /**
      * Returns one of the given {@code enum} {@code values}.
      * <p>
-     * The default implementation depends on the implementation of {@link #nextOf(Object[])}.
+     * The default implementation depends on the implementation of {@link #anyOf(Object[])}.
      */
-    default <T extends Enum<T>> T nextOf(final Class<T> enumClass) {
-        return nextOf(enumClass.getEnumConstants());
+    default <T extends Enum<T>> T anyOf(final Class<T> enumClass) {
+        return anyOf(enumClass.getEnumConstants());
     }
 }

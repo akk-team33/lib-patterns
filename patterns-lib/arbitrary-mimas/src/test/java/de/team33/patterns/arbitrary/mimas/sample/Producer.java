@@ -14,15 +14,15 @@ public class Producer extends Random implements Generator, Charger, Initiator {
         return new BigInteger(numBits, this);
     }
 
-    public final Person nextPerson() {
+    public final Person anyPerson() {
         return initiate(Person.class);
     }
 
-    public final Customer nextCustomer() {
+    public final Customer anyCustomer() {
         return charge(new Customer());
     }
 
-    public final Employee nextEmployee() {
+    public final Employee anyEmployee() {
         return charge(new Employee());
     }
 }

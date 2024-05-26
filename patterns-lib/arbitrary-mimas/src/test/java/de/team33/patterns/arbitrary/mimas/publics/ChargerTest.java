@@ -50,7 +50,7 @@ public class ChargerTest implements Charger {
     @Test
     final void supplierNotFound() {
         try {
-            final Sample result = charge(new Sample(), "nextStrings");
+            final Sample result = charge(new Sample(), "anyStrings");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
             // e.printStackTrace();
@@ -84,35 +84,35 @@ public class ChargerTest implements Charger {
         assertEquals(new Generic<String>(), result);
     }
 
-    public final boolean nextBoolean() {
+    public final boolean anyBoolean() {
         return sample.isBooleanValue();
     }
 
-    public final Integer nextInt() {
+    public final Integer anyInt() {
         return sample.getIntValue();
     }
 
-    public final String nextString() {
+    public final String anyString() {
         return sample.getStringValue();
     }
 
-    public final Long nextLong() {
+    public final Long anyLong() {
         return sample.getLongValue();
     }
 
-    public final long nextLongValue() {
+    public final long anyLongValue() {
         return sample.getLongValue();
     }
 
-    public final List<String> nextStrings() {
+    public final List<String> anyStrings() {
         return sample.getStringList();
     }
 
-    public final List<Long> nextLongs() {
+    public final List<Long> anyLongs() {
         return sample.getLongList();
     }
 
-    public final Date nextDate() {
+    public final Date anyDate() {
         return new Date();
     }
 }

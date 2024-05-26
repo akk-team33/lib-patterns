@@ -23,20 +23,20 @@ public class Supply extends Random implements Generator, Charger {
         return new BigInteger(numBits, this);
     }
 
-    public final Buildable nextBuildable() {
+    public final Buildable anyBuildable() {
         return charge(Buildable.builder(), "setup").build();
     }
 
     @SuppressWarnings("unused")
-    public final Instant nextInstant() {
-        return Instant.now().minusSeconds(nextLong(SECONDS_PER_YEAR));
+    public final Instant anyInstant() {
+        return Instant.now().minusSeconds(anyLong(SECONDS_PER_YEAR));
     }
 
-    public final String nextString() {
-        return nextString(nextInt(1, 24), LETTERS);
+    public final String anyString() {
+        return anyString(anyInt(1, 24), LETTERS);
     }
 
-    public final List<String> nextStringList(final int size) {
-        return Stream.generate(this::nextString).limit(size).collect(Collectors.toList());
+    public final List<String> anyStringList(final int size) {
+        return Stream.generate(this::anyString).limit(size).collect(Collectors.toList());
     }
 }

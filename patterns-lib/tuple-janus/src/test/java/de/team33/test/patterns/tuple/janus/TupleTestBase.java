@@ -21,11 +21,11 @@ class TupleTestBase extends Random implements Generator {
     }
 
     final String nextString() {
-        return nextString(nextInt(24), CHARS);
+        return anyString(nextInt(24), CHARS);
     }
 
     final Instant nextInstant() {
-        return Instant.now().plusMillis(nextLong(-1000000, 1000000));
+        return Instant.now().plusMillis(anyLong(-1000000, 1000000));
     }
 
     final <E> List<E> nextList(final Supplier<E> supplier) {

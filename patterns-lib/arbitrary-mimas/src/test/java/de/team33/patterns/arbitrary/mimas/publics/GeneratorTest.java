@@ -26,7 +26,7 @@ class GeneratorTest {
 
     private static final BigInteger FIXED = new BigInteger("45619B2F8D02DD0BD545B8C8BD2CDBF86E8149DD7581925275C0", 16);
 
-    private final Producer random = new Producer();
+    private final Producer variable = new Producer();
     private final Generator fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
 
     @Test
@@ -34,14 +34,14 @@ class GeneratorTest {
         final Generator simple = Generator.simple();
         assertInstanceOf(Generator.class, simple);
         assertInstanceOf(Boolean.class, simple.anyBoolean());
-        assertInstanceOf(Byte.class, simple.nextByte());
+        assertInstanceOf(Byte.class, simple.anyByte());
         // etc. ...
     }
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})
-    final void nextBits(final int numBits) {
-        final BigInteger result = random.anyBits(numBits);
+    final void anyBits(final int numBits) {
+        final BigInteger result = variable.anyBits(numBits);
         assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
 
@@ -51,33 +51,33 @@ class GeneratorTest {
     }
 
     @Test
-    final void nextBoolean() {
-        assertInstanceOf(Boolean.class, random.nextBoolean());
+    final void anyBoolean() {
+        assertInstanceOf(Boolean.class, variable.anyBoolean());
         assertFalse(fixed.anyBoolean());
     }
 
     @Test
-    final void nextByte() {
-        assertInstanceOf(Byte.class, random.nextByte());
-        assertEquals(BigInteger.valueOf(0xC0).byteValue(), fixed.nextByte());
+    final void anyByte() {
+        assertInstanceOf(Byte.class, variable.anyByte());
+        assertEquals(BigInteger.valueOf(0xC0).byteValue(), fixed.anyByte());
     }
 
     @Test
-    final void nextShort() {
-        assertInstanceOf(Short.class, random.nextShort());
-        assertEquals(BigInteger.valueOf(0x75C0).shortValue(), fixed.nextShort());
+    final void anyShort() {
+        assertInstanceOf(Short.class, variable.anyShort());
+        assertEquals(BigInteger.valueOf(0x75C0).shortValue(), fixed.anyShort());
     }
 
     @Test
-    final void nextInt() {
-        assertInstanceOf(Integer.class, random.nextInt());
-        assertEquals(0x925275C0, fixed.nextInt());
+    final void anyInt() {
+        assertInstanceOf(Integer.class, variable.anyInt());
+        assertEquals(0x925275C0, fixed.anyInt());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void nextInt_bound(final int bound) {
-        final int result = random.nextInt(bound);
+    final void anyInt_bound(final int bound) {
+        final int result = variable.anyInt(bound);
         assertTrue(0 <= result,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bound > result,
@@ -86,13 +86,13 @@ class GeneratorTest {
                                   .filter(i -> i > bound)
                                   .findFirst()
                                   .orElse(256) - 1;
-        assertEquals(0x925275C0 & mask, fixed.nextInt(bound));
+        assertEquals(0x925275C0 & mask, fixed.anyInt(bound));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-3, -2, -1, 0, 1, 2, 5, 11, 19, 97})
-    final void nextInt_min_bound(final int bound) {
-        final int result = random.nextInt(-5, bound);
+    final void anyInt_min_bound(final int bound) {
+        final int result = variable.anyInt(-5, bound);
         assertTrue(-5 <= result,
                    () -> "result is expected to be greater or equal to -5 but was " + result);
         assertTrue(bound > result,
@@ -100,15 +100,15 @@ class GeneratorTest {
     }
 
     @Test
-    final void nextLong() {
-        assertInstanceOf(Long.class, random.nextLong());
-        assertEquals(0x49DD7581925275C0L, fixed.nextLong());
+    final void anyLong() {
+        assertInstanceOf(Long.class, variable.anyLong());
+        assertEquals(0x49DD7581925275C0L, fixed.anyLong());
     }
 
     @ParameterizedTest
     @ValueSource(longs = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void nextLong_bound(final long bound) {
-        final long result = random.nextLong(bound);
+    final void anyLong_bound(final long bound) {
+        final long result = variable.anyLong(bound);
         assertTrue(0 <= result,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bound > result,
@@ -117,9 +117,9 @@ class GeneratorTest {
 
     @ParameterizedTest
     @ValueSource(longs = {0, -1, -3, -5, -11, -19, -29, -97})
-    final void nextLong_subzero(final long bound) {
+    final void anyLong_subzero(final long bound) {
         try {
-            final long result = random.nextLong(bound);
+            final long result = variable.anyLong(bound);
             fail("should fail but was <" + result + ">");
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();
@@ -129,8 +129,8 @@ class GeneratorTest {
 
     @ParameterizedTest
     @ValueSource(longs = {-3, -2, -1, 0, 1, 2, 5, 11, 19, 97})
-    final void nextLong_min_bound(final long bound) {
-        final long result = random.nextLong(-5, bound);
+    final void anyLong_min_bound(final long bound) {
+        final long result = variable.anyLong(-5, bound);
         assertTrue(-5 <= result,
                    () -> "result is expected to be greater or equal to -5 but was " + result);
         assertTrue(bound > result,
@@ -138,8 +138,8 @@ class GeneratorTest {
     }
 
     @Test
-    final void nextChar() {
-        final char result = random.nextChar("0123456789");
+    final void anyChar() {
+        final char result = variable.anyChar("0123456789");
         assertTrue('0' <= result,
                    () -> "result is expected to be greater or equal to '0' but was '" + result + "'");
         assertTrue('9' >= result,
@@ -148,8 +148,8 @@ class GeneratorTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void nextString(final int length) {
-        final String result = random.nextString(length, "0123456789");
+    final void anyString(final int length) {
+        final String result = variable.anyString(length, "0123456789");
         assertEquals(length, result.length());
         for (final char c : result.toCharArray()) {
             assertTrue('0' <= c,
@@ -161,9 +161,9 @@ class GeneratorTest {
 
     @ParameterizedTest
     @ValueSource(ints = {-1, -3, -7, -17, -29, -97})
-    final void nextString_subzero(final int length) {
+    final void anyString_subzero(final int length) {
         try {
-            final String result = random.nextString(length, "0123456789");
+            final String result = variable.anyString(length, "0123456789");
             fail("should fail but was <" + result + ">");
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();
@@ -172,31 +172,31 @@ class GeneratorTest {
     }
 
     @Test
-    final void nextFloat() {
-        final float result = assertInstanceOf(Float.class, random.nextFloat());
+    final void anyFloat() {
+        final float result = assertInstanceOf(Float.class, variable.anyFloat());
         assertTrue(0.0f <= result,
                    () -> "result is expected to be greater or equal to 0.0 but was " + result);
         assertTrue(1.0f > result,
                    () -> "result is expected to be less than 1.0 but was " + result);
-        assertEquals(Float.valueOf("0.32210922"), fixed.nextFloat());
+        assertEquals(Float.valueOf("0.32210922"), fixed.anyFloat());
     }
 
     @Test
-    final void nextDouble() {
-        final double result = random.nextDouble();
+    final void anyDouble() {
+        final double result = variable.anyDouble();
         assertInstanceOf(Double.class, result);
         assertTrue(0.0 <= result,
                    () -> "result is expected to be greater or equal to 0.0 but was " + result);
         assertTrue(1.0 > result,
                    () -> "result is expected to be less than 1.0 but was " + result);
-        assertEquals(0.9205940111020752, fixed.nextDouble());
+        assertEquals(0.9205940111020752, fixed.anyDouble());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void nextBigInteger_bound(final int bound) {
+    final void anyBigInteger_bound(final int bound) {
         final BigInteger bigBound = BigInteger.valueOf(bound);
-        final BigInteger result = random.nextBigInteger(bigBound);
+        final BigInteger result = variable.anyBigInteger(bigBound);
         assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
                    () -> "result is expected to be greater or equal to ZERO but was " + result);
         assertTrue(bigBound.compareTo(result) > 0,
@@ -205,10 +205,10 @@ class GeneratorTest {
 
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void nextBigInteger_min_bound(final int bound) {
+    final void anyBigInteger_min_bound(final int bound) {
         final BigInteger bigBound = BigInteger.valueOf(bound);
         final BigInteger bigMin = BigInteger.valueOf(bound - 17);
-        final BigInteger result = random.nextBigInteger(bigMin, bigBound);
+        final BigInteger result = variable.anyBigInteger(bigMin, bigBound);
         assertTrue(bigMin.compareTo(result) <= 0,
                    () -> "result is expected to be greater or equal to " + bigMin + " but was " + result);
         assertTrue(bigBound.compareTo(result) > 0,
@@ -216,10 +216,10 @@ class GeneratorTest {
     }
 
     @Test
-    final void nextOf() {
+    final void anyOf() {
         final int expected = 10000;
         final Map<RoundingMode, AtomicInteger> counts = new EnumMap<>(RoundingMode.class);
-        Stream.generate(() -> random.nextOf(RoundingMode.class))
+        Stream.generate(() -> variable.anyOf(RoundingMode.class))
               .limit((long) expected * RoundingMode.values().length)
               .forEach(mode -> counts.computeIfAbsent(mode, key -> new AtomicInteger(0)).incrementAndGet());
 

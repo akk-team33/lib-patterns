@@ -22,11 +22,11 @@ public class Supply implements Generator, Charger {
     }
 
     public final String nextString() {
-        return nextString(nextInt(1, 24), "abcdefghij-ABCDEFGHIJ_0123456789");
+        return anyString(anyInt(1, 24), "abcdefghij-ABCDEFGHIJ_0123456789");
     }
 
     public final Instant nextInstantValue() {
-        return Instant.now().plusMillis(nextShort());
+        return Instant.now().plusMillis(anyShort());
     }
 
     public final BeanClass nextBean() {
@@ -43,7 +43,7 @@ public class Supply implements Generator, Charger {
 
     public final List<Object> nextList() {
         return Stream.generate(this::nextString)
-                     .limit(nextInt(4))
+                     .limit(anyInt(4))
                      .collect(Collectors.toList());
     }
 }

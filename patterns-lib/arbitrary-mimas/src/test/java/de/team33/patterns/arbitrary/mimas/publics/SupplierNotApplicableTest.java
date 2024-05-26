@@ -25,7 +25,7 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
         } catch (final UnfitConditionException e) {
             // e.printStackTrace();
             assertEquals("Method not applicable as supplier!", e.getMessage().substring(0, 34));
-            assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".nextString()"));
+            assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".anyString()"));
         }
     }
 
@@ -37,7 +37,7 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
         } catch (final UnfitConditionException e) {
             // e.printStackTrace();
             assertEquals("Method not applicable as supplier!", e.getMessage().substring(0, 34));
-            assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".nextString()"));
+            assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".anyString()"));
         }
     }
 
@@ -51,7 +51,7 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
      * because the declaring class (this test class) is not public.
      */
     @SuppressWarnings("unused")
-    public final String nextString() {
-        return nextString(5, "abc");
+    public final String anyString() {
+        return anyString(5, "abc");
     }
 }

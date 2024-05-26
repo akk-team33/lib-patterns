@@ -19,7 +19,7 @@ abstract class MappingSetupTestBase<S extends Mapping.Setup<String, List<String>
 
     @Test
     final void put() {
-        final Map<String, List<String>> expected = nextStringListMap(3);
+        final Map<String, List<String>> expected = anyStringListMap(3);
         final List<String> keys = new ArrayList<>(expected.keySet());
 
         final Map<String, List<String>> result = resultOf(setup().put(keys.get(0), expected.get(keys.get(0)))
@@ -31,12 +31,12 @@ abstract class MappingSetupTestBase<S extends Mapping.Setup<String, List<String>
 
     @Test
     final void remove() {
-        final Map<String, List<String>> origin = nextStringListMap(3);
+        final Map<String, List<String>> origin = anyStringListMap(3);
         final List<String> keys = new ArrayList<>(origin.keySet());
         final S setup = setup().putAll(origin);
 
         final Map<String, List<String>> result = resultOf(setup.remove(null)
-                                                               .remove(nextInt())
+                                                               .remove(anyInt())
                                                                .remove(keys.get(0))
                                                                .remove(keys.get(1))
                                                                .remove(keys.get(2)));
@@ -46,7 +46,7 @@ abstract class MappingSetupTestBase<S extends Mapping.Setup<String, List<String>
 
     @Test
     final void putAll() {
-        final Map<String, List<String>> expected = nextStringListMap(3);
+        final Map<String, List<String>> expected = anyStringListMap(3);
 
         final Map<String, List<String>> result = resultOf(setup().putAll(expected));
 
@@ -55,7 +55,7 @@ abstract class MappingSetupTestBase<S extends Mapping.Setup<String, List<String>
 
     @Test
     final void clear() {
-        final S setup = setup().putAll(nextStringListMap(3));
+        final S setup = setup().putAll(anyStringListMap(3));
 
         final Map<String, List<String>> result = resultOf(setup.clear());
 

@@ -18,14 +18,14 @@ class CollectingTest {
 
     @Test
     final void lifecycle_Charger() {
-        final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.nextStringList(3));
+        final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.anyStringList(3));
         charger.charged();
-        assertThrows(IllegalStateException.class, () -> charger.add(SUPPLY.nextString()));
+        assertThrows(IllegalStateException.class, () -> charger.add(SUPPLY.anyString()));
     }
 
     @Test
     final void identity_Charger() {
-        final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.nextStringList(3));
+        final Collecting.Charger<String, List<String>, ?> charger = Collecting.charger(SUPPLY.anyStringList(3));
         final List<String> original = charger.charged();
         final List<String> result = charger.charged();
         assertEquals(original, result);
@@ -34,7 +34,7 @@ class CollectingTest {
 
     @Test
     final void identity_Builder() {
-        final List<String> template = SUPPLY.nextStringList(3);
+        final List<String> template = SUPPLY.anyStringList(3);
         final Collecting.Builder<String, List<String>, ?> builder = Collecting.builder(() -> new ArrayList<>(template));
         final List<String> original = builder.build();
         final List<String> result = builder.build();
@@ -44,7 +44,7 @@ class CollectingTest {
 
     @Test
     final void add_Charger() {
-        final List<String> expected = SUPPLY.nextStringList(3);
+        final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.charger(new ArrayList<String>())
                                               .add(expected.get(0))
                                               .add(expected.get(1))
@@ -55,7 +55,7 @@ class CollectingTest {
 
     @Test
     final void add_Builder() {
-        final List<String> expected = SUPPLY.nextStringList(3);
+        final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.builder(() -> new ArrayList<String>())
                                               .add(expected.get(0))
                                               .add(expected.get(1))
@@ -66,7 +66,7 @@ class CollectingTest {
 
     @Test
     final void addAll_Charger() {
-        final List<String> expected = SUPPLY.nextStringList(3);
+        final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.charger(new ArrayList<String>())
                                               .addAll(expected)
                                               .charged();
@@ -75,7 +75,7 @@ class CollectingTest {
 
     @Test
     final void addAll_Builder() {
-        final List<String> expected = SUPPLY.nextStringList(3);
+        final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.builder(() -> new ArrayList<String>())
                                               .addAll(expected)
                                               .build();
