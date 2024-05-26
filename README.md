@@ -15,6 +15,7 @@ http://www.team33.de/dev/patterns/1.x
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
+  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * random-tarvos (Team33 Randomization Library - Edition "tarvos")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * io-phobos (Team33 IO Library - Edition "phobos")
@@ -33,6 +34,11 @@ http://www.team33.de/dev/patterns/1.x
   * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
+
+### 1.19.0
+
+* Added module arbitrary-mimas
+* Marked module random-tarvos as deprecated
 
 ### 1.18.1
 
