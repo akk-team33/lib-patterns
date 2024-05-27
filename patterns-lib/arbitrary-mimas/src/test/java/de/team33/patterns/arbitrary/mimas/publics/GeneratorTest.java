@@ -1,13 +1,16 @@
 package de.team33.patterns.arbitrary.mimas.publics;
 
+import de.team33.patterns.arbitrary.mimas.Bridge;
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.arbitrary.mimas.sample.Producer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.util.EnumMap;
 import java.util.IntSummaryStatistics;
 import java.util.Map;
@@ -16,6 +19,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -66,6 +70,15 @@ class GeneratorTest {
     final void anyShort() {
         assertInstanceOf(Short.class, variable.anyShort());
         assertEquals(BigInteger.valueOf(0x75C0).shortValue(), fixed.anyShort());
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anySmallInt(final Case testCase) {
+        final int bound = Case.RANDOM.generator.anyInt(256);
+        final int result = testCase.generator.anySmallInt(bound);
+        assertTrue(0 <= result);
+        assertTrue(bound > result);
     }
 
     @Test
@@ -137,9 +150,18 @@ class GeneratorTest {
                    () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
-    @Test
-    final void anyChar() {
-        final char result = variable.anyChar("0123456789");
+    @ParameterizedTest
+    @EnumSource
+    final void anyChar_DEFAULT(final Case testCase) {
+        final char result = testCase.generator.anyChar();
+        final int index = Bridge.STD_CHARACTERS.indexOf(result);
+        assertFalse(0 > index);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyChar_CHARSET(final Case testCase) {
+        final char result = testCase.generator.anyChar("0123456789");
         assertTrue('0' <= result,
                    () -> "result is expected to be greater or equal to '0' but was '" + result + "'");
         assertTrue('9' >= result,
@@ -193,6 +215,14 @@ class GeneratorTest {
     }
 
     @ParameterizedTest
+    @EnumSource
+    final void anyBigInteger(final Case testCase) {
+        final BigInteger result = testCase.generator.anyBigInteger();
+        assertTrue(BigInteger.valueOf(Long.MIN_VALUE).compareTo(result) <= 0);
+        assertTrue(BigInteger.valueOf(Long.MAX_VALUE).compareTo(result) >= 0);
+    }
+
+    @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
     final void anyBigInteger_bound(final int bound) {
         final BigInteger bigBound = BigInteger.valueOf(bound);
@@ -213,6 +243,23 @@ class GeneratorTest {
                    () -> "result is expected to be greater or equal to " + bigMin + " but was " + result);
         assertTrue(bigBound.compareTo(result) > 0,
                    () -> "result is expected to be less than " + bigBound + " but was " + result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anySmallBigInteger(final Case testCase) {
+        final BigInteger result = testCase.generator.anySmallBigInteger();
+        assertTrue(ZERO.compareTo(result) <= 0);
+        assertTrue(ONE.shiftLeft(16).compareTo(result) > 0);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anySmallBigInteger_bound(final Case testCase) {
+        final BigInteger bound = Case.RANDOM.generator.anyBigInteger(ONE.shiftLeft(16));
+        final BigInteger result = testCase.generator.anySmallBigInteger(bound);
+        assertTrue(ZERO.compareTo(result) <= 0);
+        assertTrue(bound.compareTo(result) > 0);
     }
 
     @Test
@@ -236,5 +283,19 @@ class GeneratorTest {
         final int spread = expected / 50;
         assertEquals((1.0 * expected) - spread, stats.getMin(), 1.0 * spread);
         assertEquals((1.0 * expected) + spread, stats.getMax(), 1.0 * spread);
+    }
+
+    enum Case {
+
+        FIXED_MIN(numBits -> BigInteger.ZERO),
+        FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE)),
+        RANDOM(Generator.simple()),
+        SECURE_RANDOM(Generator.simple(new SecureRandom()));
+
+        final Generator generator;
+
+        Case(Generator generator) {
+            this.generator = generator;
+        }
     }
 }

@@ -97,6 +97,18 @@ public interface Generator {
     }
 
     /**
+     * Returns an {@code int} value between {@code zero} (incl.) and {@code bound} (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
+     * being more probable than bigger values.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
+     */
+    default int anySmallInt(final int bound) {
+        return anySmallBigInteger(BigInteger.valueOf(bound)).intValue();
+    }
+
+    /**
      * Returns any {@code long} value.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
@@ -146,6 +158,16 @@ public interface Generator {
     }
 
     /**
+     * Returns any {@code char} value of a predefined character set.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyChar(String)} and returns
+     * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
+     */
+    default char anyChar() {
+        return anyChar(Util.STD_CHARACTERS);
+    }
+
+    /**
      * Returns any {@code char} value of the given {@code characters}.
      * <p>
      * The default implementation depends on the implementation of {@link #anyInt(int)}.
@@ -177,19 +199,21 @@ public interface Generator {
     }
 
     /**
+     * Returns a {@link BigInteger} value between {@link Long#MIN_VALUE} and {@link Long#MAX_VALUE} (both incl.).
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     */
+    default BigInteger anyBigInteger() {
+        return BigInteger.valueOf(anyBits(Long.SIZE).longValue());
+    }
+
+    /**
      * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger(final BigInteger bound) {
-        if (BigInteger.ZERO.compareTo(bound) < 0) {
-            final int bitLength = bound.bitLength();
-            return Stream.generate(() -> anyBits(bitLength))
-                         .filter(result -> result.compareTo(bound) < 0)
-                         .findAny()
-                         .orElseThrow(NoSuchElementException::new);
-        }
-        throw new IllegalArgumentException("<bound> must be greater than ZERO but was " + bound);
+        return Util.anyBigInteger(this, bound, bound.bitLength());
     }
 
     /**
@@ -199,6 +223,30 @@ public interface Generator {
      */
     default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
         return anyBigInteger(bound.subtract(min)).add(min);
+    }
+
+    /**
+     * Returns a {@link BigInteger} value between zero (incl.) and 2<sup>16</sup> (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
+     * being more probable than bigger values.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
+     */
+    default BigInteger anySmallBigInteger() {
+        return anySmallBigInteger(BigInteger.ONE.shiftLeft(16));
+    }
+
+    /**
+     * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
+     * being more probable than bigger values.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     */
+    default BigInteger anySmallBigInteger(final BigInteger bound) {
+        return Util.anyBigInteger(this, bound, anyInt(bound.bitLength()) + 1);
     }
 
     /**
