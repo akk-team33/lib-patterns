@@ -17,7 +17,6 @@
     <modules>
         <module>testing-titan</module>
         <module>arbitrary-mimas</module>
-        <module>random-tarvos</module>
         <module>io-deimos</module>
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>

@@ -110,7 +110,7 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-tarvos</artifactId>
-                <version>${project.version}</version><!-- TODO: 1.19.0 -->
+                <version>1.19.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
