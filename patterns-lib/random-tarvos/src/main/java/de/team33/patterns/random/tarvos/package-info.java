@@ -38,5 +38,7 @@
  * contextual types (Person, Customer, Employee, ...) with random content.
  *
  * @see <a href="https://de.wikipedia.org/wiki/Tarvos_(Mond)">Tarvos</a>
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Successor is the module arbitrary-mimas.
  */
 package de.team33.patterns.random.tarvos;

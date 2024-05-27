@@ -28,7 +28,10 @@ import java.util.function.Supplier;
  * methods are ignored.
  *
  * @see de.team33.patterns.random.tarvos package
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Use {@link de.team33.patterns.arbitrary.mimas.Charger} instead.
  */
+@Deprecated
 public interface Charger {
 
     /**

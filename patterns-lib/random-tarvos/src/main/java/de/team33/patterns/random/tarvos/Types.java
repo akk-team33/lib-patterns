@@ -18,6 +18,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableMap;
 
+@Deprecated
 final class Types {
 
     private static final Map<Type, Collection<Type>> MATCHING = newMatching();

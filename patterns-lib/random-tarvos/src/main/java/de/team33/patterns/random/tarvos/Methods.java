@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 
+@Deprecated
 final class Methods {
 
     private static final int SYNTHETIC = 0x00001000;

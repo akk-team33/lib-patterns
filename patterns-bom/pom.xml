@@ -32,11 +32,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>random-tarvos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>io-deimos</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -112,6 +107,11 @@
             </dependency>
 
             <!-- deprecated ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-tarvos</artifactId>
+                <version>${project.version}</version><!-- TODO: 1.19.0 -->
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>

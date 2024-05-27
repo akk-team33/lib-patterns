@@ -55,7 +55,10 @@ import java.util.stream.Stream;
  * </pre>
  *
  * @see de.team33.patterns.random.tarvos package
+ * @deprecated Further development is discontinued and this package/module may be removed in a future release.
+ * Use {@link de.team33.patterns.arbitrary.mimas.Generator} instead.
  */
+@Deprecated
 @FunctionalInterface
 public interface Generator {
 

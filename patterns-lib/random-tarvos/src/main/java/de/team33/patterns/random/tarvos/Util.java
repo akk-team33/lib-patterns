@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+@Deprecated
 final class Util {
 
     static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
