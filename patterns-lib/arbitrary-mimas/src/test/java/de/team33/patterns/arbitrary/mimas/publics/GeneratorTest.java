@@ -14,6 +14,7 @@ import java.security.SecureRandom;
 import java.util.EnumMap;
 import java.util.IntSummaryStatistics;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,6 +24,7 @@ import static java.math.BigInteger.ZERO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -35,41 +37,84 @@ class GeneratorTest {
 
     @Test
     final void simple() {
-        final Generator simple = Generator.simple();
-        assertInstanceOf(Generator.class, simple);
-        assertInstanceOf(Boolean.class, simple.anyBoolean());
-        assertInstanceOf(Byte.class, simple.anyByte());
+        final Generator generator = Generator.of(new SecureRandom());
+        assertInstanceOf(Generator.class, generator);
+        assertInstanceOf(Boolean.class, generator.anyBoolean());
+        assertInstanceOf(Byte.class, generator.anyByte());
         // etc. ...
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97, 197, 1997})
-    final void anyBits(final int numBits) {
-        final BigInteger result = variable.anyBits(numBits);
-        assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
-                   () -> "result is expected to be greater or equal to ZERO but was " + result);
+    @EnumSource
+    final void anyBits(final Case testCase) {
+        final int numBits = Case.RANDOM.generator.anyInt(256);
+        final BigInteger bound = ONE.shiftLeft(numBits);
 
-        final BigInteger limit = ONE.shiftLeft(numBits);
-        assertTrue(limit.compareTo(result) > 0,
-                   () -> "result is expected to be less than " + limit + " but was " + result);
+        final BigInteger result = testCase.generator.anyBits(numBits);
+
+        assertTrue(ZERO.compareTo(result) <= 0,
+                   () -> "<result> is expected to be greater or equal to ZERO but was " + result);
+        assertTrue(bound.compareTo(result) > 0,
+                   () -> "<result> is expected to be less than " + bound + " but was " + result);
     }
 
-    @Test
-    final void anyBoolean() {
-        assertInstanceOf(Boolean.class, variable.anyBoolean());
-        assertFalse(fixed.anyBoolean());
+    @ParameterizedTest
+    @EnumSource
+    final void anyBoolean(final Case testCase) {
+        final boolean result = testCase.generator.anyBoolean();
+        assertTrue(testCase.isExpected(result));
     }
 
-    @Test
-    final void anyByte() {
-        assertInstanceOf(Byte.class, variable.anyByte());
-        assertEquals(BigInteger.valueOf(0xC0).byteValue(), fixed.anyByte());
+    @ParameterizedTest
+    @EnumSource
+    final void anyByte(final Case testCase) {
+        final byte result = testCase.generator.anyByte();
+        assertTrue(testCase.isExpected(result));
     }
 
-    @Test
-    final void anyShort() {
-        assertInstanceOf(Short.class, variable.anyShort());
-        assertEquals(BigInteger.valueOf(0x75C0).shortValue(), fixed.anyShort());
+    @ParameterizedTest
+    @EnumSource
+    final void anyShort(final Case testCase) {
+        final short result = testCase.generator.anyShort();
+        assertTrue(testCase.isExpected(result));
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyInt(final Case testCase) {
+        final int result = testCase.generator.anyInt();
+        assertTrue(testCase.isExpected(result));
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyInt_bound(final Case testCase) {
+        final int bound = 1 + Case.SECURE_RANDOM.generator.anyInt(256);
+
+        final int result = testCase.generator.anyInt(bound);
+
+        assertTrue(0 <= result);
+        assertTrue(bound > result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyInt_bound_edge(final Case testCase) {
+        assertEquals(0, testCase.generator.anyInt(1));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyInt(0));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyInt(-5));
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyInt_min_bound(final Case testCase) {
+        final int min = Case.SECURE_RANDOM.generator.anyInt(-256, 256);
+        final int bound = min + 1 + Case.SECURE_RANDOM.generator.anyInt(256);
+
+        final int result = testCase.generator.anyInt(min, bound);
+
+        assertTrue(min <= result);
+        assertTrue(bound > result);
     }
 
     @ParameterizedTest
@@ -81,78 +126,47 @@ class GeneratorTest {
         assertTrue(bound > result);
     }
 
-    @Test
-    final void anyInt() {
-        assertInstanceOf(Integer.class, variable.anyInt());
-        assertEquals(0x925275C0, fixed.anyInt());
-    }
-
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void anyInt_bound(final int bound) {
-        final int result = variable.anyInt(bound);
-        assertTrue(0 <= result,
-                   () -> "result is expected to be greater or equal to ZERO but was " + result);
-        assertTrue(bound > result,
-                   () -> "result is expected to be less than " + bound + " but was " + result);
-        final int mask = IntStream.of(1, 2, 4, 8, 16, 32, 64, 128)
-                                  .filter(i -> i > bound)
-                                  .findFirst()
-                                  .orElse(256) - 1;
-        assertEquals(0x925275C0 & mask, fixed.anyInt(bound));
-    }
-
-    @ParameterizedTest
-    @ValueSource(ints = {-3, -2, -1, 0, 1, 2, 5, 11, 19, 97})
-    final void anyInt_min_bound(final int bound) {
-        final int result = variable.anyInt(-5, bound);
-        assertTrue(-5 <= result,
-                   () -> "result is expected to be greater or equal to -5 but was " + result);
-        assertTrue(bound > result,
-                   () -> "result is expected to be less than " + bound + " but was " + result);
-    }
-
-    @Test
-    final void anyLong() {
-        assertInstanceOf(Long.class, variable.anyLong());
-        assertEquals(0x49DD7581925275C0L, fixed.anyLong());
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void anyLong_bound(final long bound) {
-        final long result = variable.anyLong(bound);
-        assertTrue(0 <= result,
-                   () -> "result is expected to be greater or equal to ZERO but was " + result);
-        assertTrue(bound > result,
-                   () -> "result is expected to be less than " + bound + " but was " + result);
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {0, -1, -3, -5, -11, -19, -29, -97})
-    final void anyLong_subzero(final long bound) {
-        try {
-            final long result = variable.anyLong(bound);
-            fail("should fail but was <" + result + ">");
-        } catch (final IllegalArgumentException e) {
-            // e.printStackTrace();
-            assertEquals("<bound> must be greater than ZERO but was " + bound, e.getMessage());
-        }
-    }
-
-    @ParameterizedTest
-    @ValueSource(longs = {-3, -2, -1, 0, 1, 2, 5, 11, 19, 97})
-    final void anyLong_min_bound(final long bound) {
-        final long result = variable.anyLong(-5, bound);
-        assertTrue(-5 <= result,
-                   () -> "result is expected to be greater or equal to -5 but was " + result);
-        assertTrue(bound > result,
-                   () -> "result is expected to be less than " + bound + " but was " + result);
+    @EnumSource
+    final void anyLong(final Case testCase) {
+        final long result = testCase.generator.anyLong();
+        assertTrue(testCase.isExpected(result));
     }
 
     @ParameterizedTest
     @EnumSource
-    final void anyChar_DEFAULT(final Case testCase) {
+    final void anyLong_bound(final Case testCase) {
+        final long bound = 1L + Case.SECURE_RANDOM.generator.anyLong(Integer.MAX_VALUE);
+
+        final long result = testCase.generator.anyLong(bound);
+
+        assertTrue(0 <= result);
+        assertTrue(bound > result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyLong_bound_edge(final Case testCase) {
+        assertEquals(0L, testCase.generator.anyLong(1L));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyLong(0L));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyLong(-5L));
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyLong_min_bound(final Case testCase) {
+        final long min = Case.SECURE_RANDOM.generator.anyLong(Integer.MIN_VALUE, Integer.MAX_VALUE);
+        final long bound = min + 1 + Case.SECURE_RANDOM.generator.anyLong(Integer.MAX_VALUE);
+
+        final long result = testCase.generator.anyLong(min, bound);
+
+        assertTrue(min <= result);
+        assertTrue(bound > result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyChar(final Case testCase) {
         final char result = testCase.generator.anyChar();
         final int index = Bridge.STD_CHARACTERS.indexOf(result);
         assertFalse(0 > index);
@@ -160,7 +174,7 @@ class GeneratorTest {
 
     @ParameterizedTest
     @EnumSource
-    final void anyChar_CHARSET(final Case testCase) {
+    final void anyChar_characters(final Case testCase) {
         final char result = testCase.generator.anyChar("0123456789");
         assertTrue('0' <= result,
                    () -> "result is expected to be greater or equal to '0' but was '" + result + "'");
@@ -193,25 +207,26 @@ class GeneratorTest {
         }
     }
 
-    @Test
-    final void anyFloat() {
-        final float result = assertInstanceOf(Float.class, variable.anyFloat());
-        assertTrue(0.0f <= result,
-                   () -> "result is expected to be greater or equal to 0.0 but was " + result);
-        assertTrue(1.0f > result,
-                   () -> "result is expected to be less than 1.0 but was " + result);
-        assertEquals(Float.valueOf("0.32210922"), fixed.anyFloat());
-    }
+    @ParameterizedTest
+    @EnumSource
+    final void anyFloat(final Case testCase) {
+        final float result = testCase.generator.anyFloat();
 
-    @Test
-    final void anyDouble() {
-        final double result = variable.anyDouble();
-        assertInstanceOf(Double.class, result);
         assertTrue(0.0 <= result,
                    () -> "result is expected to be greater or equal to 0.0 but was " + result);
         assertTrue(1.0 > result,
                    () -> "result is expected to be less than 1.0 but was " + result);
-        assertEquals(0.9205940111020752, fixed.anyDouble());
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void anyDouble(final Case testCase) {
+        final double result = testCase.generator.anyDouble();
+
+        assertTrue(0.0 <= result,
+                   () -> "result is expected to be greater or equal to 0.0 but was " + result);
+        assertTrue(1.0 > result,
+                   () -> "result is expected to be less than 1.0 but was " + result);
     }
 
     @ParameterizedTest
@@ -287,15 +302,65 @@ class GeneratorTest {
 
     enum Case {
 
-        FIXED_MIN(numBits -> BigInteger.ZERO),
-        FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE)),
-        RANDOM(Generator.simple()),
-        SECURE_RANDOM(Generator.simple(new SecureRandom()));
+        FIXED_MIN(numBits -> BigInteger.ZERO,
+                  false, 0, 0, 0, 0),
+
+        FIXED_MEAN(numBits -> ONE.shiftLeft(numBits / 2).subtract(ONE),
+                   false, 0x0f, 0x00ff, 0xffff, 0xffffffffL),
+
+        FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE),
+                  true, -1, -1, -1, -1),
+
+        RANDOM(Generator.of(new Random())),
+
+        SECURE_RANDOM(Generator.of(new SecureRandom()));
 
         final Generator generator;
+        final Boolean expBoolean;
+        final Byte expByte;
+        final Short expShort;
+        final Integer expInt;
+        final Long expLong;
 
-        Case(Generator generator) {
+        Case(final Generator generator) {
+            this(generator, null, null, null, null, null);
+        }
+
+        Case(final Generator generator,
+             final boolean expBoolean, final int expByte, final int expShort, final int expInt, final long expLong) {
+            this(generator,
+                 Boolean.valueOf(expBoolean), Byte.valueOf((byte) expByte), Short.valueOf((short) expShort),
+                 Integer.valueOf(expInt), Long.valueOf(expLong));
+        }
+
+        Case(final Generator generator, final Boolean expBoolean, final Byte expByte, final Short expShort,
+             final Integer expInt, final Long expLong) {
             this.generator = generator;
+            this.expBoolean = expBoolean;
+            this.expByte = expByte;
+            this.expShort = expShort;
+            this.expInt = expInt;
+            this.expLong = expLong;
+        }
+
+        final boolean isExpected(final boolean result) {
+            return (null == expBoolean) || expBoolean.equals(result);
+        }
+
+        final boolean isExpected(final byte result) {
+            return (null == expByte) || expByte.equals(result);
+        }
+
+        final boolean isExpected(final short result) {
+            return (null == expShort) || expShort.equals(result);
+        }
+
+        final boolean isExpected(final int result) {
+            return (null == expInt) || expInt.equals(result);
+        }
+
+        final boolean isExpected(final long result) {
+            return (null == expLong) || expLong.equals(result);
         }
     }
 }

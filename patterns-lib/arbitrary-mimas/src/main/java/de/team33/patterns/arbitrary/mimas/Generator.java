@@ -1,10 +1,8 @@
 package de.team33.patterns.arbitrary.mimas;
 
 import java.math.BigInteger;
-import java.util.NoSuchElementException;
 import java.util.Random;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * A utility interface:
@@ -20,16 +18,9 @@ import java.util.stream.Stream;
 public interface Generator {
 
     /**
-     * Provides a new {@link Generator} using a new {@link Random}.
+     * Provides a new {@link Generator} based on a given {@link Random}.
      */
-    static Generator simple() {
-        return simple(new Random());
-    }
-
-    /**
-     * Provides a new {@link Generator} using a given {@link Random}.
-     */
-    static Generator simple(final Random random) {
+    static Generator of(final Random random) {
         return numBits -> new BigInteger(numBits, random);
     }
 
@@ -45,6 +36,8 @@ public interface Generator {
     /**
      * Returns any {@code boolean} value.
      * <p>
+     * A typical implementation will return one of {true, false}, with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default boolean anyBoolean() {
@@ -53,6 +46,9 @@ public interface Generator {
 
     /**
      * Returns any {@code byte} value.
+     * <p>
+     * A typical implementation will return an arbitrary {@code byte} value,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
@@ -63,6 +59,9 @@ public interface Generator {
     /**
      * Returns any {@code short} value.
      * <p>
+     * A typical implementation will return an arbitrary {@code short} value,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default short anyShort() {
@@ -71,6 +70,9 @@ public interface Generator {
 
     /**
      * Returns any {@code int} value.
+     * <p>
+     * A typical implementation will return an arbitrary {@code int} value,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
@@ -81,6 +83,9 @@ public interface Generator {
     /**
      * Returns an {@code int} value between {@code zero} (incl.) and {@code bound} (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
     default int anyInt(final int bound) {
@@ -89,6 +94,9 @@ public interface Generator {
 
     /**
      * Returns an {@code int} value between {@code min} (incl.) and {@code bound} (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
      */
@@ -99,8 +107,8 @@ public interface Generator {
     /**
      * Returns an {@code int} value between {@code zero} (incl.) and {@code bound} (excl.).
      * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
-     * being more probable than bigger values.
+     * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
+     * with smaller values being more probable than bigger values.
      * <p>
      * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
      */
@@ -111,6 +119,9 @@ public interface Generator {
     /**
      * Returns any {@code long} value.
      * <p>
+     * A typical implementation will return an arbitrary {@code long} value,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong() {
@@ -119,6 +130,9 @@ public interface Generator {
 
     /**
      * Returns any {@code long} value between {@code zero} (incl.) and {@code bound} (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
@@ -129,6 +143,9 @@ public interface Generator {
     /**
      * Returns any {@code long} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
      */
     default long anyLong(final long min, final long bound) {
@@ -137,6 +154,9 @@ public interface Generator {
 
     /**
      * Returns a {@code float} value between zero (incl.) and one (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
@@ -160,6 +180,9 @@ public interface Generator {
     /**
      * Returns any {@code char} value of a predefined character set.
      * <p>
+     * A typical implementation will return an arbitrary {@code char} value within the predefined character set,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyChar(String)} and returns
      * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
      */
@@ -169,6 +192,9 @@ public interface Generator {
 
     /**
      * Returns any {@code char} value of the given {@code characters}.
+     * <p>
+     * A typical implementation will return an arbitrary {@code char} value within the given character set,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyInt(int)}.
      *
