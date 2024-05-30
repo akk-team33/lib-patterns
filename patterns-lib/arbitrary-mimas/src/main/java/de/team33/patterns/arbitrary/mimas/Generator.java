@@ -169,6 +169,9 @@ public interface Generator {
     /**
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default double anyDouble() {
@@ -227,6 +230,9 @@ public interface Generator {
     /**
      * Returns a {@link BigInteger} value between {@link Long#MIN_VALUE} and {@link Long#MAX_VALUE} (both incl.).
      * <p>
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger() {
@@ -235,6 +241,9 @@ public interface Generator {
 
     /**
      * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
+     * <p>
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
@@ -245,6 +254,9 @@ public interface Generator {
     /**
      * Returns a {@link BigInteger} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
      */
     default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
@@ -254,8 +266,8 @@ public interface Generator {
     /**
      * Returns a {@link BigInteger} value between zero (incl.) and 2<sup>16</sup> (excl.).
      * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
-     * being more probable than bigger values.
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with smaller values being more probable than bigger values.
      * <p>
      * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
      */
@@ -280,6 +292,7 @@ public interface Generator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyInt(int)}.
      */
+    @SuppressWarnings("unchecked")
     default <T> T anyOf(final T... values) {
         return values[anyInt(values.length)];
     }

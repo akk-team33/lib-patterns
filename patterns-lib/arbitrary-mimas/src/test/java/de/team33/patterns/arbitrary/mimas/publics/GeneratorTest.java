@@ -11,10 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.util.EnumMap;
-import java.util.IntSummaryStatistics;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -233,31 +230,34 @@ class GeneratorTest {
     @EnumSource
     final void anyBigInteger(final Case testCase) {
         final BigInteger result = testCase.generator.anyBigInteger();
+
         assertTrue(BigInteger.valueOf(Long.MIN_VALUE).compareTo(result) <= 0);
         assertTrue(BigInteger.valueOf(Long.MAX_VALUE).compareTo(result) >= 0);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void anyBigInteger_bound(final int bound) {
-        final BigInteger bigBound = BigInteger.valueOf(bound);
-        final BigInteger result = variable.anyBigInteger(bigBound);
-        assertTrue(BigInteger.ZERO.compareTo(result) <= 0,
-                   () -> "result is expected to be greater or equal to ZERO but was " + result);
-        assertTrue(bigBound.compareTo(result) > 0,
-                   () -> "result is expected to be less than " + bigBound + " but was " + result);
+    @EnumSource
+    final void anyBigInteger_bound(final Case testCase) {
+        final BigInteger bound = Case.SECURE_RANDOM.generator.anySmallBigInteger().add(ONE);
+
+        final BigInteger result = testCase.generator.anyBigInteger(bound);
+
+        assertTrue(ZERO.compareTo(result) <= 0);
+        assertTrue(bound.compareTo(result) > 0);
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void anyBigInteger_min_bound(final int bound) {
+    @EnumSource
+    final void anyBigInteger_min_bound(final Case testCase) {
+        final long min = Case.SECURE_RANDOM.generator.anyLong(Integer.MIN_VALUE, Integer.MAX_VALUE);
+        final long bound = min + 1 + Case.SECURE_RANDOM.generator.anyLong(Integer.MAX_VALUE);
+        final BigInteger bigMin = BigInteger.valueOf(min);
         final BigInteger bigBound = BigInteger.valueOf(bound);
-        final BigInteger bigMin = BigInteger.valueOf(bound - 17);
-        final BigInteger result = variable.anyBigInteger(bigMin, bigBound);
-        assertTrue(bigMin.compareTo(result) <= 0,
-                   () -> "result is expected to be greater or equal to " + bigMin + " but was " + result);
-        assertTrue(bigBound.compareTo(result) > 0,
-                   () -> "result is expected to be less than " + bigBound + " but was " + result);
+
+        final BigInteger result = testCase.generator.anyBigInteger(bigMin, bigBound);
+
+        assertTrue(bigMin.compareTo(result) <= 0);
+        assertTrue(bigBound.compareTo(result) > 0);
     }
 
     @ParameterizedTest
@@ -277,27 +277,18 @@ class GeneratorTest {
         assertTrue(bound.compareTo(result) > 0);
     }
 
-    @Test
-    final void anyOf() {
-        final int expected = 10000;
-        final Map<RoundingMode, AtomicInteger> counts = new EnumMap<>(RoundingMode.class);
-        Stream.generate(() -> variable.anyOf(RoundingMode.class))
-              .limit((long) expected * RoundingMode.values().length)
-              .forEach(mode -> counts.computeIfAbsent(mode, key -> new AtomicInteger(0)).incrementAndGet());
+    @ParameterizedTest
+    @EnumSource
+    final void anyOf(final Case testCase) {
+        final RoundingMode result = testCase.generator.anyOf(RoundingMode.values());
+        assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
+    }
 
-        //counts.forEach((mode, count) -> System.out.printf("[%s] -> %s%n", mode, count));
-
-        final IntSummaryStatistics stats = counts.values()
-                                                 .stream()
-                                                 .map(AtomicInteger::get)
-                                                 .collect(IntSummaryStatistics::new,
-                                                          IntSummaryStatistics::accept,
-                                                          IntSummaryStatistics::combine);
-        assertEquals(1.0 * expected, stats.getAverage());
-
-        final int spread = expected / 50;
-        assertEquals((1.0 * expected) - spread, stats.getMin(), 1.0 * spread);
-        assertEquals((1.0 * expected) + spread, stats.getMax(), 1.0 * spread);
+    @ParameterizedTest
+    @EnumSource
+    final void anyOf_enum(final Case testCase) {
+        final RoundingMode result = testCase.generator.anyOf(RoundingMode.class);
+        assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
     }
 
     enum Case {
