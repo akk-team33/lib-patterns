@@ -90,8 +90,10 @@ class GeneratorTest {
 
         final int result = testCase.generator.anyInt(bound);
 
-        assertTrue(0 <= result);
-        assertTrue(bound > result);
+        assertTrue(0 <= result,
+                   () -> "result is expected to be greater or equal to 0 but was " + result);
+        assertTrue(bound > result,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
@@ -110,17 +112,23 @@ class GeneratorTest {
 
         final int result = testCase.generator.anyInt(min, bound);
 
-        assertTrue(min <= result);
-        assertTrue(bound > result);
+        assertTrue(min <= result,
+                   () -> "result is expected to be greater or equal to " + min + " but was " + result);
+        assertTrue(bound > result,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
     @EnumSource
     final void anySmallInt(final Case testCase) {
-        final int bound = Case.RANDOM.generator.anyInt(256);
+        final int bound = 1 + Case.RANDOM.generator.anyInt(256);
+
         final int result = testCase.generator.anySmallInt(bound);
-        assertTrue(0 <= result);
-        assertTrue(bound > result);
+
+        assertTrue(0 <= result,
+                   () -> "result is expected to be greater or equal to 0 but was " + result);
+        assertTrue(bound > result,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
@@ -137,8 +145,10 @@ class GeneratorTest {
 
         final long result = testCase.generator.anyLong(bound);
 
-        assertTrue(0 <= result);
-        assertTrue(bound > result);
+        assertTrue(0 <= result,
+                   () -> "result is expected to be greater or equal to 0 but was " + result);
+        assertTrue(bound > result,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
@@ -157,8 +167,10 @@ class GeneratorTest {
 
         final long result = testCase.generator.anyLong(min, bound);
 
-        assertTrue(min <= result);
-        assertTrue(bound > result);
+        assertTrue(min <= result,
+                   () -> "result is expected to be greater or equal to " + min + " but was " + result);
+        assertTrue(bound > result,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
@@ -242,8 +254,10 @@ class GeneratorTest {
 
         final BigInteger result = testCase.generator.anyBigInteger(bound);
 
-        assertTrue(ZERO.compareTo(result) <= 0);
-        assertTrue(bound.compareTo(result) > 0);
+        assertTrue(ZERO.compareTo(result) <= 0,
+                   () -> "result is expected to be greater or equal to ZERO but was " + result);
+        assertTrue(bound.compareTo(result) > 0,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
@@ -256,25 +270,36 @@ class GeneratorTest {
 
         final BigInteger result = testCase.generator.anyBigInteger(bigMin, bigBound);
 
-        assertTrue(bigMin.compareTo(result) <= 0);
-        assertTrue(bigBound.compareTo(result) > 0);
+        assertTrue(bigMin.compareTo(result) <= 0,
+                   () -> "result is expected to be greater or equal to " + bigMin + " but was " + result);
+        assertTrue(bigBound.compareTo(result) > 0,
+                   () -> "result is expected to be less than " + bigBound + " but was " + result);
     }
 
     @ParameterizedTest
     @EnumSource
     final void anySmallBigInteger(final Case testCase) {
+        final BigInteger bound = ONE.shiftLeft(16);
+
         final BigInteger result = testCase.generator.anySmallBigInteger();
-        assertTrue(ZERO.compareTo(result) <= 0);
-        assertTrue(ONE.shiftLeft(16).compareTo(result) > 0);
+
+        assertTrue(ZERO.compareTo(result) <= 0,
+                   () -> "result is expected to be greater or equal to ZERO but was " + result);
+        assertTrue(bound.compareTo(result) > 0,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest
     @EnumSource
     final void anySmallBigInteger_bound(final Case testCase) {
         final BigInteger bound = Case.RANDOM.generator.anyBigInteger(ONE.shiftLeft(16));
+
         final BigInteger result = testCase.generator.anySmallBigInteger(bound);
-        assertTrue(ZERO.compareTo(result) <= 0);
-        assertTrue(bound.compareTo(result) > 0);
+
+        assertTrue(ZERO.compareTo(result) <= 0,
+                   () -> "result is expected to be greater or equal to ZERO but was " + result);
+        assertTrue(bound.compareTo(result) > 0,
+                   () -> "result is expected to be less than " + bound + " but was " + result);
     }
 
     @ParameterizedTest

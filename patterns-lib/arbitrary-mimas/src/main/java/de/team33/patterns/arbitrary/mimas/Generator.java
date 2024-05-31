@@ -101,10 +101,10 @@ public interface Generator extends BitGenerator {
      * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
      * with smaller values being more probable than bigger values.
      * <p>
-     * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anySmallInt(final int bound) {
-        return anySmallBigInteger(BigInteger.valueOf(bound)).intValue();
+        return Generating.anySmallInt(this, bound);
     }
 
     /**
@@ -125,10 +125,10 @@ public interface Generator extends BitGenerator {
      * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong(final long bound) {
-        return anyBigInteger(BigInteger.valueOf(bound)).longValue();
+        return Generating.anyLong(this, bound);
     }
 
     /**
@@ -137,10 +137,10 @@ public interface Generator extends BitGenerator {
      * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong(final long min, final long bound) {
-        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).longValue();
+        return Generating.anyLong(this, min, bound);
     }
 
     /**
@@ -165,53 +165,6 @@ public interface Generator extends BitGenerator {
      */
     default double anyDouble() {
         return Generating.anyDouble(this);
-    }
-
-    /**
-     * Returns any {@code char} value of a predefined character set.
-     * <p>
-     * A typical implementation will return an arbitrary {@code char} value within the predefined character set,
-     * with each possible value being equally probable.
-     * <p>
-     * The default implementation depends on the implementation of {@link #anyChar(String)} and returns
-     * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
-     */
-    default char anyChar() {
-        return anyChar(Util.STD_CHARACTERS);
-    }
-
-    /**
-     * Returns any {@code char} value of the given {@code characters}.
-     * <p>
-     * A typical implementation will return an arbitrary {@code char} value within the given character set,
-     * with each possible value being equally probable.
-     * <p>
-     * The default implementation depends on the implementation of {@link #anyInt(int)}.
-     *
-     * @param characters A {@link String} made up of the characters that are a possible result.
-     */
-    default char anyChar(final String characters) {
-        return characters.charAt(anyInt(characters.length()));
-    }
-
-    /**
-     * Returns a {@link String} with the given {@code length} consisting of the given {@code characters}.
-     * <p>
-     * The default implementation depends on the implementation of {@link #anyInt(int)}.
-     *
-     * @param length     The length of the resulting string.
-     * @param characters A string made up of the characters that make up a possible result.
-     */
-    default String anyString(final int length, final String characters) {
-        if (0 <= length) {
-            return IntStream.generate(() -> anyInt(characters.length()))
-                            .limit(length)
-                            .collect(StringBuilder::new,
-                                     (sb, i) -> sb.append(characters.charAt(i)),
-                                     StringBuilder::append)
-                            .toString();
-        }
-        throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
     }
 
     /**
@@ -275,21 +228,66 @@ public interface Generator extends BitGenerator {
     }
 
     /**
+     * Returns any {@code char} value of a predefined character set.
+     * <p>
+     * A typical implementation will return an arbitrary {@code char} value within the predefined character set,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)} and returns
+     * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
+     */
+    default char anyChar() {
+        return Generating.anyChar(this);
+    }
+
+    /**
+     * Returns any {@code char} value of the given {@code characters}.
+     * <p>
+     * A typical implementation will return an arbitrary {@code char} value within the given characters,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     *
+     * @param characters A {@link String} made up of the characters that are a possible result.
+     */
+    default char anyChar(final String characters) {
+        return Generating.anyChar(this, characters);
+    }
+
+    /**
+     * Returns a {@link String} with the given {@code length} consisting of the given {@code characters}.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     *
+     * @param length     The length of the resulting string.
+     * @param characters A string made up of the characters that make up a possible result.
+     */
+    default String anyString(final int length, final String characters) {
+        return Generating.anyString(this, length, characters);
+    }
+
+    /**
      * Returns one of the given {@code values}.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyInt(int)}.
+     * A typical implementation will return an arbitrary value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     @SuppressWarnings("unchecked")
     default <T> T anyOf(final T... values) {
-        return values[anyInt(values.length)];
+        return Generating.anyOf(this, values);
     }
 
     /**
      * Returns one of the given {@code enum} {@code values}.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyOf(Object[])}.
+     * A typical implementation will return an arbitrary value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default <T extends Enum<T>> T anyOf(final Class<T> enumClass) {
-        return anyOf(enumClass.getEnumConstants());
+        return Generating.anyOf(this, enumClass.getEnumConstants());
     }
 }
