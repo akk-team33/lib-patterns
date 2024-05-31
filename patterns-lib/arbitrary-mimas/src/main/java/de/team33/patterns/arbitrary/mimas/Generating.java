@@ -113,14 +113,17 @@ final class Generating {
     }
 
     static String anyString(final BitGenerator generator, final int length, final String characters) {
-        if (0 <= length) {
-            return IntStream.generate(() -> anyInt(generator, characters.length()))
-                            .limit(length)
-                            .collect(StringBuilder::new,
-                                     sbAppender(characters),
-                                     StringBuilder::append)
-                            .toString();
+        if (0 > length) {
+            throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
         }
-        throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
+        if (characters.isEmpty()) {
+            throw new IllegalArgumentException("<characters> must not be empty but was \"" + characters + "\"");
+        }
+        return IntStream.generate(() -> anyInt(generator, characters.length()))
+                        .limit(length)
+                        .collect(StringBuilder::new,
+                                 sbAppender(characters),
+                                 StringBuilder::append)
+                        .toString();
     }
 }

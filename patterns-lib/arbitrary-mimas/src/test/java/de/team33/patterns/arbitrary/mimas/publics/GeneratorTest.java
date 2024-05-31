@@ -27,11 +27,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class GeneratorTest {
 
-    private static final BigInteger FIXED = new BigInteger("45619B2F8D02DD0BD545B8C8BD2CDBF86E8149DD7581925275C0", 16);
-
-    private final Producer variable = new Producer();
-    private final Generator fixed = numBits -> FIXED.and(ONE.shiftLeft(numBits).subtract(ONE));
-
     @Test
     final void simple() {
         final Generator generator = Generator.of(new SecureRandom());
@@ -192,9 +187,12 @@ class GeneratorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 2, 3, 5, 7, 11, 17, 19, 29, 97})
-    final void anyString(final int length) {
-        final String result = variable.anyString(length, "0123456789");
+    @EnumSource
+    final void anyString(final Case testCase) {
+        final int length = Case.SECURE_RANDOM.generator.anyInt(128);
+
+        final String result = testCase.generator.anyString(length, "0123456789");
+
         assertEquals(length, result.length());
         for (final char c : result.toCharArray()) {
             assertTrue('0' <= c,
@@ -205,15 +203,13 @@ class GeneratorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-1, -3, -7, -17, -29, -97})
-    final void anyString_subzero(final int length) {
-        try {
-            final String result = variable.anyString(length, "0123456789");
-            fail("should fail but was <" + result + ">");
-        } catch (final IllegalArgumentException e) {
-            // e.printStackTrace();
-            assertEquals("<length> must be greater than or equal to zero but was " + length, e.getMessage());
-        }
+    @EnumSource
+    final void anyString_edge(final Case testCase) {
+        assertEquals("", testCase.generator.anyString(0, "0123456789"));
+        assertEquals("00000", testCase.generator.anyString(5, "0"));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyString(-1, "0123456789"));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyString(1, ""));
+        assertThrows(IllegalArgumentException.class, () -> testCase.generator.anyString(0, ""));
     }
 
     @ParameterizedTest
