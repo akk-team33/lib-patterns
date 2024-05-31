@@ -41,7 +41,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default boolean anyBoolean() {
-        return anyBits(1).equals(BigInteger.ONE);
+        return Generating.anyBoolean(this);
     }
 
     /**
@@ -53,7 +53,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default byte anyByte() {
-        return anyBits(Byte.SIZE).byteValue();
+        return Generating.anyByte(this);
     }
 
     /**
@@ -65,7 +65,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default short anyShort() {
-        return anyBits(Short.SIZE).shortValue();
+        return Generating.anyShort(this);
     }
 
     /**
@@ -77,7 +77,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt() {
-        return anyBits(Integer.SIZE).intValue();
+        return Generating.anyInt(this);
     }
 
     /**
@@ -86,10 +86,10 @@ public interface Generator {
      * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt(final int bound) {
-        return anyBigInteger(BigInteger.valueOf(bound)).intValue();
+        return Generating.anyInt(this, bound);
     }
 
     /**
@@ -98,10 +98,10 @@ public interface Generator {
      * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt(final int min, final int bound) {
-        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
+        return Generating.anyInt(this, min, bound);
     }
 
     /**
@@ -125,7 +125,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong() {
-        return anyBits(Long.SIZE).longValue();
+        return Generating.anyLong(this);
     }
 
     /**
@@ -161,9 +161,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default float anyFloat() {
-        final float numerator = anyBits(Util.FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(Util.FLOAT_RESOLUTION).floatValue();
-        return numerator / denominator;
+        return Generating.anyFloat(this);
     }
 
     /**
@@ -175,9 +173,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default double anyDouble() {
-        final double numerator = anyBits(Util.DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(Util.DOUBLE_RESOLUTION).doubleValue();
-        return numerator / denominator;
+        return Generating.anyDouble(this);
     }
 
     /**
@@ -236,7 +232,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger() {
-        return BigInteger.valueOf(anyBits(Long.SIZE).longValue());
+        return Generating.anyBigInteger(this);
     }
 
     /**
@@ -248,7 +244,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger(final BigInteger bound) {
-        return Util.anyBigInteger(this, bound, bound.bitLength());
+        return Generating.anyBigInteger(this, bound);
     }
 
     /**
@@ -257,10 +253,10 @@ public interface Generator {
      * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
-        return anyBigInteger(bound.subtract(min)).add(min);
+        return Generating.anyBigInteger(this, min, bound);
     }
 
     /**
@@ -269,10 +265,10 @@ public interface Generator {
      * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
      * with smaller values being more probable than bigger values.
      * <p>
-     * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anySmallBigInteger() {
-        return anySmallBigInteger(BigInteger.ONE.shiftLeft(16));
+        return Generating.anySmallBigInteger(this);
     }
 
     /**
@@ -284,7 +280,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anySmallBigInteger(final BigInteger bound) {
-        return Util.anyBigInteger(this, bound, anyInt(bound.bitLength()) + 1);
+        return Generating.anySmallBigInteger(this, bound);
     }
 
     /**
