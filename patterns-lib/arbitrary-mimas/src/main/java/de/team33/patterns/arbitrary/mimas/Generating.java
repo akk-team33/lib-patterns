@@ -126,4 +126,8 @@ final class Generating {
                                  StringBuilder::append)
                         .toString();
     }
+
+    public static String anyString(final BitGenerator generator) {
+        return anyString(generator, 1 + anyInt(generator, 128), Util.STD_CHARACTERS);
+    }
 }

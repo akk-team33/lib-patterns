@@ -266,6 +266,10 @@ public interface Generator extends BitGenerator {
         return Generating.anyString(this, length, characters);
     }
 
+    default String anyString() {
+        return Generating.anyString(this);
+    }
+
     /**
      * Returns one of the given {@code values}.
      * <p>

@@ -204,6 +204,19 @@ class GeneratorTest {
 
     @ParameterizedTest
     @EnumSource
+    final void anyString_default(final Case testCase) {
+        final String result = testCase.generator.anyString();
+
+        assertFalse(result.isEmpty());
+        assertTrue(128 >= result.length());
+
+        for (final char c : result.toCharArray()) {
+            assertTrue(0 <= Bridge.STD_CHARACTERS.indexOf(c));
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource
     final void anyString_edge(final Case testCase) {
         assertEquals("", testCase.generator.anyString(0, "0123456789"));
         assertEquals("00000", testCase.generator.anyString(5, "0"));
