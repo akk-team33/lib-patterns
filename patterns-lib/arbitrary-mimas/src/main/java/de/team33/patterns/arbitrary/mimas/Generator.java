@@ -15,7 +15,7 @@ import java.util.stream.IntStream;
  * @see de.team33.patterns.arbitrary.mimas package
  */
 @FunctionalInterface
-public interface Generator {
+public interface Generator extends BitGenerator {
 
     /**
      * Provides a new {@link Generator} based on a given {@link Random}.
@@ -25,15 +25,6 @@ public interface Generator {
     }
 
     /**
-     * Returns any non-negative {@link BigInteger} representing a sequence of significant bits of a given length.
-     * In other words, the result is any value between zero (inclusive) and 2<sup>length</sup> (exclusive).
-     * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds, with each possible value
-     * being equally probable.
-     */
-    BigInteger anyBits(final int numBits);
-
-    /**
      * Returns any {@code boolean} value.
      * <p>
      * A typical implementation will return one of {true, false}, with each possible value being equally probable.
@@ -41,7 +32,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default boolean anyBoolean() {
-        return anyBits(1).equals(BigInteger.ONE);
+        return Generating.anyBoolean(this);
     }
 
     /**
@@ -53,7 +44,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default byte anyByte() {
-        return anyBits(Byte.SIZE).byteValue();
+        return Generating.anyByte(this);
     }
 
     /**
@@ -65,7 +56,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default short anyShort() {
-        return anyBits(Short.SIZE).shortValue();
+        return Generating.anyShort(this);
     }
 
     /**
@@ -77,7 +68,7 @@ public interface Generator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt() {
-        return anyBits(Integer.SIZE).intValue();
+        return Generating.anyInt(this);
     }
 
     /**
