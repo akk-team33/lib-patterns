@@ -77,10 +77,10 @@ public interface Generator extends BitGenerator {
      * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt(final int bound) {
-        return anyBigInteger(BigInteger.valueOf(bound)).intValue();
+        return Generating.anyInt(this, bound);
     }
 
     /**
@@ -89,10 +89,10 @@ public interface Generator extends BitGenerator {
      * A typical implementation will return an arbitrary {@code int} value within the defined bounds,
      * with each possible value being equally probable.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger, BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt(final int min, final int bound) {
-        return anyBigInteger(BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
+        return Generating.anyInt(this, min, bound);
     }
 
     /**
@@ -116,7 +116,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong() {
-        return anyBits(Long.SIZE).longValue();
+        return Generating.anyLong(this);
     }
 
     /**
@@ -152,20 +152,19 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default float anyFloat() {
-        final float numerator = anyBits(Util.FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(Util.FLOAT_RESOLUTION).floatValue();
-        return numerator / denominator;
+        return Generating.anyFloat(this);
     }
 
     /**
      * Returns a {@code double} value between zero (incl.) and one (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@code long} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default double anyDouble() {
-        final double numerator = anyBits(Util.DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(Util.DOUBLE_RESOLUTION).doubleValue();
-        return numerator / denominator;
+        return Generating.anyDouble(this);
     }
 
     /**
@@ -218,40 +217,49 @@ public interface Generator extends BitGenerator {
     /**
      * Returns a {@link BigInteger} value between {@link Long#MIN_VALUE} and {@link Long#MAX_VALUE} (both incl.).
      * <p>
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger() {
-        return BigInteger.valueOf(anyBits(Long.SIZE).longValue());
+        return Generating.anyBigInteger(this);
     }
 
     /**
      * Returns a {@link BigInteger} value between {@link BigInteger#ZERO} (incl.) and {@code bound} (excl.).
      * <p>
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger(final BigInteger bound) {
-        return Util.anyBigInteger(this, bound, bound.bitLength());
+        return Generating.anyBigInteger(this, bound);
     }
 
     /**
      * Returns a {@link BigInteger} value between {@code min} (incl.) and {@code bound} (excl.).
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBigInteger(BigInteger)}.
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger(final BigInteger min, final BigInteger bound) {
-        return anyBigInteger(bound.subtract(min)).add(min);
+        return Generating.anyBigInteger(this, min, bound);
     }
 
     /**
      * Returns a {@link BigInteger} value between zero (incl.) and 2<sup>16</sup> (excl.).
      * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds, with smaller values
-     * being more probable than bigger values.
+     * A typical implementation will return an arbitrary {@link BigInteger} value within the defined bounds,
+     * with smaller values being more probable than bigger values.
      * <p>
-     * The default implementation depends on the implementation of {@link #anySmallBigInteger(BigInteger)}.
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anySmallBigInteger() {
-        return anySmallBigInteger(BigInteger.ONE.shiftLeft(16));
+        return Generating.anySmallBigInteger(this);
     }
 
     /**
@@ -263,7 +271,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anySmallBigInteger(final BigInteger bound) {
-        return Util.anyBigInteger(this, bound, anyInt(bound.bitLength()) + 1);
+        return Generating.anySmallBigInteger(this, bound);
     }
 
     /**
@@ -271,6 +279,7 @@ public interface Generator extends BitGenerator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyInt(int)}.
      */
+    @SuppressWarnings("unchecked")
     default <T> T anyOf(final T... values) {
         return values[anyInt(values.length)];
     }

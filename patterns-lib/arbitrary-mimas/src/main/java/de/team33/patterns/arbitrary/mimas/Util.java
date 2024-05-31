@@ -8,7 +8,6 @@ import java.io.Reader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 final class Util {
 
@@ -16,8 +15,6 @@ final class Util {
     static final String STD_CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ " +
                                          "!#$§%&*+,.?@äöüÄÖÜß";
     static final long MAX_RETRY = 16;
-    static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
-    static final int FLOAT_RESOLUTION = Float.SIZE - 8;
     static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
     static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
@@ -26,17 +23,6 @@ final class Util {
             " <%s> is not a valid resource or is not accessible in the context <%s>";
 
     private Util() {
-    }
-
-    static BigInteger anyBigInteger(final Generator generator, final BigInteger bound, final int bitLength) {
-        if (BigInteger.ZERO.compareTo(bound) < 0) {
-            return Stream.generate(() -> generator.anyBits(bitLength))
-                         .limit(MAX_RETRY)
-                         .filter(result -> result.compareTo(bound) < 0)
-                         .findAny()
-                         .orElseGet(() -> generator.anyBits(bitLength - 1));
-        }
-        throw new IllegalArgumentException("<bound> must be greater than ZERO but was " + bound);
     }
 
     static String load(final Class<?> context, final String resource) {
