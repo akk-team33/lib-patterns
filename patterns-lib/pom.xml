@@ -21,6 +21,7 @@
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>
         <module>io-phobos</module>
+        <module>io-charon</module>
         <module>expiry-tethys</module>
         <module>pooling-ariel</module>
         <module>tuple-janus</module>
