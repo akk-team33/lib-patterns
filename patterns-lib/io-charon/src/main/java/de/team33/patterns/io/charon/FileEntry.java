@@ -1,6 +1,11 @@
 package de.team33.patterns.io.charon;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Represents an entry from the file system.
@@ -14,13 +19,24 @@ import java.nio.file.Path;
 public class FileEntry {
 
     private final Path path;
+    private final FileType type;
 
-    private FileEntry(final Path path) {
+    private FileEntry(final Path path, final FileType type) {
         this.path = path.toAbsolutePath().normalize();
+        this.type = type;
     }
 
     public static FileEntry of(final Path path) {
-        return new FileEntry(path);
+        try {
+            final BasicFileAttributes attributes = Files.readAttributes(path,
+                                                                        BasicFileAttributes.class,
+                                                                        LinkOption.NOFOLLOW_LINKS);
+            return new FileEntry(path, FileType.map(attributes));
+        } catch (final NoSuchFileException ignored) {
+            return new FileEntry(path, FileType.MISSING);
+        } catch (final IOException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -37,5 +53,17 @@ public class FileEntry {
      */
     public final String name() {
         return path.getFileName().toString();
+    }
+
+    /**
+     * Returns the {@link FileType} of the represented file.
+     */
+    public final FileType type() {
+        return type;
+    }
+
+    public enum Mode {
+        STRAIGHT,
+        EFFECTIVE
     }
 }
