@@ -34,6 +34,11 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.18.3
+
+* Refined module io-deimos ...
+  * Added class Resource
+
 ### 1.18.1
 
 * building-elara
