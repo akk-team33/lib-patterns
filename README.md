@@ -38,6 +38,7 @@ http://www.team33.de/dev/patterns/1.x
 
 * Refined module io-deimos ...
   * Added class Resource
+  * Marked TextIO.read(InputStream) as deprecated
 
 ### 1.18.1
 
