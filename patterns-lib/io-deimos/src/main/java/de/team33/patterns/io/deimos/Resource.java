@@ -15,6 +15,9 @@ import java.util.Properties;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Abstracts a resource that can be read via a byte stream.
+ */
 public class Resource {
 
     private static final String CANNOT_READ_RESOURCE = "cannot read resource%n" +
@@ -37,12 +40,18 @@ public class Resource {
         this.newExceptionMessage = newExceptionMessage;
     }
 
+    /**
+     * Retrieves a {@link Resource} to read a java resource.
+     */
     public static Resource by(final Class<?> referringClass, final String resourceName) {
         return new Resource(() -> referringClass.getResourceAsStream(resourceName),
                             caught -> String.format(CANNOT_READ_RESOURCE, resourceName, referringClass,
                                                     caught.getClass().getCanonicalName(), caught.getMessage()));
     }
 
+    /**
+     * Retrieves a {@link Resource} to read a file.
+     */
     public static Resource by(final Path path) {
         return new Resource(() -> Files.newInputStream(path),
                             caught -> String.format(CANNOT_READ_FILE, path,
