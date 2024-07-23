@@ -17,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Abstracts a resource that can be read via a {@link InputStream byte stream}.
+ * A tool for processing a resource that can be read via a {@link InputStream byte stream}.
  */
 public class Resource {
 
