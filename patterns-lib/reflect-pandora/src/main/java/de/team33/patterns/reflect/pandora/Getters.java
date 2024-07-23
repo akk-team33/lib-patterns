@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -49,10 +50,8 @@ public class Getters<T> {
      */
     public static <T> Getters<T> of(final Class<T> subjectClass, final Policy policy) {
         return new Getters<>(policy.toStream.apply(subjectClass)
-                                            .map(method -> new Getter<T>(method))
-                                            .collect(TreeMap::new,
-                                                     (map, getter) -> map.put(getter.name(), getter),
-                                                     Map::putAll));
+                                            .map(method -> new Getter<T>(method, policy.toName.apply(method)))
+                                            .collect(Collectors.toMap(Getter::name, Function.identity())));
     }
 
     /**
@@ -103,25 +102,28 @@ public class Getters<T> {
         /**
          * Accepts methods whose names begin with one of the prefixes "get" or "is".
          */
-        CLASSIC(Methods::classicGettersOf),
+        CLASSIC(Methods::classicGettersOf, Methods::normalName),
 
         /**
          * Accepts methods that meet the criteria for access methods of <em>record</em>s
          * (as defined with Java 17 or later).
          */
-        RECORD(Methods::recordGettersOf),
+        RECORD(Methods::recordGettersOf, Method::getName),
 
         /**
          * Accepts all methods that meet the basic criteria for getters.
          *
          * @see Policy
          */
-        BROAD(Methods::publicGettersOf);
+        BROAD(Methods::publicGettersOf, Method::getName);
 
         private final Function<Class<?>, Stream<Method>> toStream;
+        private final Function<Method, String> toName;
 
-        Policy(final Function<Class<?>, Stream<Method>> toStream) {
+        Policy(final Function<Class<?>, Stream<Method>> toStream,
+               final Function<Method, String> toName) {
             this.toStream = toStream;
+            this.toName = toName;
         }
     }
 }

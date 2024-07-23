@@ -16,11 +16,11 @@ class Getter<T> implements Function<T, Object> {
     private final Method method;
     private final String name;
 
-    Getter(final Method method) {
+    Getter(final Method method, final String name) {
         assert 0 == method.getParameterCount();
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         this.method = method;
-        this.name = Methods.normalName(method);
+        this.name = name;
     }
 
     final String name() {

@@ -38,6 +38,10 @@ public class Supply implements Generator, Charger, Initiator {
         return initiate(RecordClass.class);
     }
 
+    public final MixedClass nextMixed() {
+        return charge(new MixedClass());
+    }
+
     public final Sample01 nextSample01() {
         return charge(new Sample01.Mutable());
     }

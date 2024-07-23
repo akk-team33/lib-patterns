@@ -4,6 +4,7 @@ import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Getters.Policy;
 import de.team33.patterns.reflect.pandora.testing.BeanClass;
 import de.team33.patterns.reflect.pandora.testing.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.MixedClass;
 import de.team33.patterns.reflect.pandora.testing.RecordClass;
 import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
@@ -82,7 +83,7 @@ class GettersTest {
     }
 
     @Test
-    final void getter_RecordClass() {
+    final void getter_RecordClass_RECORD() {
         final RecordClass origin = SUPPLY.nextRecord();
         final Getters<RecordClass> getters = Getters.of(RecordClass.class, Policy.RECORD);
         final Map<String, Object> expected = new TreeMap<String, Object>() {{
@@ -90,6 +91,31 @@ class GettersTest {
             put("longValue", origin.longValue());
             put("stringValue", origin.stringValue());
             put("instantValue", origin.instantValue());
+        }};
+
+        final Map<String, Object> result = getters.names()
+                                                  .stream()
+                                                  .collect(HashMap::new,
+                                                           (map, name) -> map.put(name, getters.getter(name)
+                                                                                               .apply(origin)),
+                                                           Map::putAll);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void getter_MixedClass_BROAD() {
+        final MixedClass origin = SUPPLY.nextMixed();
+        final Getters<MixedClass> getters = Getters.of(MixedClass.class, Policy.BROAD);
+        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+            put("intValue", origin.intValue());
+            put("longValue", origin.longValue());
+            put("stringValue", origin.stringValue());
+            put("instantValue", origin.instantValue());
+            put("getIntValue", origin.getIntValue());
+            put("getLongValue", origin.getLongValue());
+            put("getStringValue", origin.getStringValue());
+            put("getInstantValue", origin.getInstantValue());
         }};
 
         final Map<String, Object> result = getters.names()

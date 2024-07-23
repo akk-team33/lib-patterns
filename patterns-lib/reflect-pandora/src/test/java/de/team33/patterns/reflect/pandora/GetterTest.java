@@ -12,7 +12,7 @@ class GetterTest {
     @Test
     final void apply_IllegalAccessException() throws NoSuchMethodException {
         final String name = "writeReplace";
-        final Getter<Instant> getter = new Getter<>(Instant.class.getDeclaredMethod(name));
+        final Getter<Instant> getter = new Getter<>(Instant.class.getDeclaredMethod(name), name);
         final Instant target = Instant.now();
 
         try {
@@ -29,7 +29,7 @@ class GetterTest {
     @Test
     final void apply_InvocationTargetException() throws NoSuchMethodException {
         final String name = "getLeadsToInvocationTargetException";
-        final Getter<GetterTest> getter = new Getter<>(getClass().getDeclaredMethod(name));
+        final Getter<GetterTest> getter = new Getter<>(getClass().getDeclaredMethod(name), name);
 
         try {
             final Object result = getter.apply(this);
