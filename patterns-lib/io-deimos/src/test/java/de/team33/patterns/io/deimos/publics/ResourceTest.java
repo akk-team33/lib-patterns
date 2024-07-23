@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,8 +64,8 @@ class ResourceTest {
     }
 
     enum TestCase {
-        BY_RESOURCE(() -> Resource.by(ResourceTest.class, RESOURCE_NAME)),
-        BY_FILE(() -> Resource.by(RESOURCE_PATH));
+        BY_RESOURCE(() -> Resource.by(ResourceTest.class, RESOURCE_NAME).using(StandardCharsets.US_ASCII)),
+        BY_FILE(() -> Resource.by(RESOURCE_PATH).using(StandardCharsets.ISO_8859_1));
 
         private final Supplier<Resource> newResource;
 

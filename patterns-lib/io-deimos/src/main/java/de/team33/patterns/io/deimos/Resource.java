@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +17,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Abstracts a resource that can be read via a byte stream.
+ * Abstracts a resource that can be read via a {@link InputStream byte stream}.
  */
 public class Resource {
 
@@ -31,37 +32,54 @@ public class Resource {
                                                    "    cause message : %s%n";
     private static final String NEW_LINE = String.format("%n");
 
+    private final Charset charset;
     private final XSupplier<InputStream, IOException> newInputStream;
     private final Function<Exception, String> newExceptionMessage;
 
-    protected Resource(final XSupplier<InputStream, IOException> newInputStream,
+    protected Resource(final Charset charset,
+                       final XSupplier<InputStream, IOException> newInputStream,
                        final Function<Exception, String> newExceptionMessage) {
+        this.charset = charset;
         this.newInputStream = newInputStream;
         this.newExceptionMessage = newExceptionMessage;
     }
 
     /**
-     * Retrieves a {@link Resource} to read a java resource.
+     * Returns a {@link Resource} to read a java resource.
+     * It uses UTF-8 if charset encoding is required.
+     *
+     * @see #using(Charset)
      */
     public static Resource by(final Class<?> referringClass, final String resourceName) {
-        return new Resource(() -> referringClass.getResourceAsStream(resourceName),
+        return new Resource(StandardCharsets.UTF_8,
+                            () -> referringClass.getResourceAsStream(resourceName),
                             caught -> String.format(CANNOT_READ_RESOURCE, resourceName, referringClass,
                                                     caught.getClass().getCanonicalName(), caught.getMessage()));
     }
 
     /**
-     * Retrieves a {@link Resource} to read a file.
+     * Returns a {@link Resource} to read a file.
+     * It uses UTF-8 if charset encoding is required.
+     *
+     * @see #using(Charset)
      */
     public static Resource by(final Path path) {
-        return new Resource(() -> Files.newInputStream(path),
+        return new Resource(StandardCharsets.UTF_8,
+                            () -> Files.newInputStream(path),
                             caught -> String.format(CANNOT_READ_FILE, path,
                                                     caught.getClass().getCanonicalName(), caught.getMessage()));
     }
 
-    private static <R> R readCharStream(final InputStream in,
+    /**
+     * Returns a copy of <em>this</em> {@link Resource}, but using the given charset encoding.
+     */
+    public final Resource using(final Charset charset) {
+        return new Resource(charset, newInputStream, newExceptionMessage);
+    }
+
+    private static <R> R readCharStream(final Reader reader,
                                         final XFunction<BufferedReader, R, IOException> function) throws IOException {
-        try (final Reader streamReader = new InputStreamReader(in, StandardCharsets.UTF_8);
-             final BufferedReader bufferedReader = new BufferedReader(streamReader)) {
+        try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
             return function.apply(bufferedReader);
         }
     }
@@ -81,6 +99,14 @@ public class Resource {
             return function.apply(in);
         } catch (final RuntimeException | IOException e) {
             throw new IllegalArgumentException(newExceptionMessage.apply(e), e);
+        }
+    }
+
+    private <R> R readCharStream(final InputStream stream,
+                                 final XFunction<BufferedReader, R, IOException> function) throws IOException {
+        try (final Reader reader = new InputStreamReader(stream, charset);
+             final BufferedReader bufferedReader = new BufferedReader(reader)) {
+            return function.apply(bufferedReader);
         }
     }
 
