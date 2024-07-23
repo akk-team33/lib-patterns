@@ -77,13 +77,6 @@ public class Resource {
         return new Resource(charset, newInputStream, newExceptionMessage);
     }
 
-    private static <R> R readCharStream(final Reader reader,
-                                        final XFunction<BufferedReader, R, IOException> function) throws IOException {
-        try (final BufferedReader bufferedReader = new BufferedReader(reader)) {
-            return function.apply(bufferedReader);
-        }
-    }
-
     private static String readText(BufferedReader reader) {
         return reader.lines().collect(Collectors.joining(NEW_LINE));
     }
