@@ -1,4 +1,4 @@
-package de.team33.patterns.test.io.deimos;
+package de.team33.patterns.io.deimos.publics;
 
 import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.testing.titan.io.FileIO;
