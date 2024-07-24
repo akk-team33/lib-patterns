@@ -2,7 +2,6 @@ package de.team33.patterns.arbitrary.mimas;
 
 import java.math.BigInteger;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 /**
  * A utility interface:
@@ -18,10 +17,20 @@ import java.util.stream.IntStream;
 public interface Generator extends BitGenerator {
 
     /**
+     * <b>Utility method:</b>
+     * Returns a randomly generated non-negative {@link BigInteger} representing a sequence of
+     * significant bits of a given length, intended as a result of anyBits(int).
+     */
+    static BigInteger anyBits(final int numBits, final Random random) {
+        return new BigInteger(numBits, random);
+    }
+
+    /**
+     * <b>Utility method:</b>
      * Provides a new {@link Generator} based on a given {@link Random}.
      */
     static Generator of(final Random random) {
-        return numBits -> new BigInteger(numBits, random);
+        return numBits -> anyBits(numBits, random);
     }
 
     /**

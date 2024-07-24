@@ -13,19 +13,19 @@
  *     private final Random random = new Random();
  *
  *     &#64;Override
- *     public final BigInteger nextBits(final int numBits) {
+ *     public final BigInteger anyBits(final int numBits) {
  *         return new BigInteger(numBits, random);
  *     }
  *
- *     public final Person nextPerson() {
+ *     public final Person anyPerson() {
  *         return initiate(Person.class);
  *     }
  *
- *     public final Customer nextCustomer() {
+ *     public final Customer anyCustomer() {
  *         return charge(new Customer());
  *     }
  *
- *     public final Employee nextEmployee() {
+ *     public final Employee anyEmployee() {
  *         return charge(new Employee());
  *     }
  * }
@@ -35,6 +35,6 @@
  * {@link de.team33.patterns.arbitrary.mimas.Initiator} interfaces are used to charge/initiate the complex,
  * contextual types (Person, Customer, Employee, ...) with random content.
  *
- * @see <a href="https://de.wikipedia.org/wiki/Tarvos_(Mond)">Tarvos</a>
+ * @see <a href="https://de.wikipedia.org/wiki/Mimas_(Mond)">Mimas</a>
  */
 package de.team33.patterns.arbitrary.mimas;
