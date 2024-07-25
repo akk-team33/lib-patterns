@@ -34,6 +34,10 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.20.0
+
+* Added module enums-pan
+
 ### 1.19.1
 
 * Refined module arbitrary-mimas
