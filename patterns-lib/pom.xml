@@ -16,6 +16,7 @@
 
     <modules>
         <module>testing-titan</module>
+        <module>enums-pan</module>
         <module>arbitrary-mimas</module>
         <module>io-deimos</module>
         <module>exceptional-dione</module>
