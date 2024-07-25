@@ -14,6 +14,7 @@ http://www.team33.de/dev/patterns/1.x
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
+  * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * io-deimos (Team33 IO Library - Edition "deimos")
