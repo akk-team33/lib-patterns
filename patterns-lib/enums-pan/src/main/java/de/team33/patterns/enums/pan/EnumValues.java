@@ -7,6 +7,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+/**
+ * A Tool to handle enum values.
+ *
+ * @param <E> The enum type whose values should be handled.
+ */
 public class EnumValues<E extends Enum<E>> {
 
     private final Class<E> enumClass;
@@ -17,30 +22,53 @@ public class EnumValues<E extends Enum<E>> {
         this.resolver = resolver;
     }
 
+    /**
+     * Returns a tool to handle the values of the given <em>enum class</em>.
+     */
     public static <E extends Enum<E>> EnumValues<E> of(final Class<E> enumClass) {
         return new EnumValues<>(enumClass, optional -> optional.orElseThrow(NoSuchElementException::new));
     }
 
+    /**
+     * Returns a copy of <em>this</em>, but using a given <em>resolver</em>.
+     */
     public final EnumValues<E> resolving(final Function<Optional<E>, E> resolver) {
         return new EnumValues<>(enumClass, resolver);
     }
 
+    /**
+     * Returns a copy of <em>this</em>, but returning a given <em>fallback</em> if no other value is present.
+     */
     public final EnumValues<E> fallback(final E fallback) {
         return resolving(opt -> opt.orElse(fallback));
     }
 
+    /**
+     * Returns a copy of <em>this</em>, but using a given {@link Supplier} to return a <em>fallback</em>
+     * if no other value is present.
+     */
     public final EnumValues<E> fallback(final Supplier<E> fallback) {
         return resolving(opt -> opt.orElseGet(fallback));
     }
 
+    /**
+     * Returns a copy of <em>this</em>, but using a given {@link Supplier} to throw a
+     * {@link RuntimeException} if no value is present.
+     */
     public final EnumValues<E> failing(final Supplier<? extends RuntimeException> failing) {
         return resolving(opt -> opt.orElseThrow(failing));
     }
 
+    /**
+     * Returns a {@link Stream} over all values of the underlying enum type.
+     */
     public final Stream<E> stream() {
         return Stream.of(enumClass.getEnumConstants());
     }
 
+    /**
+     * Returns a {@link Stream} of those values of the underlying enum type that match the given <em>filter</em>.
+     */
     public final Stream<E> findAll(final Predicate<? super E> filter) {
         return stream().filter(filter);
     }
