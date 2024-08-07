@@ -1,7 +1,7 @@
 package de.team33.patterns.io.deimos.publics;
 
 import de.team33.patterns.io.deimos.TextIO;
-import de.team33.patterns.testing.titan.io.FileIO;
+import de.team33.testing.io.hydra.FileIO;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;

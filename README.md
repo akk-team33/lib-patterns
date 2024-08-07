@@ -38,6 +38,7 @@ http://www.team33.de/dev/patterns/1.x
 ### 1.20.0
 
 * Added module enums-pan
+* Marked module testing-titan as deprecated
 
 ### 1.19.1
 
