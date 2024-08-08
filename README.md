@@ -34,6 +34,10 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.19.2
+
+* Marked module testing-titan as deprecated
+
 ### 1.19.1
 
 * Refined module arbitrary-mimas

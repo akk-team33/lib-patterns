@@ -10,10 +10,10 @@ import static java.util.Collections.synchronizedList;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * A report of multiple executions of a method.
- *
- * @param <R> The type of result of the method to be run.
+ * @deprecated use de.team33.testing.async.thebe.Report instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/async-thebe/">de.team33.testing:async-thebe</a>
  */
+@Deprecated
 public final class Report<R> {
 
     private final List<R> results;

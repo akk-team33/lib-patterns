@@ -12,7 +12,8 @@
     <packaging>jar</packaging>
 
     <name>Team33 Testing Library - Edition "titan"</name>
-    <description>Provides classes for testing purpose</description>
+    <description>DEPRECATED - use de.team33.testing:* instead.
+        See http://www.team33.de/dev/testing/1.x/</description>
 
     <dependencies>
         <dependency>

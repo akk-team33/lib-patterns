@@ -12,6 +12,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Deprecated
 class FileIOTest {
 
     private static final Path TEST_PATH = Paths.get("target", "testing")

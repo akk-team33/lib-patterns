@@ -9,13 +9,10 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 /**
- * A tool/utility used to perform a given operation multiple times in parallel threads, with a fixed number
- * of executing threads. Each thread performs the operation at least once and repeats it until all intended
- * threads have effectively started.
- * <p>
- * The operation is given unique context information each time it is executed, showing an assignment to the
- * executing thread, the absolute start order, and repetition within the executing thread.
+ * @deprecated use de.team33.testing.async.thebe.Parallel instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/async-thebe/">de.team33.testing:async-thebe</a>
  */
+@Deprecated
 public final class Parallel<R> {
 
     private final Report.Builder<R> report = new Report.Builder<>();

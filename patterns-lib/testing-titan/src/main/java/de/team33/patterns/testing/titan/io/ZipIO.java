@@ -9,8 +9,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Utility for unpacking zip files in test scenarios.
+ * @deprecated use de.team33.testing.io.hydra.ZipIO instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/io-hydra/">de.team33.testing:io-hydra</a>
  */
+@Deprecated
 public final class ZipIO {
 
     private static final String CANNOT_UNZIP_RESOURCE = "cannot unzip resource%n" +

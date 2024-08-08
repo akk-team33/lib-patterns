@@ -1,10 +1,6 @@
 package de.team33.patterns.testing.titan;
 
-/**
- * An operation that is intended for multiple, parallel execution.
- *
- * @param <R> The result type of the operation.
- */
+@Deprecated
 @FunctionalInterface
 @SuppressWarnings("ProhibitedExceptionDeclared")
 public interface Operation<R> {

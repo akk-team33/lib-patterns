@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Deprecated
 class ReportTest extends Random {
 
     private static final BiConsumer<Report.Builder<Integer>, Report.Builder<Integer>> ADD_ALL = (a, b) -> {

@@ -22,11 +22,6 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-titan</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>arbitrary-mimas</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -107,6 +102,11 @@
             </dependency>
 
             <!-- deprecated ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-titan</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-tarvos</artifactId>

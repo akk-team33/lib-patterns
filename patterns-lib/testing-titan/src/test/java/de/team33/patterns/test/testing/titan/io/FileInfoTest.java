@@ -12,6 +12,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Deprecated
 class FileInfoTest {
 
     private static final Class<FileInfoTest> CLASS = FileInfoTest.class;

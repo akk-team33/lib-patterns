@@ -6,8 +6,10 @@ import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 /**
- * Utility to redirect standard output to a file in test scenarios.
+ * @deprecated use de.team33.testing.stdio.ersa.Redirected instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/stdio-ersa/">de.team33.testing:stdio-ersa</a>
  */
+@Deprecated
 @SuppressWarnings("UseOfSystemOutOrSystemErr")
 public final class Redirected {
 

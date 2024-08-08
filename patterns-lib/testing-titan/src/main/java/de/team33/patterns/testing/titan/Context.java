@@ -1,11 +1,10 @@
 package de.team33.patterns.testing.titan;
 
 /**
- * Summarizes various input parameters that may be of interest in the context of the execution of an {@link Operation}.
- *
- * @see Parallel#report(int, Operation)
- * @see Parallel#stream(int, Operation)
+ * @deprecated use de.team33.testing.async.thebe.Context instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/async-thebe/">de.team33.testing:async-thebe</a>
  */
+@Deprecated
 public class Context {
 
     /**

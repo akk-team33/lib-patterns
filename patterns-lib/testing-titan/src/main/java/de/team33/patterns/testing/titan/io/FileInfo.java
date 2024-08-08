@@ -15,6 +15,11 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * @deprecated use de.team33.testing.io.hydra.FileInfo instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/io-hydra/">de.team33.testing:io-hydra</a>
+ */
+@Deprecated
 public class FileInfo {
 
     private static final Comparator<Path> ORDER = Comparator.comparing(path -> path.getFileName().toString());
@@ -101,6 +106,7 @@ public class FileInfo {
                              name, type, type.details.apply(size, lastModified), type.toTail.apply(indent, content));
     }
 
+    @Deprecated
     private enum Type {
 
         REGULAR(BasicFileAttributes::isRegularFile, FileInfo::regularDetail, FileInfo::noTail),

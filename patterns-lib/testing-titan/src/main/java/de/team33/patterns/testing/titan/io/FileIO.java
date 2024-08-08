@@ -7,8 +7,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 /**
- * Utility for copying files in test scenarios.
+ * @deprecated use de.team33.testing.io.hydra.FileIO instead -
+ * see <a href="http://www.team33.de/dev/testing/1.x/testing-lib/io-hydra/">de.team33.testing:io-hydra</a>
  */
+@Deprecated
 public final class FileIO {
 
     private static final String CANNOT_COPY_RESOURCE = "cannot copy resource%n" +

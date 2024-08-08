@@ -12,6 +12,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class ZipIOTest {
 
     private static final Path TEST_PATH = Paths.get("target", "testing")
