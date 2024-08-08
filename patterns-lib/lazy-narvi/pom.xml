@@ -26,9 +26,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>testing-titan</artifactId>
-            <scope>test</scope>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>async-thebe</artifactId>
         </dependency>
     </dependencies>
 </project>
