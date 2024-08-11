@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.19.2-SNAPSHOT</version>
+        <version>1.19.2</version>
     </parent>
 
     <artifactId>collection-ceres</artifactId>
@@ -19,11 +19,8 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>building-elara</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- testing -->
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>arbitrary-mimas</artifactId>

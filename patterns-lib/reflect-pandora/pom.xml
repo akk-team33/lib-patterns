@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.19.2-SNAPSHOT</version>
+        <version>1.19.2</version>
     </parent>
 
     <artifactId>reflect-pandora</artifactId>
@@ -15,11 +15,7 @@
     <description>Provides tools and utilities for reflective processing of properties.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- testing -->
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>arbitrary-mimas</artifactId>
