@@ -105,7 +105,7 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-titan</artifactId>
-                <version>${project.version}</version>
+                <version>1.19.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
