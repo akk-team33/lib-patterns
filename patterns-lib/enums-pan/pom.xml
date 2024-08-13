@@ -14,11 +14,4 @@
     <name>Team33 Enums Library - Edition "pan"</name>
     <description>Provides tools and utilities to handle enums.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
