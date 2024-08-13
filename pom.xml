@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <copyright.year>2023</copyright.year>
+        <copyright.year>2024</copyright.year>
         <skipJavadoc>false</skipJavadoc>
         <skipHome>false</skipHome>
         <skipDeploy>false</skipDeploy>
