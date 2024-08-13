@@ -31,13 +31,20 @@ http://www.team33.de/dev/patterns/1.x
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
   * decision-telesto (Team33 Decision Library - Edition "telesto")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
-  * testing-titan (Team33 Testing Library - Edition "titan")
 
 ## Change Log
 
 ### 1.20.0
 
 * Added module enums-pan
+
+### 1.19.3
+
+* Nailed deprecated module testing-titan to 1.19.2
+
+### 1.19.2
+
+* Marked module testing-titan as deprecated
 
 ### 1.19.1
 

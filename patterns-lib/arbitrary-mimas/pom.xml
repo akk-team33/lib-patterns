@@ -14,11 +14,4 @@
     <name>Team33 Arbitrary Library - Edition "mimas"</name>
     <description>Provides classes that support the generation of arbitrary values of virtually any type.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

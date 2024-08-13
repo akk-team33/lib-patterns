@@ -19,11 +19,8 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>building-elara</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- testing -->
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>arbitrary-mimas</artifactId>

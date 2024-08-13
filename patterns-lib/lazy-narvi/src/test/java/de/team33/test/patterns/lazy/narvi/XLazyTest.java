@@ -1,7 +1,7 @@
 package de.team33.test.patterns.lazy.narvi;
 
 import de.team33.patterns.lazy.narvi.XLazy;
-import de.team33.patterns.testing.titan.Parallel;
+import de.team33.testing.async.thebe.Parallel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;

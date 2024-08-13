@@ -16,11 +16,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
             <scope>test</scope>

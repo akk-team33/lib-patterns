@@ -14,11 +14,4 @@
     <name>Team33 Decision Library - Edition "telesto"</name>
     <description>Classes and utilities for implementing and handling decisions.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>

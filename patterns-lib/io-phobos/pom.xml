@@ -20,20 +20,10 @@
             <artifactId>lazy-narvi</artifactId>
         </dependency>
 
+        <!-- testing -->
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>testing-titan</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>io-deimos</artifactId>
-            <scope>test</scope>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>io-hydra</artifactId>
         </dependency>
     </dependencies>
 </project>

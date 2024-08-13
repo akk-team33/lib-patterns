@@ -16,11 +16,4 @@
         tools for converting them to their more manageable counterparts, exception types useful for this,
         and some tools for exception handling.</description>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 </project>
