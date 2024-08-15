@@ -1,4 +1,4 @@
-package de.team33.test.patterns.execution.metis;
+package de.team33.patterns.execution.metis.publics;
 
 import de.team33.patterns.execution.metis.SimpleExecutorService;
 import org.junit.jupiter.api.Test;
