@@ -32,6 +32,7 @@
         <module>serial-charon</module>
         <module>decision-telesto</module>
         <module>collection-ceres</module>
+        <module>tree-styx</module>
     </modules>
 
     <dependencyManagement>

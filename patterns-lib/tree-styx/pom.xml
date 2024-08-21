@@ -1,0 +1,30 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-lib</artifactId>
+        <version>1.20.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>tree-styx</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Team33 Tree Library - Edition "styx"</name>
+    <description>Provides an abstraction of trees.</description>
+
+    <dependencies>
+        <!-- testing -->
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-ceres</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>
