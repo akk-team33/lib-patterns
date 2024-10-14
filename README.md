@@ -34,6 +34,12 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### next
+
+* Refined module enums-pan ...
+  * Added class Values
+  * Marked class EnumValues as deprecated
+
 ### 1.20.0
 
 * Added module enums-pan
