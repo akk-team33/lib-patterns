@@ -8,13 +8,13 @@ import org.junit.jupiter.params.provider.NullSource;
 
 import java.nio.file.AccessMode;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class EnumValuesTest {
 
     static final EnumValues<AccessMode> ACCESS_MODE_VALUES = EnumValues.of(AccessMode.class);

@@ -8,10 +8,9 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 /**
- * A Tool to handle enum values.
- *
- * @param <E> The enum type whose values should be handled.
+ * @deprecated use {@link Values} instead.
  */
+@Deprecated
 public class EnumValues<E extends Enum<E>> {
 
     private final Class<E> enumClass;
