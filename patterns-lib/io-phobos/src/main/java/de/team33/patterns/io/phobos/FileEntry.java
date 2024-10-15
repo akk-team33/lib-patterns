@@ -4,13 +4,14 @@ import de.team33.patterns.lazy.narvi.Lazy;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,49 +31,46 @@ public abstract class FileEntry {
     private final Path path;
     private final FileType type;
 
-    FileEntry(final Path path, final FileType type) {
-        this.path = path.toAbsolutePath().normalize();
+    FileEntry(final Path path, final Normality normal, final FileType type) {
+        this.path = normal.of(path);
         this.type = type;
     }
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path}.
-     * <p>
-     * If the specified {@link Path} points to a symbolic link,
-     * the {@link #type() result type} is {@link FileType#SYMBOLIC}.
+     * Just like {@link #of(Path, FilePolicy) of(path, FilePolicy.DISTINCT_SYMLINKS)}.
+     *
+     * @see FilePolicy#DISTINCT_SYMLINKS
      */
-    public static FileEntry primary(final Path path) {
-        return of(path, LinkOption.NOFOLLOW_LINKS);
+    public static FileEntry of(final Path path) {
+        return of(path, FilePolicy.DISTINCT_SYMLINKS);
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path}.
-     * <p>
-     * If the specified {@link Path} points to a symbolic link,
-     * the {@link #type() result type} corresponds to the linked file.
+     * Returns a new {@link FileEntry}.
+     *
+     * @param path   a {@link Path} to the file to be represented.
+     * @param policy a {@link FilePolicy} that specifies how symbolic links should be treated.
      */
-    public static FileEntry evaluated(final Path path) {
-        return of(path);
+    public static FileEntry of(final Path path, final FilePolicy policy) {
+        return of(path, Normality.UNKNOWN, policy);
     }
 
-    /**
-     * @deprecated use {@link #primary(Path)} or {@link #evaluated(Path)} instead.
-     */
-    @Deprecated
-    public static FileEntry of(final Path path, final LinkOption... linkOptions) {
+    private static FileEntry of(final Path path, final Normality normal, final FilePolicy policy) {
         try {
             final BasicFileAttributes attributes = //
-                    Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
-            return of(path, attributes);
+                    Files.readAttributes(path, BasicFileAttributes.class, policy.linkOptions());
+            return of(path, normal, policy, attributes);
         } catch (final IOException e) {
-            return new Missing(path, e);
+            return new Missing(path, normal, e);
         }
     }
 
-    private static FileEntry of(final Path path, final BasicFileAttributes attributes) {
+    private static FileEntry of(final Path path, final Normality normal,
+                                final FilePolicy policy, final BasicFileAttributes attributes) {
         return attributes.isDirectory()
-               ? new Directory(path, attributes)
-               : new NoDirectory(path, attributes);
+               ? new Directory(path, normal, policy, attributes)
+               : new NoDirectory(path, normal, attributes);
     }
 
     /**
@@ -88,9 +86,12 @@ public abstract class FileEntry {
      * Returns the simple name of the represented file.
      */
     public final String name() {
-        return path.getFileName().toString();
+        return Optional.ofNullable(path.getFileName()).orElse(path).toString();
     }
 
+    /**
+     * Returns the {@link FileType} of the represented file.
+     */
     public final FileType type() {
         return type;
     }
@@ -114,7 +115,7 @@ public abstract class FileEntry {
      * Determines if the represented file is something else than a directory, a regular file or a symbolic link.
      * E.g. a special file.
      */
-    public abstract boolean isOther();
+    public abstract boolean isSpecial();
 
     /**
      * Determines if the represented file exists.
@@ -154,21 +155,36 @@ public abstract class FileEntry {
      *
      * @throws UnsupportedOperationException if the represented file is not a directory.
      */
-    public abstract List<Path> content();
+    public abstract List<FileEntry> entries();
 
     @Override
     public final String toString() {
         return path.toString();
     }
 
+    private enum Normality {
+        UNKNOWN(path -> path.toAbsolutePath().normalize()),
+        NORMAL(Function.identity());
+
+        private final Function<Path, Path> toNormal;
+
+        Normality(Function<Path, Path> toNormal) {
+            this.toNormal = toNormal;
+        }
+
+        final Path of(final Path path) {
+            return toNormal.apply(path);
+        }
+    }
+
     private static class NoDirectory extends Existing {
 
-        NoDirectory(final Path path, final BasicFileAttributes attributes) {
-            super(path, attributes);
+        NoDirectory(final Path path, final Normality normal, final BasicFileAttributes attributes) {
+            super(path, normal, attributes);
         }
 
         @Override
-        public final List<Path> content() {
+        public List<FileEntry> entries() {
             throw new UnsupportedOperationException("not a directory: " + path());
         }
     }
@@ -177,8 +193,8 @@ public abstract class FileEntry {
 
         private final BasicFileAttributes attributes;
 
-        Existing(final Path path, final BasicFileAttributes attributes) {
-            super(path, FileType.map(attributes));
+        Existing(final Path path, final Normality normal, final BasicFileAttributes attributes) {
+            super(path, normal, FileType.map(attributes));
             this.attributes = attributes;
         }
 
@@ -198,7 +214,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final boolean isOther() {
+        public final boolean isSpecial() {
             return attributes.isOther();
         }
 
@@ -230,30 +246,33 @@ public abstract class FileEntry {
 
     private static class Directory extends Existing {
 
-        private static final Comparator<String> IGNORE_CASE = String::compareToIgnoreCase;
-        private static final Comparator<String> RESPECT_CASE = String::compareTo;
-        private static final Comparator<Path> ENTRY_ORDER = comparing(path -> path.getFileName().toString(),
-                                                                      IGNORE_CASE.thenComparing(RESPECT_CASE));
+        private static final Comparator<String> PRIMARY = String::compareToIgnoreCase;
+        private static final Comparator<String> SECONDARY = String::compareTo;
+        private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
+                                                                           PRIMARY.thenComparing(SECONDARY));
+        private final FilePolicy policy;
+        private final Lazy<List<FileEntry>> lazyEntries;
 
-        private final Lazy<List<Path>> lazyContent;
-
-        private Directory(final Path path, final BasicFileAttributes attributes) {
-            super(path, attributes);
-            this.lazyContent = Lazy.init(this::newContent);
+        private Directory(final Path path, final Normality normal,
+                          final FilePolicy policy, final BasicFileAttributes attributes) {
+            super(path, normal, attributes);
+            this.policy = policy;
+            this.lazyEntries = Lazy.init(this::newEntries);
         }
 
-        private List<Path> newContent() {
+        private List<FileEntry> newEntries() {
             try (final Stream<Path> stream = Files.list(path())) {
-                return Collections.unmodifiableList(stream.sorted(ENTRY_ORDER)
-                                                          .collect(Collectors.toList()));
+                return stream.map(path -> FileEntry.of(path, Normality.NORMAL, policy))
+                             .sorted(ENTRY_ORDER)
+                             .collect(Collectors.toList());
             } catch (final IOException ignored) {
                 return Collections.emptyList();
             }
         }
 
         @Override
-        public final List<Path> content() {
-            return lazyContent.get();
+        public List<FileEntry> entries() {
+            return lazyEntries.get();
         }
     }
 
@@ -261,8 +280,8 @@ public abstract class FileEntry {
 
         private final IOException cause;
 
-        Missing(final Path path, final IOException cause) {
-            super(path, FileType.MISSING);
+        Missing(final Path path, final Normality normal, final IOException cause) {
+            super(path, normal, FileType.MISSING);
             this.cause = cause;
         }
 
@@ -282,7 +301,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final boolean isOther() {
+        public final boolean isSpecial() {
             return false;
         }
 
@@ -312,7 +331,7 @@ public abstract class FileEntry {
         }
 
         @Override
-        public final List<Path> content() {
+        public final List<FileEntry> entries() {
             throw new UnsupportedOperationException("not existing: " + path(), cause);
         }
     }

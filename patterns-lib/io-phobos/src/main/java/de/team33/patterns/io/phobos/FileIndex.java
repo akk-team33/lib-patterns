@@ -1,155 +1,76 @@
 package de.team33.patterns.io.phobos;
 
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Represents a file index.
- */
+import static java.util.Collections.singleton;
+
 public class FileIndex {
 
-    private static final String NEW_LINE = String.format("%n");
+    private static final Predicate<FileEntry> NEVER = file -> false;
 
-    private final Path root;
-    private final Predicate<Path> skipPath;
-    private final Predicate<FileEntry> skipEntry;
-    private final Function<Path, FileEntry> toFileEntry;
+    private final List<FileEntry> roots;
+    private Predicate<FileEntry> skipCondition = NEVER;
 
-    private FileIndex(final Path root,
-                      final Predicate<Path> skipPath,
-                      final Predicate<FileEntry> skipEntry,
-                      final Function<Path, FileEntry> toFileEntry) {
-        this.root = root.toAbsolutePath().normalize();
-        this.skipPath = skipPath;
-        this.skipEntry = skipEntry;
-        this.toFileEntry = toFileEntry;
+    private FileIndex(final Collection<? extends Path> paths, final FilePolicy policy) {
+        this.roots = paths.stream()
+                          .map(path -> FileEntry.of(path, policy))
+                          .collect(Collectors.toList());
     }
 
-    /**
-     * Returns a file index starting at a given {@link Path root path}.
-     * <p>
-     * If a {@link Path} points to a symbolic link,
-     * a resulting {@link FileEntry#type()} is {@link FileType#SYMBOLIC}.
-     */
-    public static FileIndex primary(final Path root) {
-        return of(root, FileEntry::primary);
+    public static FileIndex of(final Collection<? extends Path> paths) {
+        return new FileIndex(paths, FilePolicy.DISTINCT_SYMLINKS);
     }
 
-    /**
-     * Returns a file index starting at a given root path.
-     * <p>
-     * If a {@link Path} points to a symbolic link,
-     * a resulting {@link FileEntry#type()} is {@link FileType#SYMBOLIC}.
-     */
-    public static FileIndex primary(final String root) {
-        return primary(Paths.get(root));
+    public static FileIndex of(final Collection<? extends Path> paths, final FilePolicy policy) {
+        return new FileIndex(paths, policy);
     }
 
-    /**
-     * Returns a file index starting at a given {@link Path root path}.
-     * <p>
-     * If a {@link Path} points to a symbolic link,
-     * a resulting {@link FileEntry#type()} corresponds to the linked file.
-     */
-    public static FileIndex evaluated(final Path root) {
-        return of(root, FileEntry::evaluated);
+    public static FileIndex of(final Path path) {
+        return of(singleton(path), FilePolicy.DISTINCT_SYMLINKS);
     }
 
-    /**
-     * Returns a file index starting at a given root path.
-     * <p>
-     * If a {@link Path} points to a symbolic link,
-     * a resulting {@link FileEntry#type()} corresponds to the linked file.
-     */
-    public static FileIndex evaluated(final String root) {
-        return evaluated(Paths.get(root));
+    public static FileIndex of(final Path path, final FilePolicy policy) {
+        return of(List.of(path), policy);
     }
 
-    private static FileIndex of(final Path root, final Function<Path, FileEntry> toFileEntry) {
-        return new FileIndex(root, path -> false, entry -> false, toFileEntry);
+    public final Stream<FileEntry> entries() {
+        return streamAll(roots);
     }
 
-    /**
-     * @deprecated use {@link #primary(Path)} or {@link #evaluated(Path)} instead.
-     */
-    @Deprecated
-    public static FileIndex of(final Path root, final LinkOption ... options) {
-        return Arrays.asList(options)
-                     .contains(LinkOption.NOFOLLOW_LINKS) ? primary(root) : evaluated(root);
+    private Stream<FileEntry> streamAll(final List<FileEntry> entries) {
+        return entries.stream()
+                      .flatMap(this::streamAll);
     }
 
-    /**
-     * @deprecated use {@link #primary(String)} or {@link #evaluated(String)} instead.
-     */
-    @Deprecated
-    public static FileIndex of(final String root, final LinkOption ... options) {
-        return of(Paths.get(root), options);
+    private Stream<FileEntry> streamAll(final FileEntry entry) {
+        if (skipCondition.test(entry)) {
+            return Stream.empty();
+        }
+
+        final Stream<FileEntry> head = Stream.of(entry);
+        if (entry.isDirectory()) {
+            return Stream.concat(head, streamAll(entry.entries()));
+        } else {
+            return head;
+        }
     }
 
-    /**
-     * Returns a new file index based on <em>this</em> file index that skips each path that matches the given
-     * {@link Predicate}. If a skipped path is a directory path, this will also skip its contents.
-     */
-    public final FileIndex skipPath(final Predicate<? super Path> ignorable) {
-        return new FileIndex(root, skipPath.or(ignorable), skipEntry, toFileEntry);
+    public final FileIndex skipEntry(final Predicate<FileEntry> condition) {
+        this.skipCondition = condition;
+        return this;
     }
 
-    /**
-     * Returns a new file index based on <em>this</em> file index that skips each file entry that matches the given
-     * {@link Predicate}. If a skipped file entry represents a directory, this will also skip its contents.
-     */
-    public final FileIndex skipEntry(final Predicate<? super FileEntry> ignorable) {
-        return new FileIndex(root, skipPath, skipEntry.or(ignorable), toFileEntry);
+    public final FileIndex skipPath(final Predicate<Path> condition) {
+        return skipEntry(file -> condition.test(file.path()));
     }
 
-    /**
-     * Streams all entries of <em>this</em> file index.
-     */
-    public final Stream<FileEntry> stream() {
-        return stream(root);
-    }
-
-    private Stream<FileEntry> stream(final Path path) {
-        return skipPath.test(path) ? Stream.empty() : stream(toFileEntry.apply(path));
-    }
-
-    private Stream<FileEntry> stream(final FileEntry entry) {
-        return skipEntry.test(entry) ? Stream.empty() : stream(entry, Stream.of(entry));
-    }
-
-    private Stream<FileEntry> stream(final FileEntry entry, final Stream<FileEntry> head) {
-        return entry.isDirectory() ? Stream.concat(head, entry.content().stream().flatMap(this::stream)) : head;
-    }
-
-    @Override
-    public final String toString() {
-        return stream().map(this::toString)
-                       .collect(Collectors.joining(NEW_LINE));
-    }
-
-    private String toString(final FileEntry entry) {
-        final int count = entry.path().getNameCount() - root.getNameCount();
-        final String name = root.equals(entry.path()) ? root.toString() : entry.name();
-        return String.join("", indent(count), name, " : ", entry.type().name(), details(entry), tail(entry));
-    }
-
-    private static String indent(final int count) {
-        return Stream.generate(() -> "    ")
-                     .limit(count)
-                     .collect(Collectors.joining());
-    }
-
-    private static String tail(final FileEntry entry) {
-        return entry.isDirectory() ? " ..." : ";";
-    }
-
-    private static String details(final FileEntry entry) {
-        return entry.isRegularFile() ? String.format(" (%,d - %s)", entry.size(), entry.lastModified()) : "";
+    public final List<FileEntry> roots() {
+        return roots;
     }
 }

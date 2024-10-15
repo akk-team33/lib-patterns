@@ -34,7 +34,7 @@ public enum FileType {
     /**
      * Symbolizes a special file.
      */
-    OTHER(BasicFileAttributes::isOther);
+    SPECIAL(BasicFileAttributes::isOther);
 
     private final Predicate<BasicFileAttributes> filter;
 
