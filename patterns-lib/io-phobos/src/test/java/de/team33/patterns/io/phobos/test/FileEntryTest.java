@@ -1,6 +1,7 @@
 package de.team33.patterns.io.phobos.test;
 
 import de.team33.patterns.io.phobos.FileEntry;
+import de.team33.patterns.io.phobos.FilePolicy;
 import de.team33.patterns.io.phobos.FileType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -63,8 +64,8 @@ class FileEntryTest {
             assertEquals(FileType.SYMBOLIC, entry.type());
         } else if (entry.isRegularFile()) {
             assertEquals(FileType.REGULAR, entry.type());
-        } else if (entry.isOther()) {
-            assertEquals(FileType.OTHER, entry.type());
+        } else if (entry.isSpecial()) {
+            assertEquals(FileType.SPECIAL, entry.type());
         } else {
             assertEquals(FileType.MISSING, entry.type());
         }
@@ -87,7 +88,7 @@ class FileEntryTest {
     @ParameterizedTest
     @MethodSource("paths")
     final void isSymbolicLink(final Path path) {
-        final FileEntry entry = FileEntry.of(path, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry entry = FileEntry.of(path, FilePolicy.DISTINCT_SYMLINKS);
         assertEquals(Files.isSymbolicLink(path), entry.isSymbolicLink());
     }
 
@@ -95,7 +96,7 @@ class FileEntryTest {
     @MethodSource("paths")
     final void isOther(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.isOther()) {
+        if (entry.isSpecial()) {
             assertEquals(DEV_NULL, path);
         } else {
             assertNotEquals(DEV_NULL, path);
@@ -158,9 +159,9 @@ class FileEntryTest {
     final void content(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.isDirectory()) {
-            assertNotNull(entry.content());
+            assertNotNull(entry.entries());
         } else {
-            assertThrows(UnsupportedOperationException.class, entry::content);
+            assertThrows(UnsupportedOperationException.class, entry::entries);
         }
     }
 }

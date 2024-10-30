@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Collections.*;
 import static java.util.Collections.singleton;
 
 public class FileIndex {
@@ -36,7 +37,7 @@ public class FileIndex {
     }
 
     public static FileIndex of(final Path path, final FilePolicy policy) {
-        return of(List.of(path), policy);
+        return of(singleton(path), policy);
     }
 
     public final Stream<FileEntry> entries() {

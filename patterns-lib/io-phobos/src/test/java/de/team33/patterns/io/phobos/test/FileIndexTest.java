@@ -3,6 +3,7 @@ package de.team33.patterns.io.phobos.test;
 import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.io.phobos.FileEntry;
 import de.team33.patterns.io.phobos.FileIndex;
+import de.team33.patterns.io.phobos.FilePolicy;
 import de.team33.testing.io.hydra.ZipIO;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -27,26 +28,26 @@ class FileIndexTest {
     @Test
     final void skipPath() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipPath.txt");
-        final String result = collected(FileIndex.primary(TEST_PATH.toString())
+        final String result = collected(FileIndex.of(TEST_PATH, FilePolicy.DISTINCT_SYMLINKS)
                                                  .skipPath(entry -> "main".equals(entry.getFileName().toString()))
-                                                 .stream());
+                                                 .entries());
         assertEquals(expected, result);
     }
 
     @Test
     final void skipEntry() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
-        final String result = collected(FileIndex.evaluated(TEST_PATH)
+        final String result = collected(FileIndex.of(TEST_PATH, FilePolicy.RESOLVE_SYMLINKS)
                                                  .skipEntry(entry -> "test".equals(entry.name()))
-                                                 .stream());
+                                                 .entries());
         assertEquals(expected, result);
     }
 
     @Test
     final void stream() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
-        final String result = collected(FileIndex.evaluated(TEST_PATH.toString())
-                                                 .stream());
+        final String result = collected(FileIndex.of(TEST_PATH, FilePolicy.RESOLVE_SYMLINKS)
+                                                 .entries());
         assertEquals(expected, result);
     }
 
@@ -55,7 +56,7 @@ class FileIndexTest {
         final String expected = String.format(TextIO.read(getClass(), "FileIndexTest.toString.txt"),
                                               TEST_PATH.toAbsolutePath().normalize());
 
-        final String result = FileIndex.evaluated(TEST_PATH).toString();
+        final String result = FileIndex.of(TEST_PATH).toString();
         // System.out.println(result);
 
         assertEquals(expected, result);
