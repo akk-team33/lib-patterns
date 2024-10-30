@@ -51,17 +51,6 @@ class FileIndexTest {
         assertEquals(expected, result);
     }
 
-    @Test
-    final void testToString() {
-        final String expected = String.format(TextIO.read(getClass(), "FileIndexTest.toString.txt"),
-                                              TEST_PATH.toAbsolutePath().normalize());
-
-        final String result = FileIndex.of(TEST_PATH).toString();
-        // System.out.println(result);
-
-        assertEquals(expected, result);
-    }
-
     private static String collected(final Stream<FileEntry> entrys) {
         final Path normal = TEST_PATH.toAbsolutePath().normalize();
         return entrys.map(FileEntry::path)

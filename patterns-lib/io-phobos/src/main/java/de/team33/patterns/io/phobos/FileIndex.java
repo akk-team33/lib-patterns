@@ -2,13 +2,11 @@ package de.team33.patterns.io.phobos;
 
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.*;
 import static java.util.Collections.singleton;
 
 public class FileIndex {
