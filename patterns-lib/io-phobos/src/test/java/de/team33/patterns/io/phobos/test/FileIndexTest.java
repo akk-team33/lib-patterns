@@ -3,7 +3,7 @@ package de.team33.patterns.io.phobos.test;
 import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.io.phobos.FileEntry;
 import de.team33.patterns.io.phobos.FileIndex;
-import de.team33.patterns.io.phobos.FilePolicy;
+import de.team33.patterns.io.phobos.LinkPolicy;
 import de.team33.patterns.io.phobos.testing.IoTestBase;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class FileIndexTest extends IoTestBase {
     @Test
     final void skipPath() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipPath.txt");
-        final String result = collected(FileIndex.of(testPath(), FilePolicy.DISTINCT_SYMLINKS)
+        final String result = collected(FileIndex.of(testPath(), LinkPolicy.DISTINCT)
                                                  .skipPath(entry -> "main".equals(entry.getFileName().toString()))
                                                  .entries());
         assertEquals(expected, result);
@@ -29,7 +29,7 @@ class FileIndexTest extends IoTestBase {
     @Test
     final void skipEntry() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
-        final String result = collected(FileIndex.of(testPath(), FilePolicy.RESOLVE_SYMLINKS)
+        final String result = collected(FileIndex.of(testPath(), LinkPolicy.RESOLVED)
                                                  .skipEntry(entry -> "test".equals(entry.name()))
                                                  .entries());
         assertEquals(expected, result);
@@ -38,7 +38,7 @@ class FileIndexTest extends IoTestBase {
     @Test
     final void entries() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
-        final String result = collected(FileIndex.of(testPath(), FilePolicy.RESOLVE_SYMLINKS)
+        final String result = collected(FileIndex.of(testPath(), LinkPolicy.RESOLVED)
                                                  .entries());
         assertEquals(expected, result);
     }

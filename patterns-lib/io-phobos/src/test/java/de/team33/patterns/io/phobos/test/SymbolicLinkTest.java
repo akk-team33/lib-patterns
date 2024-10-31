@@ -1,7 +1,7 @@
 package de.team33.patterns.io.phobos.test;
 
 import de.team33.patterns.io.phobos.FileEntry;
-import de.team33.patterns.io.phobos.FilePolicy;
+import de.team33.patterns.io.phobos.LinkPolicy;
 import de.team33.patterns.io.phobos.FileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkRegularPrimary() {
-        final FileEntry result = FileEntry.of(regLinkPath, FilePolicy.DISTINCT_SYMLINKS);
+        final FileEntry result = FileEntry.of(regLinkPath, LinkPolicy.DISTINCT);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isRegularFile());
@@ -62,7 +62,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkRegularEvaluated() {
-        final FileEntry result = FileEntry.of(regLinkPath, FilePolicy.RESOLVE_SYMLINKS);
+        final FileEntry result = FileEntry.of(regLinkPath, LinkPolicy.RESOLVED);
         assertEquals(FileType.REGULAR, result.type());
         assertFalse(result.isSymbolicLink());
         assertTrue(result.isRegularFile());
@@ -70,7 +70,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkDirectoryPrimary() {
-        final FileEntry result = FileEntry.of(dirLinkPath, FilePolicy.DISTINCT_SYMLINKS);
+        final FileEntry result = FileEntry.of(dirLinkPath, LinkPolicy.DISTINCT);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isDirectory());
@@ -78,7 +78,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkDirectoryEvaluated() {
-        final FileEntry result = FileEntry.of(dirLinkPath, FilePolicy.RESOLVE_SYMLINKS);
+        final FileEntry result = FileEntry.of(dirLinkPath, LinkPolicy.RESOLVED);
         assertEquals(FileType.DIRECTORY, result.type());
         assertFalse(result.isSymbolicLink());
         assertTrue(result.isDirectory());
@@ -86,7 +86,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkMissingPrimary() {
-        final FileEntry result = FileEntry.of(missingLinkPath, FilePolicy.DISTINCT_SYMLINKS);
+        final FileEntry result = FileEntry.of(missingLinkPath, LinkPolicy.DISTINCT);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertTrue(result.exists());
@@ -94,7 +94,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkMissingEvaluated() {
-        final FileEntry result = FileEntry.of(missingLinkPath, FilePolicy.RESOLVE_SYMLINKS);
+        final FileEntry result = FileEntry.of(missingLinkPath, LinkPolicy.RESOLVED);
         assertEquals(FileType.MISSING, result.type());
         assertFalse(result.isSymbolicLink());
         assertFalse(result.exists());
@@ -102,7 +102,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkSpecialPrimary() {
-        final FileEntry result = FileEntry.of(specLinkPath, FilePolicy.DISTINCT_SYMLINKS);
+        final FileEntry result = FileEntry.of(specLinkPath, LinkPolicy.DISTINCT);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isSpecial());
@@ -110,7 +110,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkSpecialEvaluated() {
-        final FileEntry result = FileEntry.of(specLinkPath, FilePolicy.RESOLVE_SYMLINKS);
+        final FileEntry result = FileEntry.of(specLinkPath, LinkPolicy.RESOLVED);
         assertEquals(FileType.SPECIAL, result.type());
         assertFalse(result.isSymbolicLink());
         assertTrue(result.isSpecial());
@@ -118,7 +118,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkLinkRegularPrimary() {
-        final FileEntry result = FileEntry.of(linkLinkPath, FilePolicy.DISTINCT_SYMLINKS);
+        final FileEntry result = FileEntry.of(linkLinkPath, LinkPolicy.DISTINCT);
         assertEquals(FileType.SYMBOLIC, result.type());
         assertTrue(result.isSymbolicLink());
         assertFalse(result.isRegularFile());
@@ -126,7 +126,7 @@ class SymbolicLinkTest {
 
     @Test
     final void linkLinkRegularEvaluated() {
-        final FileEntry result = FileEntry.of(linkLinkPath, FilePolicy.RESOLVE_SYMLINKS);
+        final FileEntry result = FileEntry.of(linkLinkPath, LinkPolicy.RESOLVED);
         assertEquals(FileType.REGULAR, result.type());
         assertFalse(result.isSymbolicLink());
         assertTrue(result.isRegularFile());

@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,31 +31,31 @@ public abstract class FileEntry {
     private final FileType type;
 
     FileEntry(final Path path, final Normality normal, final FileType type) {
-        this.path = normal.of(path);
+        this.path = normal.apply(path);
         this.type = type;
     }
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path}.
-     * Just like {@link #of(Path, FilePolicy) of(path, FilePolicy.DISTINCT_SYMLINKS)}.
+     * Just like {@link #of(Path, LinkPolicy) of(path, FilePolicy.DISTINCT_SYMLINKS)}.
      *
-     * @see FilePolicy#DISTINCT_SYMLINKS
+     * @see LinkPolicy#DISTINCT
      */
     public static FileEntry of(final Path path) {
-        return of(path, FilePolicy.DISTINCT_SYMLINKS);
+        return of(path, LinkPolicy.DISTINCT);
     }
 
     /**
      * Returns a new {@link FileEntry}.
      *
      * @param path   a {@link Path} to the file to be represented.
-     * @param policy a {@link FilePolicy} that specifies how symbolic links should be treated.
+     * @param policy a {@link LinkPolicy} that specifies how symbolic links should be treated.
      */
-    public static FileEntry of(final Path path, final FilePolicy policy) {
+    public static FileEntry of(final Path path, final LinkPolicy policy) {
         return of(path, Normality.UNKNOWN, policy);
     }
 
-    private static FileEntry of(final Path path, final Normality normal, final FilePolicy policy) {
+    private static FileEntry of(final Path path, final Normality normal, final LinkPolicy policy) {
         try {
             final BasicFileAttributes attributes = //
                     Files.readAttributes(path, BasicFileAttributes.class, policy.linkOptions());
@@ -67,7 +66,7 @@ public abstract class FileEntry {
     }
 
     private static FileEntry of(final Path path, final Normality normal,
-                                final FilePolicy policy, final BasicFileAttributes attributes) {
+                                final LinkPolicy policy, final BasicFileAttributes attributes) {
         return attributes.isDirectory()
                ? new Directory(path, normal, policy, attributes)
                : new NoDirectory(path, normal, attributes);
@@ -162,21 +161,6 @@ public abstract class FileEntry {
         return path.toString();
     }
 
-    private enum Normality {
-        UNKNOWN(path -> path.toAbsolutePath().normalize()),
-        NORMAL(Function.identity());
-
-        private final Function<Path, Path> toNormal;
-
-        Normality(Function<Path, Path> toNormal) {
-            this.toNormal = toNormal;
-        }
-
-        final Path of(final Path path) {
-            return toNormal.apply(path);
-        }
-    }
-
     private static class NoDirectory extends Existing {
 
         NoDirectory(final Path path, final Normality normal, final BasicFileAttributes attributes) {
@@ -250,11 +234,11 @@ public abstract class FileEntry {
         private static final Comparator<String> SECONDARY = String::compareTo;
         private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
                                                                            PRIMARY.thenComparing(SECONDARY));
-        private final FilePolicy policy;
+        private final LinkPolicy policy;
         private final Lazy<List<FileEntry>> lazyEntries;
 
         private Directory(final Path path, final Normality normal,
-                          final FilePolicy policy, final BasicFileAttributes attributes) {
+                          final LinkPolicy policy, final BasicFileAttributes attributes) {
             super(path, normal, attributes);
             this.policy = policy;
             this.lazyEntries = Lazy.init(this::newEntries);
@@ -262,7 +246,7 @@ public abstract class FileEntry {
 
         private List<FileEntry> newEntries() {
             try (final Stream<Path> stream = Files.list(path())) {
-                return stream.map(path -> FileEntry.of(path, Normality.NORMAL, policy))
+                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, policy))
                              .sorted(ENTRY_ORDER)
                              .collect(Collectors.toList());
             } catch (final IOException ignored) {

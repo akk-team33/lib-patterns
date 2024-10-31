@@ -16,25 +16,25 @@ public class FileIndex {
     private final List<FileEntry> roots;
     private Predicate<FileEntry> skipCondition = NEVER;
 
-    private FileIndex(final Collection<? extends Path> paths, final FilePolicy policy) {
+    private FileIndex(final Collection<? extends Path> paths, final LinkPolicy policy) {
         this.roots = paths.stream()
                           .map(path -> FileEntry.of(path, policy))
                           .collect(Collectors.toList());
     }
 
     public static FileIndex of(final Collection<? extends Path> paths) {
-        return new FileIndex(paths, FilePolicy.DISTINCT_SYMLINKS);
+        return new FileIndex(paths, LinkPolicy.DISTINCT);
     }
 
-    public static FileIndex of(final Collection<? extends Path> paths, final FilePolicy policy) {
+    public static FileIndex of(final Collection<? extends Path> paths, final LinkPolicy policy) {
         return new FileIndex(paths, policy);
     }
 
     public static FileIndex of(final Path path) {
-        return of(singleton(path), FilePolicy.DISTINCT_SYMLINKS);
+        return of(singleton(path), LinkPolicy.DISTINCT);
     }
 
-    public static FileIndex of(final Path path, final FilePolicy policy) {
+    public static FileIndex of(final Path path, final LinkPolicy policy) {
         return of(singleton(path), policy);
     }
 
