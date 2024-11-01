@@ -1,7 +1,6 @@
 package de.team33.patterns.io.phobos.test;
 
 import de.team33.patterns.io.phobos.FileEntry;
-import de.team33.patterns.io.phobos.LinkPolicy;
 import de.team33.patterns.io.phobos.FileType;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -94,7 +93,7 @@ class FileEntryTest {
     @ParameterizedTest
     @MethodSource("paths")
     final void isSymbolicLink(final Path path) {
-        final FileEntry entry = FileEntry.of(path, LinkPolicy.DISTINCT);
+        final FileEntry entry = FileEntry.of(path);
         assertEquals(Files.isSymbolicLink(path), entry.isSymbolicLink());
     }
 

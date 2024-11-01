@@ -37,25 +37,15 @@ public abstract class FileEntry {
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path}.
-     * Just like {@link #of(Path, LinkPolicy) of(path, FilePolicy.DISTINCT_SYMLINKS)}.
+     * Symbolic links will not be resolved!
      *
-     * @see LinkPolicy#DISTINCT
+     * @see #resolved()
      */
     public static FileEntry of(final Path path) {
-        return of(path, LinkPolicy.DISTINCT);
+        return of(path, Normality.UNKNOWN, LinkPolicy.DISTINCT);
     }
 
-    /**
-     * Returns a new {@link FileEntry}.
-     *
-     * @param path   a {@link Path} to the file to be represented.
-     * @param policy a {@link LinkPolicy} that specifies how symbolic links should be treated.
-     */
-    public static FileEntry of(final Path path, final LinkPolicy policy) {
-        return of(path, Normality.UNKNOWN, policy);
-    }
-
-    private static FileEntry of(final Path path, final Normality normal, final LinkPolicy policy) {
+    static FileEntry of(final Path path, final Normality normal, final LinkPolicy policy) {
         try {
             final BasicFileAttributes attributes = //
                     Files.readAttributes(path, BasicFileAttributes.class, policy.linkOptions());
@@ -69,8 +59,20 @@ public abstract class FileEntry {
                                 final LinkPolicy policy, final BasicFileAttributes attributes) {
         return attributes.isDirectory()
                ? new Directory(path, normal, policy, attributes)
-               : new NoDirectory(path, normal, attributes);
+               : attributes.isSymbolicLink()
+                       ? new LinkEntry(path, normal, attributes)
+                       : new PlainEntry(path, normal, attributes);
     }
+
+    /**
+     * Returns a {@link FileEntry} that represents the same file as <em>this</em> {@link FileEntry},
+     * but symbolic links are resolved. This applies primarily to {@link FileEntry FileEntries} of
+     * {@link FileEntry#type() type} {@link FileType#SYMBOLIC SYMBOLIC}, but also of {@link FileEntry#type() type}
+     * {@link FileType#DIRECTORY DIRECTORY} if their {@link FileEntry#entries() contents} are in turn of
+     * {@link FileEntry#type() type} {@link FileType#SYMBOLIC SYMBOLIC} or {@link FileType#DIRECTORY DIRECTORY}.
+     * {@link FileEntry FileEntries} of other types simply return a self-reference.
+     */
+    public abstract FileEntry resolved();
 
     /**
      * Returns the file system path of the represented file.
@@ -161,14 +163,41 @@ public abstract class FileEntry {
         return path.toString();
     }
 
-    private static class NoDirectory extends Existing {
+    private static class LinkEntry extends NoDirectory {
+
+        private final Lazy<FileEntry> lazyResolved;
+
+        LinkEntry(final Path path, final Normality normal, final BasicFileAttributes attributes) {
+            super(path, normal, attributes);
+            this.lazyResolved = Lazy.init(() -> FileEntry.of(path(), Normality.DEFINITE, LinkPolicy.RESOLVED));
+        }
+
+        @Override
+        public final FileEntry resolved() {
+            return lazyResolved.get();
+        }
+    }
+
+    private static class PlainEntry extends NoDirectory {
+
+        PlainEntry(final Path path, final Normality normal, final BasicFileAttributes attributes) {
+            super(path, normal, attributes);
+        }
+
+        @Override
+        public final FileEntry resolved() {
+            return this;
+        }
+    }
+
+    private static abstract class NoDirectory extends Existing {
 
         NoDirectory(final Path path, final Normality normal, final BasicFileAttributes attributes) {
             super(path, normal, attributes);
         }
 
         @Override
-        public List<FileEntry> entries() {
+        public final List<FileEntry> entries() {
             throw new UnsupportedOperationException("not a directory: " + path());
         }
     }
@@ -236,12 +265,14 @@ public abstract class FileEntry {
                                                                            PRIMARY.thenComparing(SECONDARY));
         private final LinkPolicy policy;
         private final Lazy<List<FileEntry>> lazyEntries;
+        private final Lazy<FileEntry> lazyResolved;
 
         private Directory(final Path path, final Normality normal,
                           final LinkPolicy policy, final BasicFileAttributes attributes) {
             super(path, normal, attributes);
             this.policy = policy;
             this.lazyEntries = Lazy.init(this::newEntries);
+            this.lazyResolved = Lazy.init(this::newResolved);
         }
 
         private List<FileEntry> newEntries() {
@@ -254,8 +285,21 @@ public abstract class FileEntry {
             }
         }
 
+        private FileEntry newResolved() {
+            if (LinkPolicy.RESOLVED == policy) {
+                return this;
+            } else {
+                return FileEntry.of(path(), Normality.DEFINITE, LinkPolicy.RESOLVED);
+            }
+        }
+
         @Override
-        public List<FileEntry> entries() {
+        public final FileEntry resolved() {
+            return lazyResolved.get();
+        }
+
+        @Override
+        public final List<FileEntry> entries() {
             return lazyEntries.get();
         }
     }
@@ -267,6 +311,11 @@ public abstract class FileEntry {
         Missing(final Path path, final Normality normal, final IOException cause) {
             super(path, normal, FileType.MISSING);
             this.cause = cause;
+        }
+
+        @Override
+        public final FileEntry resolved() {
+            return this;
         }
 
         @Override

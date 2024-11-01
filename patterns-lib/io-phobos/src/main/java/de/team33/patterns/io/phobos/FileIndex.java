@@ -18,7 +18,7 @@ public class FileIndex {
 
     private FileIndex(final Collection<? extends Path> paths, final LinkPolicy policy) {
         this.roots = paths.stream()
-                          .map(path -> FileEntry.of(path, policy))
+                          .map(path -> FileEntry.of(path, Normality.UNKNOWN, policy))
                           .collect(Collectors.toList());
     }
 
