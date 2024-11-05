@@ -1,6 +1,7 @@
 package de.team33.patterns.io.phobos;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
@@ -16,26 +17,20 @@ public class FileIndex {
     private final List<FileEntry> roots;
     private Predicate<FileEntry> skipCondition = NEVER;
 
-    private FileIndex(final Collection<? extends Path> paths, final LinkPolicy policy) {
-        this.roots = paths.stream()
-                          .map(path -> FileEntry.of(path, Normality.UNKNOWN, policy))
-                          .collect(Collectors.toList());
+    private FileIndex(final Stream<? extends FileEntry> entries) {
+        this.roots = entries.collect(Collectors.toList());
     }
 
     public static FileIndex of(final Collection<? extends Path> paths) {
-        return new FileIndex(paths, LinkPolicy.DISTINCT);
+        return new FileIndex(paths.stream().map(FileEntry::of));
     }
 
-    public static FileIndex of(final Collection<? extends Path> paths, final LinkPolicy policy) {
-        return new FileIndex(paths, policy);
+    public static FileIndex of(final Path... paths) {
+        return of(Arrays.asList(paths));
     }
 
-    public static FileIndex of(final Path path) {
-        return of(singleton(path), LinkPolicy.DISTINCT);
-    }
-
-    public static FileIndex of(final Path path, final LinkPolicy policy) {
-        return of(singleton(path), policy);
+    public final FileIndex resolved() {
+        return new FileIndex(roots.stream().map(FileEntry::resolved));
     }
 
     public final Stream<FileEntry> entries() {
