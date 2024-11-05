@@ -87,7 +87,7 @@ public abstract class FileEntry {
      * {@link FileEntry FileEntries} of other types simply return a self-reference.
      */
     public final FileEntry distinct() {
-        throw new UnsupportedOperationException("not yet implemented");
+        return of(path(), Normality.DEFINITE, DISTINCTIVE);
     }
 
     /**

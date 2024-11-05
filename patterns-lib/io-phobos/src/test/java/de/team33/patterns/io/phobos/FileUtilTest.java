@@ -22,7 +22,7 @@ class FileUtilTest extends IoTestBase {
                                                localTestPath.resolve("test"));
 
         final String result = FileUtil.report(FileIndex.of(paths));
-        System.out.println(result);
+        //System.out.println(result);
 
         assertEquals(expected, result);
     }
@@ -33,7 +33,7 @@ class FileUtilTest extends IoTestBase {
                                               testPath().toAbsolutePath().normalize());
 
         final String result = FileUtil.report(FileEntry.of(testPath()));
-        System.out.println(result);
+        //System.out.println(result);
 
         assertEquals(expected, result);
     }
@@ -44,7 +44,18 @@ class FileUtilTest extends IoTestBase {
                                               testPath().toAbsolutePath().normalize());
 
         final String result = FileUtil.report(FileEntry.of(testPath()).resolved());
-        System.out.println(result);
+        //System.out.println(result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void report_FileEntry_resolved_distinct() {
+        final String expected = String.format(TextIO.read(FileUtilTest.class, "report_FileEntry_distinct.txt"),
+                                              testPath().toAbsolutePath().normalize());
+
+        final String result = FileUtil.report(FileEntry.of(testPath()).resolved().distinct());
+        ////System.out.println(result);
 
         assertEquals(expected, result);
     }
