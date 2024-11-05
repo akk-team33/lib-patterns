@@ -4,6 +4,7 @@ import de.team33.patterns.lazy.narvi.Lazy;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
@@ -27,6 +28,9 @@ import static java.util.Comparator.comparing;
  */
 public abstract class FileEntry {
 
+    private static final LinkOption[] DISTINCTIVE = {LinkOption.NOFOLLOW_LINKS};
+    private static final LinkOption[] RESOLVING = {};
+
     private final Path path;
     private final FileType type;
 
@@ -42,23 +46,23 @@ public abstract class FileEntry {
      * @see #resolved()
      */
     public static FileEntry of(final Path path) {
-        return of(path, Normality.UNKNOWN, LinkPolicy.DISTINCT);
+        return of(path, Normality.UNKNOWN, DISTINCTIVE);
     }
 
-    static FileEntry of(final Path path, final Normality normal, final LinkPolicy policy) {
+    private static FileEntry of(final Path path, final Normality normal, final LinkOption[] options) {
         try {
             final BasicFileAttributes attributes = //
-                    Files.readAttributes(path, BasicFileAttributes.class, policy.linkOptions());
-            return of(path, normal, policy, attributes);
+                    Files.readAttributes(path, BasicFileAttributes.class, options);
+            return of(path, normal, options, attributes);
         } catch (final IOException e) {
             return new Missing(path, normal, e);
         }
     }
 
     private static FileEntry of(final Path path, final Normality normal,
-                                final LinkPolicy policy, final BasicFileAttributes attributes) {
+                                final LinkOption[] options, final BasicFileAttributes attributes) {
         return attributes.isDirectory()
-               ? new Directory(path, normal, policy, attributes)
+               ? new Directory(path, normal, options, attributes)
                : attributes.isSymbolicLink()
                        ? new LinkEntry(path, normal, attributes)
                        : new PlainEntry(path, normal, attributes);
@@ -169,7 +173,7 @@ public abstract class FileEntry {
 
         LinkEntry(final Path path, final Normality normal, final BasicFileAttributes attributes) {
             super(path, normal, attributes);
-            this.lazyResolved = Lazy.init(() -> FileEntry.of(path(), Normality.DEFINITE, LinkPolicy.RESOLVED));
+            this.lazyResolved = Lazy.init(() -> FileEntry.of(path(), Normality.DEFINITE, RESOLVING));
         }
 
         @Override
@@ -263,21 +267,21 @@ public abstract class FileEntry {
         private static final Comparator<String> SECONDARY = String::compareTo;
         private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
                                                                            PRIMARY.thenComparing(SECONDARY));
-        private final LinkPolicy policy;
+        private final LinkOption[] options;
         private final Lazy<List<FileEntry>> lazyEntries;
         private final Lazy<FileEntry> lazyResolved;
 
         private Directory(final Path path, final Normality normal,
-                          final LinkPolicy policy, final BasicFileAttributes attributes) {
+                          final LinkOption[] options, final BasicFileAttributes attributes) {
             super(path, normal, attributes);
-            this.policy = policy;
+            this.options = options;
             this.lazyEntries = Lazy.init(this::newEntries);
             this.lazyResolved = Lazy.init(this::newResolved);
         }
 
         private List<FileEntry> newEntries() {
             try (final Stream<Path> stream = Files.list(path())) {
-                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, policy))
+                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, options))
                              .sorted(ENTRY_ORDER)
                              .collect(Collectors.toList());
             } catch (final IOException ignored) {
@@ -286,10 +290,10 @@ public abstract class FileEntry {
         }
 
         private FileEntry newResolved() {
-            if (LinkPolicy.RESOLVED == policy) {
+            if (RESOLVING == options) {
                 return this;
             } else {
-                return FileEntry.of(path(), Normality.DEFINITE, LinkPolicy.RESOLVED);
+                return FileEntry.of(path(), Normality.DEFINITE, RESOLVING);
             }
         }
 
