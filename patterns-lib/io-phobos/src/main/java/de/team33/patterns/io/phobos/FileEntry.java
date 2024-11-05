@@ -33,10 +33,12 @@ public abstract class FileEntry {
 
     private final Path path;
     private final FileType type;
+    private final FileEntry distinct;
 
-    FileEntry(final Path path, final Normality normal, final FileType type) {
+    FileEntry(final Path path, final Normality normal, final FileType type, final FileEntry distinct) {
         this.path = normal.apply(path);
         this.type = type;
+        this.distinct = distinct;
     }
 
     /**
@@ -46,26 +48,27 @@ public abstract class FileEntry {
      * @see #resolved()
      */
     public static FileEntry of(final Path path) {
-        return of(path, Normality.UNKNOWN, DISTINCTIVE);
+        return of(path, Normality.UNKNOWN, null);
     }
 
-    private static FileEntry of(final Path path, final Normality normal, final LinkOption[] options) {
+    private static FileEntry of(final Path path, final Normality normal, final FileEntry distinct) {
         try {
             final BasicFileAttributes attributes = //
-                    Files.readAttributes(path, BasicFileAttributes.class, options);
-            return of(path, normal, options, attributes);
+                    Files.readAttributes(path, BasicFileAttributes.class,
+                                         null == distinct ? DISTINCTIVE : RESOLVING);
+            return of(path, normal, attributes, distinct);
         } catch (final IOException e) {
-            return new Missing(path, normal, e);
+            return new Missing(path, normal, distinct, e);
         }
     }
 
     private static FileEntry of(final Path path, final Normality normal,
-                                final LinkOption[] options, final BasicFileAttributes attributes) {
+                                final BasicFileAttributes attributes, final FileEntry distinct) {
         return attributes.isDirectory()
-               ? new Directory(path, normal, options, attributes)
+               ? new Directory(path, normal, attributes, distinct)
                : attributes.isSymbolicLink()
                        ? new LinkEntry(path, normal, attributes)
-                       : new PlainEntry(path, normal, attributes);
+                       : new PlainEntry(path, normal, attributes, distinct);
     }
 
     /**
@@ -87,7 +90,11 @@ public abstract class FileEntry {
      * {@link FileEntry FileEntries} of other types simply return a self-reference.
      */
     public final FileEntry distinct() {
-        return of(path(), Normality.DEFINITE, DISTINCTIVE);
+        return isDistinct() ? this : distinct;
+    }
+
+    final boolean isDistinct() {
+        return (null == distinct);
     }
 
     /**
@@ -183,9 +190,14 @@ public abstract class FileEntry {
 
         private final Lazy<FileEntry> lazyResolved;
 
-        LinkEntry(final Path path, final Normality normal, final BasicFileAttributes attributes) {
-            super(path, normal, attributes);
-            this.lazyResolved = Lazy.init(() -> FileEntry.of(path(), Normality.DEFINITE, RESOLVING));
+        LinkEntry(final Path path, final Normality normal,
+                  final BasicFileAttributes attributes) {
+            super(path, normal, attributes, null);
+            this.lazyResolved = Lazy.init(this::newResolved);
+        }
+
+        private FileEntry newResolved() {
+            return FileEntry.of(path(), Normality.DEFINITE, this);
         }
 
         @Override
@@ -196,8 +208,9 @@ public abstract class FileEntry {
 
     private static class PlainEntry extends NoDirectory {
 
-        PlainEntry(final Path path, final Normality normal, final BasicFileAttributes attributes) {
-            super(path, normal, attributes);
+        PlainEntry(final Path path, final Normality normal,
+                   final BasicFileAttributes attributes, final FileEntry distinct) {
+            super(path, normal, attributes, distinct);
         }
 
         @Override
@@ -208,8 +221,9 @@ public abstract class FileEntry {
 
     private static abstract class NoDirectory extends Existing {
 
-        NoDirectory(final Path path, final Normality normal, final BasicFileAttributes attributes) {
-            super(path, normal, attributes);
+        NoDirectory(final Path path, final Normality normal,
+                    final BasicFileAttributes attributes, final FileEntry distinct) {
+            super(path, normal, attributes, distinct);
         }
 
         @Override
@@ -222,9 +236,14 @@ public abstract class FileEntry {
 
         private final BasicFileAttributes attributes;
 
-        Existing(final Path path, final Normality normal, final BasicFileAttributes attributes) {
-            super(path, normal, FileType.map(attributes));
+        Existing(final Path path, final Normality normal,
+                 final BasicFileAttributes attributes, final FileEntry distinct) {
+            super(path, normal, FileType.map(attributes), distinct);
             this.attributes = attributes;
+        }
+
+        final BasicFileAttributes attributes() {
+            return attributes;
         }
 
         @Override
@@ -279,21 +298,21 @@ public abstract class FileEntry {
         private static final Comparator<String> SECONDARY = String::compareTo;
         private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
                                                                            PRIMARY.thenComparing(SECONDARY));
-        private final LinkOption[] options;
+
         private final Lazy<List<FileEntry>> lazyEntries;
         private final Lazy<FileEntry> lazyResolved;
 
         private Directory(final Path path, final Normality normal,
-                          final LinkOption[] options, final BasicFileAttributes attributes) {
-            super(path, normal, attributes);
-            this.options = options;
+                          final BasicFileAttributes attributes, final FileEntry distinct) {
+            super(path, normal, attributes, distinct);
             this.lazyEntries = Lazy.init(this::newEntries);
             this.lazyResolved = Lazy.init(this::newResolved);
         }
 
         private List<FileEntry> newEntries() {
             try (final Stream<Path> stream = Files.list(path())) {
-                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, options))
+                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, null))
+                             .map(entry -> isDistinct() ? entry : entry.resolved())
                              .sorted(ENTRY_ORDER)
                              .collect(Collectors.toList());
             } catch (final IOException ignored) {
@@ -302,10 +321,10 @@ public abstract class FileEntry {
         }
 
         private FileEntry newResolved() {
-            if (RESOLVING == options) {
-                return this;
+            if (isDistinct()) {
+                return new Directory(path(), Normality.DEFINITE, attributes(), this);
             } else {
-                return FileEntry.of(path(), Normality.DEFINITE, RESOLVING);
+                return this;
             }
         }
 
@@ -324,8 +343,8 @@ public abstract class FileEntry {
 
         private final IOException cause;
 
-        Missing(final Path path, final Normality normal, final IOException cause) {
-            super(path, normal, FileType.MISSING);
+        Missing(final Path path, final Normality normal, final FileEntry distinct, final IOException cause) {
+            super(path, normal, FileType.MISSING, distinct);
             this.cause = cause;
         }
 
