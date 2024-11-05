@@ -79,6 +79,18 @@ public abstract class FileEntry {
     public abstract FileEntry resolved();
 
     /**
+     * Returns a {@link FileEntry} that represents the same file as <em>this</em> {@link FileEntry},
+     * but symbolic links are NOT resolved. This applies primarily to {@link FileEntry FileEntries} of
+     * {@link FileEntry#type() type} {@link FileType#SYMBOLIC SYMBOLIC}, but also of {@link FileEntry#type() type}
+     * {@link FileType#DIRECTORY DIRECTORY} if their {@link FileEntry#entries() contents} are in turn of
+     * {@link FileEntry#type() type} {@link FileType#SYMBOLIC SYMBOLIC} or {@link FileType#DIRECTORY DIRECTORY}.
+     * {@link FileEntry FileEntries} of other types simply return a self-reference.
+     */
+    public final FileEntry distinct() {
+        throw new UnsupportedOperationException("not yet implemented");
+    }
+
+    /**
      * Returns the file system path of the represented file.
      * The implementation will return an {@link Path#toAbsolutePath() absolute}
      * {@link Path#normalize() normalized} {@link Path}.

@@ -1,6 +1,10 @@
 
+directory.link
 exceptional-dione
+exceptional-dione/indirect.link
+exceptional-dione/missing.link
 exceptional-dione/pom.xml
+exceptional-dione/regular.link
 exceptional-dione/src
 exceptional-dione/src/main
 exceptional-dione/src/main/java
@@ -44,3 +48,4 @@ exceptional-dione/src/test/java/de/team33/test/patterns/exceptional/dione/Revisi
 exceptional-dione/src/test/java/de/team33/test/patterns/exceptional/dione/WrappedExceptionTest.java
 exceptional-dione/src/test/java/de/team33/test/patterns/exceptional/dione/WrappingTest.java
 exceptional-dione/src/test/java/de/team33/test/patterns/exceptional/dione/XBiConsumerTest.java
+special.link

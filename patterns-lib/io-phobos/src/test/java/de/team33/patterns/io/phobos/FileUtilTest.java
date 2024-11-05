@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileUtilTest extends IoTestBase {
 
@@ -29,11 +28,22 @@ class FileUtilTest extends IoTestBase {
     }
 
     @Test
-    void report_FileEntry() {
-        final String expected = String.format(TextIO.read(FileUtilTest.class, "report_FileEntry.txt"),
+    void report_FileEntry_distinct() {
+        final String expected = String.format(TextIO.read(FileUtilTest.class, "report_FileEntry_distinct.txt"),
                                               testPath().toAbsolutePath().normalize());
 
         final String result = FileUtil.report(FileEntry.of(testPath()));
+        System.out.println(result);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void report_FileEntry_resolved() {
+        final String expected = String.format(TextIO.read(FileUtilTest.class, "report_FileEntry_resolved.txt"),
+                                              testPath().toAbsolutePath().normalize());
+
+        final String result = FileUtil.report(FileEntry.of(testPath()).resolved());
         System.out.println(result);
 
         assertEquals(expected, result);

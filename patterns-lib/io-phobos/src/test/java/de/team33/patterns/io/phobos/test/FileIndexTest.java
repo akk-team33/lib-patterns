@@ -29,15 +29,22 @@ class FileIndexTest extends IoTestBase {
     final void skipEntry() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
         final String result = collected(FileIndex.of(testPath())
-                                                 .resolved()
                                                  .skipEntry(entry -> "test".equals(entry.name()))
                                                  .entries());
         assertEquals(expected, result);
     }
 
     @Test
-    final void entries() {
-        final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
+    final void entries_distinct() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_distinct.txt");
+        final String result = collected(FileIndex.of(testPath())
+                                                 .entries());
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void entries_resolved() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_resolved.txt");
         final String result = collected(FileIndex.of(testPath())
                                                  .resolved()
                                                  .entries());
