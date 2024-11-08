@@ -9,11 +9,13 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -196,6 +198,28 @@ public class FileEntry {
     }
 
     /**
+     * Returns the timestamp of the last update of the represented file.
+     * <p>
+     * A regular file returns the same value as {@link #lastModified()}.
+     * A directory returns the most recent timestamp of all files and directories it contains.
+     * Other files always return <em>null</em>.
+     */
+    public final Instant lastUpdated() {
+        switch (type()) {
+        case REGULAR:
+            return lastModified().truncatedTo(ChronoUnit.SECONDS);
+        case DIRECTORY:
+            return entries().stream()
+                            .map(FileEntry::lastUpdated)
+                            .filter(Objects::nonNull)
+                            .reduce((left, right) -> (left.compareTo(right) < 0) ? right : left)
+                            .orElse(null);
+        default:
+            return null;
+        }
+    }
+
+    /**
      * Returns the timestamp of the last access to the represented file.
      *
      * @throws UnsupportedOperationException if the file does not exist.
@@ -220,6 +244,24 @@ public class FileEntry {
      */
     public final long size() {
         return lazyAttributes.get().size();
+    }
+
+    /**
+     * Returns the total size of the represented file.
+     * <p>
+     * A regular file returns the same value as {@link #size()}.
+     * A directory returns the sum of the total sizes of all files and directories it contains.
+     * Other files always return zero.
+     */
+    public final long totalSize() {
+        switch (type()) {
+        case REGULAR:
+            return size();
+        case DIRECTORY:
+            return entries().stream().map(FileEntry::totalSize).reduce(0L, Long::sum);
+        default:
+            return 0L;
+        }
     }
 
     /**

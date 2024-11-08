@@ -41,8 +41,8 @@ public class FileUtil {
     private enum InfoType {
 
         MISSING(entry -> entry.type() + ";"),
-        REGULAR(entry -> String.format("%s (%,d, %s);", entry.type(), entry.size(), entry.lastModified())),
-        DIRECTORY(entry -> entry.type() + " ..."),
+        REGULAR(entry -> String.format("%s (%,d, %s);", entry.type(), entry.totalSize(), entry.lastUpdated())),
+        DIRECTORY(entry -> String.format("%s (%,d, %s) ...", entry.type(), entry.totalSize(), entry.lastUpdated())),
         SYMBOLIC(entry -> entry.type() + ";"),
         SPECIAL(entry -> entry.type() + ";");
 
