@@ -47,6 +47,6 @@ public enum FileType {
 
     static FileType map(final BasicFileAttributes attributes) {
         return VALUES.findAny(fileType -> fileType.filter.test(attributes))
-                     .orElseThrow(() -> new NoSuchElementException("failed: " + attributes));
+                     .orElse(MISSING);
     }
 }

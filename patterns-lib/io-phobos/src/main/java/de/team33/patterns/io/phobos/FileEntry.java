@@ -7,14 +7,18 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
 import static java.util.Comparator.comparing;
 
 /**
@@ -26,19 +30,28 @@ import static java.util.Comparator.comparing;
  * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
  * that the meta information is out of date because the underlying file may have been changed in the meantime.
  */
-public abstract class FileEntry {
+public class FileEntry {
 
+    private static final Comparator<String> PRIMARY = String::compareToIgnoreCase;
+    private static final Comparator<String> SECONDARY = String::compareTo;
+    private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
+                                                                       PRIMARY.thenComparing(SECONDARY));
     private static final LinkOption[] DISTINCTIVE = {LinkOption.NOFOLLOW_LINKS};
     private static final LinkOption[] RESOLVING = {};
 
     private final Path path;
-    private final FileType type;
     private final FileEntry distinct;
+    private final List<IOException> problems = new LinkedList<>();
+    private final Lazy<BasicFileAttributes> lazyAttributes;
+    private final Lazy<FileType> lazyType;
+    private final Lazy<List<FileEntry>> lazyEntries;
 
-    FileEntry(final Path path, final Normality normal, final FileType type, final FileEntry distinct) {
+    private FileEntry(final Path path, final Normality normal, final FileEntry distinct) {
         this.path = normal.apply(path);
-        this.type = type;
         this.distinct = distinct;
+        this.lazyAttributes = Lazy.init(this::newAttributes);
+        this.lazyType = Lazy.init(() -> FileType.map(lazyAttributes.get()));
+        this.lazyEntries = Lazy.init(this::newEntries);
     }
 
     /**
@@ -48,27 +61,31 @@ public abstract class FileEntry {
      * @see #resolved()
      */
     public static FileEntry of(final Path path) {
-        return of(path, Normality.UNKNOWN, null);
+        return new FileEntry(path, Normality.UNKNOWN, null);
     }
 
-    private static FileEntry of(final Path path, final Normality normal, final FileEntry distinct) {
+    private BasicFileAttributes newAttributes() {
         try {
-            final BasicFileAttributes attributes = //
-                    Files.readAttributes(path, BasicFileAttributes.class,
-                                         null == distinct ? DISTINCTIVE : RESOLVING);
-            return of(path, normal, attributes, distinct);
+            return Files.readAttributes(path, BasicFileAttributes.class, (null == distinct) ? DISTINCTIVE : RESOLVING);
         } catch (final IOException e) {
-            return new Missing(path, normal, distinct, e);
+            problems.add(e);
+            return new MissingFileAttributes(path);
         }
     }
 
-    private static FileEntry of(final Path path, final Normality normal,
-                                final BasicFileAttributes attributes, final FileEntry distinct) {
-        return attributes.isDirectory()
-               ? new Directory(path, normal, attributes, distinct)
-               : attributes.isSymbolicLink()
-                       ? new LinkEntry(path, normal, attributes)
-                       : new PlainEntry(path, normal, attributes, distinct);
+    private List<FileEntry> newEntries() {
+        if (isDirectory()) {
+            try (final Stream<Path> stream = Files.list(path())) {
+                return stream.map(path -> new FileEntry(path, Normality.DEFINITE, null))
+                             .map(entry -> isDistinct() ? entry : entry.resolved())
+                             .sorted(ENTRY_ORDER)
+                             .collect(Collectors.toList());
+            } catch (final IOException caught) {
+                problems.add(caught);
+                return Collections.emptyList();
+            }
+        }
+        return null;
     }
 
     /**
@@ -79,7 +96,13 @@ public abstract class FileEntry {
      * {@link FileEntry#type() type} {@link FileType#SYMBOLIC SYMBOLIC} or {@link FileType#DIRECTORY DIRECTORY}.
      * {@link FileEntry FileEntries} of other types simply return a self-reference.
      */
-    public abstract FileEntry resolved();
+    public final FileEntry resolved() {
+        if (isDistinct() && (isSymbolicLink() || isDirectory())) {
+            return new FileEntry(path, Normality.DEFINITE, this);
+        } else {
+            return this;
+        }
+    }
 
     /**
      * Returns a {@link FileEntry} that represents the same file as <em>this</em> {@link FileEntry},
@@ -117,290 +140,162 @@ public abstract class FileEntry {
      * Returns the {@link FileType} of the represented file.
      */
     public final FileType type() {
-        return type;
+        return lazyType.get();
     }
 
     /**
      * Determines if the represented file is a directory.
      */
-    public abstract boolean isDirectory();
+    public final boolean isDirectory() {
+        return lazyAttributes.get().isDirectory();
+    }
 
     /**
      * Determines if the represented file is a regular file.
      */
-    public abstract boolean isRegularFile();
+    public final boolean isRegularFile() {
+        return lazyAttributes.get().isRegularFile();
+    }
 
     /**
      * Determines if the represented file is a symbolic link.
      */
-    public abstract boolean isSymbolicLink();
+    public final boolean isSymbolicLink() {
+        return lazyAttributes.get().isSymbolicLink();
+    }
 
     /**
      * Determines if the represented file is something else than a directory, a regular file or a symbolic link.
      * E.g. a special file.
      */
-    public abstract boolean isSpecial();
+    public final boolean isSpecial() {
+        return lazyAttributes.get().isOther();
+    }
+
+    /**
+     * Determines if the represented file is missing.
+     */
+    public final boolean isMissing() {
+        return type() == FileType.MISSING;
+    }
 
     /**
      * Determines if the represented file exists.
      */
-    public abstract boolean exists();
+    public final boolean exists() {
+        return type() != FileType.MISSING;
+    }
 
     /**
      * Returns the timestamp of the last modification of the represented file.
      *
      * @throws UnsupportedOperationException if the file does not exist.
      */
-    public abstract Instant lastModified();
+    public final Instant lastModified() {
+        return lazyAttributes.get().lastModifiedTime().toInstant();
+    }
 
     /**
      * Returns the timestamp of the last access to the represented file.
      *
      * @throws UnsupportedOperationException if the file does not exist.
      */
-    public abstract Instant lastAccess();
+    public final Instant lastAccess() {
+        return lazyAttributes.get().lastAccessTime().toInstant();
+    }
 
     /**
      * Returns the timestamp of the creation of the represented file.
      *
      * @throws UnsupportedOperationException if the file does not exist.
      */
-    public abstract Instant creation();
+    public final Instant creation() {
+        return lazyAttributes.get().creationTime().toInstant();
+    }
 
     /**
      * Returns the size of the represented file.
      *
      * @throws UnsupportedOperationException if the file does not exist.
      */
-    public abstract long size();
+    public final long size() {
+        return lazyAttributes.get().size();
+    }
 
     /**
      * Returns the content of the represented file if it {@link #isDirectory() is a directory}.
      *
      * @throws UnsupportedOperationException if the represented file is not a directory.
      */
-    public abstract List<FileEntry> entries();
+    public final List<FileEntry> entries() {
+        return Optional.ofNullable(lazyEntries.get())
+                       .orElseThrow(() -> new UnsupportedOperationException("not a directory: " + path));
+    }
+
+    public final List<IOException> problems() {
+        return new ArrayList<>(problems);
+    }
 
     @Override
     public final String toString() {
         return path.toString();
     }
 
-    private static class LinkEntry extends NoDirectory {
+    private static class MissingFileAttributes implements BasicFileAttributes {
 
-        private final Lazy<FileEntry> lazyResolved;
+        private static final String PROPERTY_NOT_AVAILABLE =
+                "property not available because the file does not exist:%n%n" +
+                "    path: %s%n%n";
 
-        LinkEntry(final Path path, final Normality normal,
-                  final BasicFileAttributes attributes) {
-            super(path, normal, attributes, null);
-            this.lazyResolved = Lazy.init(this::newResolved);
-        }
+        private final Path path;
 
-        private FileEntry newResolved() {
-            return FileEntry.of(path(), Normality.DEFINITE, this);
-        }
-
-        @Override
-        public final FileEntry resolved() {
-            return lazyResolved.get();
-        }
-    }
-
-    private static class PlainEntry extends NoDirectory {
-
-        PlainEntry(final Path path, final Normality normal,
-                   final BasicFileAttributes attributes, final FileEntry distinct) {
-            super(path, normal, attributes, distinct);
+        private MissingFileAttributes(final Path path) {
+            this.path = path;
         }
 
         @Override
-        public final FileEntry resolved() {
-            return this;
-        }
-    }
-
-    private static abstract class NoDirectory extends Existing {
-
-        NoDirectory(final Path path, final Normality normal,
-                    final BasicFileAttributes attributes, final FileEntry distinct) {
-            super(path, normal, attributes, distinct);
+        public FileTime lastModifiedTime() {
+            throw new UnsupportedOperationException(format(PROPERTY_NOT_AVAILABLE, path));
         }
 
         @Override
-        public final List<FileEntry> entries() {
-            throw new UnsupportedOperationException("not a directory: " + path());
-        }
-    }
-
-    private abstract static class Existing extends FileEntry {
-
-        private final BasicFileAttributes attributes;
-
-        Existing(final Path path, final Normality normal,
-                 final BasicFileAttributes attributes, final FileEntry distinct) {
-            super(path, normal, FileType.map(attributes), distinct);
-            this.attributes = attributes;
-        }
-
-        final BasicFileAttributes attributes() {
-            return attributes;
+        public FileTime lastAccessTime() {
+            throw new UnsupportedOperationException(format(PROPERTY_NOT_AVAILABLE, path));
         }
 
         @Override
-        public final boolean isDirectory() {
-            return attributes.isDirectory();
+        public FileTime creationTime() {
+            throw new UnsupportedOperationException(format(PROPERTY_NOT_AVAILABLE, path));
         }
 
         @Override
-        public final boolean isRegularFile() {
-            return attributes.isRegularFile();
-        }
-
-        @Override
-        public final boolean isSymbolicLink() {
-            return attributes.isSymbolicLink();
-        }
-
-        @Override
-        public final boolean isSpecial() {
-            return attributes.isOther();
-        }
-
-        @Override
-        public final boolean exists() {
-            return true;
-        }
-
-        @Override
-        public final Instant lastModified() {
-            return attributes.lastModifiedTime().toInstant();
-        }
-
-        @Override
-        public final Instant lastAccess() {
-            return attributes.lastAccessTime().toInstant();
-        }
-
-        @Override
-        public final Instant creation() {
-            return attributes.creationTime().toInstant();
-        }
-
-        @Override
-        public final long size() {
-            return attributes.size();
-        }
-    }
-
-    private static class Directory extends Existing {
-
-        private static final Comparator<String> PRIMARY = String::compareToIgnoreCase;
-        private static final Comparator<String> SECONDARY = String::compareTo;
-        private static final Comparator<FileEntry> ENTRY_ORDER = comparing(FileEntry::name,
-                                                                           PRIMARY.thenComparing(SECONDARY));
-
-        private final Lazy<List<FileEntry>> lazyEntries;
-        private final Lazy<FileEntry> lazyResolved;
-
-        private Directory(final Path path, final Normality normal,
-                          final BasicFileAttributes attributes, final FileEntry distinct) {
-            super(path, normal, attributes, distinct);
-            this.lazyEntries = Lazy.init(this::newEntries);
-            this.lazyResolved = Lazy.init(this::newResolved);
-        }
-
-        private List<FileEntry> newEntries() {
-            try (final Stream<Path> stream = Files.list(path())) {
-                return stream.map(path -> FileEntry.of(path, Normality.DEFINITE, null))
-                             .map(entry -> isDistinct() ? entry : entry.resolved())
-                             .sorted(ENTRY_ORDER)
-                             .collect(Collectors.toList());
-            } catch (final IOException ignored) {
-                return Collections.emptyList();
-            }
-        }
-
-        private FileEntry newResolved() {
-            if (isDistinct()) {
-                return new Directory(path(), Normality.DEFINITE, attributes(), this);
-            } else {
-                return this;
-            }
-        }
-
-        @Override
-        public final FileEntry resolved() {
-            return lazyResolved.get();
-        }
-
-        @Override
-        public final List<FileEntry> entries() {
-            return lazyEntries.get();
-        }
-    }
-
-    private static class Missing extends FileEntry {
-
-        private final IOException cause;
-
-        Missing(final Path path, final Normality normal, final FileEntry distinct, final IOException cause) {
-            super(path, normal, FileType.MISSING, distinct);
-            this.cause = cause;
-        }
-
-        @Override
-        public final FileEntry resolved() {
-            return this;
-        }
-
-        @Override
-        public final boolean isDirectory() {
+        public boolean isRegularFile() {
             return false;
         }
 
         @Override
-        public final boolean isRegularFile() {
+        public boolean isDirectory() {
             return false;
         }
 
         @Override
-        public final boolean isSymbolicLink() {
+        public boolean isSymbolicLink() {
             return false;
         }
 
         @Override
-        public final boolean isSpecial() {
+        public boolean isOther() {
             return false;
         }
 
         @Override
-        public final boolean exists() {
-            return false;
+        public long size() {
+            throw new UnsupportedOperationException(format(PROPERTY_NOT_AVAILABLE, path));
         }
 
         @Override
-        public final Instant lastModified() {
-            throw new UnsupportedOperationException("not existing: " + path(), cause);
-        }
-
-        @Override
-        public final Instant lastAccess() {
-            throw new UnsupportedOperationException("not existing: " + path(), cause);
-        }
-
-        @Override
-        public final Instant creation() {
-            throw new UnsupportedOperationException("not existing: " + path(), cause);
-        }
-
-        @Override
-        public final long size() {
-            throw new UnsupportedOperationException("not existing: " + path(), cause);
-        }
-
-        @Override
-        public final List<FileEntry> entries() {
-            throw new UnsupportedOperationException("not existing: " + path(), cause);
+        public Object fileKey() {
+            throw new UnsupportedOperationException(format(PROPERTY_NOT_AVAILABLE, path));
         }
     }
 }
