@@ -51,6 +51,16 @@ class FileIndexTest extends IoTestBase {
         assertEquals(expected, result);
     }
 
+    @Test
+    final void entries_resolved_distinct() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_distinct.txt");
+        final String result = collected(FileIndex.of(testPath())
+                                                 .resolved()
+                                                 .distinct()
+                                                 .entries());
+        assertEquals(expected, result);
+    }
+
     private String collected(final Stream<FileEntry> entrys) {
         final Path normal = testPath().toAbsolutePath().normalize();
         return entrys.map(FileEntry::path)

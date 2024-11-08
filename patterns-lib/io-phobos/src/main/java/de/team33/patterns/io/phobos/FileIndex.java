@@ -33,6 +33,10 @@ public class FileIndex {
         return new FileIndex(roots.stream().map(FileEntry::resolved));
     }
 
+    public final FileIndex distinct() {
+        return new FileIndex(roots.stream().map(FileEntry::distinct));
+    }
+
     public final Stream<FileEntry> entries() {
         return streamAll(roots);
     }
