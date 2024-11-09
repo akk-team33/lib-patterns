@@ -8,8 +8,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.singleton;
-
 public class FileIndex {
 
     private static final Predicate<FileEntry> NEVER = file -> false;
@@ -38,12 +36,11 @@ public class FileIndex {
     }
 
     public final Stream<FileEntry> entries() {
-        return streamAll(roots);
+        return streamAll(roots.stream());
     }
 
-    private Stream<FileEntry> streamAll(final List<FileEntry> entries) {
-        return entries.stream()
-                      .flatMap(this::streamAll);
+    private Stream<FileEntry> streamAll(final Stream<FileEntry> entries) {
+        return entries.flatMap(this::streamAll);
     }
 
     private Stream<FileEntry> streamAll(final FileEntry entry) {

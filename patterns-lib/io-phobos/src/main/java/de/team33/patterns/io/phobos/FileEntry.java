@@ -12,9 +12,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,11 +40,15 @@ public class FileEntry {
     private static final LinkOption[] DISTINCTIVE = {LinkOption.NOFOLLOW_LINKS};
     private static final LinkOption[] RESOLVING = {};
 
+    private static final String CONTENT_NOT_AVAILABLE =
+            "content not available because the file is not a directory:%n%n" +
+            "    path: %s%n%n";
+
     private final Path path;
     private final FileEntry distinct;
     private final Lazy<BasicFileAttributes> lazyAttributes;
     private final Lazy<FileType> lazyType;
-    private final Lazy<List<FileEntry>> lazyEntries;
+    private final Lazy<Set<FileEntry>> lazyEntries;
 
     private FileEntry(final Path path, final Normality normal, final FileEntry distinct) {
         this.path = normal.apply(path);
@@ -76,16 +81,15 @@ public class FileEntry {
         return FileType.map(lazyAttributes.get());
     }
 
-    private List<FileEntry> newEntries() {
+    private Set<FileEntry> newEntries() {
         if (isDirectory()) {
             try (final Stream<Path> stream = Files.list(path())) {
                 return stream.map(path -> new FileEntry(path, Normality.DEFINITE, null))
                              .map(entry -> isDistinct() ? entry : entry.resolved())
-                             .sorted(ENTRY_ORDER)
-                             .collect(Collectors.toList());
+                             .collect(Collectors.toCollection(() -> new TreeSet<>(ENTRY_ORDER)));
             } catch (final IOException caught) {
                 // TODO?: problems.add(caught);
-                return Collections.emptyList();
+                return Collections.emptySet();
             }
         }
         return null;
@@ -211,8 +215,7 @@ public class FileEntry {
         case REGULAR:
             return lastModified().truncatedTo(ChronoUnit.SECONDS);
         case DIRECTORY:
-            return entries().stream()
-                            .map(FileEntry::lastUpdated)
+            return entries().map(FileEntry::lastUpdated)
                             .filter(Objects::nonNull)
                             .reduce((left, right) -> (left.compareTo(right) < 0) ? right : left)
                             .orElse(null);
@@ -260,7 +263,7 @@ public class FileEntry {
         case REGULAR:
             return size();
         case DIRECTORY:
-            return entries().stream().map(FileEntry::totalSize).reduce(0L, Long::sum);
+            return entries().map(FileEntry::totalSize).reduce(0L, Long::sum);
         default:
             return 0L;
         }
@@ -271,9 +274,10 @@ public class FileEntry {
      *
      * @throws UnsupportedOperationException if the represented file is not a directory.
      */
-    public final List<FileEntry> entries() {
+    public final Stream<FileEntry> entries() {
         return Optional.ofNullable(lazyEntries.get())
-                       .orElseThrow(() -> new UnsupportedOperationException("not a directory: " + path));
+                       .orElseThrow(() -> new UnsupportedOperationException(format(CONTENT_NOT_AVAILABLE, path)))
+                       .stream();
     }
 
     @Override

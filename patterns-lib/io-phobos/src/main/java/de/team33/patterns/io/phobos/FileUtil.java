@@ -29,9 +29,8 @@ public class FileUtil {
         final String info = InfoType.valueOf(entry.type().name())
                                     .info(entry);
         result.add(String.format(format, "", name, info));
-        if ((FileType.DIRECTORY == entry.type()) && (0 < entry.entries().size())) {
+        if (FileType.DIRECTORY == entry.type()) {
             entry.entries()
-                 .stream()
                  .map(e -> report(e, indent + 1))
                  .forEach(result::add);
         }
