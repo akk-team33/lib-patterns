@@ -10,10 +10,8 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -43,7 +41,6 @@ public class FileEntry {
 
     private final Path path;
     private final FileEntry distinct;
-    private final List<IOException> problems = new LinkedList<>();
     private final Lazy<BasicFileAttributes> lazyAttributes;
     private final Lazy<FileType> lazyType;
     private final Lazy<List<FileEntry>> lazyEntries;
@@ -52,7 +49,7 @@ public class FileEntry {
         this.path = normal.apply(path);
         this.distinct = distinct;
         this.lazyAttributes = Lazy.init(this::newAttributes);
-        this.lazyType = Lazy.init(() -> FileType.map(lazyAttributes.get()));
+        this.lazyType = Lazy.init(this::newType);
         this.lazyEntries = Lazy.init(this::newEntries);
     }
 
@@ -70,9 +67,13 @@ public class FileEntry {
         try {
             return Files.readAttributes(path, BasicFileAttributes.class, (null == distinct) ? DISTINCTIVE : RESOLVING);
         } catch (final IOException e) {
-            problems.add(e);
+            // TODO?: problems.add(e);
             return new MissingFileAttributes(path);
         }
+    }
+
+    private FileType newType() {
+        return FileType.map(lazyAttributes.get());
     }
 
     private List<FileEntry> newEntries() {
@@ -83,7 +84,7 @@ public class FileEntry {
                              .sorted(ENTRY_ORDER)
                              .collect(Collectors.toList());
             } catch (final IOException caught) {
-                problems.add(caught);
+                // TODO?: problems.add(caught);
                 return Collections.emptyList();
             }
         }
@@ -200,8 +201,9 @@ public class FileEntry {
     /**
      * Returns the timestamp of the last update of the represented file.
      * <p>
-     * A regular file returns the same value as {@link #lastModified()}.
-     * A directory returns the most recent timestamp of all files and directories it contains.
+     * A regular file returns the same value as {@link #lastModified()} truncated to a second.
+     * A directory returns the most recent timestamp of all files and directories it contains
+     * or <em>null</em> if it is empty.
      * Other files always return <em>null</em>.
      */
     public final Instant lastUpdated() {
@@ -251,7 +253,7 @@ public class FileEntry {
      * <p>
      * A regular file returns the same value as {@link #size()}.
      * A directory returns the sum of the total sizes of all files and directories it contains.
-     * Other files always return zero.
+     * Other files always return <em>zero</em>.
      */
     public final long totalSize() {
         switch (type()) {
@@ -272,10 +274,6 @@ public class FileEntry {
     public final List<FileEntry> entries() {
         return Optional.ofNullable(lazyEntries.get())
                        .orElseThrow(() -> new UnsupportedOperationException("not a directory: " + path));
-    }
-
-    public final List<IOException> problems() {
-        return new ArrayList<>(problems);
     }
 
     @Override
