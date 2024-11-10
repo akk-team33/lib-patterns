@@ -408,7 +408,7 @@ public class FileEntry {
 
         private final Lazy<Set<FileEntry>> entrySet;
 
-        DirectoryAttributes(BasicFileAttributes backing) {
+        DirectoryAttributes(final BasicFileAttributes backing) {
             super(backing);
             this.entrySet = Lazy.init(() -> {
                 try (final Stream<Path> stream = Files.list(path())) {
