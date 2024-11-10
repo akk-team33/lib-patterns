@@ -73,7 +73,7 @@ public class FileEntry {
             }
         } catch (final IOException e) {
             // TODO?: problems.add(e);
-            return new MissingFileAttributes(path);
+            return new MissingFileAttributes();
         }
     }
 
@@ -282,17 +282,11 @@ public class FileEntry {
         }
     }
 
-    private static class MissingFileAttributes implements FileAttributes {
+    private class MissingFileAttributes implements FileAttributes {
 
         private static final String PROPERTY_NOT_AVAILABLE =
                 "property not available because the file does not exist:%n%n" +
                 "    path: %s%n%n";
-
-        private final Path path;
-
-        private MissingFileAttributes(final Path path) {
-            this.path = path;
-        }
 
         @Override
         public final Path path() {
