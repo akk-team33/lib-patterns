@@ -34,11 +34,12 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.21.0
 
 * Refined module enums-pan ...
   * Added class Values
   * Marked class EnumValues as deprecated
+* Refactored module io-phobos
 
 ### 1.20.0
 
