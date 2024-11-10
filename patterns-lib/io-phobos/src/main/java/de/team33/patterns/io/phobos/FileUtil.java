@@ -2,7 +2,6 @@ package de.team33.patterns.io.phobos;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class FileUtil {
@@ -26,8 +25,7 @@ public class FileUtil {
                                             : String.format("%%%ds%%s : %%s", 4 * indent);
         final String name = (indent == 0) ? entry.path().toString()
                                           : entry.name();
-        final String info = InfoType.valueOf(entry.type().name())
-                                    .info(entry);
+        final String info = infoOf(entry);
         result.add(String.format(format, "", name, info));
         if (FileType.DIRECTORY == entry.type()) {
             entry.entries()
@@ -37,22 +35,32 @@ public class FileUtil {
         return String.join(NEW_LINE, result);
     }
 
-    private enum InfoType {
+    private static String infoOf(final FileEntry entry) {
+        return String.format(format(entry.type()), argsOf(entry));
+    }
 
-        MISSING(entry -> entry.type() + ";"),
-        REGULAR(entry -> String.format("%s (%,d, %s);", entry.type(), entry.totalSize(), entry.lastUpdated())),
-        DIRECTORY(entry -> String.format("%s (%,d, %s) ...", entry.type(), entry.totalSize(), entry.lastUpdated())),
-        SYMBOLIC(entry -> entry.type() + ";"),
-        SPECIAL(entry -> entry.type() + ";");
-
-        private final Function<FileEntry, String> toInfo;
-
-        InfoType(Function<FileEntry, String> toInfo) {
-            this.toInfo = toInfo;
+    private static Object[] argsOf(final FileEntry entry) {
+        switch (entry.type()) {
+            case REGULAR:
+            case DIRECTORY:
+                return arrayOf(entry.type(), entry.totalSize(), entry.lastUpdated());
+            default:
+                return arrayOf(entry.type());
         }
+    }
 
-        final String info(final FileEntry entry) {
-            return toInfo.apply(entry);
+    private static Object[] arrayOf(final Object ... args) {
+        return args;
+    }
+
+    private static String format(final FileType type) {
+        switch (type) {
+            case REGULAR:
+                return "%s (%,d, %s);";
+            case DIRECTORY:
+                return "%s (%,d, %s) ...";
+            default:
+                return "%s;";
         }
     }
 }
