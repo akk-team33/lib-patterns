@@ -59,7 +59,6 @@ class CollectingTest {
             fail("expected to fail - but was " + result);
         } catch (final NullPointerException ignored) {
             // as expected
-            // ignored.printStackTrace();
         }
     }
 
@@ -141,6 +140,7 @@ class CollectingTest {
         final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> obsolete = rmCase.obsoleteList.apply(origin);
         final Set<String> expected = new HashSet<String>(origin) {{
+            //noinspection SlowAbstractSetRemoveAll
             removeAll(obsolete);
         }};
         final Set<String> result = Collecting.removeAll(new TreeSet<>(origin), obsolete);
@@ -195,11 +195,13 @@ class CollectingTest {
         final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> obsolete = rmCase.obsoleteList.apply(origin);
         final Set<String> expected = new HashSet<String>(origin) {{
+            //noinspection SlowAbstractSetRemoveAll
             removeAll(obsolete);
         }};
         final Set<String> result = Collecting.removeIf(new TreeSet<>(origin), obsolete::contains);
         assertEquals(expected, result);
 
+        //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> Collecting.removeIf(null, obsolete::contains));
 
         final TreeSet<Object> subject = new TreeSet<>();

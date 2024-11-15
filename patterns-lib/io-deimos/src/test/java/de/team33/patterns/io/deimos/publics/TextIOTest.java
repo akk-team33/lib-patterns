@@ -36,7 +36,6 @@ class TextIOTest {
             fail("expected to fail - but was '" + result + "'");
         } catch (final IllegalArgumentException e) {
             // as expected, and ...
-            // e.printStackTrace();
             assertTrue(e.getMessage().contains(MISSING_PATH.toString()));
         }
     }
@@ -55,7 +54,6 @@ class TextIOTest {
             fail("expected to fail - but was '" + result + "'");
         } catch (final IllegalArgumentException e) {
             // as expected, and ...
-            // e.printStackTrace();
             final String message = e.getMessage();
             assertTrue(message.contains(getClass().getCanonicalName()));
             assertTrue(message.contains(MISSING_FILE));

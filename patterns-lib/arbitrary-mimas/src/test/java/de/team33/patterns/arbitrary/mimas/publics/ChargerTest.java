@@ -41,7 +41,6 @@ public class ChargerTest implements Charger {
             final Sample result = charge(new SampleEx());
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("Method not applicable as setter!", e.getMessage().substring(0, 32));
             assertTrue(e.getMessage().contains(SampleEx.class.getSimpleName() + ".setDateValue"));
         }
@@ -53,7 +52,6 @@ public class ChargerTest implements Charger {
             final Sample result = charge(new Sample(), "anyStrings");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("No appropriate supplier method found!", e.getMessage().substring(0, 37));
             assertTrue(e.getMessage().contains(getClass().getSimpleName()));
             assertTrue(e.getMessage().contains(Sample.class.getSimpleName()));

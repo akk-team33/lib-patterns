@@ -21,10 +21,12 @@ class ProtoBuilderTest {
     private static final ProtoBuilder.Lifecycle LIFECYCLE = new ProtoBuilder.Lifecycle() {
         @Override
         public void check() {
+            // nothing to do here
         }
 
         @Override
         public void increment() {
+            // nothing to do here
         }
     };
 

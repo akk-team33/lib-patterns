@@ -21,7 +21,6 @@ class SetterTest {
             fail("expected to fail - but was " + target);
         } catch (final IllegalStateException e) {
             // as expected!
-            // e.printStackTrace();
             assertInstanceOf(IllegalAccessException.class, e.getCause());
             assertTrue(e.getMessage().contains(name));
         }
@@ -37,7 +36,6 @@ class SetterTest {
             fail("expected to fail - but was " + this);
         } catch (final IllegalStateException e) {
             // as expected!
-            // e.printStackTrace();
             assertInstanceOf(InvocationTargetException.class, e.getCause());
             assertTrue(e.getMessage().contains(name));
         }

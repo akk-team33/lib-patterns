@@ -58,7 +58,6 @@ class EnumValuesTest {
             fail("expected to fail - but was " + result);
         } catch (final NoSuchElementException e) {
             // as expected
-            // e.printStackTrace();
         }
     }
 
@@ -100,7 +99,6 @@ class EnumValuesTest {
             fail("expected to fail - but was " + result);
         } catch (final IllegalStateException e) {
             // as expected
-            // e.printStackTrace();
         }
     }
 }

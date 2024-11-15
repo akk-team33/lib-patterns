@@ -12,7 +12,6 @@ class UtilTest {
             final String result = Util.load(UtilTest.class, "no.txt");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("Should not happen:", e.getMessage().substring(0, 18));
             assertTrue(e.getMessage().contains(UtilTest.class.getSimpleName()));
             assertTrue(e.getMessage().contains("no.txt"));

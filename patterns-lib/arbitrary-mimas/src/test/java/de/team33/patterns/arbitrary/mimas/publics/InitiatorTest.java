@@ -47,7 +47,6 @@ public class InitiatorTest implements Initiator {
             final Record result = initiate(Record.class);
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("No appropriate supplier method found!", e.getMessage().substring(0, 37));
             assertTrue(e.getMessage().contains(Record.class.getSimpleName() + "("));
         }
@@ -59,7 +58,6 @@ public class InitiatorTest implements Initiator {
             final Sample result = initiate(SampleEx.class);
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("No public constructor found in", e.getMessage().substring(0, 30));
             assertTrue(e.getMessage().contains(SampleEx.class.getSimpleName()));
         }
@@ -71,7 +69,6 @@ public class InitiatorTest implements Initiator {
             final Record result = initiate(RecordEx.class, "next_Int", "arg2");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("Constructor not applicable!", e.getMessage().substring(0, 27));
             assertTrue(e.getMessage().contains(RecordEx.class.getSimpleName() + "("));
         }

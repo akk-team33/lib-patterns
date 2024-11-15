@@ -23,7 +23,6 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
             final Sample result = charge(new Sample(), "setLongValue", "setStringList", "setLongList");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("Method not applicable as supplier!", e.getMessage().substring(0, 34));
             assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".anyString()"));
         }
@@ -35,7 +34,6 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
             final Record result = initiate(Record.class, "arg3", "arg4", "arg5");
             fail("should fail but was <" + result + ">");
         } catch (final UnfitConditionException e) {
-            // e.printStackTrace();
             assertEquals("Method not applicable as supplier!", e.getMessage().substring(0, 34));
             assertTrue(e.getMessage().contains(getClass().getSimpleName() + ".anyString()"));
         }

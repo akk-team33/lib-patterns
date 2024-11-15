@@ -29,7 +29,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final NullPointerException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -43,7 +42,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail, () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -58,7 +56,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final NullPointerException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -73,7 +70,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -87,7 +83,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final NullPointerException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -101,7 +96,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -116,7 +110,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final NullPointerException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -131,7 +124,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertFalse(result);
         } catch (final ClassCastException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -146,7 +138,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail, () -> "expected to fail: " + testCase.subjectClass);
             assertTrue(result);
         } catch (final NullPointerException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
@@ -161,7 +152,6 @@ class SuperfluousExceptionsTrial {
             assertFalse(testCase.fail,  () -> "expected to fail: " + testCase.subjectClass);
             assertTrue(result);
         } catch (final ClassCastException e) {
-            // e.printStackTrace();
             assertTrue(testCase.fail, "failed unexpectedly: " + testCase.subjectClass);
         }
     }
