@@ -6,9 +6,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.nio.file.AccessMode;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -68,5 +71,18 @@ class ValuesTest {
         final AccessMode[] expected = AccessMode.values();
         final AccessMode[] result = ACCESS_MODE_VALUES.mapAll(item -> item).toArray(AccessMode[]::new);
         assertArrayEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    final void mapAll_filtered(final AccessMode mode) {
+        final List<String> expected = Collections.singletonList(mode.name());
+        final Predicate<AccessMode> filter = item -> item.name().equals(mode.name());
+        final Function<AccessMode, String> mapping = Enum::name;
+
+        final List<String> result = ACCESS_MODE_VALUES.mapAll(filter, mapping)
+                                                      .collect(Collectors.toList());
+
+        assertEquals(expected, result);
     }
 }

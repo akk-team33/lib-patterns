@@ -19,7 +19,7 @@ public class Values<E extends Enum<E>> {
     }
 
     /**
-     * Returns a tool to handle the values of the given <em>enum class</em>.
+     * Returns a tool instance to handle the values of the given <em>enum class</em>.
      */
     public static <E extends Enum<E>> Values<E> of(final Class<E> enumClass) {
         return new Values<>(enumClass);
@@ -39,31 +39,64 @@ public class Values<E extends Enum<E>> {
         return stream().filter(filter);
     }
 
-    public final E findAny(final Predicate<? super E> filter, final E fallback) {
-        return findAny(filter).orElse(fallback);
-    }
-
+    /**
+     * Returns an {@linkplain Optional optional} value of the associated enum type that matches the given
+     * <em>filter</em> or, if no such value exists, {@link Optional#empty()}.
+     */
     public final Optional<E> findAny(final Predicate<? super E> filter) {
         return findAll(filter).findAny();
     }
 
-    public final E findFirst(final Predicate<? super E> filter, final E fallback) {
-        return findFirst(filter).orElse(fallback);
+    /**
+     * Returns a value of the associated enum type that matches the given <em>filter</em> or,
+     * if no such value exists, the given <em>fallback</em>.
+     */
+    public final E findAny(final Predicate<? super E> filter, final E fallback) {
+        return findAny(filter).orElse(fallback);
     }
 
+    /**
+     * Returns the {@linkplain Optional optional} first value of the associated enum type that matches the given
+     * <em>filter</em> or, if no such value exists, {@link Optional#empty()}.
+     */
     public final Optional<E> findFirst(final Predicate<? super E> filter) {
         return findAll(filter).findFirst();
     }
 
+    /**
+     * Returns the first value of the associated enum type that matches the given <em>filter</em> or,
+     * if no such value exists, the given <em>fallback</em>.
+     */
+    public final E findFirst(final Predicate<? super E> filter, final E fallback) {
+        return findFirst(filter).orElse(fallback);
+    }
+
+    /**
+     * Just like {@link #stream()}.{@link Stream#map(Function) map(mapping)}.
+     */
     public final <T> Stream<T> mapAll(final Function<E, T> mapping) {
         return stream().map(mapping);
     }
 
+    /**
+     * Just like {@link #findAll(Predicate) findAll(filter)}.{@link Stream#map(Function) map(mapping)}.
+     */
+    public final <T> Stream<T> mapAll(final Predicate<? super E> filter,
+                                      final Function<E, T> mapping) {
+        return findAll(filter).map(mapping);
+    }
+
+    /**
+     * Just like {@link #findAny(Predicate) findAny(filter)}.{@link Stream#map(Function) map(mapping)}.
+     */
     public final <R> Optional<R> mapAny(final Predicate<? super E> filter,
                                         final Function<? super E, ? extends R> mapping) {
         return findAny(filter).map(mapping);
     }
 
+    /**
+     * Just like {@link #findFirst(Predicate) findFirst(filter)}.{@link Stream#map(Function) map(mapping)}.
+     */
     public final <R> Optional<R> mapFirst(final Predicate<? super E> filter,
                                           final Function<? super E, ? extends R> mapping) {
         return findFirst(filter).map(mapping);
