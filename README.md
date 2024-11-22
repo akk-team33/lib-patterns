@@ -39,6 +39,9 @@ http://www.team33.de/dev/patterns/1.x
 * Refined module enums-pan ...
   * Added method Values.mapAll(Predicate, Function)
   * Refined javadoc
+* Refined module exceptional-dione ...
+  * Added class Ignoring
+  * Refined testing
 
 ### 1.21.0
 

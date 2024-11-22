@@ -38,43 +38,6 @@ public final class Converter {
         return new Converter(wrapping);
     }
 
-    private static XBiFunction<Void, Void, Void, ?> normalized(final XRunnable<?> xRunnable) {
-        return (t, u) -> {
-            xRunnable.run();
-            return null;
-        };
-    }
-
-    private static <T> XBiFunction<T, Void, Void, ?> normalized(final XConsumer<T, ?> xConsumer) {
-        return (t, u) -> {
-            xConsumer.accept(t);
-            return null;
-        };
-    }
-
-    private static <T, U> XBiFunction<T, U, Void, ?> normalized(final XBiConsumer<T, U, ?> xBiConsumer) {
-        return (t, u) -> {
-            xBiConsumer.accept(t, u);
-            return null;
-        };
-    }
-
-    private static <R> XBiFunction<Void, Void, R, ?> normalized(final XSupplier<R, ?> xSupplier) {
-        return (t, u) -> xSupplier.get();
-    }
-
-    private static <T> XBiFunction<T, Void, Boolean, ?> normalized(final XPredicate<T, ?> xPredicate) {
-        return (t, u) -> xPredicate.test(t);
-    }
-
-    private static <T, U> XBiFunction<T, U, Boolean, ?> normalized(final XBiPredicate<T, U, ?> xBiPredicate) {
-        return xBiPredicate::test;
-    }
-
-    private static <T, R> XBiFunction<T, Void, R, ?> normalized(final XFunction<T, R, ?> xFunction) {
-        return (t, u) -> xFunction.apply(t);
-    }
-
     @SuppressWarnings("ProhibitedExceptionThrown")
     private <T, U, R> R call(final XBiFunction<T, U, R, ?> xBiFunction, final T t, final U u) {
         try {
@@ -93,7 +56,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final Runnable runnable(final XRunnable<?> xRunnable) {
-        final XBiFunction<Void, Void, Void, ?> normal = normalized(xRunnable);
+        final XBiFunction<Void, Void, Void, ?> normal = Mutual.normalized(xRunnable);
         return () -> call(normal, null, null);
     }
 
@@ -104,7 +67,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <T> Consumer<T> consumer(final XConsumer<T, ?> xConsumer) {
-        final XBiFunction<T, Void, Void, ?> normal = normalized(xConsumer);
+        final XBiFunction<T, Void, Void, ?> normal = Mutual.normalized(xConsumer);
         return t -> call(normal, t, null);
     }
 
@@ -115,7 +78,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<T, U, ?> xBiConsumer) {
-        final XBiFunction<T, U, Void, ?> normal = normalized(xBiConsumer);
+        final XBiFunction<T, U, Void, ?> normal = Mutual.normalized(xBiConsumer);
         return (t, u) -> call(normal, t, u);
     }
 
@@ -126,7 +89,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <R> Supplier<R> supplier(final XSupplier<R, ?> xSupplier) {
-        final XBiFunction<Void, Void, R, ?> normal = normalized(xSupplier);
+        final XBiFunction<Void, Void, R, ?> normal = Mutual.normalized(xSupplier);
         return () -> call(normal, null, null);
     }
 
@@ -137,7 +100,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <T> Predicate<T> predicate(final XPredicate<T, ?> xPredicate) {
-        final XBiFunction<T, Void, Boolean, ?> normal = normalized(xPredicate);
+        final XBiFunction<T, Void, Boolean, ?> normal = Mutual.normalized(xPredicate);
         return t -> call(normal, t, null);
     }
 
@@ -148,7 +111,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<T, U, ?> xBiPredicate) {
-        final XBiFunction<T, U, Boolean, ?> normal = normalized(xBiPredicate);
+        final XBiFunction<T, U, Boolean, ?> normal = Mutual.normalized(xBiPredicate);
         return (t, u) -> call(normal, t, u);
     }
 
@@ -159,7 +122,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final <T, R> Function<T, R> function(final XFunction<T, R, ?> xFunction) {
-        final XBiFunction<T, Void, R, ?> normal = normalized(xFunction);
+        final XBiFunction<T, Void, R, ?> normal = Mutual.normalized(xFunction);
         return t -> call(normal, t, null);
     }
 

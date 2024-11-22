@@ -1,4 +1,4 @@
-package de.team33.test.patterns.exceptional.dione;
+package de.team33.patterns.exceptional.dione.publics;
 
 import de.team33.patterns.exceptional.dione.WrappedException;
 import org.junit.jupiter.api.Test;

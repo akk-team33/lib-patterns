@@ -1,4 +1,8 @@
-package de.team33.patterns.exceptional.dione;
+package de.team33.patterns.exceptional.dione.sample;
+
+import de.team33.patterns.exceptional.dione.ExpectationException;
+import de.team33.patterns.exceptional.dione.Revision;
+import de.team33.patterns.exceptional.dione.WrappedException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
