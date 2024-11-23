@@ -142,7 +142,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final void run(final XRunnable<?> xRunnable) {
-        runnable(xRunnable).run();
+        call(Mutual.normalized(xRunnable), null, null);
     }
 
     /**
@@ -154,6 +154,6 @@ public final class Converter {
      * @param <R> The result type.
      */
     public final <R> R get(final XSupplier<R, ?> xSupplier) {
-        return supplier(xSupplier).get();
+        return call(Mutual.normalized(xSupplier), null, null);
     }
 }
