@@ -34,7 +34,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.21.1
 
 * Refined module enums-pan ...
   * Added method Values.mapAll(Predicate, Function)
