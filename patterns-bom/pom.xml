@@ -105,58 +105,6 @@
                 <artifactId>collection-ceres</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <!-- deprecated ... -->
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-titan</artifactId>
-                <version>1.19.2</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-tarvos</artifactId>
-                <version>1.19.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>pooling-01</artifactId>
-                <version>1.13.1</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>exceptional-01</artifactId>
-                <version>1.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>production-01</artifactId>
-                <version>1.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-mimas</artifactId>
-                <version>1.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>lazy-01</artifactId>
-                <version>1.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>properties-01</artifactId>
-                <version>1.13.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>random-01</artifactId>
-                <version>1.12.2</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-01</artifactId>
-                <version>1.12.2</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>

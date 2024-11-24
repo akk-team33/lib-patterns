@@ -34,6 +34,11 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### 2.0.0
+
+* Using JDK17
+* Removed deprecated items
+
 ### 1.21.1
 
 * Refined module enums-pan ...
