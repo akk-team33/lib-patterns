@@ -73,9 +73,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         return (left, right) -> {
             final String leftName = Methods.normalName(left);
             final String rightName = Methods.normalName(right);
-            if (leftName.equals(setterName)) {
-                return left;
-            } else if (rightName.equals(setterName)) {
+            if (rightName.equals(setterName)) {
                 return right;
             } else {
                 return left;

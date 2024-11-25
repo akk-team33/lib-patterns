@@ -13,6 +13,7 @@ import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -29,7 +30,8 @@ class GeneratorTest {
 
     @Test
     final void simple() {
-        final Generator generator = Generator.of(new SecureRandom());
+        final RandomGenerator backing = new SecureRandom();
+        final Generator generator = Generator.of(backing);
         assertInstanceOf(Generator.class, generator);
         assertInstanceOf(Boolean.class, generator.anyBoolean());
         assertInstanceOf(Byte.class, generator.anyByte());
