@@ -15,8 +15,6 @@ final class Util {
     static final String STD_CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ " +
                                          "!#$§%&*+,.?@äöüÄÖÜß";
     static final long MAX_RETRY = 16;
-    static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
-    static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
     private static final String NEWLINE = String.format("%n");
     private static final String NO_RESOURCE = "Should not happen:" +
