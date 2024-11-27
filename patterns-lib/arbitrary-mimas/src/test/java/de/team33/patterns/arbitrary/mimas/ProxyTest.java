@@ -8,13 +8,13 @@ import java.util.random.RandomGenerator;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class RandomProxyTest {
+class ProxyTest {
 
     static final SecureRandom RANDOM = new SecureRandom();
 
     private final long fixedValue = RANDOM.nextLong();
     private final RandomGenerator backing = () -> fixedValue;
-    private final RandomProxy proxy = new RandomProxy(backing);
+    private final Proxy proxy = new Proxy(backing);
 
     @Test
     final void isDeprecated() {

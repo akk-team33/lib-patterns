@@ -6,11 +6,11 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-class RandomProxy extends Random {
+class Proxy extends Random {
 
     private final RandomGenerator backing;
 
-    RandomProxy(final RandomGenerator backing) {
+    Proxy(final RandomGenerator backing) {
         this.backing = backing;
     }
 

@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 
 final class Util {
@@ -42,5 +43,9 @@ final class Util {
             return in.lines()
                      .collect(Collectors.joining(NEWLINE));
         }
+    }
+
+    public static Random legacy(final RandomGenerator generator) {
+        return (generator instanceof Random random) ? random : new Proxy(generator);
     }
 }

@@ -2,6 +2,9 @@ package de.team33.patterns.arbitrary.mimas;
 
 import org.junit.jupiter.api.Test;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class UtilTest {
@@ -16,5 +19,17 @@ class UtilTest {
             assertTrue(e.getMessage().contains(UtilTest.class.getSimpleName()));
             assertTrue(e.getMessage().contains("no.txt"));
         }
+    }
+
+    @Test
+    final void legacy_proxy() {
+        final Random random = Util.legacy(() -> 278L);
+        assertEquals(278L, random.nextLong());
+    }
+
+    @Test
+    final void legacy_random() {
+        final Random random = Util.legacy(new SecureRandom());
+        assertInstanceOf(SecureRandom.class, random);
     }
 }

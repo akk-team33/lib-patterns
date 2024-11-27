@@ -19,18 +19,10 @@ public interface Generator extends BitGenerator {
 
     /**
      * <b>Utility method:</b>
-     * Provides a new {@link Generator} based on a given {@link Random}.
-     */
-    static Generator of(final Random random) {
-        return numBits -> new BigInteger(numBits, random);
-    }
-
-    /**
-     * <b>Utility method:</b>
      * Provides a new {@link Generator} based on a given {@link RandomGenerator}.
      */
     static Generator of(final RandomGenerator randomGenerator) {
-        return of(new RandomProxy(randomGenerator));
+        return numBits -> new BigInteger(numBits, Util.legacy(randomGenerator));
     }
 
     /**
