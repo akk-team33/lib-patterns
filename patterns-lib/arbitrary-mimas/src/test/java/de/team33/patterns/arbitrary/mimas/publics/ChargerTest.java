@@ -1,39 +1,20 @@
 package de.team33.patterns.arbitrary.mimas.publics;
 
-import de.team33.patterns.arbitrary.mimas.Charger;
 import de.team33.patterns.arbitrary.mimas.UnfitConditionException;
 import de.team33.patterns.arbitrary.mimas.sample.Buildable;
 import de.team33.patterns.arbitrary.mimas.sample.Generic;
 import de.team33.patterns.arbitrary.mimas.sample.Sample;
+import de.team33.patterns.arbitrary.mimas.testing.ChargerSupply;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class ChargerTest implements Charger {
-
-    private final Sample sample = new Sample().setBooleanValue(false)
-                                              .setStringValue("ABC")
-                                              .setIntValue(278)
-                                              .setLongValue(Long.MAX_VALUE)
-                                              .setStringList(Arrays.asList("abc", "def", "ghi"))
-                                              .setLongList(Arrays.asList(4L, 69L, 345L));
-    private final Buildable buildable = Buildable.builder()
-                                                 .setStringValue("ABC")
-                                                 .setIntValue(278)
-                                                 .setLongValue(Long.MAX_VALUE)
-                                                 .setStringList(Arrays.asList("abc", "def", "ghi"))
-                                                 .setLongList(Arrays.asList(4L, 69L, 345L)).build();
-
-    public static String getNothing() {
-        throw new UnsupportedOperationException("should not be called anyways");
-    }
+class ChargerTest extends ChargerSupply {
 
     @Test
     final void setterNotApplicable() {
@@ -80,38 +61,6 @@ public class ChargerTest implements Charger {
     final void charge_Generic() {
         final Generic<String> result = charge(new Generic<>(), "setTValue");
         assertEquals(new Generic<String>(), result);
-    }
-
-    public final boolean anyBoolean() {
-        return sample.isBooleanValue();
-    }
-
-    public final Integer anyInt() {
-        return sample.getIntValue();
-    }
-
-    public final String anyString() {
-        return sample.getStringValue();
-    }
-
-    public final Long anyLong() {
-        return sample.getLongValue();
-    }
-
-    public final long anyLongValue() {
-        return sample.getLongValue();
-    }
-
-    public final List<String> anyStrings() {
-        return sample.getStringList();
-    }
-
-    public final List<Long> anyLongs() {
-        return sample.getLongList();
-    }
-
-    public final Date anyDate() {
-        return new Date();
     }
 }
 
