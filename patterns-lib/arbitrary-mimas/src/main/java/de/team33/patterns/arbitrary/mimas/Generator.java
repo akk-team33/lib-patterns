@@ -1,7 +1,6 @@
 package de.team33.patterns.arbitrary.mimas;
 
 import java.math.BigInteger;
-import java.util.Random;
 import java.util.random.RandomGenerator;
 
 /**
@@ -231,7 +230,7 @@ public interface Generator extends BitGenerator {
     /**
      * Returns any {@code char} value of a predefined character set.
      * <p>
-     * A typical implementation will return an arbitrary {@code char} value within the predefined character set,
+     * A typical implementation will return an arbitrary {@code char} value within a predefined character set,
      * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)} and returns
@@ -267,6 +266,13 @@ public interface Generator extends BitGenerator {
         return Generating.anyString(this, length, characters);
     }
 
+    /**
+     * Returns a {@link String} with the given {@code length} consisting of a predefined character set.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)} and returns
+     * a {@link String}
+     * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
+     */
     default String anyString() {
         return Generating.anyString(this);
     }
