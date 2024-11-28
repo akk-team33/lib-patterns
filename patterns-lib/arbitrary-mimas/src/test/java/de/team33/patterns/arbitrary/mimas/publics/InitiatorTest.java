@@ -1,26 +1,16 @@
 package de.team33.patterns.arbitrary.mimas.publics;
 
-import de.team33.patterns.arbitrary.mimas.Initiator;
 import de.team33.patterns.arbitrary.mimas.UnfitConditionException;
 import de.team33.patterns.arbitrary.mimas.sample.Record;
 import de.team33.patterns.arbitrary.mimas.sample.Sample;
+import de.team33.patterns.arbitrary.mimas.testing.InitiatorSupply;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class InitiatorTest implements Initiator {
-
-    private final Record expected = new Record(true,
-                                               "ABC",
-                                               0,
-                                               Long.MAX_VALUE,
-                                               Arrays.asList("abc", "def", "ghi"),
-                                               Arrays.asList(4L, 69L, 345L));
+class InitiatorTest extends InitiatorSupply {
 
     @Test
     final void record_behavior() {
@@ -72,25 +62,5 @@ public class InitiatorTest implements Initiator {
             assertEquals("Constructor not applicable!", e.getMessage().substring(0, 27));
             assertTrue(e.getMessage().contains(RecordEx.class.getSimpleName() + "("));
         }
-    }
-
-    public final boolean anyBoolean() {
-        return expected.booleanValue();
-    }
-
-    public final String anyString() {
-        return expected.stringValue();
-    }
-
-    public final long anyLong() {
-        return expected.longValue();
-    }
-
-    public final List<String> anyStringList() {
-        return expected.stringList();
-    }
-
-    public final List<Long> anyLongList() {
-        return expected.longList();
     }
 }
