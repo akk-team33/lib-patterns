@@ -96,6 +96,7 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
             final Types.Naming naming = Types.naming(type);
             final String name1 = naming.parameterizedName(type);
             final String name2 = naming.simpleName(type);
+            final String name3 = Util.normalName();
             return format(NO_SUPPLIER, initiating.sourceType, initiating.targetType,
                           initiating.constructor.toGenericString(), name, name1, name2);
         }

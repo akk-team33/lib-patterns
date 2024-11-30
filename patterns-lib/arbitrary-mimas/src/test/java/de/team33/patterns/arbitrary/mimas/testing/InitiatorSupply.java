@@ -6,6 +6,7 @@ import de.team33.patterns.arbitrary.mimas.sample.Record;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class InitiatorSupply implements Initiator {
 
     protected final Record expected = new Record(true,
@@ -15,13 +16,13 @@ public class InitiatorSupply implements Initiator {
                                                  Arrays.asList("abc", "def", "ghi"),
                                                  Arrays.asList(4L, 69L, 345L));
 
-    public final boolean anyBoolean() {
-        return !expected.booleanValue();
-    }
-
-    public final boolean anyArg0() {
-        return expected.booleanValue();
-    }
+//    public final boolean anyBoolean() {
+//        return !expected.booleanValue();
+//    }
+//
+//    public final boolean anyArg0() {
+//        return expected.booleanValue();
+//    }
 
     public final String anyString() {
         return expected.stringValue();
