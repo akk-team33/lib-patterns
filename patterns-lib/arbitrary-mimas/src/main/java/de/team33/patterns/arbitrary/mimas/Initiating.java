@@ -62,8 +62,15 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
     }
 
     private BinaryOperator<Method> preference(final Parameter parameter) {
-        // TODO?
-        return (left, right) -> left;
+        final String parameterName = Util.normalName(parameter.getName());
+        return (left, right) -> {
+            final String rightName = Util.normalName(right.getName());
+            if (rightName.equals(parameterName)) {
+                return right;
+            } else {
+                return left;
+            }
+        };
     }
 
     final T result() {

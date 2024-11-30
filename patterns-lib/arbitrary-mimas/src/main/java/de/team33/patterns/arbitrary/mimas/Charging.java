@@ -69,10 +69,9 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
     }
 
     private static BinaryOperator<Method> preference(final Method setter) {
-        final String setterName = Methods.normalName(setter);
+        final String setterName = Util.normalName(setter.getName());
         return (left, right) -> {
-            final String leftName = Methods.normalName(left);
-            final String rightName = Methods.normalName(right);
+            final String rightName = Util.normalName(right.getName());
             if (rightName.equals(setterName)) {
                 return right;
             } else {
@@ -94,7 +93,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         private static String missingMessage(final Charging<?, ?> charging, final Method setter, final Type valueType) {
             final Types.Naming naming = Types.naming(valueType);
             final String name1 = naming.parameterizedName(valueType);
-            final String name2 = Methods.normalName(setter);
+            final String name2 = Util.normalName(setter.getName());
             return format(NO_SUPPLIER, charging.sourceType, charging.targetType,
                           setter.toGenericString(), setter.getName(), name1, name2);
         }

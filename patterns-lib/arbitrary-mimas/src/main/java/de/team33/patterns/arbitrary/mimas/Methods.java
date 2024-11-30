@@ -67,39 +67,4 @@ final class Methods {
     private static boolean isInstance(final int modifiers) {
         return 0 == (modifiers & NON_INSTANCE);
     }
-
-    static String normalName(final Method method) {
-        final String name = method.getName();
-        final Prefix prefix = Stream.of(Prefix.values())
-                                    .filter(pfx -> name.startsWith(pfx.value))
-                                    .findAny()
-                                    .orElse(Prefix.NONE);
-        final int headIndex = prefix.value.length();
-        final int tailIndex = (headIndex < name.length()) ? (headIndex + 1) : headIndex;
-        final String head = name.substring(headIndex, tailIndex).toUpperCase(Locale.ROOT);
-        return head + name.substring(tailIndex);
-    }
-
-    private enum Prefix {
-
-        NEXT,
-        ANY,
-        GET,
-        NEW,
-        SET,
-        IS,
-        AS,
-        TO,
-        NONE("");
-
-        final String value;
-
-        Prefix(final String value) {
-            this.value = value;
-        }
-
-        Prefix() {
-            this.value = name().toLowerCase(Locale.ROOT);
-        }
-    }
 }

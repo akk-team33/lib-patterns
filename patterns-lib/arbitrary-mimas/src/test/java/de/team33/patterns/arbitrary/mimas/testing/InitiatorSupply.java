@@ -16,6 +16,10 @@ public class InitiatorSupply implements Initiator {
                                                  Arrays.asList(4L, 69L, 345L));
 
     public final boolean anyBoolean() {
+        return !expected.booleanValue();
+    }
+
+    public final boolean anyArg0() {
         return expected.booleanValue();
     }
 

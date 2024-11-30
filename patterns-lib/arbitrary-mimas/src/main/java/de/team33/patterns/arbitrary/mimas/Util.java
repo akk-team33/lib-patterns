@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 final class Util {
 
@@ -22,6 +24,21 @@ final class Util {
             " <%s> is not a valid resource or is not accessible in the context <%s>";
 
     private Util() {
+    }
+
+    static String normalName(final String name) {
+        final Prefix prefix = Stream.of(Prefix.values())
+                                    .filter(pfx -> name.startsWith(pfx.value))
+                                    .findAny()
+                                    .orElse(Prefix.NONE);
+        final int headIndex = prefix.value.length();
+        final int tailIndex = (headIndex < name.length()) ? (headIndex + 1) : headIndex;
+        final String head = name.substring(headIndex, tailIndex).toUpperCase(Locale.ROOT);
+        return head + name.substring(tailIndex);
+    }
+
+    static Random legacy(final RandomGenerator generator) {
+        return (generator instanceof Random random) ? random : new Proxy(generator);
     }
 
     static String load(final Class<?> context, final String resource) {
@@ -43,9 +60,5 @@ final class Util {
             return in.lines()
                      .collect(Collectors.joining(NEWLINE));
         }
-    }
-
-    public static Random legacy(final RandomGenerator generator) {
-        return (generator instanceof Random random) ? random : new Proxy(generator);
     }
 }
