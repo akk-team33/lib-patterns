@@ -105,6 +105,11 @@
                 <artifactId>collection-ceres</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>hashing-pandia</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- deprecated ... -->
             <dependency>
