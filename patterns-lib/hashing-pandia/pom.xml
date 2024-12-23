@@ -14,4 +14,20 @@
     <name>Team33 Hashing Library - Edition "pandia"</name>
     <description>Provides convenience methods for hashing strings, binary data, files, ...</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>lazy-narvi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>io-hydra</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
