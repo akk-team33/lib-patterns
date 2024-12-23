@@ -1,8 +1,7 @@
 package de.team33.test.patterns.expiry.tethys;
 
 import de.team33.patterns.expiry.tethys.Recent;
-import de.team33.patterns.testing.titan.Parallel;
-import de.team33.patterns.tuple.janus.Pair;
+import de.team33.testing.async.thebe.Parallel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +93,7 @@ class RecentTest {
                             return new Result(context.operationIndex, delta);
                         })
                         .reThrowAny()
-                        .getResults();
+                        .list();
         final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
         final long maxExpected = limit * LIFE_TIME;
         assertTrue(delta < maxExpected, () -> format(" <delta> is expected to be less than" +
@@ -107,22 +106,6 @@ class RecentTest {
                                                                result.index(), LIFE_TIME, result.delta()))
                                          .collect(joining(format("%n")));
         assertEquals("", unexpected);
-    }
-
-    @SuppressWarnings("ClassTooDeepInInheritanceTree")
-    static class Result extends Pair<Integer, Long> {
-
-        Result(final int index, final long delta) {
-            super(index, delta);
-        }
-
-        final int index() {
-            return left();
-        }
-
-        final long delta() {
-            return right();
-        }
     }
 
     private static class Sample {

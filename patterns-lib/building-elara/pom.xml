@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.22.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>building-elara</artifactId>
@@ -14,18 +14,7 @@
     <name>Team33 Building Library - Edition "elara"</name>
     <description>Classes and utilities for implementing and handling builders.</description>
 
-    <!-- test wise ... -->
-    <!--properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-    </properties-->
-
     <dependencies>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
@@ -33,12 +22,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>random-tarvos</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-01</artifactId>
+            <artifactId>arbitrary-mimas</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

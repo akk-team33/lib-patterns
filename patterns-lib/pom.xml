@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.22.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-lib</artifactId>
@@ -15,21 +15,24 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>exceptional-01</module>
-        <module>testing-titan</module>
-        <module>production-01</module>
-        <module>random-mimas</module>
-        <module>random-tarvos</module>
-        <module>lazy-01</module>
+        <module>enums-pan</module>
+        <module>arbitrary-mimas</module>
+        <module>io-deimos</module>
+        <module>exceptional-dione</module>
         <module>lazy-narvi</module>
+        <module>io-phobos</module>
         <module>expiry-tethys</module>
-        <module>pooling-01</module>
+        <module>pooling-ariel</module>
         <module>tuple-janus</module>
         <module>reflect-luna</module>
-        <module>properties-01</module>
+        <module>reflect-pandora</module>
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <module>serial-charon</module>
+        <module>decision-telesto</module>
+        <module>collection-ceres</module>
+        <module>hashing-pandia</module>
         <module>math-phoebe</module>
     </modules>
 
@@ -48,12 +51,27 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>5.10.0</version>
+                <version>5.9.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.testing</groupId>
+                <artifactId>testing-bom</artifactId>
+                <version>1.0.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
@@ -98,6 +116,11 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -124,6 +147,26 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-default</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <dependencyConvergence />
+                                <requireReleaseDeps>
+                                    <onlyWhenRelease>true</onlyWhenRelease>
+                                    <message>No Snapshots Allowed!</message>
+                                </requireReleaseDeps>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

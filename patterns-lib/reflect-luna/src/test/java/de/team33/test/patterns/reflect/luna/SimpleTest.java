@@ -1,7 +1,7 @@
 package de.team33.test.patterns.reflect.luna;
 
-import de.team33.patterns.exceptional.e1.XConsumer;
-import de.team33.patterns.exceptional.e1.XFunction;
+import de.team33.patterns.exceptional.dione.XConsumer;
+import de.team33.patterns.exceptional.dione.XFunction;
 import de.team33.patterns.reflect.luna.Fields;
 import de.team33.sample.patterns.reflect.luna.Simple;
 import org.junit.jupiter.api.Test;
@@ -10,9 +10,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class SimpleTest {
 
@@ -39,8 +41,12 @@ class SimpleTest {
     @Test
     final void readAccess_failing() {
         final Simple origin = SUPPLY.nextSimple();
-        //noinspection ResultOfMethodCallIgnored
-        assertThrows(Fields.AccessException.class, () -> FOREIGN_FIELDS.map(field -> field.get(origin)).count());
+        try {
+            final List<Object> list = FOREIGN_FIELDS.map(field -> field.get(origin)).collect(Collectors.toList());
+            fail("expected to fail - but was " + list);
+        } catch (final Fields.AccessException caught) {
+            // as expected!
+        }
     }
 
     @Test

@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.12.3-SNAPSHOT</version>
+        <version>1.22.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-bom</artifactId>
@@ -22,27 +22,27 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>production-01</artifactId>
+                <artifactId>enums-pan</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>random-mimas</artifactId>
+                <artifactId>arbitrary-mimas</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>random-tarvos</artifactId>
+                <artifactId>io-deimos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>exceptional-01</artifactId>
+                <artifactId>io-phobos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>lazy-01</artifactId>
+                <artifactId>exceptional-dione</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -52,7 +52,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>pooling-01</artifactId>
+                <artifactId>pooling-ariel</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -67,12 +67,12 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>expiry-tethys</artifactId>
+                <artifactId>reflect-pandora</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>properties-01</artifactId>
+                <artifactId>expiry-tethys</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -92,16 +92,71 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>math-phoebe</artifactId>
+                <artifactId>serial-charon</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-titan</artifactId>
+                <artifactId>decision-telesto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>collection-ceres</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>hashing-pandia</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>math-phoebe</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- nailed (deprecated) ... -->
+            <!-- deprecated ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-titan</artifactId>
+                <version>1.19.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-tarvos</artifactId>
+                <version>1.19.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>pooling-01</artifactId>
+                <version>1.13.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>exceptional-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>production-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-mimas</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>properties-01</artifactId>
+                <version>1.13.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>random-01</artifactId>

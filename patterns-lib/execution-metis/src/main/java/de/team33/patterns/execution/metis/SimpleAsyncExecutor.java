@@ -13,11 +13,11 @@ public class SimpleAsyncExecutor implements Executor {
     private static final AtomicLong NEXT_INDEX = new AtomicLong(0L);
 
     private final String namePrefix = getClass().getCanonicalName() + "#" + NEXT_INDEX.getAndIncrement() + "#";
-    private final AtomicLong nextIndex = new AtomicLong(0L);
+    private final AtomicLong anyIndex = new AtomicLong(0L);
 
     @Override
     public final void execute(final Runnable command) {
-        final String name = nextName();
+        final String name = anyName();
         new Thread(() -> run(command, name), name).start();
     }
 
@@ -31,7 +31,7 @@ public class SimpleAsyncExecutor implements Executor {
         }
     }
 
-    private String nextName() {
-        return namePrefix + nextIndex.getAndIncrement();
+    private String anyName() {
+        return namePrefix + anyIndex.getAndIncrement();
     }
 }

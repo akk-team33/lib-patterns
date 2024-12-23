@@ -28,7 +28,7 @@ class QuadTest extends TupleTestBase {
         final Quad<String, Long, List<Integer>, Byte> expected = Quad.of(nextString(),
                                                                          nextLong(),
                                                                          nextList(this::nextInt),
-                                                                         nextByte());
+                                                                         anyByte());
         final Quad<String, Long, List<Integer>, Byte> result = new Quad<>(expected.north(),
                                                                           expected.east(),
                                                                           expected.south(),
@@ -40,7 +40,7 @@ class QuadTest extends TupleTestBase {
     final void testHashCode() {
         final Quad<Instant, String, BigInteger, Float> expected = Quad.of(nextInstant(),
                                                                           nextString(),
-                                                                          nextBits(nextInt(1, 256)),
+                                                                          anyBits(anyInt(1, 256)),
                                                                           nextFloat());
         final Quad<Instant, String, BigInteger, Float> result = new Quad<>(expected.north(),
                                                                            expected.east(),
@@ -54,7 +54,7 @@ class QuadTest extends TupleTestBase {
         final Quad<Set<String>, List<Instant>, Boolean, Short> expected = Quad.of(nextSet(this::nextString),
                                                                                   nextList(this::nextInstant),
                                                                                   nextBoolean(),
-                                                                                  nextShort());
+                                                                                  anyShort());
         final Quad<Set<String>, List<Instant>, Boolean, Short> result = new Quad<>(expected.north(),
                                                                                    expected.east(),
                                                                                    expected.south(),

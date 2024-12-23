@@ -1,6 +1,6 @@
 package de.team33.test.patterns.tuple.janus;
 
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Generator;
 
 import java.math.BigInteger;
 import java.time.Instant;
@@ -16,16 +16,16 @@ class TupleTestBase extends Random implements Generator {
     private static final String CHARS = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     @Override
-    public final BigInteger nextBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, this);
     }
 
     final String nextString() {
-        return nextString(nextInt(24), CHARS);
+        return anyString(nextInt(24), CHARS);
     }
 
     final Instant nextInstant() {
-        return Instant.now().plusMillis(nextLong(-1000000, 1000000));
+        return Instant.now().plusMillis(anyLong(-1000000, 1000000));
     }
 
     final <E> List<E> nextList(final Supplier<E> supplier) {
