@@ -29,10 +29,11 @@ public class BigRational extends Number {
     }
 
     /**
-     * Results in a {@link BigRational} value based on an integer numerator and denominator that are given as
-     * {@link BigInteger} values. The denominator must not be zero.
+     * Returns a {@link BigRational} value based on the numerator and denominator,
+     * both specified as {@link BigInteger} values.
+     * The denominator must not be (equal to) {@link BigInteger#ZERO}.
      *
-     * @throws ArithmeticException if the denominator is (equal to) {@link #ZERO}.
+     * @throws ArithmeticException if the denominator is (equal to) {@link BigInteger#ZERO}.
      * @see #valueOf(long, BigInteger)
      * @see #valueOf(BigInteger, long)
      * @see #valueOf(long, long)
@@ -271,18 +272,27 @@ public class BigRational extends Number {
         return new BigDecimal(numerator).divide(new BigDecimal(denominator), 16, RoundingMode.HALF_UP);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final int hashCode() {
         return toList(this).hashCode();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final boolean equals(final Object obj) {
         return (this == obj) || ((obj instanceof BigRational) && toList(this).equals(toList((BigRational) obj)));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public final String toString() {
-        return "(" + numerator + "/" + denominator + ")";
+        return BigInteger.ONE.equals(denominator) ? numerator.toString() : "(" + numerator + "/" + denominator + ")";
     }
 }
