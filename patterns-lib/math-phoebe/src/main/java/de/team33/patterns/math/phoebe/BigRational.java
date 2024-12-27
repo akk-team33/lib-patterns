@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a rational number, the size and accuracy of which is generally not limited or only limited by
- * the available memory.
+ * Represents a rational number whose size and precision are in principle not limited at all
+ * or practically only by the available memory.
  */
 public class BigRational extends Number {
 
@@ -32,7 +32,7 @@ public class BigRational extends Number {
      * Results in a {@link BigRational} value based on an integer numerator and denominator that are given as
      * {@link BigInteger} values. The denominator must not be zero.
      *
-     * @throws IllegalArgumentException When the denominator is zero.
+     * @throws ArithmeticException if the denominator is (equal to) {@link #ZERO}.
      * @see #valueOf(long, BigInteger)
      * @see #valueOf(BigInteger, long)
      * @see #valueOf(long, long)
@@ -47,7 +47,7 @@ public class BigRational extends Number {
         case -1:
             return new BigRational(numerator.negate(), denominator.negate());
         default:
-            throw new IllegalArgumentException("the denominator must not be ZERO");
+            throw new ArithmeticException("BigRational: division by zero");
         }
     }
 
@@ -55,7 +55,7 @@ public class BigRational extends Number {
      * Results in a {@link BigRational} value based on a {@link BigInteger} numerator and a {@code long} denominator.
      * The denominator must not be zero.
      *
-     * @throws IllegalArgumentException When the denominator is zero.
+     * @throws ArithmeticException When the denominator is zero.
      * @see #valueOf(BigInteger, BigInteger)
      * @see #valueOf(long, BigInteger)
      * @see #valueOf(long, long)
@@ -71,7 +71,7 @@ public class BigRational extends Number {
      * Results in a {@link BigRational} value based on a {@code long} numerator and a {@link BigInteger} denominator.
      * The denominator must not be zero.
      *
-     * @throws IllegalArgumentException When the denominator is zero.
+     * @throws ArithmeticException When the denominator is zero.
      * @see #valueOf(BigInteger, BigInteger)
      * @see #valueOf(BigInteger, long)
      * @see #valueOf(long, long)
@@ -87,7 +87,7 @@ public class BigRational extends Number {
      * Results in a {@link BigRational} value based on an integer numerator and denominator that are given as
      * {@code long} values. The denominator must not be zero.
      *
-     * @throws IllegalArgumentException When the denominator is zero.
+     * @throws ArithmeticException When the denominator is zero.
      * @see #valueOf(BigInteger, BigInteger)
      * @see #valueOf(long, BigInteger)
      * @see #valueOf(BigInteger, long)
@@ -177,7 +177,7 @@ public class BigRational extends Number {
      * Returns the inverse, more precisely multiplicative inverse of this value.
      */
     public final BigRational inverse() {
-        return new BigRational(denominator, numerator);
+        return valueOf(denominator, numerator);
     }
 
     /**
@@ -208,19 +208,18 @@ public class BigRational extends Number {
      * Returns the quotient of this and the other given value.
      */
     public final BigRational divide(final BigRational divisor) {
-        return new BigRational(numerator.multiply(divisor.denominator),
-                               denominator.multiply(divisor.numerator));
+        return multiply(divisor.inverse());
     }
 
     /**
-     * Returns the (abbreviated) numerator of this value.
+     * Returns the numerator of this value.
      */
     public final BigInteger getNumerator() {
         return numerator;
     }
 
     /**
-     * Returns the (abbreviated) denominator of this value.
+     * Returns the denominator of this value.
      */
     public final BigInteger getDenominator() {
         return denominator;
@@ -269,7 +268,7 @@ public class BigRational extends Number {
      * Returns an (roughly) equivalent {@link BigDecimal} value.
      */
     public final BigDecimal toBigDecimal() {
-        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 15, RoundingMode.HALF_UP);
+        return new BigDecimal(numerator).divide(new BigDecimal(denominator), 16, RoundingMode.HALF_UP);
     }
 
     @Override
