@@ -24,10 +24,7 @@ public class Hash {
     }
 
     private BigInteger newBigInteger() {
-        final int length = bytes.length;
-        final byte[] bytesEx = new byte[length + 1];
-        System.arraycopy(bytes, 0, bytesEx, 1, length);
-        return new BigInteger(bytesEx);
+        return new BigInteger(1, bytes);
     }
 
     /**
