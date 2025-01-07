@@ -35,6 +35,11 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 2.0.0
+
+* Set java language level to 17
+* Removed deprecated items
+
 ### 1.22.0
 
 * Added module hashing-pandia

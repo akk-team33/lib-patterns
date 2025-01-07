@@ -24,11 +24,4 @@ public final class TextIO {
     public static String read(final Path path) {
         return Resource.by(path).readText();
     }
-
-    @Deprecated
-    public static String read(final InputStream in) throws IOException {
-        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            return reader.lines().collect(Collectors.joining(NEW_LINE));
-        }
-    }
 }

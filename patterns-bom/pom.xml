@@ -111,7 +111,7 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- deprecated ... -->
+            <!-- frozen (deprecated - but will stay here for now) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-titan</artifactId>
