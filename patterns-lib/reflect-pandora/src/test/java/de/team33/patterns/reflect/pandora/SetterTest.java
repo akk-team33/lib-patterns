@@ -12,7 +12,7 @@ class SetterTest {
 
     @Test
     void accept_IllegalAccessException() throws NoSuchMethodException {
-        final String name = "ensureCapacityInternal";
+        final String name = "checkForComodification";
         final Setter<ArrayList<?>> setter = new Setter<>(ArrayList.class.getDeclaredMethod(name, int.class));
         final ArrayList<Object> target = new ArrayList<>();
 

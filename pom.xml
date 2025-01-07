@@ -33,8 +33,8 @@
 
     <properties>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <copyright.year>2024</copyright.year>
         <skipJavadoc>false</skipJavadoc>
         <skipHome>false</skipHome>
