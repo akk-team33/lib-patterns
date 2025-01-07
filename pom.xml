@@ -45,6 +45,7 @@
         <module>patterns-bom</module>
         <module>patterns-lib</module>
         <module>patterns-home</module>
+        <module>patterns-annex</module>
     </modules>
 
     <build>
