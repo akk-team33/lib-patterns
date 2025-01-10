@@ -7,9 +7,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class FileEntryTest {
 
     private static final Path DEV_NULL = Paths.get("/", "dev", "null"); // special file
-    private static final Path ROOT = Paths.get("/", "root"); // unreadable directory
+    private static final Path ROOT_DIR = Paths.get("/", "root"); // unreadable directory
+    private static final Path ROOT = Paths.get("/"); // root directory
 
     static Stream<Path> paths() {
         return Stream.of(
@@ -29,6 +30,7 @@ class FileEntryTest {
                 Paths.get("src", "main", "java"),
                 Paths.get("pom.xml"),
                 DEV_NULL,
+                ROOT_DIR,
                 ROOT);
     }
 
@@ -39,11 +41,15 @@ class FileEntryTest {
         assertTrue(entry.path().isAbsolute());
     }
 
+    private static String nameOf(final Path path) {
+        return Optional.ofNullable(path.getFileName()).orElse(path).toString();
+    }
+
     @ParameterizedTest
     @MethodSource("paths")
     final void name(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        assertEquals(path.getFileName().toString(), entry.name());
+        assertEquals(nameOf(path), entry.name());
     }
 
     @ParameterizedTest
@@ -63,8 +69,8 @@ class FileEntryTest {
             assertEquals(FileType.SYMBOLIC, entry.type());
         } else if (entry.isRegularFile()) {
             assertEquals(FileType.REGULAR, entry.type());
-        } else if (entry.isOther()) {
-            assertEquals(FileType.OTHER, entry.type());
+        } else if (entry.isSpecial()) {
+            assertEquals(FileType.SPECIAL, entry.type());
         } else {
             assertEquals(FileType.MISSING, entry.type());
         }
@@ -87,7 +93,7 @@ class FileEntryTest {
     @ParameterizedTest
     @MethodSource("paths")
     final void isSymbolicLink(final Path path) {
-        final FileEntry entry = FileEntry.of(path, LinkOption.NOFOLLOW_LINKS);
+        final FileEntry entry = FileEntry.of(path);
         assertEquals(Files.isSymbolicLink(path), entry.isSymbolicLink());
     }
 
@@ -95,7 +101,7 @@ class FileEntryTest {
     @MethodSource("paths")
     final void isOther(final Path path) {
         final FileEntry entry = FileEntry.of(path);
-        if (entry.isOther()) {
+        if (entry.isSpecial()) {
             assertEquals(DEV_NULL, path);
         } else {
             assertNotEquals(DEV_NULL, path);
@@ -158,9 +164,9 @@ class FileEntryTest {
     final void content(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         if (entry.isDirectory()) {
-            assertNotNull(entry.content());
+            assertNotNull(entry.entries());
         } else {
-            assertThrows(UnsupportedOperationException.class, entry::content);
+            assertThrows(UnsupportedOperationException.class, entry::entries);
         }
     }
 }

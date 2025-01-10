@@ -46,7 +46,6 @@ class SimpleTest {
             fail("expected to fail - but was " + list);
         } catch (final Fields.AccessException caught) {
             // as expected!
-            // caught.printStackTrace();
         }
     }
 

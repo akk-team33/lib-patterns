@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-lib</artifactId>
-        <version>1.17.1-SNAPSHOT</version>
+        <version>1.22.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>io-deimos</artifactId>
@@ -16,14 +16,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>testing-titan</artifactId>
-            <scope>test</scope>
+            <artifactId>exceptional-dione</artifactId>
+        </dependency>
+
+        <!-- testing -->
+        <dependency>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>io-hydra</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>de.team33.patterns</groupId>
+                    <artifactId>io-deimos</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>

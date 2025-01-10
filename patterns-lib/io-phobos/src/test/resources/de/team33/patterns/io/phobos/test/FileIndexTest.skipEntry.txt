@@ -1,6 +1,10 @@
 
+directory.link
 exceptional-dione
+exceptional-dione/indirect.link
+exceptional-dione/missing.link
 exceptional-dione/pom.xml
+exceptional-dione/regular.link
 exceptional-dione/src
 exceptional-dione/src/main
 exceptional-dione/src/main/java
@@ -24,3 +28,4 @@ exceptional-dione/src/main/java/de/team33/patterns/exceptional/dione/XFunction.j
 exceptional-dione/src/main/java/de/team33/patterns/exceptional/dione/XPredicate.java
 exceptional-dione/src/main/java/de/team33/patterns/exceptional/dione/XRunnable.java
 exceptional-dione/src/main/java/de/team33/patterns/exceptional/dione/XSupplier.java
+special.link

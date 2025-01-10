@@ -23,12 +23,10 @@ class XRProviderTest {
     private final XRProvider<AtomicInteger, SQLException> failing = //
             new XRProvider<>(XRProviderTest::newSQLException, IDLE_TIME, LIFE_TIME);
 
-    @SuppressWarnings("RedundantThrows")
-    private static AtomicInteger newAtomicInteger() throws SQLException {
+    private static AtomicInteger newAtomicInteger() {
         return new AtomicInteger();
     }
 
-    @SuppressWarnings("RedundantThrows")
     private static AtomicInteger newSQLException() throws SQLException {
         throw new SQLException("failing");
     }

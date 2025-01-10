@@ -1,7 +1,7 @@
 package de.team33.test.patterns.reflect.luna;
 
-import de.team33.patterns.random.tarvos.Charger;
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Charger;
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.sample.patterns.reflect.luna.Level0;
 import de.team33.sample.patterns.reflect.luna.Level1;
 import de.team33.sample.patterns.reflect.luna.Level2;
@@ -15,17 +15,17 @@ import java.util.Random;
 public class Supply extends Random implements Generator, Charger {
 
     @Override
-    public final BigInteger nextBits(int numBits) {
+    public final BigInteger anyBits(int numBits) {
         return new BigInteger(numBits, this);
     }
 
     public final Instant nextInstant() {
         return Instant.now()
-                      .plusSeconds(nextLong(-100000L, 100000L));
+                      .plusSeconds(anyLong(-100000L, 100000L));
     }
 
     public final String nextString() {
-        return nextString(nextInt(0, 24), "abc");
+        return anyString(anyInt(0, 24), "abc");
     }
 
     public final Simple nextSimple() {

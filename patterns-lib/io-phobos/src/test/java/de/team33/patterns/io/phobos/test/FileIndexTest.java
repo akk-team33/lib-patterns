@@ -3,67 +3,66 @@ package de.team33.patterns.io.phobos.test;
 import de.team33.patterns.io.deimos.TextIO;
 import de.team33.patterns.io.phobos.FileEntry;
 import de.team33.patterns.io.phobos.FileIndex;
-import de.team33.patterns.testing.titan.io.ZipIO;
-import org.junit.jupiter.api.BeforeAll;
+import de.team33.patterns.io.phobos.testing.IoTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class FileIndexTest {
+class FileIndexTest extends IoTestBase {
 
-    private static final Path TEST_PATH = Paths.get("target", "testing", FileIndexTest.class.getSimpleName());
-    private static final Path CWD = Paths.get(".").toAbsolutePath().normalize();
     private static final String NEW_LINE = String.format("%n");
-
-    @BeforeAll
-    static void init() {
-        ZipIO.unzip(FileIndexTest.class, "files.zip", TEST_PATH);
-    }
 
     @Test
     final void skipPath() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipPath.txt");
-        final String result = collected(FileIndex.primary(TEST_PATH.toString())
+        final String result = collected(FileIndex.of(testPath())
                                                  .skipPath(entry -> "main".equals(entry.getFileName().toString()))
-                                                 .stream());
+                                                 .entries());
         assertEquals(expected, result);
     }
 
     @Test
     final void skipEntry() {
         final String expected = TextIO.read(getClass(), "FileIndexTest.skipEntry.txt");
-        final String result = collected(FileIndex.evaluated(TEST_PATH)
+        final String result = collected(FileIndex.of(testPath())
                                                  .skipEntry(entry -> "test".equals(entry.name()))
-                                                 .stream());
+                                                 .entries());
         assertEquals(expected, result);
     }
 
     @Test
-    final void stream() {
-        final String expected = TextIO.read(getClass(), "FileIndexTest.stream.txt");
-        final String result = collected(FileIndex.evaluated(TEST_PATH.toString())
-                                                 .stream());
+    final void entries_distinct() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_distinct.txt");
+        final String result = collected(FileIndex.of(testPath())
+                                                 .entries());
         assertEquals(expected, result);
     }
 
     @Test
-    final void testToString() {
-        final String expected = String.format(TextIO.read(getClass(), "FileIndexTest.toString.txt"),
-                                              TEST_PATH.toAbsolutePath().normalize());
-
-        final String result = FileIndex.evaluated(TEST_PATH).toString();
-        // System.out.println(result);
-
+    final void entries_resolved() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_resolved.txt");
+        final String result = collected(FileIndex.of(testPath())
+                                                 .resolved()
+                                                 .entries());
         assertEquals(expected, result);
     }
 
-    private static String collected(final Stream<FileEntry> entrys) {
-        final Path normal = TEST_PATH.toAbsolutePath().normalize();
+    @Test
+    final void entries_resolved_distinct() {
+        final String expected = TextIO.read(getClass(), "FileIndexTest.stream_distinct.txt");
+        final String result = collected(FileIndex.of(testPath())
+                                                 .resolved()
+                                                 .distinct()
+                                                 .entries());
+        assertEquals(expected, result);
+    }
+
+    private String collected(final Stream<FileEntry> entrys) {
+        final Path normal = testPath().toAbsolutePath().normalize();
         return entrys.map(FileEntry::path)
                      .map(normal::relativize)
                      .map(Path::toString)

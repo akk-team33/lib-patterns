@@ -14,29 +14,93 @@ http://www.team33.de/dev/patterns/1.x
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * exceptional-dione (Team33 Exceptional Library - Edition "Dione")
-  * random-tarvos (Team33 Randomization Library - Edition "Tarvos")
-  * io-deimos (Team33 IO Library - Edition "Deimos")
-  * io-phobos (Team33 IO Library - Edition "Phobos")
-  * lazy-narvi (Team33 Lazy Initialization Library - Edition "Narvi")
-  * pooling-ariel (Team33 Pooling Library - Edition "Ariel")
-  * expiry-tethys (Team33 Expiration Library - Edition "Tethys")
-  * tuple-janus (Team33 Tuple Library - Edition "Janus")
-  * reflect-luna (Team33 Reflection Library - Edition "Luna")
-  * reflect-pandora (Team33 Reflection Library - Edition "Pandora")
-  * building-elara (Team33 Building Library - Edition "Elara")
-  * notes-eris (Team33 Notifications Library - Edition "Eris")
-  * execution-metis (Team33 Execution Library - Edition "Metis")
-  * serial-charon (Team33 Serial Collection Library - Edition "Charon")
-  * decision-telesto (Team33 Decision Library - Edition "Telesto")
+  * enums-pan (Team33 Enums Library - Edition "pan")
+  * exceptional-dione (Team33 Exceptional Library - Edition "dione")
+  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
+  * io-deimos (Team33 IO Library - Edition "deimos")
+  * io-phobos (Team33 IO Library - Edition "phobos")
+  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
+  * pooling-ariel (Team33 Pooling Library - Edition "ariel")
+  * expiry-tethys (Team33 Expiration Library - Edition "tethys")
+  * tuple-janus (Team33 Tuple Library - Edition "janus")
+  * reflect-luna (Team33 Reflection Library - Edition "luna")
+  * reflect-pandora (Team33 Reflection Library - Edition "pandora")
+  * building-elara (Team33 Building Library - Edition "elara")
+  * notes-eris (Team33 Notifications Library - Edition "eris")
+  * execution-metis (Team33 Execution Library - Edition "metis")
+  * serial-charon (Team33 Serial Collection Library - Edition "charon")
+  * decision-telesto (Team33 Decision Library - Edition "telesto")
+  * collection-ceres (Team33 Collection Library - Edition "ceres")
+  * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * normal-iocaste (Team33 Normalization Library - Edition "Iocaste")
-  * testing-titan (Team33 Testing Library - Edition "Titan")
 
 ## Change Log
 
 ### next
 
 * Added module normal-iocaste
+
+### 1.22.0
+
+* Added module hashing-pandia
+
+### 1.21.1
+
+* Refined module enums-pan ...
+  * Added method Values.mapAll(Predicate, Function)
+  * Refined javadoc
+* Refined module exceptional-dione ...
+  * Added class Ignoring
+  * Refined testing
+
+### 1.21.0
+
+* Refined module enums-pan ...
+  * Added class Values
+  * Marked class EnumValues as deprecated
+* Refactored module io-phobos
+
+### 1.20.0
+
+* Added module enums-pan
+
+### 1.19.3
+
+* Nailed deprecated module testing-titan to 1.19.2
+
+### 1.19.2
+
+* Marked module testing-titan as deprecated
+
+### 1.19.1
+
+* Refined module arbitrary-mimas
+* Nailed deprecated module random-tarvos to 1.19.0
+
+### 1.19.0
+
+* Added module arbitrary-mimas
+* Marked module random-tarvos as deprecated
+
+### 1.18.3
+
+* Refined module io-deimos ...
+  * Added class Resource
+  * Marked TextIO.read(InputStream) as deprecated
+
+### 1.18.1
+
+* building-elara
+  * Refined existing classes
+  * Added class DataBuilder
+
+### 1.18.0
+
+* Added module collection-ceres
+* Removed some deprecated methods from non-deprecated classes
+  * de.team33.patterns.building.elara.Charger.release()
+  * de.team33.patterns.exceptional.dione.Revision.finish()
+  * de.team33.patterns.exceptional.dione.Revision.finish(Function)
 
 ### 1.17.0
 

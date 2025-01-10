@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.17.1-SNAPSHOT</version>
+        <version>1.22.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-bom</artifactId>
@@ -22,17 +22,22 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>testing-titan</artifactId>
+                <artifactId>enums-pan</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>random-tarvos</artifactId>
+                <artifactId>arbitrary-mimas</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>io-deimos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>io-phobos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -43,11 +48,6 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>lazy-narvi</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>io-phobos</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -102,11 +102,31 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>collection-ceres</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>hashing-pandia</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>normal-iocaste</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!-- deprecated ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>testing-titan</artifactId>
+                <version>1.19.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>random-tarvos</artifactId>
+                <version>1.19.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-01</artifactId>

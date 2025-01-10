@@ -1,7 +1,7 @@
 package de.team33.patterns.testing.reflect.pandora;
 
-import de.team33.patterns.random.tarvos.Charger;
-import de.team33.patterns.random.tarvos.Generator;
+import de.team33.patterns.arbitrary.mimas.Charger;
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.sample.reflect.pandora.Sample01;
 import de.team33.patterns.sample.reflect.pandora.Sample02;
 
@@ -17,16 +17,16 @@ public class Supply implements Generator, Charger {
     private final Random random = new Random();
 
     @Override
-    public BigInteger nextBits(int numBits) {
+    public BigInteger anyBits(int numBits) {
         return new BigInteger(numBits, random);
     }
 
     public final String nextString() {
-        return nextString(nextInt(1, 24), "abcdefghij-ABCDEFGHIJ_0123456789");
+        return anyString(anyInt(1, 24), "abcdefghij-ABCDEFGHIJ_0123456789");
     }
 
     public final Instant nextInstantValue() {
-        return Instant.now().plusMillis(nextShort());
+        return Instant.now().plusMillis(anyShort());
     }
 
     public final BeanClass nextBean() {
@@ -43,7 +43,7 @@ public class Supply implements Generator, Charger {
 
     public final List<Object> nextList() {
         return Stream.generate(this::nextString)
-                     .limit(nextInt(4))
+                     .limit(anyInt(4))
                      .collect(Collectors.toList());
     }
 }

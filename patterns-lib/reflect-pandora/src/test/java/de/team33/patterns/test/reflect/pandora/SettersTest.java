@@ -60,7 +60,6 @@ class SettersTest {
             fail("expected to fail - but was " + setter);
         } catch (final NoSuchElementException e) {
             // as expected!
-            // e.printStackTrace();
             assertTrue(e.getMessage().contains(unknownName));
         }
     }
@@ -73,7 +72,6 @@ class SettersTest {
             fail("expected to fail - but was " + setter);
         } catch (final NoSuchElementException e) {
             // as expected!
-            // e.printStackTrace();
             assertTrue(e.getMessage().contains(String.class.getCanonicalName()));
         }
     }

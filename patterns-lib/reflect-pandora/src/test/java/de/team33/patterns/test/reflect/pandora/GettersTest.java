@@ -88,7 +88,6 @@ class GettersTest {
             fail("expected to fail - but was " + getter);
         } catch (final NoSuchElementException e) {
             // as expected!
-            // e.printStackTrace();
             assertTrue(e.getMessage().contains(unknownName));
         }
     }

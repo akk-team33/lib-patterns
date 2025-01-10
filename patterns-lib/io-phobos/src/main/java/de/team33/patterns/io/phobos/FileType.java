@@ -1,10 +1,11 @@
 package de.team33.patterns.io.phobos;
 
+import de.team33.patterns.enums.pan.Values;
+
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Symbolizes different file types
@@ -17,14 +18,14 @@ public enum FileType {
     MISSING(Objects::isNull),
 
     /**
-     * Symbolizes a directory.
-     */
-    DIRECTORY(BasicFileAttributes::isDirectory),
-
-    /**
      * Symbolizes a regular file.
      */
     REGULAR(BasicFileAttributes::isRegularFile),
+
+    /**
+     * Symbolizes a directory.
+     */
+    DIRECTORY(BasicFileAttributes::isDirectory),
 
     /**
      * Symbolizes a symbolic link.
@@ -34,7 +35,9 @@ public enum FileType {
     /**
      * Symbolizes a special file.
      */
-    OTHER(BasicFileAttributes::isOther);
+    SPECIAL(BasicFileAttributes::isOther);
+
+    private static final Values<FileType> VALUES = Values.of(FileType.class);
 
     private final Predicate<BasicFileAttributes> filter;
 
@@ -43,9 +46,7 @@ public enum FileType {
     }
 
     static FileType map(final BasicFileAttributes attributes) {
-        return Stream.of(values())
-                     .filter(fileType -> fileType.filter.test(attributes))
-                     .findAny()
-                     .orElseThrow(() -> new NoSuchElementException("failed: " + attributes));
+        return VALUES.findAny(fileType -> fileType.filter.test(attributes))
+                     .orElse(MISSING);
     }
 }

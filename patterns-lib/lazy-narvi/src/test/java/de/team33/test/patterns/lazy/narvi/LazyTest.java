@@ -2,7 +2,7 @@ package de.team33.test.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 import de.team33.patterns.lazy.narvi.Lazy;
-import de.team33.patterns.testing.titan.Parallel;
+import de.team33.testing.async.thebe.Parallel;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ class LazyTest {
         Thread.sleep(1);
         return counter.incrementAndGet();
     };
-    private final Lazy<Integer> lazy = Lazy.initEx(initial);
+    private final Lazy<Integer> lazyIndex = Lazy.initEx(initial);
     private final XSupplier<Integer, ?> badLazy = new XSupplier<Integer, Exception>() {
 
         private Integer value = null;
@@ -57,7 +57,7 @@ class LazyTest {
     final void get_lateBound() {
         assertEquals(1, counter.incrementAndGet(),
                      "this direct access is expected to be the first access");
-        assertEquals(2, lazy.get(),
+        assertEquals(2, lazyIndex.get(),
                      "this indirect access is expected to be the second access");
     }
 
@@ -67,7 +67,7 @@ class LazyTest {
      */
     @Test
     final void get_same_sequential() {
-        final List<Integer> results = Stream.generate(lazy::get)
+        final List<Integer> results = Stream.generate(lazyIndex::get)
                                             .limit(100)
                                             .collect(Collectors.toList());
         final Integer expected = results.get(0);
@@ -80,7 +80,7 @@ class LazyTest {
      */
     @Test
     final void get_same_parallel() throws Exception {
-        final List<Integer> results = Parallel.stream(100, context -> lazy.get())
+        final List<Integer> results = Parallel.stream(100, context -> lazyIndex.get())
                                               .collect(Collectors.toList());
         final Integer expected = results.get(0);
         results.forEach(result -> assertSame(expected, result));
