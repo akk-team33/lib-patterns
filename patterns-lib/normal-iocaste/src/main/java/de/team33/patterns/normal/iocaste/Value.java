@@ -1,9 +1,14 @@
 package de.team33.patterns.normal.iocaste;
 
 /**
- * Represents a normalized value object.
+ * Represents a normalized value object (aka data object).
  */
 public abstract class Value {
+
+    /**
+     * Returns the {@link Type} of <em>this</em> value.
+     */
+    public abstract Type type();
 
     /**
      * Symbolizes the type of {@link Value value object}.
