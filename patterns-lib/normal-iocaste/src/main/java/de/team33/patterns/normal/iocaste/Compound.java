@@ -14,4 +14,9 @@ public class Compound extends Value {
     public final Type type() {
         return Type.COMPOUND;
     }
+
+    @Override
+    public final Compound asCompound() {
+        return this;
+    }
 }

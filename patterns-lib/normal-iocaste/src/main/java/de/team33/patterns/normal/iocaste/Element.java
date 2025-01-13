@@ -14,4 +14,9 @@ public class Element extends Value {
     public final Type type() {
         return Type.ELEMENT;
     }
+
+    @Override
+    public final Element asElement() {
+        return this;
+    }
 }

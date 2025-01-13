@@ -14,4 +14,9 @@ public class Sequence extends Value {
     public final Type type() {
         return Type.SEQUENCE;
     }
+
+    @Override
+    public final Sequence asSequence() {
+        return this;
+    }
 }
