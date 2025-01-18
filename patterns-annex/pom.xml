@@ -13,7 +13,9 @@
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Annex</name>
-    <description>Parent of team33 patterns annex collection</description>
+    <description>Parent of team33 patterns annex:
+        A collection of additional modules containing special tests, examples, prototypes, etc.
+        whose artifacts are not provided in a public repository (e.g. Maven Central).</description>
 
     <properties>
         <skipHome>true</skipHome>
