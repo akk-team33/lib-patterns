@@ -30,7 +30,6 @@
         <module>notes-eris</module>
         <module>execution-metis</module>
         <module>serial-charon</module>
-        <module>decision-telesto</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
     </modules>

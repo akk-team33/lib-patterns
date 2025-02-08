@@ -97,11 +97,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-telesto</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>collection-ceres</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -111,7 +106,14 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <!-- deprecated ... -->
+            <!-- nailed (discontinued) ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>decision-telesto</artifactId>
+                <version>1.22.0</version>
+            </dependency>
+
+            <!-- nailed (deprecated) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-titan</artifactId>
