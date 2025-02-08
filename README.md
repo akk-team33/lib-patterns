@@ -29,6 +29,7 @@ http://www.team33.de/dev/patterns/1.x
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
+  * decision-leda (Team33 Decision Library - Edition "leda")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
 
@@ -37,6 +38,7 @@ http://www.team33.de/dev/patterns/1.x
 ### next
 
 * Nailed module decision-telesto to 1.22.0 (discontinued)
+* Added module decision-leda
 
 ### 1.22.0
 
