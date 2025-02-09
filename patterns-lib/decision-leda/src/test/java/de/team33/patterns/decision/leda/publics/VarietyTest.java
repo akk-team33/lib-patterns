@@ -1,14 +1,14 @@
 package de.team33.patterns.decision.leda.publics;
 
-import de.team33.patterns.decision.leda.IntDecision;
+import de.team33.patterns.decision.leda.Variety;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class IntDecisionTest {
+class VarietyTest {
 
-    private final IntDecision<Input> decision = IntDecision.basedOn(Input::isA, Input::isB, Input::isC);
+    private final Variety<Input> decision = Variety.joined(Input::isA, Input::isB, Input::isC);
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
