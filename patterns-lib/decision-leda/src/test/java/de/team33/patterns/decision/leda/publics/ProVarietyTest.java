@@ -1,23 +1,26 @@
 package de.team33.patterns.decision.leda.publics;
 
-import de.team33.patterns.decision.leda.PreDecision;
+import de.team33.patterns.decision.leda.BitOrder;
+import de.team33.patterns.decision.leda.ProVariety;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class PreDecisionTest {
+class ProVarietyTest {
 
-    private final PreDecision.Cascade<Input> cascade = PreDecision.basedOn(Input::isC, Input::isB, Input::isA);
-    private final PreDecision<Input, Result> decision = cascade.replying(Result.values());
+    private final ProVariety.Stage<Input> stage = ProVariety.joined(Input::isC, Input::isB, Input::isA);
+    private final ProVariety<Input, Result> variety = stage.replying(Result.values());
 
     @Test
     final void basedOn_replying_less() {
         try {
-            final PreDecision<Input, String> decision = cascade.replying("A", "B", "C", "D", "E");
+            final ProVariety<Input, String> decision = stage.replying("A", "B", "C", "D", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -31,7 +34,7 @@ class PreDecisionTest {
     @Test
     final void basedOn_replying_more() {
         try {
-            final PreDecision<Input, String> decision = cascade.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
+            final ProVariety<Input, String> decision = stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -45,7 +48,28 @@ class PreDecisionTest {
     @ParameterizedTest
     @EnumSource
     void apply(final Result given) {
-        final Result result = decision.apply(new Input(given.ordinal()));
+        final Result result = variety.apply(new Input(given.ordinal()));
+        assertEquals(given, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    void apply_LSB_FIRST(final Result given) {
+        final Result result = variety.withBitOrder(BitOrder.LSB_FIRST)
+                                     .apply(new Input(invert(given.ordinal())));
+        assertEquals(given, result);
+    }
+
+    private int invert(final int ordinal) {
+        final int[] stage = {(ordinal & 4) >> 2, (ordinal & 2), (ordinal & 1) << 2};
+        return IntStream.of(stage).reduce(0, Integer::sum);
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    void apply_MSB_FIRST(final Result given) {
+        final Result result = variety.withBitOrder(BitOrder.MSB_FIRST)
+                                     .apply(new Input(given.ordinal()));
         assertEquals(given, result);
     }
 
