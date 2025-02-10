@@ -1,5 +1,6 @@
 package de.team33.patterns.decision.leda.publics;
 
+import de.team33.patterns.decision.leda.BitOrder;
 import de.team33.patterns.decision.leda.Variety;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -8,12 +9,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class VarietyTest {
 
-    private final Variety<Input> decision = Variety.joined(Input::isA, Input::isB, Input::isC);
+    private final Variety<Input> variety = Variety.joined(Input::isA, Input::isB, Input::isC);
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
     void apply(final int given) {
-        final int result = decision.apply(new Input(given));
+        final int result = variety.apply(new Input(4 == (given & 4), 2 == (given & 2), 1 == (given & 1)));
+        assertEquals(given, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
+    void apply_LSB_FIRST(final int given) {
+        final int result = variety.withBitOrder(BitOrder.LSB_FIRST)
+                                  .apply(new Input(1 == (given & 1), 2 == (given & 2), 4 == (given & 4)));
+        assertEquals(given, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
+    void apply_MSB_FIRST(final int given) {
+        final int result = variety.withBitOrder(BitOrder.MSB_FIRST)
+                                  .apply(new Input(4 == (given & 4), 2 == (given & 2), 1 == (given & 1)));
         assertEquals(given, result);
     }
 
@@ -23,10 +40,10 @@ class VarietyTest {
         private final boolean b;
         private final boolean c;
 
-        Input(final int expectation) {
-            this.a = (1 == (expectation & 1));
-            this.b = (2 == (expectation & 2));
-            this.c = (4 == (expectation & 4));
+        Input(final boolean a, final boolean b, final boolean c) {
+            this.a = a;
+            this.b = b;
+            this.c = c;
         }
 
         boolean isA() {

@@ -6,7 +6,7 @@ import static de.team33.patterns.decision.leda.sample.Result.*;
 
 public class Choices {
 
-    private static final PreDecision<Input, Result> DECISION = PreDecision.basedOn(Input::k1, Input::k2, Input::k3)
+    private static final PreDecision<Input, Result> DECISION = PreDecision.basedOn(Input::k3, Input::k2, Input::k1)
                                                                           .replying(B, E, A, C, D, B, D, A);
 
     public static Result map(final X x, final Y y, final Z z) {

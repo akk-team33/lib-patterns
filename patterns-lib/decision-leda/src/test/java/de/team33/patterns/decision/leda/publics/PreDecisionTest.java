@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class PreDecisionTest {
 
-    private final PreDecision.Cascade<Input> cascade = PreDecision.basedOn(Input::isA, Input::isB, Input::isC);
+    private final PreDecision.Cascade<Input> cascade = PreDecision.basedOn(Input::isC, Input::isB, Input::isA);
     private final PreDecision<Input, Result> decision = cascade.replying(Result.values());
 
     @Test
