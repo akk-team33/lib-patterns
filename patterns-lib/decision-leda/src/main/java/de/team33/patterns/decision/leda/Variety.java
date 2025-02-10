@@ -40,34 +40,109 @@ public class Variety<I> {
         }
     }
 
+    /**
+     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and {@link BitOrder#MSB_FIRST}.
+     *
+     * @see #apply(Object)
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
     @SafeVarargs
     public static <I> Variety<I> joined(final Predicate<I>... conditions) {
         return joined(Arrays.asList(conditions));
     }
 
-    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
-        return new Variety<>(BitOrder.MSB_FIRST, conditions);
+    /**
+     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and the given {@link BitOrder}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
+    @SafeVarargs
+    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... conditions) {
+        return joined(bitOrder, Arrays.asList(conditions));
     }
 
+    /**
+     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and {@link BitOrder#MSB_FIRST}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(BitOrder, Collection)
+     */
+    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
+        return joined(BitOrder.MSB_FIRST, conditions);
+    }
+
+    /**
+     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and the given {@link BitOrder}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     */
+    public static <I> Variety<I> joined(final BitOrder bitOrder,
+                                        final Collection<? extends Predicate<? super I>> conditions) {
+        return new Variety<>(bitOrder, conditions);
+    }
+
+    /**
+     * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
+     * but the {@link BitOrder} given here.
+     */
     public final Variety<I> withBitOrder(final BitOrder order) {
         return new Variety<>(order, conditions);
     }
 
+    /**
+     * Returns the number of predicates assigned at initialization.
+     *
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
     public final int scale() {
         return conditions.size();
     }
 
+    /**
+     * Returns the number of possible different results of {@link #apply(Object)}.
+     * Such a result is between <em>0</em> and <em>(bound() - 1)</em>.
+     * @return
+     */
     public final int bound() {
         return 1 << conditions.size();
     }
 
-    public final int apply(final I value) {
-        return IntStream.range(0, conditions.size())
-                        .map(index -> conditions.get(index).test(value) ? bit(index) : 0)
-                        .reduce(0, Integer::sum);
-    }
-
     private int bit(final int index) {
         return bitOp.applyAsInt(index);
+    }
+
+    /**
+     * Evaluates the predicates given during instantiation with the given <em>argument</em>,
+     * creates a bit pattern from them and returns an <code>int</code> value that represents this bit pattern.
+     * <p>
+     * Let <em>scale</em> be the number of given predicates,
+     * then the result is a value between <em>0</em> and <em>((2<sup>scale</sup>) - 1)</em>.
+     *
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
+    public final int apply(final I argument) {
+        return IntStream.range(0, conditions.size())
+                        .map(index -> conditions.get(index).test(argument) ? bit(index) : 0)
+                        .reduce(0, Integer::sum);
     }
 }
