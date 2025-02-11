@@ -63,7 +63,7 @@
  * shorter but hardly clearer. Each additional criterion would roughly double the required code of the decision
  * cascade.
  * <p>
- * The <em>Decision</em>> classes defined in this module allows a different implementation of the same decision cascade ...
+ * The <em>Decision</em> classes defined in this module allows a different implementation of the same decision cascade ...
  * <pre>
  * public enum Result {
  *

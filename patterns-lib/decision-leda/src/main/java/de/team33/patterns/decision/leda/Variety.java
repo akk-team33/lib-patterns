@@ -13,12 +13,17 @@ import java.util.stream.IntStream;
  * A tool for distinguishing cases that consist of multiple independent boolean decisions
  * related to an input of a particular type.
  * <p>
- * Use {@link #joined(Predicate[])} to get an instance.
+ * Use e.g. {@link #joined(Predicate[])} to get an instance.
  * <p>
  * The different cases are represented as <code>int</code> values that reflect the individual boolean decisions
  * when interpreted as bit patterns.
  *
  * @param <I> The input type.
+ * @see #apply(Object)
+ * @see #joined(Predicate[])
+ * @see #joined(BitOrder, Predicate[])
+ * @see #joined(Collection)
+ * @see #joined(BitOrder, Collection)
  */
 public class Variety<I> {
 
@@ -118,7 +123,6 @@ public class Variety<I> {
     /**
      * Returns the number of possible different results of {@link #apply(Object)}.
      * Such a result is between <em>0</em> and <em>(bound() - 1)</em>.
-     * @return
      */
     public final int bound() {
         return 1 << conditions.size();

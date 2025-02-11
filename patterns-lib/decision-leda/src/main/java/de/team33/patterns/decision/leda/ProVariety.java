@@ -7,6 +7,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * A tool for distinguishing cases that consist of multiple independent boolean decisions
+ * related to an input of a particular type.
+ * <p>
+ * Use e.g. {@link #joined(Predicate[])} and {@link Stage#replying(Object[])} to get an instance.
+ *
+ * @param <I> The input type.
+ * @param <R> The result type.
+ * @see #apply(Object)
+ * @see #joined(Predicate[])
+ * @see #joined(BitOrder, Predicate[])
+ * @see #joined(Collection)
+ * @see #joined(BitOrder, Collection)
+ * @see Stage#replying(Object[])
+ * @see Stage#replying(Collection)
+ */
 public class ProVariety<I, R> {
 
     private static final String ILLEGAL_ARGUMENTS =
@@ -24,29 +40,95 @@ public class ProVariety<I, R> {
         }
     }
 
+    /**
+     * Represents a preliminary stage of instantiating a {@link ProVariety}.
+     * <p>
+     * Use e.g. {@link #joined(Predicate[])} to get an instance.
+     * <p>
+     * Use {@link #replying(Object[])} or {@link #replying(Collection)} to finally get a {@link ProVariety}.
+     *
+     * @param <I> The input type.
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
     public static abstract class Stage<I> {
+
+        /**
+         * Returns a new {@link ProVariety} that applies the underlying predicates and bit-order and
+         * {@linkplain ProVariety#apply(Object) will return} one of the given results.
+         *
+         * @see #replying(Collection)
+         * @see ProVariety#apply(Object)
+         */
         @SafeVarargs
         public final <R> ProVariety<I, R> replying(final R... results) {
             return replying(Arrays.asList(results));
         }
 
+        /**
+         * Returns a new {@link ProVariety} that applies the underlying predicates and bit-order and
+         * {@linkplain ProVariety#apply(Object) will return} one of the given results.
+         *
+         * @see #replying(Object[])
+         * @see ProVariety#apply(Object)
+         */
         public abstract <R> ProVariety<I, R> replying(Collection<? extends R> results);
     }
 
+    /**
+     * Returns a new {@link Stage} that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and {@link BitOrder#MSB_FIRST}.
+     *
+     * @see #apply(Object)
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     * @see Stage#replying(Object[])
+     * @see Stage#replying(Collection)
+     */
     @SafeVarargs
-    public static <I> Stage<I> joined(final Predicate<I>... conditions) {
-        return joined(Arrays.asList(conditions));
+    public static <I> Stage<I> joined(final Predicate<I>... predicates) {
+        return joined(Arrays.asList(predicates));
     }
 
+    /**
+     * Returns a new {@link Stage} that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and the given {@link BitOrder}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
     @SafeVarargs
     public static <I> Stage<I> joined(final BitOrder bitOrder, final Predicate<I>... conditions) {
         return joined(bitOrder, Arrays.asList(conditions));
     }
 
+    /**
+     * Returns a new {@link Stage} that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and {@link BitOrder#MSB_FIRST}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(BitOrder, Collection)
+     */
     public static <I> Stage<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
         return joined(BitOrder.MSB_FIRST, conditions);
     }
 
+    /**
+     * Returns a new {@link Stage} that {@linkplain #apply(Object) applies} the given {@link Predicate}s
+     * and the given {@link BitOrder}.
+     *
+     * @see #apply(Object)
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     */
     public static <I> Stage<I> joined(final BitOrder bitOrder,
                                       final Collection<? extends Predicate<? super I>> conditions) {
         return new Stage<I>() {
@@ -57,15 +139,49 @@ public class ProVariety<I, R> {
         };
     }
 
-    public final R apply(final I value) {
-        return results.get(backing.apply(value));
-    }
-
     /**
      * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
      * but the {@link BitOrder} given here.
      */
     public final ProVariety<I, R> with(final BitOrder order) {
         return new ProVariety<>(backing.with(order), results);
+    }
+
+    /**
+     * Returns the number of predicates assigned at initialization.
+     *
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     */
+    public final int scale() {
+        return backing.scale();
+    }
+
+    /**
+     * Returns the number of possible different results of {@link #apply(Object)} assigned at initialization.
+     *
+     * @see Stage#replying(Object[])
+     * @see Stage#replying(Collection)
+     */
+    public final int bound() {
+        return backing.bound();
+    }
+
+    /**
+     * Evaluates the underlying predicates (specified during instantiation) with the given argument,
+     * creates a bit pattern from the results, uses this bit pattern as an index,
+     * and finally returns a value (also specified during instantiation) associated with this index.
+     *
+     * @see #joined(Predicate[])
+     * @see #joined(BitOrder, Predicate[])
+     * @see #joined(Collection)
+     * @see #joined(BitOrder, Collection)
+     * @see Stage#replying(Object[])
+     * @see Stage#replying(Collection)
+     */
+    public final R apply(final I argument) {
+        return results.get(backing.apply(argument));
     }
 }
