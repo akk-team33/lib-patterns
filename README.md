@@ -35,7 +35,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### next
+### 1.23.0
 
 * Nailed module decision-telesto to 1.22.0 (discontinued)
 * Added module decision-leda
