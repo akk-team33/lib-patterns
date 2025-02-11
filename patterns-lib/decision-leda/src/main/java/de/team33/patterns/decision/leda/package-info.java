@@ -69,12 +69,12 @@
  *
  *     A, B, C, D, E;
  *
- *     private static final PreDecision&lt;Input, Result&gt; CHOICE =
- *             PreDecision.basedOn(Input::isConditionOne, Input::isConditionTwo, Input::isConditionThree)
- *                        .replying(A, B, C, D, E, A, B, C);
+ *     private static final Variety&lt;Input, Result&gt; VARIETY =
+ *             Variety.joined(Input::isConditionOne, Input::isConditionTwo, Input::isConditionThree)
+ *                    .replying(A, B, C, D, E, A, B, C);
  *
  *     public static Result map(final Input input) {
- *         return CHOICE.apply(input);
+ *         return VARIETY.apply(input);
  *     }
  * }
  * </pre>
