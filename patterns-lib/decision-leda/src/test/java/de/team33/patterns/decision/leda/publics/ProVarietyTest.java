@@ -55,7 +55,7 @@ class ProVarietyTest {
     @ParameterizedTest
     @EnumSource
     void apply_LSB_FIRST(final Result given) {
-        final Result result = variety.withBitOrder(BitOrder.LSB_FIRST)
+        final Result result = variety.with(BitOrder.LSB_FIRST)
                                      .apply(new Input(invert(given.ordinal())));
         assertEquals(given, result);
     }
@@ -68,7 +68,7 @@ class ProVarietyTest {
     @ParameterizedTest
     @EnumSource
     void apply_MSB_FIRST(final Result given) {
-        final Result result = variety.withBitOrder(BitOrder.MSB_FIRST)
+        final Result result = variety.with(BitOrder.MSB_FIRST)
                                      .apply(new Input(given.ordinal()));
         assertEquals(given, result);
     }

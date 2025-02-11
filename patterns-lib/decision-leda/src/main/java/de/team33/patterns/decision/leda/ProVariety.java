@@ -65,7 +65,7 @@ public class ProVariety<I, R> {
      * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
      * but the {@link BitOrder} given here.
      */
-    public final ProVariety<I, R> withBitOrder(final BitOrder order) {
-        return new ProVariety<>(backing.withBitOrder(order), results);
+    public final ProVariety<I, R> with(final BitOrder order) {
+        return new ProVariety<>(backing.with(order), results);
     }
 }

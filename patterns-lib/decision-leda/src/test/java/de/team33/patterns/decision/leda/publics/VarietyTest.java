@@ -21,7 +21,7 @@ class VarietyTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
     void apply_LSB_FIRST(final int given) {
-        final int result = variety.withBitOrder(BitOrder.LSB_FIRST)
+        final int result = variety.with(BitOrder.LSB_FIRST)
                                   .apply(new Input(1 == (given & 1), 2 == (given & 2), 4 == (given & 4)));
         assertEquals(given, result);
     }
@@ -29,7 +29,7 @@ class VarietyTest {
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
     void apply_MSB_FIRST(final int given) {
-        final int result = variety.withBitOrder(BitOrder.MSB_FIRST)
+        final int result = variety.with(BitOrder.MSB_FIRST)
                                   .apply(new Input(4 == (given & 4), 2 == (given & 2), 1 == (given & 1)));
         assertEquals(given, result);
     }

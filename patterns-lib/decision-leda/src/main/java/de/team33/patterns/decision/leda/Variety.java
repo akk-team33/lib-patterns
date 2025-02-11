@@ -99,7 +99,7 @@ public class Variety<I> {
      * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
      * but the {@link BitOrder} given here.
      */
-    public final Variety<I> withBitOrder(final BitOrder order) {
+    public final Variety<I> with(final BitOrder order) {
         return new Variety<>(order, conditions);
     }
 
