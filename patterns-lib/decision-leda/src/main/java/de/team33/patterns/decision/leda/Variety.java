@@ -23,7 +23,7 @@ import java.util.function.Predicate;
  * @see Stage#replying(Object[])
  * @see Stage#replying(Collection)
  */
-public class ProVariety<I, R> {
+public class Variety<I, R> {
 
     private static final String ILLEGAL_ARGUMENTS =
             "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
@@ -31,7 +31,7 @@ public class ProVariety<I, R> {
     private final IntVariety<I> backing;
     private final List<R> results;
 
-    private ProVariety(final IntVariety<I> backing, final Collection<? extends R> results) {
+    private Variety(final IntVariety<I> backing, final Collection<? extends R> results) {
         this.backing = backing;
         if (backing.bound() == results.size()) {
             this.results = Collections.unmodifiableList(new ArrayList<>(results));
@@ -41,11 +41,11 @@ public class ProVariety<I, R> {
     }
 
     /**
-     * Represents a preliminary stage of instantiating a {@link ProVariety}.
+     * Represents a preliminary stage of instantiating a {@link Variety}.
      * <p>
      * Use e.g. {@link #joined(Predicate[])} to get an instance.
      * <p>
-     * Use {@link #replying(Object[])} or {@link #replying(Collection)} to finally get a {@link ProVariety}.
+     * Use {@link #replying(Object[])} or {@link #replying(Collection)} to finally get a {@link Variety}.
      *
      * @param <I> The input type.
      * @see #joined(Predicate[])
@@ -56,25 +56,25 @@ public class ProVariety<I, R> {
     public static abstract class Stage<I> {
 
         /**
-         * Returns a new {@link ProVariety} that applies the underlying predicates and bit-order and
-         * {@linkplain ProVariety#apply(Object) will return} one of the given results.
+         * Returns a new {@link Variety} that applies the underlying predicates and bit-order and
+         * {@linkplain Variety#apply(Object) will return} one of the given results.
          *
          * @see #replying(Collection)
-         * @see ProVariety#apply(Object)
+         * @see Variety#apply(Object)
          */
         @SafeVarargs
-        public final <R> ProVariety<I, R> replying(final R... results) {
+        public final <R> Variety<I, R> replying(final R... results) {
             return replying(Arrays.asList(results));
         }
 
         /**
-         * Returns a new {@link ProVariety} that applies the underlying predicates and bit-order and
-         * {@linkplain ProVariety#apply(Object) will return} one of the given results.
+         * Returns a new {@link Variety} that applies the underlying predicates and bit-order and
+         * {@linkplain Variety#apply(Object) will return} one of the given results.
          *
          * @see #replying(Object[])
-         * @see ProVariety#apply(Object)
+         * @see Variety#apply(Object)
          */
-        public abstract <R> ProVariety<I, R> replying(Collection<? extends R> results);
+        public abstract <R> Variety<I, R> replying(Collection<? extends R> results);
     }
 
     /**
@@ -133,8 +133,8 @@ public class ProVariety<I, R> {
                                       final Collection<? extends Predicate<? super I>> conditions) {
         return new Stage<I>() {
             @Override
-            public <R> ProVariety<I, R> replying(final Collection<? extends R> results) {
-                return new ProVariety<>(IntVariety.joined(bitOrder, conditions), results);
+            public <R> Variety<I, R> replying(final Collection<? extends R> results) {
+                return new Variety<>(IntVariety.joined(bitOrder, conditions), results);
             }
         };
     }
@@ -143,8 +143,8 @@ public class ProVariety<I, R> {
      * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
      * but the {@link BitOrder} given here.
      */
-    public final ProVariety<I, R> with(final BitOrder order) {
-        return new ProVariety<>(backing.with(order), results);
+    public final Variety<I, R> with(final BitOrder order) {
+        return new Variety<>(backing.with(order), results);
     }
 
     /**

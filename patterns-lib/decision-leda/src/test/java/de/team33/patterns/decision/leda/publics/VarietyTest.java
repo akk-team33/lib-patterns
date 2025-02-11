@@ -1,7 +1,7 @@
 package de.team33.patterns.decision.leda.publics;
 
 import de.team33.patterns.decision.leda.BitOrder;
-import de.team33.patterns.decision.leda.ProVariety;
+import de.team33.patterns.decision.leda.Variety;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class ProVarietyTest {
+class VarietyTest {
 
-    private final ProVariety.Stage<Input> stage = ProVariety.joined(Input::isC, Input::isB, Input::isA);
-    private final ProVariety<Input, Result> variety = stage.replying(Result.values());
+    private final Variety.Stage<Input> stage = Variety.joined(Input::isC, Input::isB, Input::isA);
+    private final Variety<Input, Result> variety = stage.replying(Result.values());
 
     @Test
     final void basedOn_replying_less() {
         try {
-            final ProVariety<Input, String> decision = stage.replying("A", "B", "C", "D", "E");
+            final Variety<Input, String> decision = stage.replying("A", "B", "C", "D", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -34,7 +34,7 @@ class ProVarietyTest {
     @Test
     final void basedOn_replying_more() {
         try {
-            final ProVariety<Input, String> decision = stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
+            final Variety<Input, String> decision = stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
