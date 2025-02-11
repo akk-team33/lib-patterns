@@ -28,10 +28,10 @@ public class ProVariety<I, R> {
     private static final String ILLEGAL_ARGUMENTS =
             "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
 
-    private final Variety<I> backing;
+    private final IntVariety<I> backing;
     private final List<R> results;
 
-    private ProVariety(final Variety<I> backing, final Collection<? extends R> results) {
+    private ProVariety(final IntVariety<I> backing, final Collection<? extends R> results) {
         this.backing = backing;
         if (backing.bound() == results.size()) {
             this.results = Collections.unmodifiableList(new ArrayList<>(results));
@@ -134,7 +134,7 @@ public class ProVariety<I, R> {
         return new Stage<I>() {
             @Override
             public <R> ProVariety<I, R> replying(final Collection<? extends R> results) {
-                return new ProVariety<>(Variety.joined(bitOrder, conditions), results);
+                return new ProVariety<>(IntVariety.joined(bitOrder, conditions), results);
             }
         };
     }
@@ -165,8 +165,8 @@ public class ProVariety<I, R> {
      * @see Stage#replying(Object[])
      * @see Stage#replying(Collection)
      */
-    public final int bound() {
-        return backing.bound();
+    public final int size() {
+        return results.size();
     }
 
     /**
