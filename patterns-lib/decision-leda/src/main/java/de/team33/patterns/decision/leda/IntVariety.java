@@ -35,9 +35,7 @@ public class IntVariety<I> {
 
     private IntVariety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> conditions) {
         final int size = conditions.size();
-        if (1 > size) {
-            throw new IllegalArgumentException(TOO_FEW_CONDITIONS);
-        } else if (Integer.SIZE < size) {
+        if (Integer.SIZE < size) {
             throw new IllegalArgumentException(String.format(TOO_MANY_CONDITIONS, Integer.SIZE, size));
         } else {
             this.conditions = Collections.unmodifiableList(new ArrayList<>(conditions));

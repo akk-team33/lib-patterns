@@ -18,9 +18,11 @@ class VarietyTest {
     private final Variety<Input, Result> variety = stage.replying(Result.values());
 
     @Test
-    final void basedOn_replying_less() {
+    final void joined_replying_less() {
         try {
-            final Variety<Input, String> decision = stage.replying("A", "B", "C", "D", "E");
+            final Variety<Input, String> decision = Variety.joined(BitOrder.LSB_FIRST,
+                                                                   Input::isA, Input::isB, Input::isC)
+                                                           .replying("A", "B", "C", "D", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -32,7 +34,17 @@ class VarietyTest {
     }
 
     @Test
-    final void basedOn_replying_more() {
+    final void scale() {
+        assertEquals(3, variety.scale());
+    }
+
+    @Test
+    final void size() {
+        assertEquals(8, variety.size());
+    }
+
+    @Test
+    final void joined_replying_more() {
         try {
             final Variety<Input, String> decision = stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
             fail("expected to fail - but was " + decision);
