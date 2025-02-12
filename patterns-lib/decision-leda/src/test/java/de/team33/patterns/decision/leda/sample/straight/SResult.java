@@ -2,11 +2,11 @@ package de.team33.patterns.decision.leda.sample.straight;
 
 import de.team33.patterns.decision.leda.sample.Input;
 
-public enum Result {
+public enum SResult {
 
     A, B, C, D, E;
 
-    public static Result map(final Input input) {
+    public static SResult map(final Input input) {
         if (input.isConditionOne()) {
             if (input.isConditionTwo()) {
                 if (input.isConditionThree()) {
