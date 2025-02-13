@@ -1,52 +1,41 @@
 package de.team33.patterns.decision.leda;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class XVariety<I, R> {
 
+    private static final String ILLEGAL_ARGUMENTS =
+            "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
+
+    private final IntVariety<I> backing;
+    private final List<Function<I, R>> results;
+
+    XVariety(final IntVariety<I> backing, final Collection<? extends Function<I, R>> results) {
+        this.backing = backing;
+        if (backing.bound() == results.size()) {
+            this.results = Collections.unmodifiableList(new ArrayList<>(results));
+        } else {
+            throw new IllegalArgumentException(String.format(ILLEGAL_ARGUMENTS, backing.scale(), backing.bound(), results.size(), results));
+        }
+    }
+
     @SafeVarargs
-    public static <I> ProChoice<I> joining(final Predicate<? super I>... conditions) {
-        throw new UnsupportedOperationException("not yet implemented");
+    public static <I> Choices.Start<I> joining(final Predicate<I>... conditions) {
+        return Choices.start(IntVariety.joined(conditions));
     }
 
     public final R apply(final I input) {
-        throw new UnsupportedOperationException("not yet implemented");
+        final int bits = backing.apply(input);
+        return Optional.ofNullable(results.get(bits))
+                       .map(method -> method.apply(input))
+                       .orElseThrow(() -> new UnsupportedOperationException(
+                               String.format("Case %s not supported", Integer.toBinaryString(bits))));
     }
 
-    public static class ProChoice<I> {
-        public ProCase<I> on(final int ... bitPatterns) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-    }
-
-    public static class ProCase<I> {
-        public <R> Choice<I, R> reply(final R result) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public <R> Choice<I, R> apply(final Function<I, R> function) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-    }
-
-    public static class Choice<I, R> {
-        public Case<I, R> on(final int ... bitPatterns) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public XVariety<I, R> build() {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-    }
-
-    public static class Case<I, R> {
-        public Choice<I, R> reply(final R result) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-
-        public Choice<I, R> apply(final Function<I, R> function) {
-            throw new UnsupportedOperationException("not yet implemented");
-        }
-    }
 }

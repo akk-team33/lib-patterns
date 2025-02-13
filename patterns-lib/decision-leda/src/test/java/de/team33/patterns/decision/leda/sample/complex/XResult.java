@@ -15,7 +15,7 @@ public enum XResult {
                     .on(0b011).reply(D)
                     .on(0b100).reply(E)
                     .on(0b111).reply(C)
-                    .build();
+                    .variety();
     private static final XVariety<Input, XResult> VARIETY1 =
             XVariety.joining(Input::isConditionThree, Input::isConditionTwo, Input::isConditionOne)
                     .on(0b000, 0b101).apply(VARIETY0::apply)
@@ -24,9 +24,9 @@ public enum XResult {
                     .on(0b011).reply(D)
                     .on(0b100).apply(VARIETY0::apply)
                     .on(0b111).reply(C)
-                    .build();
+                    .variety();
 
     public static XResult map(final Input input) {
-        return VARIETY0.apply(input);
+        return VARIETY1.apply(input);
     }
 }
