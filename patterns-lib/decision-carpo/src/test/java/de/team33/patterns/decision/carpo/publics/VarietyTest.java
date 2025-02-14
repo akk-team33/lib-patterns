@@ -1,12 +1,12 @@
 package de.team33.patterns.decision.carpo.publics;
 
 import de.team33.patterns.decision.carpo.BitOrder;
-import de.team33.patterns.decision.carpo.Variety;
+import de.team33.patterns.decision.carpo.IntVariety;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-import java.util.stream.IntStream;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,15 +14,15 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class VarietyTest {
 
-    private final Variety.Stage<Input> stage = Variety.joined(Input::isC, Input::isB, Input::isA);
-    private final Variety<Input, Result> variety = stage.replying(Result.values());
+    private final IntVariety<Input> stage = IntVariety.joined(Input::isC, Input::isB, Input::isA);
+    private final Function<Input, Result> variety = stage.replying(Result.values());
 
     @Test
     final void joined_replying_less() {
         try {
-            final Variety<Input, String> decision = Variety.joined(BitOrder.LSB_FIRST,
-                                                                   Input::isA, Input::isB, Input::isC)
-                                                           .replying("A", "B", "C", "D", "E");
+            final Function<Input, String> decision = IntVariety.joined(BitOrder.LSB_FIRST,
+                                                                       Input::isA, Input::isB, Input::isC)
+                                                               .replying("A", "B", "C", "D", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -34,19 +34,10 @@ class VarietyTest {
     }
 
     @Test
-    final void scale() {
-        assertEquals(3, variety.scale());
-    }
-
-    @Test
-    final void size() {
-        assertEquals(8, variety.size());
-    }
-
-    @Test
     final void joined_replying_more() {
         try {
-            final Variety<Input, String> decision = stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
+            final Function<Input, String> decision =
+                    stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -61,27 +52,6 @@ class VarietyTest {
     @EnumSource
     void apply(final Result given) {
         final Result result = variety.apply(new Input(given.ordinal()));
-        assertEquals(given, result);
-    }
-
-    @ParameterizedTest
-    @EnumSource
-    void apply_LSB_FIRST(final Result given) {
-        final Result result = variety.with(BitOrder.LSB_FIRST)
-                                     .apply(new Input(invert(given.ordinal())));
-        assertEquals(given, result);
-    }
-
-    private int invert(final int ordinal) {
-        final int[] stage = {(ordinal & 4) >> 2, (ordinal & 2), (ordinal & 1) << 2};
-        return IntStream.of(stage).reduce(0, Integer::sum);
-    }
-
-    @ParameterizedTest
-    @EnumSource
-    void apply_MSB_FIRST(final Result given) {
-        final Result result = variety.with(BitOrder.MSB_FIRST)
-                                     .apply(new Input(given.ordinal()));
         assertEquals(given, result);
     }
 

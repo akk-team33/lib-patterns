@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -27,18 +28,20 @@ import java.util.stream.IntStream;
  */
 public class IntVariety<I> {
 
-    private static final String TOO_FEW_CONDITIONS = "Min. one condition must be given - but there are none.";
-    private static final String TOO_MANY_CONDITIONS = "Max. %d conditions can be handled - but %d are given.";
+    private static final String TOO_MANY_CONDITIONS =
+            "Max. %d predicates can be handled - but %d are given.";
+    private static final String ILLEGAL_ARGUMENTS =
+            "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
 
-    private final List<Predicate<? super I>> conditions;
+    private final List<Predicate<? super I>> predicates;
     private final IntUnaryOperator bitOp;
 
-    private IntVariety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> conditions) {
-        final int size = conditions.size();
+    private IntVariety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> predicates) {
+        final int size = predicates.size();
         if (Integer.SIZE < size) {
             throw new IllegalArgumentException(String.format(TOO_MANY_CONDITIONS, Integer.SIZE, size));
         } else {
-            this.conditions = Collections.unmodifiableList(new ArrayList<>(conditions));
+            this.predicates = Collections.unmodifiableList(new ArrayList<>(predicates));
             this.bitOp = bitOrder.operator(size - 1);
         }
     }
@@ -103,7 +106,7 @@ public class IntVariety<I> {
      * but the {@link BitOrder} given here.
      */
     public final IntVariety<I> with(final BitOrder order) {
-        return new IntVariety<>(order, conditions);
+        return new IntVariety<>(order, predicates);
     }
 
     /**
@@ -115,7 +118,7 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Collection)
      */
     public final int scale() {
-        return conditions.size();
+        return predicates.size();
     }
 
     /**
@@ -123,7 +126,7 @@ public class IntVariety<I> {
      * Such a result is between <em>0</em> and <em>(bound() - 1)</em>.
      */
     public final int bound() {
-        return 1 << conditions.size();
+        return 1 << predicates.size();
     }
 
     private int bit(final int index) {
@@ -143,8 +146,8 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Collection)
      */
     public final int apply(final I argument) {
-        return IntStream.range(0, conditions.size())
-                        .map(index -> conditions.get(index).test(argument) ? bit(index) : 0)
+        return IntStream.range(0, predicates.size())
+                        .map(index -> predicates.get(index).test(argument) ? bit(index) : 0)
                         .reduce(0, Integer::sum);
     }
 
@@ -154,5 +157,20 @@ public class IntVariety<I> {
      */
     public final Choices.Start<I> choices() {
         return Choices.start(this);
+    }
+
+    @SafeVarargs
+    public final <R> Function<I, R> replying(final R... results) {
+        return replying(Arrays.asList(results));
+    }
+
+    public final <R> Function<I, R> replying(final Collection<? extends R> results) {
+        if (bound() == results.size()) {
+            final List<R> resultList = Collections.unmodifiableList(new ArrayList<>(results));
+            return input -> resultList.get(apply(input));
+        } else {
+            throw new IllegalArgumentException(
+                    String.format(ILLEGAL_ARGUMENTS, scale(), bound(), results.size(), results));
+        }
     }
 }

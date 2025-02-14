@@ -10,7 +10,7 @@ public interface Cases<I, R> {
 
     Choices<I, R> apply(final Function<I, R> function);
 
-    abstract class First<I> {
+    abstract class Start<I> {
 
         public final <R> Choices<I, R> reply(final R result) {
             return apply(any -> result);

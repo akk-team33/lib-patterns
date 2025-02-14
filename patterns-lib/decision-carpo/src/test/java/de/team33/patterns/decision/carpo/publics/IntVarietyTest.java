@@ -33,7 +33,7 @@ class IntVarietyTest {
         } catch (final IllegalArgumentException e) {
             // as expected
             // e.printStackTrace();
-            assertEquals("Max. 32 conditions can be handled - but 33 are given.", e.getMessage());
+            assertEquals("Max. 32 predicates can be handled - but 33 are given.", e.getMessage());
         }
     }
 
