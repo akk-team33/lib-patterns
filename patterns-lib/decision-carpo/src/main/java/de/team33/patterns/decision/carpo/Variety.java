@@ -30,7 +30,7 @@ public class Variety<I> {
 
     private static final String TOO_MANY_CONDITIONS =
             "Max. %d predicates can be handled - but %d are given.";
-    private static final String ILLEGAL_ARGUMENTS =
+    private static final String MISMATCHING_RESULTS =
             "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
 
     private final List<Predicate<? super I>> predicates;
@@ -70,8 +70,8 @@ public class Variety<I> {
      * @see #joined(BitOrder, Collection)
      */
     @SafeVarargs
-    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... conditions) {
-        return joined(bitOrder, Arrays.asList(conditions));
+    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... predicates) {
+        return joined(bitOrder, Arrays.asList(predicates));
     }
 
     /**
@@ -83,8 +83,8 @@ public class Variety<I> {
      * @see #joined(BitOrder, Predicate[])
      * @see #joined(BitOrder, Collection)
      */
-    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
-        return joined(BitOrder.MSB_FIRST, conditions);
+    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> predicates) {
+        return joined(BitOrder.MSB_FIRST, predicates);
     }
 
     /**
@@ -97,8 +97,8 @@ public class Variety<I> {
      * @see #joined(Collection)
      */
     public static <I> Variety<I> joined(final BitOrder bitOrder,
-                                        final Collection<? extends Predicate<? super I>> conditions) {
-        return new Variety<>(bitOrder, conditions);
+                                        final Collection<? extends Predicate<? super I>> predicates) {
+        return new Variety<>(bitOrder, predicates);
     }
 
     /**
@@ -159,18 +159,26 @@ public class Variety<I> {
         return Choices.start(this);
     }
 
+    /**
+     * Returns a new {@link Function} that applies the underlying predicates and bit-order and
+     * {@linkplain Function#apply(Object) will return} one of the given results.
+     */
     @SafeVarargs
     public final <R> Function<I, R> replying(final R... results) {
         return replying(Arrays.asList(results));
     }
 
+    /**
+     * Returns a new {@link Function} that applies the underlying predicates and bit-order and
+     * {@linkplain Function#apply(Object) will return} one of the given results.
+     */
     public final <R> Function<I, R> replying(final Collection<? extends R> results) {
         if (bound() == results.size()) {
             final List<R> resultList = Collections.unmodifiableList(new ArrayList<>(results));
             return input -> resultList.get(apply(input));
         } else {
             throw new IllegalArgumentException(
-                    String.format(ILLEGAL_ARGUMENTS, scale(), bound(), results.size(), results));
+                    String.format(MISMATCHING_RESULTS, scale(), bound(), results.size(), results));
         }
     }
 }
