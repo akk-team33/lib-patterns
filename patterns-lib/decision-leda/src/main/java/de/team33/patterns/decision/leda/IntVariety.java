@@ -147,4 +147,12 @@ public class IntVariety<I> {
                         .map(index -> conditions.get(index).test(argument) ? bit(index) : 0)
                         .reduce(0, Integer::sum);
     }
+
+    /**
+     * Starts a {@link Cases}/{@link Choices} based build process to finally create a
+     * {@link java.util.function.Function} that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
+     */
+    public final Choices.Start<I> choices() {
+        return Choices.start(this);
+    }
 }
