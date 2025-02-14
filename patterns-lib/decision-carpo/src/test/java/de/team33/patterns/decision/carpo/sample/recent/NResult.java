@@ -11,7 +11,6 @@ public enum NResult {
 
     private static final Function<Input, NResult> FUNCTION =
             Variety.joined(Input::isC, Input::isB, Input::isA)
-                   .choices()
                    .on(0b000, 0b101).reply(A)
                    .on(0b001, 0b110).reply(B)
                    .on(0b010).reply(C)

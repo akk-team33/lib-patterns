@@ -29,7 +29,7 @@ public class Choices<I, R> {
                              .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    static <I> Start<I> start(final Variety<I> variety) {
+    public static <I> Start<I> start(final Variety<I> variety) {
         return bitSets -> new Cases.Start<I>() {
             @Override
             public <R> Choices<I, R> apply(final Function<I, R> function) {

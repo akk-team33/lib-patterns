@@ -11,7 +11,6 @@ public enum XResult {
 
     private static final Function<Input, XResult> F1 =
             Variety.joined(Input::isC, Input::isB, Input::isA)
-                   .choices()
                    .on(0b000, 0b101).reply(A)
                    .on(0b001, 0b110).reply(B)
                    .on(0b010).reply(C)
@@ -21,7 +20,6 @@ public enum XResult {
                    .toFunction();
     private static final Function<Input, XResult> F2 =
             Variety.joined(Input::isC, Input::isB, Input::isA)
-                   .choices()
                    .on(0b000, 0b101).apply(F1)
                    .on(0b001, 0b110).apply(F1)
                    .on(0b010).reply(C)

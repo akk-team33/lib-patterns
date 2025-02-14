@@ -153,10 +153,13 @@ public class Variety<I> {
 
     /**
      * Starts a {@link Cases}/{@link Choices} based build process to finally create a {@link Function}
-     * that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
+     * that maps an input of type &lt;I&gt; to a result of a specific type.
+     *
+     * @see Choices#on(int...)
+     * @see Choices.Start#on(int...)
      */
-    public final Choices.Start<I> choices() {
-        return Choices.start(this);
+    public final Cases.Start<I> on(final int... bitSets) {
+        return Choices.start(this).on(bitSets);
     }
 
     /**
