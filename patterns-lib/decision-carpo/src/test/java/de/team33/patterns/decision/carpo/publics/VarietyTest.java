@@ -2,6 +2,7 @@ package de.team33.patterns.decision.carpo.publics;
 
 import de.team33.patterns.decision.carpo.BitOrder;
 import de.team33.patterns.decision.carpo.Variety;
+import de.team33.patterns.decision.carpo.testing.Input;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -13,7 +14,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 class VarietyTest {
@@ -84,30 +84,5 @@ class VarietyTest {
         final int result = variety.with(BitOrder.MSB_FIRST)
                                   .apply(new Input(4 == (given & 4), 2 == (given & 2), 1 == (given & 1)));
         assertEquals(given, result);
-    }
-
-    static class Input {
-
-        private final boolean a;
-        private final boolean b;
-        private final boolean c;
-
-        Input(final boolean a, final boolean b, final boolean c) {
-            this.a = a;
-            this.b = b;
-            this.c = c;
-        }
-
-        boolean isA() {
-            return a;
-        }
-
-        boolean isB() {
-            return b;
-        }
-
-        boolean isC() {
-            return c;
-        }
     }
 }

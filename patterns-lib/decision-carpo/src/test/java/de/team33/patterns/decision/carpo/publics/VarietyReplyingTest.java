@@ -2,6 +2,7 @@ package de.team33.patterns.decision.carpo.publics;
 
 import de.team33.patterns.decision.carpo.BitOrder;
 import de.team33.patterns.decision.carpo.Variety;
+import de.team33.patterns.decision.carpo.testing.Input;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -64,30 +65,5 @@ class VarietyReplyingTest {
         CASE_101,
         CASE_110,
         CASE_111
-    }
-
-    static class Input {
-
-        private final boolean a;
-        private final boolean b;
-        private final boolean c;
-
-        Input(final int expectation) {
-            this.a = (1 == (expectation & 1));
-            this.b = (2 == (expectation & 2));
-            this.c = (4 == (expectation & 4));
-        }
-
-        boolean isA() {
-            return a;
-        }
-
-        boolean isB() {
-            return b;
-        }
-
-        boolean isC() {
-            return c;
-        }
     }
 }

@@ -1,7 +1,7 @@
 package de.team33.patterns.decision.carpo.sample.complex;
 
 import de.team33.patterns.decision.carpo.Variety;
-import de.team33.patterns.decision.carpo.sample.Input;
+import de.team33.patterns.decision.carpo.testing.Input;
 
 import java.util.function.Function;
 
@@ -10,7 +10,7 @@ public enum XResult {
     A, B, C, D, E;
 
     private static final Function<Input, XResult> F1 =
-            Variety.joined(Input::isConditionThree, Input::isConditionTwo, Input::isConditionOne)
+            Variety.joined(Input::isC, Input::isB, Input::isA)
                    .choices()
                    .on(0b000, 0b101).reply(A)
                    .on(0b001, 0b110).reply(B)
@@ -20,7 +20,7 @@ public enum XResult {
                    .on(0b111).reply(C)
                    .toFunction();
     private static final Function<Input, XResult> F2 =
-            Variety.joined(Input::isConditionThree, Input::isConditionTwo, Input::isConditionOne)
+            Variety.joined(Input::isC, Input::isB, Input::isA)
                    .choices()
                    .on(0b000, 0b101).apply(F1)
                    .on(0b001, 0b110).apply(F1)
