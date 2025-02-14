@@ -152,8 +152,8 @@ public class Variety<I> {
     }
 
     /**
-     * Starts a {@link Cases}/{@link Choices} based build process to finally create a
-     * {@link java.util.function.Function} that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
+     * Starts a {@link Cases}/{@link Choices} based build process to finally create a {@link Function}
+     * that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
      */
     public final Choices.Start<I> choices() {
         return Choices.start(this);

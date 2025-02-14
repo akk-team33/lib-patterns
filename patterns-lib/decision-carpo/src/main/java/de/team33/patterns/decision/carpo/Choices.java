@@ -9,6 +9,13 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A tool for collecting pairings of specific cases with an associated choice
+ * and finally create a {@link Function} that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
+ *
+ * @param <I> the intended input type.
+ * @param <R> the intended result type.
+ */
 public class Choices<I, R> {
 
     private final Variety<I> variety;
@@ -43,6 +50,10 @@ public class Choices<I, R> {
         };
     }
 
+    /**
+     * Captures {@link Cases} that should be paired with a single specific choice.
+     * A single case is represented by a unique <em>bitSet</em> (<em>int</em> value).
+     */
     public Cases<I, R> on(final int... bitSets) {
         return method -> {
             for (final int bitSet : bitSets) {
@@ -52,11 +63,26 @@ public class Choices<I, R> {
         };
     }
 
+    /**
+     * Returns a {@link Function} generated from the collected pairings of cases/choices
+     * that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
+     */
     public final Function<I, R> toFunction() {
         return toFunction(variety, Collections.unmodifiableList(new ArrayList<>(methods)));
     }
 
+    /**
+     * A tool to start collecting pairings of specific cases with an associated choice
+     * and finally create a {@link Function} that maps an input of type &lt;I&gt; to a result of a specific type.
+     *
+     * @param <I> the intended input type.
+     */
     public interface Start<I> {
+
+        /**
+         * Captures a {@link Cases.Start first set of cases} that should be paired with a single specific choice.
+         * A single case is represented by a unique <em>bitSet</em> (<em>int</em> value).
+         */
         Cases.Start<I> on(int... bitSets);
     }
 }
