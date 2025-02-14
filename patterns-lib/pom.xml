@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.23.1-SNAPSHOT</version>
+        <version>1.24.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-lib</artifactId>
@@ -30,7 +30,7 @@
         <module>notes-eris</module>
         <module>execution-metis</module>
         <module>serial-charon</module>
-        <module>decision-leda</module>
+        <module>decision-carpo</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
     </modules>

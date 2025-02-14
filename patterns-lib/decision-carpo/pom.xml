@@ -8,10 +8,10 @@
         <version>1.24.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>execution-metis</artifactId>
+    <artifactId>decision-carpo</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Execution Library - Edition "metis"</name>
-    <description>Provides simple Executor and ExecutorService implementations.</description>
+    <name>Team33 Decision Library - Edition "carpo"</name>
+    <description>Classes and utilities for implementing and handling decisions.</description>
 
 </project>

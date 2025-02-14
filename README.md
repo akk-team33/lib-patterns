@@ -29,11 +29,16 @@ http://www.team33.de/dev/patterns/1.x
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * execution-metis (Team33 Execution Library - Edition "metis")
   * serial-charon (Team33 Serial Collection Library - Edition "charon")
-  * decision-leda (Team33 Decision Library - Edition "leda")
+  * decision-carpo (Team33 Decision Library - Edition "carpo")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
 
 ## Change Log
+
+### 1.24.0
+
+* Nailed module decision-leda to 1.23.0 (discontinued)
+* Added module decision-carpo
 
 ### 1.23.0
 
