@@ -39,8 +39,8 @@ public class Choices<I, R> {
         };
     }
 
-    public final XVariety<I, R> variety() {
-        return new XVariety<>(backing, methods);
+    public final Variety<I, R> variety() {
+        return new Variety<>(backing, methods);
     }
 
     public interface Start<I> {

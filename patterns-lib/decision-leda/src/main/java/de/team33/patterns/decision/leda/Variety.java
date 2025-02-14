@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * A tool for distinguishing cases that consist of multiple independent boolean decisions
@@ -29,9 +32,9 @@ public class Variety<I, R> {
             "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
 
     private final IntVariety<I> backing;
-    private final List<R> results;
+    private final List<Function<I, R>> results;
 
-    private Variety(final IntVariety<I> backing, final Collection<? extends R> results) {
+    Variety(final IntVariety<I> backing, final Collection<? extends Function<I, R>> results) {
         this.backing = backing;
         if (backing.bound() == results.size()) {
             this.results = Collections.unmodifiableList(new ArrayList<>(results));
@@ -134,7 +137,12 @@ public class Variety<I, R> {
         return new Stage<I>() {
             @Override
             public <R> Variety<I, R> replying(final Collection<? extends R> results) {
-                return new Variety<>(IntVariety.joined(bitOrder, conditions), results);
+                return new Variety<>(IntVariety.joined(bitOrder, conditions),
+                                     results.stream().map(result -> {
+                                         //noinspection UnnecessaryLocalVariable
+                                         final Function<I, R> method = any -> result;
+                                         return method;
+                                     }).collect(Collectors.toList()));
             }
         };
     }
@@ -181,7 +189,11 @@ public class Variety<I, R> {
      * @see Stage#replying(Object[])
      * @see Stage#replying(Collection)
      */
-    public final R apply(final I argument) {
-        return results.get(backing.apply(argument));
+    public final R apply(final I input) {
+        final int bits = backing.apply(input);
+        return Optional.ofNullable(results.get(bits))
+                       .map(method -> method.apply(input))
+                       .orElseThrow(() -> new UnsupportedOperationException(
+                               String.format("Case %s not supported", Integer.toBinaryString(bits))));
     }
 }
