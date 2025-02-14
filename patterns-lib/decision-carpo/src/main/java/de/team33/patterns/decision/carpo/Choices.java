@@ -11,10 +11,10 @@ import java.util.stream.Stream;
 
 public class Choices<I, R> {
 
-    private final IntVariety<I> variety;
+    private final Variety<I> variety;
     private final List<Function<I, R>> methods;
 
-    private Choices(final IntVariety<I> variety) {
+    private Choices(final Variety<I> variety) {
         final Supplier<Function<I, R>> noMethod = () -> null;
         this.variety = variety;
         this.methods = Stream.generate(noMethod)
@@ -22,7 +22,7 @@ public class Choices<I, R> {
                              .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    static <I> Start<I> start(final IntVariety<I> variety) {
+    static <I> Start<I> start(final Variety<I> variety) {
         return bitSets -> new Cases.Start<I>() {
             @Override
             public <R> Choices<I, R> apply(final Function<I, R> function) {
@@ -32,7 +32,7 @@ public class Choices<I, R> {
         };
     }
 
-    private static <I, R> Function<I, R> toFunction(final IntVariety<I> variety,
+    private static <I, R> Function<I, R> toFunction(final Variety<I> variety,
                                                     final List<Function<I, R>> methods) {
         return input -> {
             final int bitSet = variety.apply(input);

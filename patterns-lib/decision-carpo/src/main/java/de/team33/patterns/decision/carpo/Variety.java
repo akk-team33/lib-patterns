@@ -26,7 +26,7 @@ import java.util.stream.IntStream;
  * @see #joined(Collection)
  * @see #joined(BitOrder, Collection)
  */
-public class IntVariety<I> {
+public class Variety<I> {
 
     private static final String TOO_MANY_CONDITIONS =
             "Max. %d predicates can be handled - but %d are given.";
@@ -36,7 +36,7 @@ public class IntVariety<I> {
     private final List<Predicate<? super I>> predicates;
     private final IntUnaryOperator bitOp;
 
-    private IntVariety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> predicates) {
+    private Variety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> predicates) {
         final int size = predicates.size();
         if (Integer.SIZE < size) {
             throw new IllegalArgumentException(String.format(TOO_MANY_CONDITIONS, Integer.SIZE, size));
@@ -56,7 +56,7 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Collection)
      */
     @SafeVarargs
-    public static <I> IntVariety<I> joined(final Predicate<I>... conditions) {
+    public static <I> Variety<I> joined(final Predicate<I>... conditions) {
         return joined(Arrays.asList(conditions));
     }
 
@@ -70,7 +70,7 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Collection)
      */
     @SafeVarargs
-    public static <I> IntVariety<I> joined(final BitOrder bitOrder, final Predicate<I>... conditions) {
+    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... conditions) {
         return joined(bitOrder, Arrays.asList(conditions));
     }
 
@@ -83,7 +83,7 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Predicate[])
      * @see #joined(BitOrder, Collection)
      */
-    public static <I> IntVariety<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
+    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> conditions) {
         return joined(BitOrder.MSB_FIRST, conditions);
     }
 
@@ -96,17 +96,17 @@ public class IntVariety<I> {
      * @see #joined(BitOrder, Predicate[])
      * @see #joined(Collection)
      */
-    public static <I> IntVariety<I> joined(final BitOrder bitOrder,
-                                           final Collection<? extends Predicate<? super I>> conditions) {
-        return new IntVariety<>(bitOrder, conditions);
+    public static <I> Variety<I> joined(final BitOrder bitOrder,
+                                        final Collection<? extends Predicate<? super I>> conditions) {
+        return new Variety<>(bitOrder, conditions);
     }
 
     /**
      * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
      * but the {@link BitOrder} given here.
      */
-    public final IntVariety<I> with(final BitOrder order) {
-        return new IntVariety<>(order, predicates);
+    public final Variety<I> with(final BitOrder order) {
+        return new Variety<>(order, predicates);
     }
 
     /**
