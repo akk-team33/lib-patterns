@@ -5,6 +5,7 @@ import de.team33.patterns.decision.carpo.sample.recent.NResult;
 import de.team33.patterns.decision.carpo.sample.recent.RResult;
 import de.team33.patterns.decision.carpo.sample.straight.SResult;
 import de.team33.patterns.decision.carpo.testing.Input;
+import de.team33.patterns.decision.carpo.testing.InputImpl;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +18,7 @@ class SampleTest {
         for (int i = -2; i <= 2; ++i) {
             for (int k = -2; k <= 2; ++k) {
                 for (int n = -2; n <= 2; ++n) {
-                    final Input input = new Input(i == 0, k == 0, n == 0);
+                    final Input input = new InputImpl(i == 0, k == 0, n == 0);
                     final String expected = SResult.map(input).name();
 
                     final String result = RResult.map(input).name();
@@ -33,7 +34,7 @@ class SampleTest {
         for (int i = -2; i <= 2; ++i) {
             for (int k = -2; k <= 2; ++k) {
                 for (int n = -2; n <= 2; ++n) {
-                    final Input input = new Input(i == 0, k == 0, n == 0);
+                    final Input input = new InputImpl(i == 0, k == 0, n == 0);
                     final String expected = SResult.map(input).name();
 
                     final String result = XResult.map(input).name();
@@ -46,7 +47,7 @@ class SampleTest {
 
     @Test
     final void nResult() {
-        final Input input = new Input(true, true, false);
+        final Input input = new InputImpl(true, true, false);
         try {
             final NResult result = NResult.map(input);
             fail("expected to fail - but was " + result);

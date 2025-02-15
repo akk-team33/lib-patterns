@@ -3,6 +3,7 @@ package de.team33.patterns.decision.carpo.publics;
 import de.team33.patterns.decision.carpo.BitOrder;
 import de.team33.patterns.decision.carpo.Variety;
 import de.team33.patterns.decision.carpo.testing.Input;
+import de.team33.patterns.decision.carpo.testing.InputImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -15,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 class VarietyReplyingTest {
 
-    private final Variety<Input> stage = Variety.joined(Input::isC, Input::isB, Input::isA);
-    private final Function<Input, Result> variety = stage.replying(Result.values());
+    private final Variety<Input> variety = Variety.joined(Input::isC, Input::isB, Input::isA);
+    private final Function<Input, Result> function = variety.replying(Result.values());
 
     @Test
     final void joined_replying_less() {
@@ -38,7 +39,7 @@ class VarietyReplyingTest {
     final void joined_replying_more() {
         try {
             final Function<Input, String> decision =
-                    stage.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
+                    variety.replying("A", "A", "A", "B", "C", "C", "D", "E", "E", "E", "E");
             fail("expected to fail - but was " + decision);
         } catch (final IllegalArgumentException e) {
             // as expected
@@ -52,7 +53,7 @@ class VarietyReplyingTest {
     @ParameterizedTest
     @EnumSource
     void apply(final Result given) {
-        final Result result = variety.apply(new Input(given.ordinal()));
+        final Result result = function.apply(new InputImpl(given.ordinal()));
         assertEquals(given, result);
     }
 
