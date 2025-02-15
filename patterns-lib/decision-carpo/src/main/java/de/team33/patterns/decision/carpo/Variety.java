@@ -11,16 +11,78 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
- * A tool for distinguishing cases that consist of multiple independent boolean decisions
- * related to an input of a particular type.
+ * A tool that combines the results of multiple independent boolean criteria
+ * relating to an input of a specific type &lt;I&gt; into an int value,
+ * which, when interpreted as bit patterns, reflect a combination of the boolean results.
  * <p>
  * Use e.g. {@link #joined(Predicate[])} to get an instance.
  * <p>
- * The different cases are represented as <code>int</code> values that reflect the individual boolean decisions
- * when interpreted as bit patterns.
+ * <b>Given an input type:</b>
+ * <pre>
+ * public interface Input {
+ *
+ *     boolean isA();
+ *
+ *     boolean isB();
+ *
+ *     boolean isC();
+ * }
+ * </pre>
+ * <p>
+ * <b>Example 1:</b>
+ * <pre>
+ * public enum Result {
+ *
+ *     A, B, C, D, E, F, G, H;
+ *
+ *     private static final Variety&lt;Input&gt; VARIETY = Variety.joined(Input::isC, Input::isB, Input::isA);
+ *
+ *     public static Result of(final Input input) {
+ *         return Result.values()[VARIETY.apply(input)];
+ *     }
+ * }
+ * </pre>
+ * <p>
+ * <b>Example 2:</b>
+ * <pre>
+ * public enum Result {
+ *
+ *     A, B, C, D, E;
+ *
+ *     private static final Function&lt;Input, Result&gt; FUNCTION = Variety.joined(Input::isC, Input::isB, Input::isA)
+ *                                                                    .replying(A, A, B, C, D, D, D, E);
+ *
+ *     public static Result of(final Input input) {
+ *         return FUNCTION.apply(input);
+ *     }
+ * }
+ * </pre>
+ * <p>
+ * <b>Example 3:</b>
+ * <pre>
+ * public enum Result {
+ *
+ *     A, B, C, D, E;
+ *
+ *     private static final Function&lt;Input, Result&gt; FUNCTION = Variety.joined(Input::isC, Input::isB, Input::isA)
+ *                                                                    .on(0b000, 0b001).reply(A)
+ *                                                                    .on(0b010).reply(B)
+ *                                                                    .on(0b011).reply(C)
+ *                                                                    .on(0b100, 0b101, 0b110).reply(D)
+ *                                                                    .on(0b111).reply(E)
+ *                                                                    .toFunction();
+ *
+ *     public static Result of(final Input input) {
+ *         return FUNCTION.apply(input);
+ *     }
+ * }
+ * </pre>
  *
  * @param <I> The input type.
  * @see #apply(Object)
+ * @see #replying(Object[])
+ * @see #replying(Collection)
+ * @see #on(int...)
  * @see #joined(Predicate[])
  * @see #joined(BitOrder, Predicate[])
  * @see #joined(Collection)
@@ -28,27 +90,27 @@ import java.util.stream.IntStream;
  */
 public class Variety<I> {
 
-    private static final String TOO_MANY_CONDITIONS =
-            "Max. %d predicates can be handled - but %d are given.";
+    private static final String TOO_MANY_CRITERIA =
+            "Max. %d criteria can be handled - but %d are given.";
     private static final String MISMATCHING_RESULTS =
-            "For %d independent conditions, %d possible replies must be defined - but %d are given: %n%n    %s%n";
+            "For %d independent criteria, %d possible replies must be defined - but %d are given: %n%n    %s%n";
 
-    private final List<Predicate<? super I>> predicates;
+    private final List<Predicate<? super I>> criteria;
     private final IntUnaryOperator bitOp;
 
-    private Variety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> predicates) {
-        final int size = predicates.size();
+    private Variety(final BitOrder bitOrder, final Collection<? extends Predicate<? super I>> criteria) {
+        final int size = criteria.size();
         if (Integer.SIZE < size) {
-            throw new IllegalArgumentException(String.format(TOO_MANY_CONDITIONS, Integer.SIZE, size));
+            throw new IllegalArgumentException(String.format(TOO_MANY_CRITERIA, Integer.SIZE, size));
         } else {
-            this.predicates = Collections.unmodifiableList(new ArrayList<>(predicates));
+            this.criteria = Collections.unmodifiableList(new ArrayList<>(criteria));
             this.bitOp = bitOrder.operator(size - 1);
         }
     }
 
     /**
-     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
-     * and {@link BitOrder#MSB_FIRST}.
+     * Returns a new instance that {@linkplain #apply(Object) applies} an <em>input</em> to the given <em>criteria</em>
+     * and sorts their results as bits using {@link BitOrder#MSB_FIRST}.
      *
      * @see #apply(Object)
      * @see #joined(BitOrder, Predicate[])
@@ -56,13 +118,13 @@ public class Variety<I> {
      * @see #joined(BitOrder, Collection)
      */
     @SafeVarargs
-    public static <I> Variety<I> joined(final Predicate<I>... conditions) {
-        return joined(Arrays.asList(conditions));
+    public static <I> Variety<I> joined(final Predicate<I>... criteria) {
+        return joined(Arrays.asList(criteria));
     }
 
     /**
-     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
-     * and the given {@link BitOrder}.
+     * Returns a new instance that {@linkplain #apply(Object) applies} an <em>input</em> to the given <em>criteria</em>
+     * and sorts their results as bits using the given {@link BitOrder}.
      *
      * @see #apply(Object)
      * @see #joined(Predicate[])
@@ -70,26 +132,26 @@ public class Variety<I> {
      * @see #joined(BitOrder, Collection)
      */
     @SafeVarargs
-    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... predicates) {
-        return joined(bitOrder, Arrays.asList(predicates));
+    public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... criteria) {
+        return joined(bitOrder, Arrays.asList(criteria));
     }
 
     /**
-     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
-     * and {@link BitOrder#MSB_FIRST}.
+     * Returns a new instance that {@linkplain #apply(Object) applies} an <em>input</em> to the given <em>criteria</em>
+     * and sorts their results as bits using {@link BitOrder#MSB_FIRST}.
      *
      * @see #apply(Object)
      * @see #joined(Predicate[])
      * @see #joined(BitOrder, Predicate[])
      * @see #joined(BitOrder, Collection)
      */
-    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> predicates) {
-        return joined(BitOrder.MSB_FIRST, predicates);
+    public static <I> Variety<I> joined(final Collection<? extends Predicate<? super I>> criteria) {
+        return joined(BitOrder.MSB_FIRST, criteria);
     }
 
     /**
-     * Returns a new instance that {@linkplain #apply(Object) applies} the given {@link Predicate}s
-     * and the given {@link BitOrder}.
+     * Returns a new instance that {@linkplain #apply(Object) applies} an <em>input</em> to the given <em>criteria</em>
+     * and sorts their results as bits using the given {@link BitOrder}.
      *
      * @see #apply(Object)
      * @see #joined(Predicate[])
@@ -97,8 +159,8 @@ public class Variety<I> {
      * @see #joined(Collection)
      */
     public static <I> Variety<I> joined(final BitOrder bitOrder,
-                                        final Collection<? extends Predicate<? super I>> predicates) {
-        return new Variety<>(bitOrder, predicates);
+                                        final Collection<? extends Predicate<? super I>> criteria) {
+        return new Variety<>(bitOrder, criteria);
     }
 
     /**
@@ -106,7 +168,7 @@ public class Variety<I> {
      * but the {@link BitOrder} given here.
      */
     public final Variety<I> with(final BitOrder order) {
-        return new Variety<>(order, predicates);
+        return new Variety<>(order, criteria);
     }
 
     /**
@@ -118,7 +180,7 @@ public class Variety<I> {
      * @see #joined(BitOrder, Collection)
      */
     public final int scale() {
-        return predicates.size();
+        return criteria.size();
     }
 
     /**
@@ -126,7 +188,7 @@ public class Variety<I> {
      * Such a result is between <em>0</em> and <em>(bound() - 1)</em>.
      */
     public final int bound() {
-        return 1 << predicates.size();
+        return 1 << criteria.size();
     }
 
     private int bit(final int index) {
@@ -146,8 +208,8 @@ public class Variety<I> {
      * @see #joined(BitOrder, Collection)
      */
     public final int apply(final I argument) {
-        return IntStream.range(0, predicates.size())
-                        .map(index -> predicates.get(index).test(argument) ? bit(index) : 0)
+        return IntStream.range(0, criteria.size())
+                        .map(index -> criteria.get(index).test(argument) ? bit(index) : 0)
                         .reduce(0, Integer::sum);
     }
 
@@ -165,6 +227,8 @@ public class Variety<I> {
     /**
      * Returns a new {@link Function} that applies the underlying predicates and bit-order and
      * {@linkplain Function#apply(Object) will return} one of the given results.
+     *
+     * @see #replying(Collection)
      */
     @SafeVarargs
     public final <R> Function<I, R> replying(final R... results) {
@@ -174,6 +238,8 @@ public class Variety<I> {
     /**
      * Returns a new {@link Function} that applies the underlying predicates and bit-order and
      * {@linkplain Function#apply(Object) will return} one of the given results.
+     *
+     * @see #replying(Object[])
      */
     public final <R> Function<I, R> replying(final Collection<? extends R> results) {
         if (bound() == results.size()) {
