@@ -17,19 +17,7 @@ import java.util.stream.IntStream;
  * <p>
  * Use e.g. {@link #joined(Predicate[])} to get an instance.
  * <p>
- * <b>Given an input type:</b>
- * <pre>
- * public interface Input {
- *
- *     boolean isA();
- *
- *     boolean isB();
- *
- *     boolean isC();
- * }
- * </pre>
- * <p>
- * <b>Example 1:</b>
+ * <b>Example:</b>
  * <pre>
  * public enum Result {
  *
@@ -42,51 +30,14 @@ import java.util.stream.IntStream;
  *     }
  * }
  * </pre>
- * <p>
- * <b>Example 2:</b>
- * <pre>
- * public enum Result {
- *
- *     A, B, C, D, E;
- *
- *     private static final Function&lt;Input, Result&gt; FUNCTION = Variety.joined(Input::isC, Input::isB, Input::isA)
- *                                                                    .replying(A, A, B, C, D, D, D, E);
- *
- *     public static Result of(final Input input) {
- *         return FUNCTION.apply(input);
- *     }
- * }
- * </pre>
- * <p>
- * <b>Example 3:</b>
- * <pre>
- * public enum Result {
- *
- *     A, B, C, D, E;
- *
- *     private static final Function&lt;Input, Result&gt; FUNCTION = Variety.joined(Input::isC, Input::isB, Input::isA)
- *                                                                    .on(0b000, 0b001).reply(A)
- *                                                                    .on(0b010).reply(B)
- *                                                                    .on(0b011).reply(C)
- *                                                                    .on(0b100, 0b101, 0b110).reply(D)
- *                                                                    .on(0b111).reply(E)
- *                                                                    .toFunction();
- *
- *     public static Result of(final Input input) {
- *         return FUNCTION.apply(input);
- *     }
- * }
- * </pre>
  *
  * @param <I> The input type.
  * @see #apply(Object)
- * @see #replying(Object[])
- * @see #replying(Collection)
- * @see #on(int...)
  * @see #joined(Predicate[])
  * @see #joined(BitOrder, Predicate[])
  * @see #joined(Collection)
  * @see #joined(BitOrder, Collection)
+ * @see de.team33.patterns.decision.carpo package
  */
 public class Variety<I> {
 
@@ -164,7 +115,7 @@ public class Variety<I> {
     }
 
     /**
-     * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> {@link Predicate}s
+     * Returns a new instance that {@linkplain #apply(Object) applies} <em>this'</em> criteria
      * but the {@link BitOrder} given here.
      */
     public final Variety<I> with(final BitOrder order) {
@@ -185,7 +136,7 @@ public class Variety<I> {
 
     /**
      * Returns the number of possible different results of {@link #apply(Object)}.
-     * Such a result is between <em>0</em> and <em>(bound() - 1)</em>.
+     * Such a result is between <em>0</em> and <em>(bound() - 1)</em> (inclusive).
      */
     public final int bound() {
         return 1 << criteria.size();
@@ -196,7 +147,7 @@ public class Variety<I> {
     }
 
     /**
-     * Evaluates the predicates given during instantiation with the given <em>argument</em>,
+     * Evaluates the predicates given during instantiation with the given <em>input</em>,
      * creates a bit pattern from them and returns an <code>int</code> value that represents this bit pattern.
      * <p>
      * Let <em>scale</em> be the number of given predicates,
@@ -207,9 +158,9 @@ public class Variety<I> {
      * @see #joined(Collection)
      * @see #joined(BitOrder, Collection)
      */
-    public final int apply(final I argument) {
+    public final int apply(final I input) {
         return IntStream.range(0, criteria.size())
-                        .map(index -> criteria.get(index).test(argument) ? bit(index) : 0)
+                        .map(index -> criteria.get(index).test(input) ? bit(index) : 0)
                         .reduce(0, Integer::sum);
     }
 
@@ -218,7 +169,6 @@ public class Variety<I> {
      * that maps an input of type &lt;I&gt; to a result of a specific type.
      *
      * @see Choices#on(int...)
-     * @see Choices.Start#on(int...)
      */
     public final Cases.Start<I> on(final int... bitSets) {
         return Choices.start(this).on(bitSets);

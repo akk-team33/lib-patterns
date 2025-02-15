@@ -1,8 +1,8 @@
 package de.team33.patterns.decision.carpo.publics;
 
-import de.team33.patterns.decision.carpo.sample.complex.XResult;
+import de.team33.patterns.decision.carpo.sample.recent.FResult;
 import de.team33.patterns.decision.carpo.sample.recent.NResult;
-import de.team33.patterns.decision.carpo.sample.recent.RResult;
+import de.team33.patterns.decision.carpo.sample.recent.XResult;
 import de.team33.patterns.decision.carpo.sample.straight.SResult;
 import de.team33.patterns.decision.carpo.testing.Input;
 import de.team33.patterns.decision.carpo.testing.InputImpl;
@@ -14,14 +14,14 @@ import static org.junit.jupiter.api.Assertions.fail;
 class SampleTest {
 
     @Test
-    final void rResult() {
+    final void fResult() {
         for (int i = -2; i <= 2; ++i) {
             for (int k = -2; k <= 2; ++k) {
                 for (int n = -2; n <= 2; ++n) {
                     final Input input = new InputImpl(i == 0, k == 0, n == 0);
                     final String expected = SResult.map(input).name();
 
-                    final String result = RResult.map(input).name();
+                    final String result = FResult.map(input).name();
 
                     assertEquals(expected, result);
                 }

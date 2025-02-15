@@ -9,10 +9,11 @@ public enum FResult {
 
     A, B, C, D, E;
 
-    private static final Function<Input, FResult> FUNCTION = Variety.joined(Input::isC, Input::isB, Input::isA)
-                                                                    .replying(A, A, B, C, D, D, D, E);
+    private static final Function<Input, FResult> FUNCTION =
+            Variety.joined(Input::isC, Input::isB, Input::isA)
+                   .replying(A, E, C, B, B, A, D, C);
 
-    public static FResult of(final Input input) {
+    public static FResult map(final Input input) {
         return FUNCTION.apply(input);
     }
 }

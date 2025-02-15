@@ -7,6 +7,7 @@ import java.util.function.Function;
  *
  * @param <I> an input type.
  * @param <R> a result type.
+ * @see de.team33.patterns.decision.carpo package
  */
 @FunctionalInterface
 public interface Cases<I, R> {
@@ -29,13 +30,20 @@ public interface Cases<I, R> {
      * Represents the first set of cases to be paired with a first choice.
      *
      * @param <I> an input type.
+     * @see de.team33.patterns.decision.carpo package
      */
-    abstract class Start<I> {
+    interface Start<I> {
 
-        public final <R> Choices<I, R> reply(final R result) {
+        /**
+         * @see Cases#reply(Object)
+         */
+        default <R> Choices<I, R> reply(final R result) {
             return apply(any -> result);
         }
 
-        public abstract <R> Choices<I, R> apply(final Function<I, R> function);
+        /**
+         * @see Cases#apply(Function)
+         */
+        <R> Choices<I, R> apply(final Function<I, R> function);
     }
 }

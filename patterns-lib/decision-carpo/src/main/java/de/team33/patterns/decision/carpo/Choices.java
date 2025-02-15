@@ -15,6 +15,7 @@ import java.util.stream.Stream;
  *
  * @param <I> the intended input type.
  * @param <R> the intended result type.
+ * @see de.team33.patterns.decision.carpo package
  */
 public class Choices<I, R> {
 
@@ -29,7 +30,7 @@ public class Choices<I, R> {
                              .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    public static <I> Start<I> start(final Variety<I> variety) {
+    static <I> Start<I> start(final Variety<I> variety) {
         return bitSets -> new Cases.Start<I>() {
             @Override
             public <R> Choices<I, R> apply(final Function<I, R> function) {
@@ -77,7 +78,7 @@ public class Choices<I, R> {
      *
      * @param <I> the intended input type.
      */
-    public interface Start<I> {
+    interface Start<I> {
 
         /**
          * Captures a {@link Cases.Start first set of cases} that should be paired with a single specific choice.

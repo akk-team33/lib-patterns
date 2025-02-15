@@ -2,17 +2,17 @@
  * Provides classes and utilities for implementing or handling complex decisions.
  * <p>
  * When decisions have to be made between several (more than two) possible results based on several independent
- * criteria, confusing code often results. Example:
+ * boolean criteria, confusing code often results. Example:
  * <p>
  * Given an <em>Input</em> parameter that offers three independent criteria ...
  * <pre>
  * public interface Input {
  *
- *     boolean isConditionOne();
+ *     boolean isA();
  *
- *     boolean isConditionTwo();
+ *     boolean isB();
  *
- *     boolean isConditionThree();
+ *     boolean isC();
  * }
  * </pre>
  * <p>
@@ -26,29 +26,29 @@
  *     A, B, C, D, E;
  *
  *     public static Result map(final Input input) {
- *         if (input.isConditionOne()) {
- *             if (input.isConditionTwo()) {
- *                 if (input.isConditionThree()) {
+ *         if (input.isC()) {
+ *             if (input.isB()) {
+ *                 if (input.isA()) {
  *                     return C;
  *                 } else {
  *                     return D;
  *                 }
  *             } else {
- *                 if (input.isConditionThree()) {
+ *                 if (input.isA()) {
  *                     return A;
  *                 } else {
  *                     return B;
  *                 }
  *             }
  *         } else {
- *             if (input.isConditionTwo()) {
- *                 if (input.isConditionThree()) {
+ *             if (input.isB()) {
+ *                 if (input.isA()) {
  *                     return B;
  *                 } else {
  *                     return C;
  *                 }
  *             } else {
- *                 if (input.isConditionThree()) {
+ *                 if (input.isA()) {
  *                     return E;
  *                 } else {
  *                     return A;
@@ -63,25 +63,42 @@
  * shorter but hardly clearer. Each additional criterion would roughly double the required code of the decision
  * cascade.
  * <p>
- * The <em>Decision</em> classes defined in this module allows a different implementation of the same decision cascade ...
+ * The classes defined in this module allow a different implementation of the same decision cascade ...
  * <pre>
  * public enum Result {
  *
  *     A, B, C, D, E;
  *
- *     private static final Variety&lt;Input, Result&gt; VARIETY =
- *             Variety.joined(Input::isConditionOne, Input::isConditionTwo, Input::isConditionThree)
- *                    .replying(A, B, C, D, E, A, B, C);
+ *     private static final Function&lt;Input, Result&gt; FUNCTION =
+ *             Variety.joined(Input::isC, Input::isB, Input::isA)
+ *                    .replying(A, E, C, B, B, A, D, C);
  *
  *     public static Result map(final Input input) {
- *         return VARIETY.apply(input);
+ *         return FUNCTION.apply(input);
  *     }
  * }
  * </pre>
  * <p>
- * The interested programmer can decide for himself whether this is better.
- * In my opinion, maintainability have been improved.
- * Readability depends largely on whether the concept has been understood.
+ * Another option requires a bit more code, but may offer a bit more readability...
+ * <pre>
+ * public enum Result {
+ *
+ *     A, B, C, D, E;
+ *
+ *     private static final Function&lt;Input, Result&gt; FUNCTION =
+ *             Variety.joined(Input::isC, Input::isB, Input::isA)
+ *                    .on(0b000, 0b101).reply(A)
+ *                    .on(0b001).reply(E)
+ *                    .on(0b010, 0b111).reply(C)
+ *                    .on(0b011, 0b100).reply(B)
+ *                    .on(0b110).reply(D)
+ *                    .toFunction();
+ *
+ *     public static Result map(final Input input) {
+ *         return FUNCTION.apply(input);
+ *     }
+ * }
+ * </pre>
  *
  * @see <a href="https://de.wikipedia.org/wiki/Carpo_(Mond)">Carpo (Mond)</a>
  */
