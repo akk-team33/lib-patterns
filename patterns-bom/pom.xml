@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.24.0-SNAPSHOT</version>
+        <version>1.24.0</version>
     </parent>
 
     <artifactId>patterns-bom</artifactId>
@@ -114,13 +114,13 @@
             <!-- nailed (discontinued) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-telesto</artifactId>
-                <version>1.22.0</version>
+                <artifactId>decision-leda</artifactId>
+                <version>1.23.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-leda</artifactId>
-                <version>1.23.0</version>
+                <artifactId>decision-telesto</artifactId>
+                <version>1.22.0</version>
             </dependency>
 
             <!-- nailed (deprecated) ... -->
