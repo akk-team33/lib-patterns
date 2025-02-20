@@ -37,5 +37,10 @@
             <artifactId>tuple-janus</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>serial-charon</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
