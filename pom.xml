@@ -39,6 +39,7 @@
         <skipJavadoc>false</skipJavadoc>
         <skipHome>false</skipHome>
         <skipDeploy>false</skipDeploy>
+        <skipGPG>false</skipGPG>
     </properties>
 
     <modules>
@@ -69,7 +70,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.11.2</version>
                     <configuration>
                         <show>protected</show>
                         <bottom><![CDATA[Copyright &copy; ${copyright.year} Andreas Kluge-Kaindl, Bremen (de).
@@ -82,6 +83,9 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>3.1.0</version>
+                    <configuration>
+                        <skip>${skipGPG}</skip>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -95,6 +99,11 @@
                     <configuration>
                         <skip>${skipDeploy}</skip>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>3.5.0</version>
                 </plugin>
             </plugins>
         </pluginManagement>
