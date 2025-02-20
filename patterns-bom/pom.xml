@@ -57,11 +57,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>tuple-janus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-luna</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -121,6 +116,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-telesto</artifactId>
                 <version>1.22.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>tuple-janus</artifactId>
+                <version>1.24.0</version>
             </dependency>
 
             <!-- nailed (deprecated) ... -->

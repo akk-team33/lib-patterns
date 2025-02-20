@@ -23,7 +23,6 @@
         <module>io-phobos</module>
         <module>expiry-tethys</module>
         <module>pooling-ariel</module>
-        <module>tuple-janus</module>
         <module>reflect-luna</module>
         <module>reflect-pandora</module>
         <module>building-elara</module>
