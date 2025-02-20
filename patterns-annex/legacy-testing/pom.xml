@@ -20,5 +20,9 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>decision-leda</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>random-tarvos</artifactId>
+        </dependency>
     </dependencies>
 </project>
