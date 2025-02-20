@@ -30,12 +30,12 @@ http://www.team33.de/dev/patterns/1.x
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
-  * serial-charon (Team33 Serial Collection Library - Edition "charon")
 
 ## Change Log
 
 ### 1.24.1
 
+* Nailed module serial-charon to 1.24.0 (discontinued)
 * Nailed module tuple-janus to 1.24.0 (discontinued)
 
 ### 1.24.0

@@ -87,11 +87,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>serial-charon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-carpo</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -120,6 +115,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>tuple-janus</artifactId>
+                <version>1.24.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>serial-charon</artifactId>
                 <version>1.24.0</version>
             </dependency>
 
