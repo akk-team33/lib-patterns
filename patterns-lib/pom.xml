@@ -104,7 +104,7 @@
                                 <outputDirectory>${basedir}/../../target/home-collected/patterns-lib/${project.artifactId}/apidocs</outputDirectory>
                                 <resources>
                                     <resource>
-                                        <directory>${project.build.directory}/apidocs</directory>
+                                        <directory>${project.build.directory}/reports/apidocs</directory>
                                         <filtering>false</filtering>
                                     </resource>
                                 </resources>
