@@ -15,12 +15,14 @@
     <description>Parent of team33 patterns annex collection</description>
 
     <properties>
+        <skipJavadoc>true</skipJavadoc>
         <skipHome>true</skipHome>
         <skipDeploy>true</skipDeploy>
         <skipGPG>true</skipGPG>
     </properties>
 
     <modules>
+        <module>legacy-testing</module>
     </modules>
 
     <dependencyManagement>
