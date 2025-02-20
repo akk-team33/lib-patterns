@@ -10,4 +10,15 @@
     </parent>
 
     <artifactId>legacy-testing</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>decision-telesto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>decision-leda</artifactId>
+        </dependency>
+    </dependencies>
 </project>
