@@ -14,15 +14,28 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>decision-telesto</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>decision-leda</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>random-tarvos</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>tuple-janus</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
