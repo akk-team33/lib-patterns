@@ -52,7 +52,7 @@ class NameMatcherTest {
             fail("expected to fail - but was " + matcher);
         } catch (final ParseException e) {
             // as expected -> OK!
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 }

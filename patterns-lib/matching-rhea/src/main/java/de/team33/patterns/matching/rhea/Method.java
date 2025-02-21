@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 enum Method {
 
     RX(Function.identity()),
-    WC(WildcardString::parse);
+    WC(WildcardString::toRegEx);
 
     private static final Values<Method> VALUES = Values.of(Method.class);
 

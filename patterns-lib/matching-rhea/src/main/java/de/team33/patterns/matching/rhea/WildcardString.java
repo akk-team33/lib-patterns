@@ -1,29 +1,39 @@
 package de.team33.patterns.matching.rhea;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-class WildcardString {
+public class WildcardString {
 
     private static final Pattern WILDCARD = Pattern.compile("[*?]");
 
-    static String parse(final String origin) {
-        final Matcher matcher = WILDCARD.matcher(origin);
-        final List<String> result = new LinkedList<>();
-        final Index index = new Index();
-//        matcher.results().forEach(matchResult -> {
-//            final int start = matchResult.start();
-//            result.add(origin.substring(index.value, start));
-//            result.add(origin.substring(start, index.value = matchResult.end()));
-//        });
-        result.add(origin.substring(index.value));
-        return result.stream()
-                     .filter(Util::isNotEmpty)
-                     .map(Util::toRegEx)
-                     .collect(Collectors.joining());
+    private final String origin;
+    private final Matcher matcher;
+
+    private WildcardString(final String origin) {
+        this.origin = origin;
+        this.matcher = WILDCARD.matcher(origin);
+    }
+
+    private Stream<String> stream(final int head) {
+        if (matcher.find(head)) {
+            final int start = matcher.start();
+            final int end = matcher.end();
+            return Stream.concat(Stream.of(origin.substring(head, start),
+                                           origin.substring(start, end)),
+                                 stream(end));
+        } else {
+            return Stream.of(origin.substring(head));
+        }
+    }
+
+    public static String toRegEx(final String origin) {
+        return new WildcardString(origin).stream(0)
+                                         .filter(Util::isNotEmpty)
+                                         .map(Util::toRegEx)
+                                         .collect(Collectors.joining());
     }
 
     private static final class Util {
@@ -42,9 +52,5 @@ class WildcardString {
                 return Pattern.quote(subs);
             }
         }
-    }
-
-    private static class Index {
-        private int value = 0;
     }
 }
