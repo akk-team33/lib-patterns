@@ -28,6 +28,7 @@
         <module>building-elara</module>
         <module>notes-eris</module>
         <module>execution-metis</module>
+        <module>matching-rhea</module>
         <module>decision-carpo</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>

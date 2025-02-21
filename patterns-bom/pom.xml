@@ -87,6 +87,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>matching-rhea</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-carpo</artifactId>
                 <version>${project.version}</version>
             </dependency>

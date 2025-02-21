@@ -26,6 +26,7 @@ http://www.team33.de/dev/patterns/1.x
   * io-deimos (Team33 IO Library - Edition "deimos")
   * io-phobos (Team33 IO Library - Edition "phobos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
+  * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
   * notes-eris (Team33 Notifications Library - Edition "eris")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * reflect-luna (Team33 Reflection Library - Edition "luna")

@@ -1,0 +1,23 @@
+Not a valid naming pattern:
+
+    %s
+
+Problem:
+
+    %s
+
+Expected syntax:
+
+    [METHOD[/OPTION]:]VALUE
+
+    METHOD - Optional one of {rx, wc} (case-insensitive)
+             rx : the VALUE is treated as a regular expression.
+             wc : the VALUE is treated as the full file name,
+                  but allows the use of the usual wildcards (?*).
+           - Default: wc
+    OPTION - Optional one of {cs, ci} (case-insensitive)
+             cs : the PATTERN will be applied case-sensitive.
+             ci : the PATTERN will be applied case-insensitive.
+           - Default: ci
+    VALUE  - A (constant) value to be applied to the METHOD along
+             with the (variable) filenames in question.%n
