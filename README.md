@@ -34,6 +34,10 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### 1.25.0
+
+* Added module matching-rhea
+
 ### 1.24.1
 
 * Nailed module serial-charon to 1.24.0 (discontinued)
