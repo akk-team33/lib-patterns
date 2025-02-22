@@ -27,25 +27,19 @@ public class NameMatcher {
     }
 
     private static NameMatcher parseEx(final String pattern) throws InternalException {
-        final String[] parts = pattern.split(":", -1);
-        if (1 == parts.length) {
-            return parseEx("", parts[0]);
-        } else if (2 == parts.length) {
-            return parseEx(parts[0], parts[1]);
-        } else {
-            throw new InternalException("The VALUE must not contain ':' (a colon)!");
-        }
+        return parseEx(pattern.split(":", 2));
+    }
+
+    private static NameMatcher parseEx(final String[] parts) throws InternalException {
+        return (1 == parts.length) ? parseEx("", parts[0]) : parseEx(parts[0], parts[1]);
     }
 
     private static NameMatcher parseEx(final String head, final String tail) throws InternalException {
-        final String[] parts = head.split("/", -1);
-        if (1 == parts.length) {
-            return parseEx(parts[0], "", tail);
-        } else if (2 == parts.length) {
-            return parseEx(parts[0], parts[1], tail);
-        } else {
-            throw new InternalException("\"" + head + "\" is not a valid METHOD/OPTION!");
-        }
+        return parseEx(head.split("/", 2), tail);
+    }
+
+    private static NameMatcher parseEx(final String[] parts, final String tail) throws InternalException {
+        return (1 == parts.length) ? parseEx(parts[0], "", tail) : parseEx(parts[0], parts[1], tail);
     }
 
     private static NameMatcher parseEx(final String method,

@@ -8,16 +8,16 @@ Problem:
 
 Expected syntax:
 
-    [METHOD[/OPTION]:]VALUE
+    [METHOD[/OPTION]:]PATTERN
 
-    METHOD - Optional one of {rx, wc} (case-insensitive)
-             rx : the VALUE is treated as a regular expression.
-             wc : the VALUE is treated as the full file name,
-                  but allows the use of the usual wildcards (?*).
-           - Default: wc
-    OPTION - Optional one of {cs, ci} (case-insensitive)
-             cs : the PATTERN will be applied case-sensitive.
-             ci : the PATTERN will be applied case-insensitive.
-           - Default: ci
-    VALUE  - A (constant) value to be applied to the METHOD along
-             with the (variable) filenames in question.%n
+    METHOD  - (Optional) one of {rx, wc} (case-insensitive)
+              rx : the VALUE is treated as a regular expression.
+              wc : the VALUE is treated as the full file name,
+                   but allows the use of the usual wildcards (?*).
+            - Default: wc
+    OPTION  - (Optional) one of {cs, ci} (case-insensitive)
+              cs : the PATTERN will be applied case-sensitive.
+              ci : the PATTERN will be applied case-insensitive.
+            - Default: ci
+    PATTERN - A pattern value to be applied to the METHOD along
+              with an argument (e.g. a filename) in question.%n
