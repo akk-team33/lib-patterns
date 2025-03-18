@@ -5,10 +5,13 @@ import java.util.function.ObjIntConsumer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 final class Generating {
 
     private static final int FLOAT_RESOLUTION = Float.SIZE - 8;
     private static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
+    private static final int MAX_STRING_LENGTH = 64;
+    private static final int DEFAULT_BOUND_BITS = 16;
 
     private Generating() {
     }
@@ -24,7 +27,7 @@ final class Generating {
         throw new IllegalArgumentException("<bound> must be greater than ZERO but was " + bound);
     }
 
-    private static ObjIntConsumer<StringBuilder> sbAppender(final String characters) {
+    private static ObjIntConsumer<StringBuilder> sbAppender(final CharSequence characters) {
         return (sb, index) -> sb.append(characters.charAt(index));
     }
 
@@ -93,7 +96,7 @@ final class Generating {
     }
 
     static BigInteger anySmallBigInteger(final BitGenerator generator) {
-        return anySmallBigInteger(generator, BigInteger.ONE.shiftLeft(16));
+        return anySmallBigInteger(generator, BigInteger.ONE.shiftLeft(DEFAULT_BOUND_BITS));
     }
 
     static BigInteger anySmallBigInteger(final BitGenerator generator, final BigInteger bound) {
@@ -104,7 +107,7 @@ final class Generating {
         return values[anyInt(generator, values.length)];
     }
 
-    static char anyChar(final BitGenerator generator, final String characters) {
+    static char anyChar(final BitGenerator generator, final CharSequence characters) {
         return characters.charAt(anyInt(generator, characters.length()));
     }
 
@@ -112,7 +115,7 @@ final class Generating {
         return anyChar(generator, Util.STD_CHARACTERS);
     }
 
-    static String anyString(final BitGenerator generator, final int length, final String characters) {
+    static String anyString(final BitGenerator generator, final int length, final CharSequence characters) {
         if (0 > length) {
             throw new IllegalArgumentException("<length> must be greater than or equal to zero but was " + length);
         }
@@ -127,7 +130,7 @@ final class Generating {
                         .toString();
     }
 
-    public static String anyString(final BitGenerator generator) {
-        return anyString(generator, 1 + anyInt(generator, 128), Util.STD_CHARACTERS);
+    static String anyString(final BitGenerator generator) {
+        return anyString(generator, 1 + anyInt(generator, MAX_STRING_LENGTH), Util.STD_CHARACTERS);
     }
 }

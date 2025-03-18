@@ -1,12 +1,8 @@
 package de.team33.patterns.arbitrary.mimas.sample;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static java.util.Collections.unmodifiableList;
-
-@SuppressWarnings({"unused", "BooleanParameter", "ConstructorWithTooManyParameters"})
+@SuppressWarnings({"unused", "BooleanParameter", "ConstructorWithTooManyParameters", "AssignmentToNull"})
 public class Record {
 
     private final boolean booleanValue;
@@ -16,14 +12,15 @@ public class Record {
     private final List<String> stringList;
     private final List<Long> longList;
 
+    @SuppressWarnings("TypeMayBeWeakened")
     public Record(final boolean booleanValue, final String stringValue, final int intValue, final Long longValue,
                   final List<String> stringList, final List<Long> longList) {
         this.booleanValue = booleanValue;
         this.stringValue = stringValue;
         this.intValue = intValue;
         this.longValue = longValue;
-        this.stringList = (null == stringList) ? null : unmodifiableList(new ArrayList<>(stringList));
-        this.longList = (null == longList) ? null : unmodifiableList(new ArrayList<>(longList));
+        this.stringList = (null == stringList) ? null : List.copyOf(stringList);
+        this.longList = (null == longList) ? null : List.copyOf(longList);
     }
 
     public Record(final boolean booleanValue, final String stringValue, final int intValue, final Long longValue) {
@@ -51,10 +48,12 @@ public class Record {
     }
 
     public final List<String> stringList() {
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
         return stringList;
     }
 
     public final List<Long> longList() {
+        //noinspection AssignmentOrReturnOfFieldWithMutableType
         return longList;
     }
 
@@ -74,6 +73,6 @@ public class Record {
     }
 
     public final List<Object> toList() {
-        return Arrays.asList(booleanValue, stringValue, intValue, longValue, stringList, longList);
+        return List.of(booleanValue, stringValue, intValue, longValue, stringList, longList);
     }
 }

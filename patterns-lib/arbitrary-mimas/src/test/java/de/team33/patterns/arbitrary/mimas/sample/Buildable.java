@@ -1,11 +1,10 @@
 package de.team33.patterns.arbitrary.mimas.sample;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Buildable {
+public final class Buildable {
 
     private final String stringValue;
     private final int intValue;
@@ -27,7 +26,7 @@ public class Buildable {
 
     @SuppressWarnings("rawtypes")
     private static List asList(final Buildable sample) {
-        return Arrays.asList(
+        return List.of(
                 sample.stringValue,
                 sample.intValue,
                 sample.longValue,
@@ -40,8 +39,8 @@ public class Buildable {
     }
 
     @Override
-    public final boolean equals(final Object o) {
-        return (this == o) || ((o instanceof Buildable) && asList(this).equals(asList((Buildable) o)));
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof final Buildable other) && asList(this).equals(asList(other)));
     }
 
     @Override

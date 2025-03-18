@@ -4,20 +4,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Locale;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Stream;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableSet;
 
 final class Methods {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NON_INSTANCE = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
-    private static final Set<String> IGNORABLE = unmodifiableSet(new TreeSet<>(asList(
-            "hashCode",
-            "toString"
-    )));
+    private static final Set<String> IGNORABLE = Set.of("hashCode", "toString");
 
     private Methods() {
     }

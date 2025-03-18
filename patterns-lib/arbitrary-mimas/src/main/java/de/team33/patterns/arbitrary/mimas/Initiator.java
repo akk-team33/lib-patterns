@@ -1,6 +1,6 @@
 package de.team33.patterns.arbitrary.mimas;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * A utility interface: can extend producer classes with the functionality to create instances of types composed
@@ -26,6 +26,6 @@ public interface Initiator {
      * @param <T> The target type.
      */
     default <T> T initiate(final Class<T> targetType, final String... ignore) {
-        return new Initiating<>(this, targetType, Arrays.asList(ignore)).result();
+        return new Initiating<>(this, targetType, List.of(ignore)).result();
     }
 }

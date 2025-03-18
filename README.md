@@ -54,6 +54,7 @@ http://www.team33.de/dev/patterns/2.x
 
 * Set java language level to 17
 * Removed most deprecated items
+* Several refinements
 
 ### 1.25.0
 

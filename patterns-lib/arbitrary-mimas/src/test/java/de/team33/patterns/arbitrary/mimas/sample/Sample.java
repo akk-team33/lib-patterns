@@ -1,10 +1,10 @@
 package de.team33.patterns.arbitrary.mimas.sample;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings({"ClassNamePrefixedWithPackageName", "unused"})
 public class Sample {
 
     private boolean booleanValue;
@@ -20,7 +20,7 @@ public class Sample {
 
     @SuppressWarnings("rawtypes")
     private static List asList(final Sample sample) {
-        return Arrays.asList(
+        return List.of(
                 sample.booleanValue,
                 sample.stringValue,
                 sample.intValue,
@@ -39,8 +39,8 @@ public class Sample {
     }
 
     @Override
-    public final boolean equals(final Object o) {
-        return (this == o) || ((o instanceof Sample) && asList(this).equals(asList((Sample) o)));
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof final Sample other) && asList(this).equals(asList(other)));
     }
 
     @Override

@@ -5,18 +5,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 final class Util {
 
-    @SuppressWarnings("SpellCheckingInspection")
     static final String STD_CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ " +
                                          "!#$§%&*+,.?@äöüÄÖÜß";
     static final long MAX_RETRY = 16;
-    static final BigInteger MIN_LONG = BigInteger.valueOf(Long.MIN_VALUE);
-    static final BigInteger MAX_LONG = BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE);
 
     private static final String NEWLINE = String.format("%n");
     private static final String NO_RESOURCE = "Should not happen:" +

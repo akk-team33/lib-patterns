@@ -2,6 +2,8 @@ package de.team33.patterns.arbitrary.mimas;
 
 import java.math.BigInteger;
 
+@SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
+@FunctionalInterface
 interface BitGenerator {
 
     /**

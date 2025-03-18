@@ -20,7 +20,7 @@ class Supplying<S> {
     private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);
     private static final String METHOD_NOT_APPLICABLE = Util.load(Supplying.class, "supplierMethodNotApplicable.txt");
 
-    final S source;
+    private final S source;
     final Class<?> sourceType;
     final Set<String> ignorable;
     final Predicate<Method> desired;
@@ -35,7 +35,7 @@ class Supplying<S> {
         this.desired = nameFilter(ignorable).negate();
     }
 
-    private static Predicate<Method> nameFilter(final Set<String> names) {
+    private static Predicate<Method> nameFilter(final Collection<String> names) {
         return method -> names.contains(method.getName());
     }
 
