@@ -6,17 +6,14 @@ class Mutual<T, X extends Exception> {
 
     private volatile XSupplier<T, X> backing;
 
-    Mutual(final XSupplier<T, X> initial) {
+    Mutual(final XSupplier<? extends T, ? extends X> initial) {
         this.backing = provident(initial);
     }
 
-    private XSupplier<T, X> definite(final T value) {
-        return () -> value;
-    }
+    private XSupplier<T, X> provident(final XSupplier<? extends T, ? extends X> initial) {
+        return new XSupplier<>() {
 
-    private XSupplier<T, X> provident(final XSupplier<T, X> initial) {
-        return new XSupplier<T, X>() {
-
+            @SuppressWarnings("SynchronizedMethod")
             @Override
             public synchronized T get() throws X {
                 if (backing == this) {
@@ -24,9 +21,14 @@ class Mutual<T, X extends Exception> {
                 }
                 return backing.get();
             }
+
+            private XSupplier<T, X> definite(final T value) {
+                return () -> value;
+            }
         };
     }
 
+    @SuppressWarnings("DesignForExtension")
     T get() throws X {
         return backing.get();
     }

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("UseOfObsoleteDateTimeApi")
 class XLazyTest {
 
     private static final String ZERO_SMALLER_FIRST =

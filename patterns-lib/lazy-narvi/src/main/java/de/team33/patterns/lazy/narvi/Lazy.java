@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  *
  * @see XLazy
  */
-public class Lazy<T> extends Mutual<T, RuntimeException> {
+public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
     private static final Converter CNV = Converter.using(InitException::new);
 
@@ -28,7 +28,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
     }
 
     /**
-     * Returns a new {@link Lazy} instance giving a {@link Supplier} that defines the intended initialization of the
+     * Returns a new instance giving a {@link Supplier} that defines the intended initialization of the
      * represented value.
      *
      * @param <T> The result type of the initialisation code.
@@ -39,7 +39,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
     }
 
     /**
-     * Returns a new {@link Lazy} instance giving an {@link XSupplier} that defines the intended initialization of the
+     * Returns a new instance giving an {@link XSupplier} that defines the intended initialization of the
      * represented value. The initialization code may throw a checked exception. If so, it is caught, wrapped in an
      * {@link InitException}, and rethrown.
      *
@@ -64,7 +64,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
      * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
      * of a {@link Lazy} instance causes a checked exception.
      */
-    public static class InitException extends RuntimeException {
+    public static final class InitException extends RuntimeException {
 
         private InitException(final Throwable cause) {
             super(cause.getMessage(), cause);

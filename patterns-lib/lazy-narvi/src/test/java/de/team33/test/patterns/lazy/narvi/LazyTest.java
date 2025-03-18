@@ -14,7 +14,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class LazyTest {
 
@@ -26,9 +29,9 @@ class LazyTest {
         return counter.incrementAndGet();
     };
     private final Lazy<Integer> lazyIndex = Lazy.initEx(initial);
-    private final XSupplier<Integer, ?> badLazy = new XSupplier<Integer, Exception>() {
+    private final XSupplier<Integer, ?> badLazy = new XSupplier<>() {
 
-        private Integer value = null;
+        private Integer value;
 
         @Override
         public Integer get() throws Exception {
@@ -67,9 +70,9 @@ class LazyTest {
      */
     @Test
     final void get_same_sequential() {
-        final List<Integer> results = Stream.generate(lazyIndex::get)
+        final List<Integer> results = Stream.generate(lazyIndex)
                                             .limit(100)
-                                            .collect(Collectors.toList());
+                                            .toList();
         final Integer expected = results.get(0);
         results.forEach(result -> assertSame(expected, result));
     }
@@ -80,8 +83,7 @@ class LazyTest {
      */
     @Test
     final void get_same_parallel() throws Exception {
-        final List<Integer> results = Parallel.stream(100, context -> lazyIndex.get())
-                                              .collect(Collectors.toList());
+        final List<Integer> results = Parallel.stream(100, context -> lazyIndex.get()).toList();
         final Integer expected = results.get(0);
         results.forEach(result -> assertSame(expected, result));
     }
