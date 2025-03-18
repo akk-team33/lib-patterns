@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 
+@SuppressWarnings("unused")
 public class ReviewExample<R> {
 
     public final R example1() throws IOException, SQLException, URISyntaxException {

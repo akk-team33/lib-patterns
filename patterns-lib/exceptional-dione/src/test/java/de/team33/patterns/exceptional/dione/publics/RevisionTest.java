@@ -6,18 +6,19 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SuppressWarnings("NestedTryStatement")
 class RevisionTest {
 
     private static final String EXPECTED_AN_EXCEPTION = "It is expected that an exception was thrown previously";
-    private static final List<Exception> EXCEPTION_LIST = Arrays.asList(
+    private static final List<Exception> EXCEPTION_LIST = List.of(
             new IOException(), new SQLException(), new IllegalArgumentException(), new IllegalStateException()
     );
 
@@ -26,7 +27,7 @@ class RevisionTest {
     }
 
     @Test
-    final void of_null() throws IOException, SQLException {
+    final void of_null() throws Exception {
         final Throwable result = Revision.of(null)
                                          .reThrow(IOException.class)
                                          .throwIf(SQLException.class::isInstance,

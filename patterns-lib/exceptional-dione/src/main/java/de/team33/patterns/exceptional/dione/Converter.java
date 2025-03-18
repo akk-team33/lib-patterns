@@ -8,6 +8,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static de.team33.patterns.exceptional.dione.Mutual.normalized;
+
 
 /**
  * A tool class that can convert certain functional constructs defined in this module (e.g. {@link XFunction})
@@ -20,9 +22,9 @@ import java.util.function.Supplier;
  */
 public final class Converter {
 
-    private final Function<Throwable, ? extends RuntimeException> wrapping;
+    private final Function<? super Throwable, ? extends RuntimeException> wrapping;
 
-    private Converter(final Function<Throwable, ? extends RuntimeException> wrapping) {
+    private Converter(final Function<? super Throwable, ? extends RuntimeException> wrapping) {
         this.wrapping = wrapping;
     }
 
@@ -34,7 +36,7 @@ public final class Converter {
      * @see Wrapping#varying(Function)
      * @see Wrapping#varying(String, Function)
      */
-    public static Converter using(final Function<Throwable, ? extends RuntimeException> wrapping) {
+    public static Converter using(final Function<? super Throwable, ? extends RuntimeException> wrapping) {
         return new Converter(wrapping);
     }
 
@@ -56,7 +58,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final Runnable runnable(final XRunnable<?> xRunnable) {
-        final XBiFunction<Void, Void, Void, ?> normal = Mutual.normalized(xRunnable);
+        final XBiFunction<Void, Void, Void, ?> normal = normalized(xRunnable);
         return () -> call(normal, null, null);
     }
 
@@ -66,8 +68,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T> Consumer<T> consumer(final XConsumer<T, ?> xConsumer) {
-        final XBiFunction<T, Void, Void, ?> normal = Mutual.normalized(xConsumer);
+    public final <T> Consumer<T> consumer(final XConsumer<? super T, ?> xConsumer) {
+        final XBiFunction<T, Void, Void, ?> normal = normalized(xConsumer);
         return t -> call(normal, t, null);
     }
 
@@ -77,8 +79,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<T, U, ?> xBiConsumer) {
-        final XBiFunction<T, U, Void, ?> normal = Mutual.normalized(xBiConsumer);
+    public final <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<? super T, ? super U, ?> xBiConsumer) {
+        final XBiFunction<T, U, Void, ?> normal = normalized(xBiConsumer);
         return (t, u) -> call(normal, t, u);
     }
 
@@ -88,8 +90,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <R> Supplier<R> supplier(final XSupplier<R, ?> xSupplier) {
-        final XBiFunction<Void, Void, R, ?> normal = Mutual.normalized(xSupplier);
+    public final <R> Supplier<R> supplier(final XSupplier<? extends R, ?> xSupplier) {
+        final XBiFunction<Void, Void, R, ?> normal = normalized(xSupplier);
         return () -> call(normal, null, null);
     }
 
@@ -99,8 +101,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T> Predicate<T> predicate(final XPredicate<T, ?> xPredicate) {
-        final XBiFunction<T, Void, Boolean, ?> normal = Mutual.normalized(xPredicate);
+    public final <T> Predicate<T> predicate(final XPredicate<? super T, ?> xPredicate) {
+        final XBiFunction<T, Void, Boolean, ?> normal = normalized(xPredicate);
         return t -> call(normal, t, null);
     }
 
@@ -110,8 +112,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<T, U, ?> xBiPredicate) {
-        final XBiFunction<T, U, Boolean, ?> normal = Mutual.normalized(xBiPredicate);
+    public final <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<? super T, ? super U, ?> xBiPredicate) {
+        final XBiFunction<T, U, Boolean, ?> normal = normalized(xBiPredicate);
         return (t, u) -> call(normal, t, u);
     }
 
@@ -121,8 +123,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T, R> Function<T, R> function(final XFunction<T, R, ?> xFunction) {
-        final XBiFunction<T, Void, R, ?> normal = Mutual.normalized(xFunction);
+    public final <T, R> Function<T, R> function(final XFunction<? super T, ? extends R, ?> xFunction) {
+        final XBiFunction<T, Void, R, ?> normal = normalized(xFunction);
         return t -> call(normal, t, null);
     }
 
@@ -132,7 +134,8 @@ public final class Converter {
      *
      * @see #using(Function)
      */
-    public final <T, U, R> BiFunction<T, U, R> biFunction(final XBiFunction<T, U, R, ?> xBiFunction) {
+    public final <T, U, R> BiFunction<T, U, R>
+    biFunction(final XBiFunction<? super T, ? super U, ? extends R, ?> xBiFunction) {
         return (t, u) -> call(xBiFunction, t, u);
     }
 
@@ -142,7 +145,7 @@ public final class Converter {
      * @see #using(Function)
      */
     public final void run(final XRunnable<?> xRunnable) {
-        call(Mutual.normalized(xRunnable), null, null);
+        call(normalized(xRunnable), null, null);
     }
 
     /**
@@ -154,6 +157,6 @@ public final class Converter {
      * @param <R> The result type.
      */
     public final <R> R get(final XSupplier<R, ?> xSupplier) {
-        return call(Mutual.normalized(xSupplier), null, null);
+        return call(normalized(xSupplier), null, null);
     }
 }

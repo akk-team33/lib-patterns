@@ -34,7 +34,7 @@ public final class Conversion {
      * Converts an {@link XConsumer} that may throw a checked exception to a {@link Consumer} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <T> Consumer<T> consumer(final XConsumer<T, ?> xConsumer) {
+    public static <T> Consumer<T> consumer(final XConsumer<? super T, ?> xConsumer) {
         return CONVERTER.consumer(xConsumer);
     }
 
@@ -42,7 +42,7 @@ public final class Conversion {
      * Converts an {@link XBiConsumer} that may throw a checked exception to a {@link BiConsumer} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<T, U, ?> xBiConsumer) {
+    public static <T, U> BiConsumer<T, U> biConsumer(final XBiConsumer<? super T, ? super U, ?> xBiConsumer) {
         return CONVERTER.biConsumer(xBiConsumer);
     }
 
@@ -50,7 +50,7 @@ public final class Conversion {
      * Converts an {@link XSupplier} that may throw a checked exception to a {@link Supplier} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <R> Supplier<R> supplier(final XSupplier<R, ?> xSupplier) {
+    public static <R> Supplier<R> supplier(final XSupplier<? extends R, ?> xSupplier) {
         return CONVERTER.supplier(xSupplier);
     }
 
@@ -58,7 +58,7 @@ public final class Conversion {
      * Converts an {@link XPredicate} that may throw a checked exception to a {@link Predicate} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <T> Predicate<T> predicate(final XPredicate<T, ?> xPredicate) {
+    public static <T> Predicate<T> predicate(final XPredicate<? super T, ?> xPredicate) {
         return CONVERTER.predicate(xPredicate);
     }
 
@@ -66,7 +66,7 @@ public final class Conversion {
      * Converts an {@link XBiPredicate} that may throw a checked exception to a {@link BiPredicate} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static  <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<T, U, ?> xBiPredicate) {
+    public static  <T, U> BiPredicate<T, U> biPredicate(final XBiPredicate<? super T, ? super U, ?> xBiPredicate) {
         return CONVERTER.biPredicate(xBiPredicate);
     }
 
@@ -74,7 +74,7 @@ public final class Conversion {
      * Converts an {@link XFunction} that may throw a checked exception to a {@link Function} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <T, R> Function<T, R> function(final XFunction<T, R, ?> xFunction) {
+    public static <T, R> Function<T, R> function(final XFunction<? super T, ? extends R, ?> xFunction) {
         return CONVERTER.function(xFunction);
     }
 
@@ -82,7 +82,8 @@ public final class Conversion {
      * Converts an {@link XBiFunction} that may throw a checked exception to a {@link BiFunction} that,
      * when executed, wraps any occurring checked exception as a {@link WrappedException}.
      */
-    public static <T, U, R> BiFunction<T, U, R> biFunction(final XBiFunction<T, U, R, ?> xBiFunction) {
+    public static <T, U, R> BiFunction<T, U, R>
+    biFunction(final XBiFunction<? super T, ? super U, ? extends R, ?> xBiFunction) {
         return CONVERTER.biFunction(xBiFunction);
     }
 

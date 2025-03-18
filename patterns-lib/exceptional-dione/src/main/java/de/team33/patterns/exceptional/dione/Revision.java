@@ -33,6 +33,7 @@ import java.util.function.Predicate;
  * @see #reThrow(Class)
  * @see #close(Function)
  */
+@SuppressWarnings("WeakerAccess")
 public final class Revision<T extends Throwable> {
 
     private final T subject;
@@ -53,7 +54,7 @@ public final class Revision<T extends Throwable> {
 
     /**
      * Applies a given {@link Function mapping} to the {@linkplain #of(Throwable) associated exception} if the given
-     * {@link Predicate condition} applies and throws the result, otherwise this {@link Revision} will be returned.
+     * {@link Predicate condition} applies and throws the result, otherwise <em>this</em> will be returned.
      *
      * @param condition A {@link Predicate} that is used to check the {@linkplain #of(Throwable) associated exception}
      *                  for applicability.
@@ -61,7 +62,7 @@ public final class Revision<T extends Throwable> {
      *                  specific type of exception to be thrown at that point.
      * @param <X>       The exception type that is intended as a result of the given mapping and that is thrown by this
      *                  method, if applicable.
-     * @return This {@link Revision}, which can be continued if no exception has been thrown.
+     * @return <em>this</em>, which can be continued if no exception has been thrown.
      * @throws X The converted exception, if present.
      */
     public final <X extends Throwable> Revision<T> throwIf(final Predicate<? super T> condition,
@@ -96,7 +97,7 @@ public final class Revision<T extends Throwable> {
 
     /**
      * Rethrows the {@linkplain #of(Throwable) associated exception} if it matches the given exception type.
-     * Otherwise, this {@link Revision} will be returned. Example:
+     * Otherwise, <em>this</em> will be returned. Example:
      * <pre>
      *         try {
      *             return somethingThatMayCauseAWrappedException();
@@ -111,7 +112,7 @@ public final class Revision<T extends Throwable> {
      *
      * @param xClass The {@link Class} that represents the type of exception that is expected.
      * @param <X>    The type of exception that is expected and, if applicable, thrown by this method.
-     * @return This {@link Revision}, which can be continued if no exception has been thrown.
+     * @return <em>this</em>, which can be continued if no exception has been thrown.
      * @throws X the {@linkplain #of(Throwable) associated exception}, cast to the expected type, if applicable.
      * @see #of(Throwable)
      * @see #close(Function)
