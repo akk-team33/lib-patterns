@@ -36,6 +36,7 @@ public class Resource {
     private final XSupplier<InputStream, IOException> newInputStream;
     private final Function<Exception, String> newExceptionMessage;
 
+    @SuppressWarnings("WeakerAccess")
     protected Resource(final Charset charset,
                        final XSupplier<InputStream, IOException> newInputStream,
                        final Function<Exception, String> newExceptionMessage) {
@@ -45,7 +46,7 @@ public class Resource {
     }
 
     /**
-     * Returns a {@link Resource} to read a java resource.
+     * Returns a new instance to read a java resource.
      * It uses UTF-8 if charset encoding is required.
      *
      * @see #using(Charset)
@@ -58,7 +59,7 @@ public class Resource {
     }
 
     /**
-     * Returns a {@link Resource} to read a file.
+     * Returns a new instance to read a file.
      * It uses UTF-8 if charset encoding is required.
      *
      * @see #using(Charset)
@@ -71,13 +72,14 @@ public class Resource {
     }
 
     /**
-     * Returns a copy of <em>this</em> {@link Resource}, but using the given charset encoding.
+     * Returns a copy of <em>this</em>, but using the given <em>charset</em> encoding.
      */
+    @SuppressWarnings("ParameterHidesMemberVariable")
     public final Resource using(final Charset charset) {
         return new Resource(charset, newInputStream, newExceptionMessage);
     }
 
-    private static String readText(BufferedReader reader) {
+    private static String readText(final BufferedReader reader) {
         return reader.lines().collect(Collectors.joining(NEW_LINE));
     }
 
@@ -87,7 +89,7 @@ public class Resource {
         return result;
     }
 
-    public final <R> R readByteStream(final XFunction<InputStream, R, IOException> function) {
+    public final <R> R readByteStream(final XFunction<? super InputStream, R, ? extends IOException> function) {
         try (final InputStream in = newInputStream.get()) {
             return function.apply(in);
         } catch (final RuntimeException | IOException e) {
@@ -95,15 +97,17 @@ public class Resource {
         }
     }
 
-    private <R> R readCharStream(final InputStream stream,
-                                 final XFunction<BufferedReader, R, IOException> function) throws IOException {
+    private <R>
+    R readCharStream(final InputStream stream,
+                     final XFunction<? super BufferedReader, R, ? extends IOException> function) throws IOException {
         try (final Reader reader = new InputStreamReader(stream, charset);
              final BufferedReader bufferedReader = new BufferedReader(reader)) {
             return function.apply(bufferedReader);
         }
     }
 
-    public final <R> R readCharStream(final XFunction<BufferedReader, R, IOException> function) {
+    @SuppressWarnings("WeakerAccess")
+    public final <R> R readCharStream(final XFunction<? super BufferedReader, R, ? extends IOException> function) {
         return readByteStream(in -> readCharStream(in, function));
     }
 

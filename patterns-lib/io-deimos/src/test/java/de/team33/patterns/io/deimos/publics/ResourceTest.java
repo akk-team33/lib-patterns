@@ -2,7 +2,6 @@ package de.team33.patterns.io.deimos.publics;
 
 import de.team33.patterns.io.deimos.Resource;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -38,7 +37,7 @@ class ResourceTest {
 
     @ParameterizedTest
     @EnumSource
-    void readText(final TestCase testCase) {
+    final void readText(final TestCase testCase) {
         final String expected = String.format("p1=v1%np2=v2%np3=v3");
         final Resource subject = testCase.newResource.get();
 
@@ -50,7 +49,7 @@ class ResourceTest {
     @ParameterizedTest
     @EnumSource
     final void readProperties(final TestCase testCase) {
-        final Map<?,?> expected = new HashMap<Object, Object>() {{
+        final Map<?,?> expected = new HashMap<>() {{
             put("p1", "v1");
             put("p2", "v2");
             put("p3", "v3");
@@ -63,13 +62,14 @@ class ResourceTest {
         assertEquals(expected, result);
     }
 
+    @SuppressWarnings("unused")
     enum TestCase {
         BY_RESOURCE(() -> Resource.by(ResourceTest.class, RESOURCE_NAME).using(StandardCharsets.US_ASCII)),
         BY_FILE(() -> Resource.by(RESOURCE_PATH).using(StandardCharsets.ISO_8859_1));
 
         private final Supplier<Resource> newResource;
 
-        TestCase(Supplier<Resource> newResource) {
+        TestCase(final Supplier<Resource> newResource) {
             this.newResource = newResource;
         }
     }
