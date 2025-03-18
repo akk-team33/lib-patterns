@@ -9,13 +9,16 @@ import de.team33.patterns.random.tarvos.shared.Sample;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class SupplierNotApplicableTest extends Random implements Generator, Charger, Initiator {
+class SupplierNotApplicableTest implements Generator, Charger, Initiator {
+
+    private final Random random = new SecureRandom();
 
     @Test
     final void charger() {
@@ -43,7 +46,7 @@ class SupplierNotApplicableTest extends Random implements Generator, Charger, In
 
     @Override
     public final BigInteger nextBits(final int numBits) {
-        return new BigInteger(numBits, this);
+        return new BigInteger(numBits, random);
     }
 
     /**
