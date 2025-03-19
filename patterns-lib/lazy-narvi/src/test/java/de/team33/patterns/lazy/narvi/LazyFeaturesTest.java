@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
-final class LazyPoolTest implements Generator {
+@SuppressWarnings("MethodOnlyUsedFromInnerClass")
+final class LazyFeaturesTest implements Generator {
 
     private final Random random = new SecureRandom();
     private final Features features = new Features();
-    private final int intValue = anyInt();
-    private final String stringValue = anyString();
-    private final Instant instantValue = Instant.now().plusNanos(anyInt());
 
     static Stream<Key<?>> keys() {
         return Key.VALUES.stream();
@@ -32,33 +32,45 @@ final class LazyPoolTest implements Generator {
         return new BigInteger(numBits, random);
     }
 
+    @SuppressWarnings("TypeMayBeWeakened")
     @ParameterizedTest
     @MethodSource("keys")
-    final <R> void get(final Key<R> key) {
+    final <R> void get_reset_one(final Key<R> key) {
         final R initial = features.get(key);
         assertSame(initial, features.get(key));
-    }
 
-    @ParameterizedTest
-    @MethodSource("keys")
-    final <R> void reset(final Key<R> key) {
-        final R initial = features.get(key);
         features.reset(key);
-        assertNotEquals(initial, features.get(key));
+        assertNotSame(initial, features.get(key));
     }
 
     @Test
-    final void reset() {
+    final void get_reset_all() {
         final List<?> initial = Key.VALUES.stream().map(features::get).toList();
+        assertEquals(initial, Key.VALUES.stream().map(features::get).toList());
+
         features.reset();
         assertNotEquals(initial, Key.VALUES.stream().map(features::get).toList());
+    }
+
+    private Integer integer() {
+        return features.get(Key.INTEGER);
+    }
+
+    private String string() {
+        return features.get(Key.STRING);
+    }
+
+    private Instant instant() {
+        return features.get(Key.INSTANT);
     }
 
     private List<Object> toList() {
         return features.get(Key.TO_LIST);
     }
 
-    interface Key<R> extends LazyPool.Key<Features, R> {
+    @SuppressWarnings("ClassNameSameAsAncestorName")
+    @FunctionalInterface
+    interface Key<R> extends LazyFeatures.Key<Features, R> {
 
         Key<Integer> INTEGER = Features::newInteger;
         Key<String> STRING = Features::newString;
@@ -67,11 +79,12 @@ final class LazyPoolTest implements Generator {
         Key<Integer> HASH_CODE = Features::newHashCode;
         Key<String> TO_STRING = Features::newToString;
 
+        @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
         List<Key<?>> VALUES = List.of(INTEGER, STRING, INSTANT, TO_STRING, HASH_CODE, TO_LIST);
     }
 
     @SuppressWarnings("ReturnOfInnerClass")
-    class Features extends LazyPool<Features> {
+    class Features extends LazyFeatures<Features> {
 
         @Override
         protected final Features host() {
@@ -87,11 +100,11 @@ final class LazyPoolTest implements Generator {
         }
 
         private Instant newInstant() {
-            return Instant.now();
+            return Instant.now().plusNanos(anyInt());
         }
 
         private List<Object> newToList() {
-            return List.of(instantValue, stringValue, instantValue);
+            return List.of(integer(), string(), instant());
         }
 
         private int newHashCode() {
