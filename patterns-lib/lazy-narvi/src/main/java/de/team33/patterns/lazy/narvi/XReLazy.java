@@ -16,7 +16,8 @@ import java.util.function.Supplier;
  * <p>
  * *Pure read accesses are of course not really competing.
  *
- * @see Lazy
+ * @see XLazy
+ * @see ReLazy
  */
 public final class XReLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
 

@@ -22,6 +22,8 @@ import java.util.function.Supplier;
  */
 public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated(forRemoval = true)
     private static final Converter CNV = Converter.using(InitException::new);
 
     private Lazy(final Supplier<? extends T> initial) {
@@ -62,13 +64,14 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
     }
 
     /**
-     * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
-     * of a {@link Lazy} instance causes a checked exception.
+     * @deprecated use {@link de.team33.patterns.lazy.narvi.InitException} instead!
      */
-    public static final class InitException extends RuntimeException {
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "DeprecatedIsStillUsed"})
+    @Deprecated(forRemoval = true)
+    public static final class InitException extends de.team33.patterns.lazy.narvi.InitException {
 
         private InitException(final Throwable cause) {
-            super(cause.getMessage(), cause);
+            super(cause);
         }
     }
 }

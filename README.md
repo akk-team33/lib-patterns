@@ -53,8 +53,13 @@ http://www.team33.de/dev/patterns/2.x
 ### 2.0.0
 
 * Set java language level to 17
-* Removed most deprecated items
+* Removed some deprecated items
 * Several refinements
+* Refined module lazy-narvy ...
+  * Added class ReLazy
+  * Added class XReLazy
+  * Added class InitException
+  * Marked class Lazy.InitException as deprecated
 
 ### 1.25.0
 

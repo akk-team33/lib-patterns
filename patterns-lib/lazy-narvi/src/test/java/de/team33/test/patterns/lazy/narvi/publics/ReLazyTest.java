@@ -1,6 +1,7 @@
 package de.team33.test.patterns.lazy.narvi.publics;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
+import de.team33.patterns.lazy.narvi.InitException;
 import de.team33.patterns.lazy.narvi.Lazy;
 import de.team33.patterns.lazy.narvi.ReLazy;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ class ReLazyTest extends LazyTestBase<ReLazy<Integer>> {
         final ReLazy<?> lazy = ReLazy.initEx(() -> {
             throw new SQLException("this is a test");
         });
-        assertThrows(ReLazy.InitException.class, lazy::get);
+        assertThrows(InitException.class, lazy::get);
     }
 
     @Test

@@ -1,9 +1,10 @@
 package de.team33.patterns.lazy.narvi;
 
-import de.team33.patterns.exceptional.dione.Converter;
 import de.team33.patterns.exceptional.dione.XSupplier;
 
 import java.util.function.Supplier;
+
+import static de.team33.patterns.lazy.narvi.InitException.CNV;
 
 /**
  * Implements a kind of {@link Supplier} that provides a virtually fixed value.
@@ -17,12 +18,12 @@ import java.util.function.Supplier;
  * <p>
  * *Pure read accesses are of course not really competing.
  *
- * @see XLazy
- * @see ReLazy
+ * @see Lazy
+ * @see XReLazy
  */
+@SuppressWarnings("WeakerAccess")
 public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
-    private static final Converter CNV = Converter.using(InitException::new);
     private final Supplier<? extends T> initial;
 
     private ReLazy(final Supplier<? extends T> initial) {
@@ -66,16 +67,5 @@ public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supp
     public final ReLazy<T> reset() {
         reset(initial::get);
         return this;
-    }
-
-    /**
-     * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
-     * of a {@link ReLazy} instance causes a checked exception.
-     */
-    public static final class InitException extends RuntimeException {
-
-        private InitException(final Throwable cause) {
-            super(cause.getMessage(), cause);
-        }
     }
 }
