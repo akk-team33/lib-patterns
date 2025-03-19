@@ -7,18 +7,18 @@ import java.util.function.Supplier;
 import static de.team33.patterns.lazy.narvi.InitException.CNV;
 
 /**
- * Implements a kind of {@link Supplier} that provides a virtually <em>fixed value</em>*.
- * That value is only actually determined when it is accessed for the first time**.
+ * Implements a {@link Supplier} that provides a virtually <em>fixed value</em><sup>(1)</sup>.
+ * That value is only actually determined when it is accessed for the <em>first time</em><sup>(2)</sup>.
  * <p>
  * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
- * is called at most once*, even if there is concurrent access from multiple threads, unless the
+ * is called at most once<sup>(1)</sup>, even if there is concurrent access from multiple threads, unless the
  * initialization attempt causes an (unchecked) exception.
  * <p>
- * Once the value is established, unnecessary effort to synchronize competing*** read accesses is avoided.
+ * Once the value is established, unnecessary effort to synchronize competing<sup>(3)</sup> read accesses is avoided.
  * <p>
- * *until {@link #reset()}.<br>
- * **after initialization or after latest {@link #reset()}.<br>
- * ***Pure read accesses are of course not really competing.
+ * (1) until {@link #reset()}.<br>
+ * (2) after initialization or after latest {@link #reset()}.<br>
+ * (3) Pure read accesses are of course not really competing.
  *
  * @see Lazy
  * @see XReLazy

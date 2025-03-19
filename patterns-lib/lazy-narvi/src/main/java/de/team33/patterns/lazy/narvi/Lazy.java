@@ -6,7 +6,7 @@ import de.team33.patterns.exceptional.dione.XSupplier;
 import java.util.function.Supplier;
 
 /**
- * Implements a kind of {@link Supplier} that provides a virtually fixed value.
+ * Implements a {@link Supplier} that provides a virtually fixed value.
  * That value is only actually determined when it is accessed for the first time.
  * <p>
  * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
