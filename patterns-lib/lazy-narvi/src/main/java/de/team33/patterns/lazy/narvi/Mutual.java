@@ -32,4 +32,8 @@ class Mutual<T, X extends Exception> {
     T get() throws X {
         return backing.get();
     }
+
+    final void reset(final XSupplier<? extends T, ? extends X> initial) {
+        this.backing = provident(initial);
+    }
 }

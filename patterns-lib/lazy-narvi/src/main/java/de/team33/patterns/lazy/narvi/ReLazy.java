@@ -20,12 +20,14 @@ import java.util.function.Supplier;
  * @see XLazy
  * @see ReLazy
  */
-public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
+public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
     private static final Converter CNV = Converter.using(InitException::new);
+    private final Supplier<? extends T> initial;
 
-    private Lazy(final Supplier<? extends T> initial) {
+    private ReLazy(final Supplier<? extends T> initial) {
         super(initial::get);
+        this.initial = initial;
     }
 
     /**
@@ -35,8 +37,8 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
      * @param <T> The result type of the initialisation code.
      * @see #initEx(XSupplier)
      */
-    public static <T> Lazy<T> init(final Supplier<? extends T> initial) {
-        return new Lazy<>(initial);
+    public static <T> ReLazy<T> init(final Supplier<? extends T> initial) {
+        return new ReLazy<>(initial);
     }
 
     /**
@@ -47,7 +49,7 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
      * @param <T> The result type of the initialisation code.
      * @see #init(Supplier)
      */
-    public static <T> Lazy<T> initEx(final XSupplier<? extends T, ?> initial) {
+    public static <T> ReLazy<T> initEx(final XSupplier<? extends T, ?> initial) {
         return init(CNV.supplier(initial));
     }
 
@@ -61,9 +63,14 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
         return super.get();
     }
 
+    public final ReLazy<T> reset() {
+        reset(initial::get);
+        return this;
+    }
+
     /**
      * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
-     * of a {@link Lazy} instance causes a checked exception.
+     * of a {@link ReLazy} instance causes a checked exception.
      */
     public static final class InitException extends RuntimeException {
 
