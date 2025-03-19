@@ -5,16 +5,18 @@ import de.team33.patterns.exceptional.dione.XSupplier;
 import java.util.function.Supplier;
 
 /**
- * Implements a kind of supplier that provides a virtually fixed value.
- * That value is only actually determined when it is accessed for the first time.
+ * Implements a kind of supplier that provides a virtually fixed value*.
+ * That value is only actually determined when it is accessed for the <em>first time</em>**.
  * <p>
  * This implementation ensures that the {@linkplain #init(XSupplier) originally defined initialization code}
- * is called at most once, even if there is concurrent access from multiple threads, unless the
+ * is called at most once*, even if there is concurrent access from multiple threads, unless the
  * initialization attempt causes an exception.
  * <p>
- * Once the value is established, unnecessary effort to synchronize competing* read accesses is avoided.
+ * Once the value is established, unnecessary effort to synchronize competing*** read accesses is avoided.
  * <p>
- * *Pure read accesses are of course not really competing.
+ * *until {@link #reset()}.<br>
+ * **after initialization or after latest {@link #reset()}.<br>
+ * ***Pure read accesses are of course not really competing.
  *
  * @see XLazy
  * @see ReLazy
@@ -49,6 +51,9 @@ public final class XReLazy<T, X extends Exception> extends Mutual<T, X> implemen
         return super.get();
     }
 
+    /**
+     * Resets <em>this</em> to the initial state and returns <em>this</em>.
+     */
     public final XReLazy<T, X> reset() {
         reset(initial);
         return this;

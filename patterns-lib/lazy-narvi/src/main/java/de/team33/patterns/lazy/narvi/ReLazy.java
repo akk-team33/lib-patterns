@@ -7,16 +7,18 @@ import java.util.function.Supplier;
 import static de.team33.patterns.lazy.narvi.InitException.CNV;
 
 /**
- * Implements a kind of {@link Supplier} that provides a virtually fixed value.
- * That value is only actually determined when it is accessed for the first time.
+ * Implements a kind of {@link Supplier} that provides a virtually <em>fixed value</em>*.
+ * That value is only actually determined when it is accessed for the first time**.
  * <p>
  * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
- * is called at most once, even if there is concurrent access from multiple threads, unless the
+ * is called at most once*, even if there is concurrent access from multiple threads, unless the
  * initialization attempt causes an (unchecked) exception.
  * <p>
- * Once the value is established, unnecessary effort to synchronize competing* read accesses is avoided.
+ * Once the value is established, unnecessary effort to synchronize competing*** read accesses is avoided.
  * <p>
- * *Pure read accesses are of course not really competing.
+ * *until {@link #reset()}.<br>
+ * **after initialization or after latest {@link #reset()}.<br>
+ * ***Pure read accesses are of course not really competing.
  *
  * @see Lazy
  * @see XReLazy
@@ -64,6 +66,9 @@ public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supp
         return super.get();
     }
 
+    /**
+     * Resets <em>this</em> to the initial state and returns <em>this</em>.
+     */
     public final ReLazy<T> reset() {
         reset(initial::get);
         return this;
