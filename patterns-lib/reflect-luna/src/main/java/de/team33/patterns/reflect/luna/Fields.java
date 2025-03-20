@@ -21,7 +21,7 @@ import java.util.stream.Stream;
  * Represents an aggregate of {@link Field}s of a specific class and allows elementary operations over all these
  * {@link Field}s, with any {@link IllegalAccessException}s that may occur being encapsulated in unchecked exceptions.
  */
-public class Fields {
+public final class Fields {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NOT_SIGNIFICANT = Modifier.STATIC | Modifier.TRANSIENT | SYNTHETIC;
@@ -79,7 +79,7 @@ public class Fields {
         return of(Group.DECLARED, subjectClass, ignorable);
     }
 
-    private static <V> BiConsumer<Map<String, V>, ? super Field> put(final Function<? super Field, V> function) {
+    private static <V> BiConsumer<Map<String, V>, ? super Field> put(final Function<? super Field, ? extends V> function) {
         return (map, field) -> map.put(field.getName(), function.apply(field));
     }
 
@@ -119,7 +119,6 @@ public class Fields {
     /**
      * Returns a {@link Stream} of the contained fields.
      */
-    @SuppressWarnings("BoundedWildcard")
     public final Stream<Field> stream() {
         return fields.stream();
     }
@@ -145,7 +144,7 @@ public class Fields {
      *
      * @throws AccessException If an {@link IllegalAccessException} is thrown during the operation.
      */
-    public final <V> Map<String, V> toMap(final XFunction<? super Field, V, IllegalAccessException> operation)
+    public final <V> Map<String, V> toMap(final XFunction<? super Field, ? extends V, IllegalAccessException> operation)
             throws AccessException {
         return stream().collect(TreeMap::new, put(CNV.function(operation)), Map::putAll);
     }
@@ -167,12 +166,12 @@ public class Fields {
 
         private final Function<Class<?>, Stream<Field>> streaming;
 
-        Group(Function<Class<?>, Stream<Field>> streaming) {
+        Group(final Function<Class<?>, Stream<Field>> streaming) {
             this.streaming = streaming;
         }
     }
 
-    public static class AccessException extends IllegalStateException {
+    public static final class AccessException extends IllegalStateException {
 
         private AccessException(final Throwable cause) {
             super(cause.getMessage(), cause);
