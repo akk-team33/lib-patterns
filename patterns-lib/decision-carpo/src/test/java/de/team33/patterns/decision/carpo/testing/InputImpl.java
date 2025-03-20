@@ -6,6 +6,7 @@ public class InputImpl implements Input {
     private final boolean b;
     private final boolean c;
 
+    @SuppressWarnings("BooleanParameter")
     public InputImpl(final boolean a, final boolean b, final boolean c) {
         this.a = a;
         this.b = b;
@@ -19,17 +20,17 @@ public class InputImpl implements Input {
     }
 
     @Override
-    public boolean isA() {
+    public final boolean isA() {
         return a;
     }
 
     @Override
-    public boolean isB() {
+    public final boolean isB() {
         return b;
     }
 
     @Override
-    public boolean isC() {
+    public final boolean isC() {
         return c;
     }
 }

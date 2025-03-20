@@ -7,6 +7,7 @@ public enum SResult {
 
     A, B, C, D, E;
 
+    @SuppressWarnings("MethodWithMultipleReturnPoints")
     public static SResult map(final Input input) {
         if (input.isC()) {
             if (input.isB()) {

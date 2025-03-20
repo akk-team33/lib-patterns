@@ -39,7 +39,8 @@ import java.util.stream.IntStream;
  * @see #joined(BitOrder, Collection)
  * @see de.team33.patterns.decision.carpo package
  */
-public class Variety<I> {
+@SuppressWarnings("WeakerAccess")
+public final class Variety<I> {
 
     private static final String TOO_MANY_CRITERIA =
             "Max. %d criteria can be handled - but %d are given.";
@@ -54,6 +55,7 @@ public class Variety<I> {
         if (Integer.SIZE < size) {
             throw new IllegalArgumentException(String.format(TOO_MANY_CRITERIA, Integer.SIZE, size));
         } else {
+            //noinspection Java9CollectionFactory
             this.criteria = Collections.unmodifiableList(new ArrayList<>(criteria));
             this.bitOp = bitOrder.operator(size - 1);
         }
@@ -68,6 +70,7 @@ public class Variety<I> {
      * @see #joined(Collection)
      * @see #joined(BitOrder, Collection)
      */
+    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public static <I> Variety<I> joined(final Predicate<I>... criteria) {
         return joined(Arrays.asList(criteria));
@@ -82,6 +85,7 @@ public class Variety<I> {
      * @see #joined(Collection)
      * @see #joined(BitOrder, Collection)
      */
+    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public static <I> Variety<I> joined(final BitOrder bitOrder, final Predicate<I>... criteria) {
         return joined(bitOrder, Arrays.asList(criteria));
@@ -148,7 +152,7 @@ public class Variety<I> {
 
     /**
      * Evaluates the predicates given during instantiation with the given <em>input</em>,
-     * creates a bit pattern from them and returns an <code>int</code> value that represents this bit pattern.
+     * creates a bit pattern from them and returns an {@code int} value that represents this bit pattern.
      * <p>
      * Let <em>scale</em> be the number of given predicates,
      * then the result is a value between <em>0</em> and <em>((2<sup>scale</sup>) - 1)</em>.
@@ -180,6 +184,7 @@ public class Variety<I> {
      *
      * @see #replying(Collection)
      */
+    @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final <R> Function<I, R> replying(final R... results) {
         return replying(Arrays.asList(results));
@@ -193,6 +198,7 @@ public class Variety<I> {
      */
     public final <R> Function<I, R> replying(final Collection<? extends R> results) {
         if (bound() == results.size()) {
+            //noinspection Java9CollectionFactory
             final List<R> resultList = Collections.unmodifiableList(new ArrayList<>(results));
             return input -> resultList.get(apply(input));
         } else {
