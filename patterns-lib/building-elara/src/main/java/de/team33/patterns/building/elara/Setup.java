@@ -11,11 +11,12 @@ import java.util.function.Consumer;
  * @param <B> The builder type: the effective type of the derived builder implementation,
  *            at least this type itself.
  */
+@FunctionalInterface
 public interface Setup<C, B> {
 
     /**
      * Accepts a {@link Consumer} as modifying operation to be performed on a target instance immediately
      * or no later than the final build() operation and returns the builder instance itself.
      */
-    B setup(Consumer<C> consumer);
+    B setup(Consumer<? super C> consumer);
 }

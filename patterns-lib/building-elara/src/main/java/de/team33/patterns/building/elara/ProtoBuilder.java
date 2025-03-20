@@ -61,7 +61,7 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends BuilderBase<B
      * This implementation applies the given consumer directly to the associated core instance.
      */
     @Override
-    public final B setup(final Consumer<C> consumer) {
+    public final B setup(final Consumer<? super C> consumer) {
         lifecycle.check();
         consumer.accept(core);
         return THIS();
@@ -75,7 +75,7 @@ public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends BuilderBase<B
      *
      * @param <R> The result type.
      */
-    protected final <R> R build(final Function<C, R> mapping) {
+    protected final <R> R build(final Function<? super C, R> mapping) {
         lifecycle.increment();
         return mapping.apply(core);
     }

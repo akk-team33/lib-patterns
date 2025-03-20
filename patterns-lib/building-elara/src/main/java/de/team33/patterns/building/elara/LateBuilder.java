@@ -19,8 +19,8 @@ import java.util.function.Supplier;
  */
 public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
 
-    private final List<Consumer<T>> setups;
-    private final Supplier<T> newResult;
+    private final List<Consumer<? super T>> setups;
+    private final Supplier<? extends T> newResult;
 
     /**
      * Initializes a new instance.
@@ -29,7 +29,7 @@ public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> 
      * @param builderClass The {@link Class} representation of the intended effective builder type.
      * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
-    protected LateBuilder(final Supplier<T> newResult, final Class<B> builderClass) {
+    protected LateBuilder(final Supplier<? extends T> newResult, final Class<B> builderClass) {
         super(builderClass);
         this.setups = new LinkedList<>();
         this.newResult = newResult;
@@ -42,7 +42,7 @@ public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> 
      * {@link #build()}.
      */
     @Override
-    public final B setup(final Consumer<T> consumer) {
+    public final B setup(final Consumer<? super T> consumer) {
         setups.add(consumer);
         return THIS();
     }
@@ -55,7 +55,7 @@ public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> 
     }
 
     private T build(final T result) {
-        for (final Consumer<T> consumer : setups) {
+        for (final Consumer<? super T> consumer : setups) {
             consumer.accept(result);
         }
         return result;

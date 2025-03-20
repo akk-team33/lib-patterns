@@ -13,6 +13,8 @@ public final class Collecting {
     private Collecting() {
     }
 
+    @SuppressWarnings({"unused", "ClassNameSameAsAncestorName"})
+    @FunctionalInterface
     public interface Setup<E, C extends Collection<E>, B>
             extends de.team33.patterns.building.elara.Setup<C, B> {
 
@@ -20,6 +22,7 @@ public final class Collecting {
             return setup(container -> container.add(element));
         }
 
+        @SuppressWarnings("unchecked")
         default B add(final E first, final E second, final E... more) {
             return addAll(Stream.concat(Stream.of(first, second), Stream.of(more)));
         }
@@ -54,6 +57,7 @@ public final class Collecting {
         return new Charger<>(subject, Charger.class);
     }
 
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "WeakerAccess"})
     public static class Charger<E, S extends Collection<E>, B extends Charger<E, S, B>>
             extends de.team33.patterns.building.elara.Charger<S, B> implements Setup<E, S, B> {
 
@@ -62,14 +66,15 @@ public final class Collecting {
         }
     }
 
-    public static <E, S extends Collection<E>> Builder<E, S, ?> builder(final Supplier<S> newResult) {
+    public static <E, S extends Collection<E>> Builder<E, S, ?> builder(final Supplier<? extends S> newResult) {
         return new Builder<>(newResult, Builder.class);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Builder<E, R extends Collection<E>, B extends Builder<E, R, B>>
             extends LateBuilder<R, B> implements Setup<E, R, B> {
 
-        protected Builder(final Supplier<R> newResult, final Class<B> builderClass) {
+        protected Builder(final Supplier<? extends R> newResult, final Class<B> builderClass) {
             super(newResult, builderClass);
         }
     }

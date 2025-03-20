@@ -9,9 +9,12 @@ package de.team33.patterns.building.elara;
  * <p>
  * For this purpose, it should be ensured in the constructor that <em>this</em> actually corresponds to the
  * designated type.
+ * <p>
+ * TODO: should be independent : "class SelfReferring"
  *
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
+@SuppressWarnings("WeakerAccess")
 public class BuilderBase<B extends BuilderBase<B>> {
 
     private static final String ILLEGAL_BUILDER_CLASS =

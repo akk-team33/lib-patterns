@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
-public class Buildable {
+public final class Buildable {
 
     private static final Fields FIELDS = Fields.of(Buildable.class);
 
@@ -50,8 +50,8 @@ public class Buildable {
     }
 
     @Override
-    public final boolean equals(final Object o) {
-        return (this == o) || ((o instanceof Buildable) && toList().equals(((Buildable) o).toList()));
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof final Buildable other) && toList().equals(other.toList()));
     }
 
     @Override

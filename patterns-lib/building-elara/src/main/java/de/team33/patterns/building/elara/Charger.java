@@ -11,7 +11,7 @@ import java.util.function.Function;
  * instance from the start and also be used as the result of the charging process.
  * <p>
  * An instance of this charger type is limited to single use.
- * Once the terminating {@link #charged()} method has been used, subsequent calls to {@link #setup(Consumer)} throw an
+ * Once the terminating {@link #charged()} method has been used, subsequent calls to {@link Setup#setup(Consumer)} throw an
  * {@link IllegalStateException}.
  *
  * @param <T> The target type: an instance of that type is associated with the charger instance
@@ -19,7 +19,7 @@ import java.util.function.Function;
  *            That type is expected to be mutable, at least in the scope of the concrete charger implementation.
  * @param <C> The charger type: the intended effective type of the concrete charger implementation.
  */
-public class Charger<T, C extends Charger<T, C>> extends ProtoBuilder<T, C> implements Setup<T, C> {
+public class Charger<T, C extends Charger<T, C>> extends ProtoBuilder<T, C> {
 
     /**
      * Initializes a new instance.
@@ -34,8 +34,8 @@ public class Charger<T, C extends Charger<T, C>> extends ProtoBuilder<T, C> impl
         super(target, newLifecycle(), chargerClass);
     }
 
-    private static Lifecycle newLifecycle() {
-        return new Lifecycle() {
+    private static ProtoBuilder.Lifecycle newLifecycle() {
+        return new ProtoBuilder.Lifecycle() {
 
             private boolean charged = false;
 
@@ -56,7 +56,7 @@ public class Charger<T, C extends Charger<T, C>> extends ProtoBuilder<T, C> impl
     /**
      * Returns the associated target instance.
      * <p>
-     * Subsequent calls of {@link #setup(Consumer)} will lead to an {@link IllegalStateException}!
+     * Subsequent calls of {@link Setup#setup(Consumer)} will lead to an {@link IllegalStateException}!
      */
     public final T charged() {
         return build(Function.identity());
