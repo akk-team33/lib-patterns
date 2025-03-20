@@ -24,7 +24,6 @@ http://www.team33.de/dev/patterns/2.x
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * io-deimos (Team33 IO Library - Edition "deimos")
-  * io-phobos (Team33 IO Library - Edition "phobos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
   * notes-eris (Team33 Notifications Library - Edition "eris")
@@ -39,6 +38,7 @@ http://www.team33.de/dev/patterns/2.x
 * (patterns-lib - previous releases)
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
+  * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
@@ -60,6 +60,7 @@ http://www.team33.de/dev/patterns/2.x
   * Added class XReLazy
   * Added class InitException
   * Marked class Lazy.InitException as deprecated
+* Nailed module io-phobos to 1.25.0
 
 ### 1.25.0
 

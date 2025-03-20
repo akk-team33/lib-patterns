@@ -37,11 +37,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>io-phobos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-dione</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -126,6 +121,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>serial-charon</artifactId>
                 <version>1.24.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>io-phobos</artifactId>
+                <version>1.25.0</version>
             </dependency>
 
             <!-- nailed (deprecated) ... -->
