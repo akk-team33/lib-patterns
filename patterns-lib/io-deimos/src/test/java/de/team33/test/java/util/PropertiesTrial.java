@@ -33,7 +33,7 @@ public class PropertiesTrial {
         final StringWriter writer = new StringWriter();
         expected.store(writer, null);
         final String stage = COMMENT_PATTERN.matcher(writer.toString()).replaceAll("");
-        System.out.println(stage);
+        // System.out.println(stage);
 
         final StringReader reader = new StringReader(stage);
         final Properties result = new Properties();
