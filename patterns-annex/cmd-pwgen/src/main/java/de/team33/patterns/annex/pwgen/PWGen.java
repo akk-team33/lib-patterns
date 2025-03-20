@@ -1,4 +1,4 @@
-package de.team33.patterns.arbitrary.mimas.sample;
+package de.team33.patterns.annex.pwgen;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 

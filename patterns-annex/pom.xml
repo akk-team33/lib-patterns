@@ -8,6 +8,7 @@
         <version>2.0.1-SNAPSHOT</version>
     </parent>
 
+    <groupId>de.team33.patterns.annex</groupId>
     <artifactId>patterns-annex</artifactId>
     <packaging>pom</packaging>
 
@@ -23,6 +24,7 @@
 
     <modules>
         <module>legacy-testing</module>
+        <module>cmd-pwgen</module>
     </modules>
 
     <dependencyManagement>
