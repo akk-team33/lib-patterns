@@ -2,22 +2,19 @@ package de.team33.patterns.annex.pwgen;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 
-import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.stream.Stream;
 
-public class PWGen extends SecureRandom implements Generator {
+public final class Main {
 
     private static final String CHARS = "abcdefghijkmnopqrstuvwxyz-ABCDEFGHJKLMNPQRSTUVWXYZ_0123456789.&%$";
 
-    @Override
-    public final BigInteger anyBits(final int numBits) {
-        return new BigInteger(numBits, this);
+    private Main() {
     }
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
     public static void main(final String[] args) {
-        final PWGen pwGen = new PWGen();
+        final Generator pwGen = Generator.of(new SecureRandom());
         Stream.generate(() -> pwGen.anyString(20, CHARS)).limit(20).forEach(System.out::println);
     }
 }
