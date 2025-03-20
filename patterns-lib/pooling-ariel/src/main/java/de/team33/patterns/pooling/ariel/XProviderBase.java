@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 class XProviderBase<I, E extends Exception> extends Mutual<I, E> {
 
-    XProviderBase(final XSupplier<XSupplier<I, E>, E> newItem) {
+    XProviderBase(final XSupplier<? extends XSupplier<I, E>, ? extends E> newItem) {
         super(newItem);
     }
 

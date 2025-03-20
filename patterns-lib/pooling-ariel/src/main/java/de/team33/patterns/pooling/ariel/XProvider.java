@@ -30,7 +30,7 @@ public class XProvider<I, E extends Exception> extends XProviderBase<I, E> {
      * Initializes a new instance giving an {@link XSupplier} that defines the intended initialization of a
      * new <em>item</em>.
      */
-    public XProvider(final XSupplier<I, E> newItem) {
+    public XProvider(final XSupplier<? extends I, ? extends E> newItem) {
         super(() -> {
             final I item = newItem.get();
             return () -> item;
