@@ -5,11 +5,11 @@ import de.team33.patterns.arbitrary.mimas.Generator;
 import java.security.SecureRandom;
 import java.util.stream.Stream;
 
-public final class PWGen {
+public final class Main {
 
     private static final String CHARS = "abcdefghijkmnopqrstuvwxyz-ABCDEFGHJKLMNPQRSTUVWXYZ_0123456789.&%$";
 
-    private PWGen() {
+    private Main() {
     }
 
     @SuppressWarnings("UseOfSystemOutOrSystemErr")
