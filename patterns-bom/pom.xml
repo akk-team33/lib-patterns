@@ -72,11 +72,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>notes-eris</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>execution-metis</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -102,6 +97,11 @@
             </dependency>
 
             <!-- nailed (suspended) ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>notes-eris</artifactId>
+                <version>1.25.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-leda</artifactId>

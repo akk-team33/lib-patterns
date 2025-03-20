@@ -26,7 +26,6 @@ http://www.team33.de/dev/patterns/2.x
   * io-deimos (Team33 IO Library - Edition "deimos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
-  * notes-eris (Team33 Notifications Library - Edition "eris")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
@@ -39,6 +38,7 @@ http://www.team33.de/dev/patterns/2.x
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
+  * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
@@ -61,6 +61,7 @@ http://www.team33.de/dev/patterns/2.x
   * Added class InitException
   * Marked class Lazy.InitException as deprecated
 * Nailed module io-phobos to 1.25.0
+* Nailed module notes-eris to 1.25.0
 
 ### 1.25.0
 
