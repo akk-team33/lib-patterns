@@ -13,6 +13,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>io-hydra</artifactId>
+        </dependency>
+        <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>arbitrary-mimas</artifactId>
             <scope>test</scope>
@@ -40,6 +44,11 @@
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>serial-charon</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>io-phobos</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
