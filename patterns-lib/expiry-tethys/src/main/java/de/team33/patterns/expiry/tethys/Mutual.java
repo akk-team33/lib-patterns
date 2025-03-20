@@ -7,7 +7,7 @@ import java.time.Instant;
 class Mutual<T, X extends Exception> {
 
     private final Rule<? extends T, ? extends X> rule;
-    private volatile Actual<T, X> actual = now -> true;
+    private volatile Actual<T> actual = now -> true;
 
     private Mutual(final Rule<? extends T, ? extends X> rule) {
         this.rule = rule;
@@ -29,16 +29,17 @@ class Mutual<T, X extends Exception> {
         this(new Rule<>(newSubject, maxIdle, maxLiving));
     }
 
+    @SuppressWarnings("DesignForExtension")
     T get() throws X {
         return approved(actual);
     }
 
-    private T approved(final Actual<? extends T, ? extends X> candidate) throws X {
+    private T approved(final Actual<? extends T> candidate) throws X {
         return candidate.isTimeout(Instant.now()) ? updated(candidate) : candidate.get();
     }
 
     @SuppressWarnings("ObjectEquality")
-    private T updated(final Actual<? extends T, ? extends X> outdated) throws X {
+    private T updated(final Actual<? extends T> outdated) throws X {
         final T result;
         synchronized (rule) {
             if (actual == outdated) {
@@ -49,17 +50,18 @@ class Mutual<T, X extends Exception> {
         return result;
     }
 
+    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
     @FunctionalInterface
-    private interface Actual<T, X extends Exception> {
+    private interface Actual<T> {
 
         boolean isTimeout(final Instant now);
 
-        default T get() throws X {
+        default T get() {
             throw new UnsupportedOperationException("method not supported");
         }
     }
 
-    private class Substantial implements Actual<T, X> {
+    private class Substantial implements Actual<T> {
 
         private final T subject;
         private final Instant lifeTimeout;
@@ -84,16 +86,6 @@ class Mutual<T, X extends Exception> {
         }
     }
 
-    private static final class Rule<T, X extends Exception> {
-
-        private final XSupplier<? extends T, ? extends X> newSubject;
-        private final long maxLife;
-        private final long maxIdle;
-
-        Rule(final XSupplier<? extends T, ? extends X> newSubject, final long maxIdle, final long maxLife) {
-            this.newSubject = newSubject;
-            this.maxIdle = maxIdle;
-            this.maxLife = maxLife;
-        }
+    private record Rule<T, X extends Exception>(XSupplier<? extends T, ? extends X> newSubject, long maxIdle, long maxLife) {
     }
 }
