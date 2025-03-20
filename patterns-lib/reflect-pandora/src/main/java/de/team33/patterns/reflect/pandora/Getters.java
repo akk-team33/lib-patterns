@@ -13,7 +13,7 @@ import java.util.function.Function;
  *
  * @param <T> The data object class in question.
  */
-public class Getters<T> {
+public final class Getters<T> {
 
     private final Map<String, Getter<T>> backing;
 

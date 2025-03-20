@@ -1,9 +1,9 @@
-package de.team33.patterns.test.reflect.pandora;
+package de.team33.patterns.reflect.pandora.publics;
 
 import de.team33.patterns.reflect.pandora.Getters;
-import de.team33.patterns.testing.reflect.pandora.BeanClass;
-import de.team33.patterns.testing.reflect.pandora.BeanInterface;
-import de.team33.patterns.testing.reflect.pandora.Supply;
+import de.team33.patterns.reflect.pandora.testing.BeanClass;
+import de.team33.patterns.reflect.pandora.testing.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
@@ -27,7 +27,7 @@ class GettersTest {
     @Test
     final void names() {
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Set<String> expected = new TreeSet<String>() {{
+        final Set<String> expected = new TreeSet<>() {{
             add("intValue");
             add("longValue");
             add("stringValue");
@@ -42,7 +42,7 @@ class GettersTest {
     @Test
     final void type() {
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Map<String, Class<?>> expected = new TreeMap<String, Class<?>>() {{
+        final Map<String, Class<?>> expected = new TreeMap<>() {{
             put("intValue", int.class);
             put("longValue", Long.class);
             put("stringValue", String.class);
@@ -60,9 +60,9 @@ class GettersTest {
 
     @Test
     final void getter() {
-        final BeanClass origin = SUPPLY.nextBean();
+        final BeanClass origin = SUPPLY.anyBean();
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+        final Map<String, Object> expected = new TreeMap<>() {{
             put("intValue", origin.getIntValue());
             put("longValue", origin.getLongValue());
             put("stringValue", origin.getStringValue());
@@ -82,7 +82,7 @@ class GettersTest {
     @Test
     final void getter_unknown() {
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final String unknownName = SUPPLY.nextString();
+        final String unknownName = SUPPLY.anyString();
         try {
             final Function<BeanInterface, Object> getter = getters.getter(unknownName);
             fail("expected to fail - but was " + getter);
@@ -94,9 +94,9 @@ class GettersTest {
 
     @Test
     final void toMap() {
-        final BeanClass origin = SUPPLY.nextBean();
+        final BeanClass origin = SUPPLY.anyBean();
         final Getters<BeanInterface> getters = Getters.of(BeanInterface.class);
-        final Map<String, Object> expected = new TreeMap<String, Object>() {{
+        final Map<String, Object> expected = new TreeMap<>() {{
             put("intValue", origin.getIntValue());
             put("longValue", origin.getLongValue());
             put("stringValue", origin.getStringValue());

@@ -1,7 +1,8 @@
-package de.team33.patterns.testing.reflect.pandora;
+package de.team33.patterns.reflect.pandora.testing;
 
 import java.time.Instant;
 
+@SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
 public interface BeanInterface {
 
     int getIntValue();

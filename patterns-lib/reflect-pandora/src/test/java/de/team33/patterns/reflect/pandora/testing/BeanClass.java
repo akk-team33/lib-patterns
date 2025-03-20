@@ -1,4 +1,4 @@
-package de.team33.patterns.testing.reflect.pandora;
+package de.team33.patterns.reflect.pandora.testing;
 
 import java.lang.reflect.Field;
 import java.time.Instant;
@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
+@SuppressWarnings("unused")
 public class BeanClass implements BeanInterface {
 
     private int intValue;
@@ -14,41 +15,41 @@ public class BeanClass implements BeanInterface {
     private Instant instantValue;
 
     @Override
-    public int getIntValue() {
+    public final int getIntValue() {
         return intValue;
     }
 
-    public BeanClass setIntValue(int intValue) {
+    public final BeanClass setIntValue(final int intValue) {
         this.intValue = intValue;
         return this;
     }
 
     @Override
-    public Long getLongValue() {
+    public final Long getLongValue() {
         return longValue;
     }
 
-    public BeanClass setLongValue(Long longValue) {
+    public final BeanClass setLongValue(final Long longValue) {
         this.longValue = longValue;
         return this;
     }
 
     @Override
-    public String getStringValue() {
+    public final String getStringValue() {
         return stringValue;
     }
 
-    public BeanClass setStringValue(String stringValue) {
+    public final BeanClass setStringValue(final String stringValue) {
         this.stringValue = stringValue;
         return this;
     }
 
     @Override
-    public Instant getInstantValue() {
+    public final Instant getInstantValue() {
         return instantValue;
     }
 
-    public BeanClass setInstantValue(Instant instantValue) {
+    public final BeanClass setInstantValue(final Instant instantValue) {
         this.instantValue = instantValue;
         return this;
     }
@@ -58,7 +59,7 @@ public class BeanClass implements BeanInterface {
                      .collect(TreeMap::new, this::put, Map::putAll);
     }
 
-    private void put(final Map<String, Object> map, final Field field) {
+    private void put(final Map<? super String, Object> map, final Field field) {
         try {
             map.put(field.getName(), field.get(this));
         } catch (final IllegalAccessException e) {

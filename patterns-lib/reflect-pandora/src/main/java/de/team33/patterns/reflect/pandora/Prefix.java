@@ -2,7 +2,6 @@ package de.team33.patterns.reflect.pandora;
 
 import java.util.stream.Stream;
 
-@SuppressWarnings("FieldNamingConvention")
 enum Prefix {
 
     is,
@@ -10,6 +9,7 @@ enum Prefix {
     set,
     NONE(0);
 
+    @SuppressWarnings("PackageVisibleField")
     final int length;
 
     Prefix() {

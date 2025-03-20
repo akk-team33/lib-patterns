@@ -1,9 +1,9 @@
-package de.team33.patterns.test.reflect.pandora;
+package de.team33.patterns.reflect.pandora.publics;
 
 import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Setters;
-import de.team33.patterns.testing.reflect.pandora.BeanClass;
-import de.team33.patterns.testing.reflect.pandora.Supply;
+import de.team33.patterns.reflect.pandora.testing.BeanClass;
+import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
@@ -21,9 +21,9 @@ class SettersTest {
     private static final Supply SUPPLY = new Supply();
 
     @Test
-    void names() {
+    final void names() {
         final Setters<BeanClass> setters = Setters.of(BeanClass.class);
-        final Set<String> expected = new TreeSet<String>() {{
+        final Set<String> expected = new TreeSet<>() {{
             add("intValue");
             add("longValue");
             add("stringValue");
@@ -39,8 +39,8 @@ class SettersTest {
     final void setter() {
         final Getters<BeanClass> getters = Getters.of(BeanClass.class);
         final Setters<BeanClass> setters = Setters.of(BeanClass.class);
-        final BeanClass origin = SUPPLY.nextBean();
-        final BeanClass target = SUPPLY.nextBean();
+        final BeanClass origin = SUPPLY.anyBean();
+        final BeanClass target = SUPPLY.anyBean();
         assertNotEquals(origin, target);
 
         setters.names()
@@ -54,7 +54,7 @@ class SettersTest {
     @Test
     final void setter_unknown_name() {
         final Setters<BeanClass> setters = Setters.of(BeanClass.class);
-        final String unknownName = SUPPLY.nextString();
+        final String unknownName = SUPPLY.anyString();
         try {
             final BiConsumer<BeanClass, Object> setter = setters.setter(unknownName, Object.class);
             fail("expected to fail - but was " + setter);

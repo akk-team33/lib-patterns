@@ -1,4 +1,4 @@
-package de.team33.patterns.sample.reflect.pandora;
+package de.team33.patterns.reflect.pandora.sample;
 
 import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Mapper;
@@ -11,6 +11,7 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
+@SuppressWarnings("ClassNamePrefixedWithPackageName")
 public abstract class Sample02 {
 
     private static final Getters<Sample02> GETTERS = Getters.of(Sample02.class);
@@ -25,6 +26,7 @@ public abstract class Sample02 {
 
     public abstract List<Object> getListValue();
 
+    @SuppressWarnings("ClassReferencesSubclass")
     public final Mutable toMutable() {
         return Mutable.MAPPER.map(this, new Mutable());
     }
@@ -48,6 +50,7 @@ public abstract class Sample02 {
         return toMap().toString();
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Proxy extends Sample02 {
 
         private final Sample02 backing;
@@ -57,31 +60,32 @@ public abstract class Sample02 {
         }
 
         @Override
-        public int getIntValue() {
+        public final int getIntValue() {
             return backing.getIntValue();
         }
 
         @Override
-        public Long getLongValue() {
+        public final Long getLongValue() {
             return backing.getLongValue();
         }
 
         @Override
-        public String getStringValue() {
+        public final String getStringValue() {
             return backing.getStringValue();
         }
 
         @Override
-        public Instant getInstantValue() {
+        public final Instant getInstantValue() {
             return backing.getInstantValue();
         }
 
         @Override
-        public List<Object> getListValue() {
+        public final List<Object> getListValue() {
             return backing.getListValue();
         }
     }
 
+    @SuppressWarnings("unused")
     public static class Mutable extends Sample02 {
 
         private static final Mapper<Sample02, Mutable> MAPPER = Mapper.mapping(GETTERS, Mutable.class);

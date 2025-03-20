@@ -1,13 +1,17 @@
-package de.team33.patterns.sample.reflect.pandora;
+package de.team33.patterns.reflect.pandora.sample;
 
 import de.team33.patterns.reflect.pandora.Getters;
 import de.team33.patterns.reflect.pandora.Mapper;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-import static java.util.Objects.*;
+import static java.util.Objects.requireNonNull;
 
+@SuppressWarnings({"ClassNamePrefixedWithPackageName", "unused", "InterfaceWithOnlyOneDirectInheritor"})
 public interface Sample01 {
 
     int getIntValue();
@@ -20,10 +24,12 @@ public interface Sample01 {
 
     List<Object> getListValue();
 
+    @SuppressWarnings("ClassReferencesSubclass")
     default Mutable toMutable() {
         return Mutable.MAPPER.map(this, new Mutable());
     }
 
+    @SuppressWarnings("AbstractClassWithOnlyOneDirectInheritor")
     abstract class Base implements Sample01 {
 
         private static final Getters<Sample01> GETTERS = Getters.of(Sample01.class);

@@ -1,8 +1,8 @@
 package de.team33.patterns.reflect.pandora;
 
-import de.team33.patterns.testing.reflect.pandora.BeanClass;
-import de.team33.patterns.testing.reflect.pandora.BeanInterface;
-import de.team33.patterns.testing.reflect.pandora.Supply;
+import de.team33.patterns.reflect.pandora.testing.BeanClass;
+import de.team33.patterns.reflect.pandora.testing.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,8 +14,8 @@ class MapperTest extends Supply {
 
     @Test
     final void map() {
-        final BeanClass origin = nextBean();
-        final BeanClass target = nextBean();
+        final BeanClass origin = anyBean();
+        final BeanClass target = anyBean();
         assertNotEquals(origin, target);
 
         mapper.map(origin, target);
