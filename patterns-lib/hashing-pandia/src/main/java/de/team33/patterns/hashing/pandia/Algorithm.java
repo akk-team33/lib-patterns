@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+@SuppressWarnings("WeakerAccess")
 public enum Algorithm {
 
     MD5("MD5"),
@@ -47,7 +48,7 @@ public enum Algorithm {
         return hash(() -> Files.newInputStream(path));
     }
 
-    public final Hash hash(final XSupplier<InputStream, IOException> streamable) {
+    public final Hash hash(final XSupplier<? extends InputStream, ? extends IOException> streamable) {
         try (final InputStream in = streamable.get()) {
             return hash(in);
         } catch (final IOException e) {
