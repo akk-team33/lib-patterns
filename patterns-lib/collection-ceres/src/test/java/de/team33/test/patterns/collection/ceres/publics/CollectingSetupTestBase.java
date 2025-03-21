@@ -4,12 +4,7 @@ import de.team33.patterns.collection.ceres.Collecting;
 import de.team33.patterns.collection.ceres.testing.Supply;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

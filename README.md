@@ -16,6 +16,7 @@ http://www.team33.de/dev/patterns/2.x
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * building-elara (Team33 Building Library - Edition "elara")
+  * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-carpo (Team33 Decision Library - Edition "carpo")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
@@ -34,7 +35,6 @@ http://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
-  * collection-ceres (Team33 Collection Library - Edition "ceres") - 1.25.0
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
@@ -49,6 +49,10 @@ http://www.team33.de/dev/patterns/2.x
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### 2.1.0
+
+* Revoked module collection-ceres
 
 ### 2.0.3
 
