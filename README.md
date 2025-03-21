@@ -34,7 +34,7 @@ http://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
-  * collection-ceres (Team33 Collection Library - Edition "ceres")
+  * collection-ceres (Team33 Collection Library - Edition "ceres") - 1.25.0
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
@@ -50,7 +50,7 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### 2.0.0
+### 2.0.3
 
 * Set java language level to 17
 * Removed some deprecated items
