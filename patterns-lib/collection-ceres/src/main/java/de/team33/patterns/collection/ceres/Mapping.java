@@ -181,8 +181,7 @@ public final class Mapping {
      */
     @SuppressWarnings("AnonymousInnerClass")
     public static <K, V> Map<K, V> proxy(final Map<K, V> subject) {
-        //noinspection ReturnOfInnerClass
-        return new AbstractMap<K, V>() {
+        return new AbstractMap<>() {
             @Override
             public Set<Entry<K, V>> entrySet() {
                 return subject.entrySet();
@@ -197,7 +196,7 @@ public final class Mapping {
      * @param <V> The value type of the target instance.
      * @param <M> The final type of the target instance, at least {@link Map}.
      */
-    public static <K, V, M extends Map<K, V>> Builder<K, V, M> builder(final Supplier<M> newTarget) {
+    public static <K, V, M extends Map<K, V>> Builder<K, V, M> builder(final Supplier<? extends M> newTarget) {
         return new Builder<>(newTarget, Builder.class);
     }
 
@@ -303,12 +302,12 @@ public final class Mapping {
      * @param <V> The value type of the target instance.
      * @param <M> The final type of the target instance, at least {@link Map}.
      */
-    public static class Builder<K, V, M extends Map<K, V>>
+    public static final class Builder<K, V, M extends Map<K, V>>
             extends LateBuilder<M, Builder<K, V, M>>
             implements Setup<K, V, M, Builder<K, V, M>> {
 
         @SuppressWarnings({"rawtypes", "unchecked"})
-        private Builder(final Supplier<M> newResult, final Class builderClass) {
+        private Builder(final Supplier<? extends M> newResult, final Class builderClass) {
             super(newResult, builderClass);
         }
     }
@@ -323,7 +322,7 @@ public final class Mapping {
      * @param <M> The final type of the target instance, at least {@link Map}.
      */
     @SuppressWarnings("ClassNameSameAsAncestorName")
-    public static class Charger<K, V, M extends Map<K, V>>
+    public static final class Charger<K, V, M extends Map<K, V>>
             extends de.team33.patterns.building.elara.Charger<M, Charger<K, V, M>>
             implements Setup<K, V, M, Charger<K, V, M>> {
 
