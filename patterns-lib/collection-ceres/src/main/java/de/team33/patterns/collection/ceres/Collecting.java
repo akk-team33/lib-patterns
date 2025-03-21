@@ -5,6 +5,7 @@ import de.team33.patterns.building.elara.LateBuilder;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -12,7 +13,10 @@ import static java.util.Arrays.asList;
 /**
  * {@linkplain Collections Additional} convenience methods to deal with Collections.
  */
-@SuppressWarnings({"ProhibitedExceptionCaught", "unused", "ClassWithTooManyMethods"})
+@SuppressWarnings({
+        "ClassWithTooManyMethods", "WeakerAccess",
+        "ProhibitedExceptionCaught", "SuspiciousMethodCalls",
+        "OverloadedMethodsWithSameNumberOfParameters"})
 public final class Collecting {
 
     private static final Object[] EMPTY_ARRAY = {};
@@ -159,8 +163,8 @@ public final class Collecting {
      * @see Collecting#addAll(Collection, Object[])
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final Iterable<? extends E> elements) {
-        return (elements instanceof Collection<?>)
-               ? addAll(subject, (Collection<? extends E>) elements)
+        return (elements instanceof final Collection<? extends E> collection)
+               ? addAll(subject, collection)
                : addAll(subject, elements.iterator());
     }
 
@@ -219,14 +223,15 @@ public final class Collecting {
      * @see Collecting#addAll(Collection, Iterator)
      */
     public static <E, C extends Collection<E>> C addAll(final C subject, final E[] elements) {
-        return addAll(subject, Arrays.asList(elements));
+        return addAll(subject, asList(elements));
     }
 
     /**
      * Just like {@link Collection#clear() subject.clear()}, but returns the <em>subject</em>.
      *
      * @throws NullPointerException          if <em>subject</em> is {@code null}.
-     * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the <em>subject</em>.
+     * @throws UnsupportedOperationException if {@link Collection#clear()} is not supported by the
+     *                                       <em>subject</em>.
      * @see Collection#clear()
      */
     public static <C extends Collection<?>> C clear(final C subject) {
@@ -352,7 +357,8 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Stream<?> elements) {
-        return removeAll(subject, addAll(new HashSet<>(), elements.filter(subject::contains)));
+        final Set<?> collected = elements.collect(Collectors.toCollection(HashSet::new));
+        return removeAll(subject, collected);
     }
 
     /**
@@ -376,8 +382,8 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Iterable<?> elements) {
-        return (elements instanceof Collection<?>)
-               ? removeAll(subject, (Collection<?>) elements)
+        return (elements instanceof final Collection<?> collection)
+               ? removeAll(subject, collection)
                : removeAll(subject, elements.iterator());
     }
 
@@ -402,7 +408,7 @@ public final class Collecting {
      * @see Collecting#removeAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C removeAll(final C subject, final Iterator<?> elements) {
-        return removeAll(subject, addAll(new HashSet<>(), elements));
+        return removeAll(subject, addAll(new HashSet<>(0), elements));
     }
 
     /**
@@ -495,7 +501,8 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Stream<?> elements) {
-        return retainAll(subject, addAll(new HashSet<>(), elements));
+        final Set<?> collected = elements.collect(Collectors.toCollection(HashSet::new));
+        return retainAll(subject, collected);
     }
 
     /**
@@ -517,8 +524,8 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Iterable<?> elements) {
-        return (elements instanceof Collection<?>)
-               ? retainAll(subject, (Collection<?>) elements)
+        return (elements instanceof final Collection<?> collection)
+               ? retainAll(subject, collection)
                : retainAll(subject, elements.iterator());
     }
 
@@ -541,7 +548,7 @@ public final class Collecting {
      * @see Collecting#retainAll(Collection, Object[])
      */
     public static <C extends Collection<?>> C retainAll(final C subject, final Iterator<?> elements) {
-        return retainAll(subject, addAll(new HashSet<>(), elements));
+        return retainAll(subject, addAll(new HashSet<>(0), elements));
     }
 
     /**
@@ -582,7 +589,6 @@ public final class Collecting {
      * @see Collecting#containsAll(Collection, Iterator)
      * @see Collecting#containsAll(Collection, Object[])
      */
-    @SuppressWarnings("OverloadedMethodsWithSameNumberOfParameters")
     public static boolean contains(final Collection<?> subject, final Object element) {
         try {
             return subject.contains(element);
@@ -673,7 +679,8 @@ public final class Collecting {
      * @see Collecting#containsAll(Collection, Object[])
      */
     public static boolean containsAll(final Collection<?> subject, final Stream<?> elements) {
-        return containsAll(subject, addAll(new HashSet<>(), elements));
+        final Set<?> collected = elements.collect(Collectors.toCollection(HashSet::new));
+        return containsAll(subject, collected);
     }
 
     /**
@@ -696,8 +703,8 @@ public final class Collecting {
      * @see Collecting#containsAll(Collection, Object[])
      */
     public static boolean containsAll(final Collection<?> subject, final Iterable<?> elements) {
-        return (elements instanceof Collection<?>)
-               ? containsAll(subject, (Collection<?>) elements)
+        return (elements instanceof final Collection<?> collection)
+               ? containsAll(subject, collection)
                : containsAll(subject, elements.iterator());
     }
 
@@ -721,7 +728,7 @@ public final class Collecting {
      * @see Collecting#containsAll(Collection, Object[])
      */
     public static boolean containsAll(final Collection<?> subject, final Iterator<?> elements) {
-        return containsAll(subject, addAll(new HashSet<>(), elements));
+        return containsAll(subject, addAll(new HashSet<>(0), elements));
     }
 
     /**
@@ -762,10 +769,9 @@ public final class Collecting {
      *                <li>{@link Collection#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings("ReturnOfInnerClass")
     public static <E> Collection<E> proxy(final Collection<E> subject) {
         // noinspection AnonymousInnerClass
-        return new AbstractCollection<E>() {
+        return new AbstractCollection<>() {
             @Override
             public Iterator<E> iterator() {
                 return subject.iterator();
@@ -796,10 +802,10 @@ public final class Collecting {
      *                <li>{@link List#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings("ReturnOfInnerClass")
+    @SuppressWarnings("BoundedWildcard")
     public static <E> List<E> proxy(final List<E> subject) {
         // noinspection AnonymousInnerClass
-        return new AbstractList<E>() {
+        return new AbstractList<>() {
             @Override
             public E get(final int index) {
                 return subject.get(index);
@@ -830,10 +836,9 @@ public final class Collecting {
      *                <li>{@link Set#size()}</li>
      *                </ul>
      */
-    @SuppressWarnings("ReturnOfInnerClass")
     public static <E> Set<E> proxy(final Set<E> subject) {
         // noinspection AnonymousInnerClass
-        return new AbstractSet<E>() {
+        return new AbstractSet<>() {
             @Override
             public Iterator<E> iterator() {
                 return subject.iterator();
@@ -877,7 +882,7 @@ public final class Collecting {
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
      */
-    public static <E, C extends Collection<E>> Builder<E, C> builder(final Supplier<C> newTarget) {
+    public static <E, C extends Collection<E>> Builder<E, C> builder(final Supplier<? extends C> newTarget) {
         return new Builder<>(newTarget, Builder.class);
     }
 
@@ -898,7 +903,7 @@ public final class Collecting {
      * @param <C> The final type of the target instance, at least {@link Collection}.
      * @param <S> The final type of the Setup implementation.
      */
-    @SuppressWarnings("ClassNameSameAsAncestorName")
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "ClassWithTooManyMethods"})
     @FunctionalInterface
     public interface Setup<E, C extends Collection<E>, S extends Setup<E, C, S>>
             extends de.team33.patterns.building.elara.Setup<C, S> {
@@ -1346,12 +1351,12 @@ public final class Collecting {
      * @param <E> The element type.
      * @param <C> The final type of the target instances, at least {@link Collection}.
      */
-    public static class Builder<E, C extends Collection<E>>
+    public static final class Builder<E, C extends Collection<E>>
             extends LateBuilder<C, Builder<E, C>>
             implements Setup<E, C, Builder<E, C>> {
 
         @SuppressWarnings({"rawtypes", "unchecked"})
-        private Builder(final Supplier<C> newResult, final Class builderClass) {
+        private Builder(final Supplier<? extends C> newResult, final Class builderClass) {
             super(newResult, builderClass);
         }
     }
@@ -1365,7 +1370,7 @@ public final class Collecting {
      * @param <C> The final type of the target instances, at least {@link Collection}.
      */
     @SuppressWarnings("ClassNameSameAsAncestorName")
-    public static class Charger<E, C extends Collection<E>>
+    public static final class Charger<E, C extends Collection<E>>
             extends de.team33.patterns.building.elara.Charger<C, Charger<E, C>>
             implements Setup<E, C, Charger<E, C>> {
 
