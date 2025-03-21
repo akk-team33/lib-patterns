@@ -18,17 +18,27 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>building-elara</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-ceres</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>notes-eris</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>arbitrary-mimas</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
