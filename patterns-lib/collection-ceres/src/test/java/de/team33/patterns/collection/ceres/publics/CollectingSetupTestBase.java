@@ -1,7 +1,7 @@
-package de.team33.test.patterns.collection.ceres.publics;
+package de.team33.patterns.collection.ceres.publics;
 
 import de.team33.patterns.collection.ceres.Collecting;
-import de.team33.test.patterns.collection.ceres.testing.Supply;
+import de.team33.patterns.collection.ceres.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;

@@ -1,4 +1,4 @@
-package de.team33.test.patterns.collection.ceres.testing;
+package de.team33.patterns.collection.ceres.testing;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 
