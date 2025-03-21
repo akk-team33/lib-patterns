@@ -1294,6 +1294,37 @@ public final class Collecting {
         }
 
         /**
+         * Retains an <em>element</em> in the instance to be set up.
+         * <p>
+         * If the instance to be set up contains the <em>element</em> several times, each occurrence will be retained.
+         * <p>
+         * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+         * {@link Collection#retainAll(Collection)} when the instance to be set up does not support the requested <em>element</em>.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see Collection#retainAll(Collection)
+         * @see Collecting#retain(Collection, Object)
+         */
+        default S retain(final Object element) {
+            return setup(target -> Collecting.retain(target, element));
+        }
+
+        /**
+         * Retains two or more <em>elements</em> in the instance to be set up.
+         * <p>
+         * If the instance to be set up contains an <em>element</em> several times, each occurrence will be retaind.
+         *
+         * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+         *                                       instance to be set up.
+         * @see #retain(Object)
+         * @see Collecting#retain(Collection, Object, Object, Object[])
+         */
+        default S retain(final Object element0, final Object element1, final Object... more) {
+            return setup(target -> Collecting.retain(target, element0, element1, nullAsEmpty(more)));
+        }
+
+        /**
          * Retains multiple <em>elements</em> by removing all others from the instance to be set up.
          * <p>
          * Treats a {@code null}-argument just like an empty {@link Collection}.

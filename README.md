@@ -52,7 +52,11 @@ http://www.team33.de/dev/patterns/2.x
 
 ### 2.1.0
 
-* Revoked module collection-ceres
+* Revoked and refined module collection-ceres
+  * Added method Collecting.retain(Collection, Object)
+  * Added method Collecting.retain(Collection, Object, Object, ...)
+  * Added method Collecting.Setup.retain(Object)
+  * Added method Collecting.Setup.retain(Object, Object, ...)
 
 ### 2.0.3
 

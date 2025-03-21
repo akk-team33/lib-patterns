@@ -151,6 +151,25 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(original, result);
     }
 
+    @Test
+    final void retain_single() {
+        final List<String> original = SUPPLY.anyStringList(20);
+        final List<String> expected = new ArrayList<>(original.subList(0, 1));
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .retain(original.get(0)));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void retain_more() {
+        final List<String> original = SUPPLY.anyStringList(20);
+        final List<String> expected = new ArrayList<>(original.subList(7, 10));
+        final List<String> result = resultOf(setup().addAll(original)
+                                                    .retain(original.get(8), original.get(7),
+                                                            original.get(9), SUPPLY.anyString()));
+        assertEquals(expected, result);
+    }
+
     @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
     @Test
     final void retainAll() {
