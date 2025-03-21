@@ -25,6 +25,7 @@
     <modules>
         <module>legacy-testing</module>
         <module>pwgen-main</module>
+        <module>pwgen-fat</module>
     </modules>
 
     <dependencyManagement>
