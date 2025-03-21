@@ -9,7 +9,7 @@
         <version>2.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>cmd-pwgen</artifactId>
+    <artifactId>pwgen-main</artifactId>
 
     <dependencies>
         <dependency>

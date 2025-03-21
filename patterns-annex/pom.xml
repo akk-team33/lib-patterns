@@ -24,7 +24,7 @@
 
     <modules>
         <module>legacy-testing</module>
-        <module>cmd-pwgen</module>
+        <module>pwgen-main</module>
     </modules>
 
     <dependencyManagement>
