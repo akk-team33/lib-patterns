@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33.patterns</groupId>
         <artifactId>patterns-root</artifactId>
-        <version>1.25.0</version>
+        <version>2.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>patterns-lib</artifactId>
@@ -20,16 +20,13 @@
         <module>io-deimos</module>
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>
-        <module>io-phobos</module>
         <module>expiry-tethys</module>
         <module>pooling-ariel</module>
         <module>reflect-luna</module>
         <module>reflect-pandora</module>
         <module>building-elara</module>
-        <module>notes-eris</module>
         <module>execution-metis</module>
         <module>decision-carpo</module>
-        <module>collection-ceres</module>
         <module>hashing-pandia</module>
         <module>matching-rhea</module>
     </modules>

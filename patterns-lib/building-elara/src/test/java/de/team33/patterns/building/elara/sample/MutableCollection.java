@@ -13,17 +13,18 @@ public final class MutableCollection {
     }
 
     public static <E, R extends Collection<E>> Builder<E, R, ?> builder(final Collection<E> subject,
-                                                                        final Function<Collection<E>, R> mapping) {
+                                                                        final Function<Collection<E>, ? extends R> mapping) {
         return new Builder<>(subject, mapping, Builder.class);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public static class Builder<E, R extends Collection<E>, B extends Builder<E, R, B>>
             extends BuilderBase<E, Collection<E>, B> {
 
-        private final Function<Collection<E>, R> mapping;
+        private final Function<? super Collection<E>, ? extends R> mapping;
 
         protected Builder(final Collection<E> container,
-                          final Function<Collection<E>, R> mapping,
+                          final Function<? super Collection<E>, ? extends R> mapping,
                           final Class<B> builderClass) {
             super(container, builderClass);
             this.mapping = mapping;
@@ -34,6 +35,7 @@ public final class MutableCollection {
         }
     }
 
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "WeakerAccess", "SuspiciousMethodCalls"})
     public static class BuilderBase<E, C extends Collection<E>, B extends BuilderBase<E, C, B>>
             extends ProtoBuilder<C, B> {
 

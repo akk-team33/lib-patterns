@@ -36,7 +36,7 @@ public class XRProvider<I, E extends Exception> extends XProviderBase<I, E> {
      * Once an instance <em>item</em> is initialized it will expire and be renewed after a maximum idle time
      * or at least after a maximum lifetime.
      */
-    public XRProvider(final XSupplier<I, E> newItem, final long maxIdle, final long maxLiving) {
+    public XRProvider(final XSupplier<? extends I, ? extends E> newItem, final long maxIdle, final long maxLiving) {
         super(() -> new XRecent<>(newItem, maxIdle, maxLiving));
     }
 }

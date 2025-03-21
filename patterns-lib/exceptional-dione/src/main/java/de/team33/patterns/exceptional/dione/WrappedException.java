@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * An unchecked exception dedicated to (temporarily) wrap checked exceptions.
  */
+@SuppressWarnings("UnusedReturnValue")
 public class WrappedException extends RuntimeException {
 
     private static final String MISSING_EXCEPTION = "Missing: an exception to be wrapped in a " + WrappedException.class.getSimpleName();

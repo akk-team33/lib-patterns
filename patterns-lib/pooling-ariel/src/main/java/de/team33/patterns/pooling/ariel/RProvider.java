@@ -36,7 +36,7 @@ public class RProvider<I> extends ProviderBase<I> {
      * Once an instance <em>item</em> is initialized it will expire and be renewed after a maximum idle time
      * or at least after a maximum lifetime.
      */
-    public RProvider(final Supplier<I> newItem, final long maxIdle, final long maxLiving) {
+    public RProvider(final Supplier<? extends I> newItem, final long maxIdle, final long maxLiving) {
         super(() -> new Recent<>(newItem, maxIdle, maxLiving)::get);
     }
 }

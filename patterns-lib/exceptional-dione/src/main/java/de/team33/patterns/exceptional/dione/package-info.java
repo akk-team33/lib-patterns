@@ -12,6 +12,6 @@
  * Finally, it contains tools and utilities for dealing with exceptions as well as exception types for occasional
  * special cases.
  *
- * @see <a href="https://de.wikipedia.org/wiki/Dione_(Mond)">Dione</a>
+ * @see <a href="https://de.wikipedia.org/wiki/Dione_(Mond)">Dione (Mond)</a>
  */
 package de.team33.patterns.exceptional.dione;

@@ -7,29 +7,28 @@ import de.team33.patterns.arbitrary.mimas.sample.Generic;
 import de.team33.patterns.arbitrary.mimas.sample.Sample;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@SuppressWarnings("unused")
 public class ChargerTest implements Charger {
 
     private final Sample sample = new Sample().setBooleanValue(false)
                                               .setStringValue("ABC")
                                               .setIntValue(278)
                                               .setLongValue(Long.MAX_VALUE)
-                                              .setStringList(Arrays.asList("abc", "def", "ghi"))
-                                              .setLongList(Arrays.asList(4L, 69L, 345L));
+                                              .setStringList(List.of("abc", "def", "ghi"))
+                                              .setLongList(List.of(4L, 69L, 345L));
     private final Buildable buildable = Buildable.builder()
                                                  .setStringValue("ABC")
                                                  .setIntValue(278)
                                                  .setLongValue(Long.MAX_VALUE)
-                                                 .setStringList(Arrays.asList("abc", "def", "ghi"))
-                                                 .setLongList(Arrays.asList(4L, 69L, 345L)).build();
+                                                 .setStringList(List.of("abc", "def", "ghi"))
+                                                 .setLongList(List.of(4L, 69L, 345L)).build();
 
     public static String getNothing() {
         throw new UnsupportedOperationException("should not be called anyways");
@@ -110,6 +109,7 @@ public class ChargerTest implements Charger {
         return sample.getLongList();
     }
 
+    @SuppressWarnings("UseOfObsoleteDateTimeApi")
     public final Date anyDate() {
         return new Date();
     }

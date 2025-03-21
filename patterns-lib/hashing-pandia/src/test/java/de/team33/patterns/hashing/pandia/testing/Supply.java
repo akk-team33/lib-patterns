@@ -8,8 +8,6 @@ import java.util.Random;
 
 public class Supply implements Generator {
 
-    public static final Supply DEFAULT = new Supply();
-
     private final Random random = new SecureRandom();
 
     @Override

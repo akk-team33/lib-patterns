@@ -22,7 +22,7 @@ import java.util.function.Function;
  */
 public class DataBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilder<C, B> {
 
-    private final Function<C, T> mapping;
+    private final Function<? super C, ? extends T> mapping;
 
     /**
      * Initializes a new instance.
@@ -36,7 +36,7 @@ public class DataBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilde
      * @param builderClass The {@link Class} representation of the intended effective builder type.
      * @throws IllegalArgumentException if the given builder class does not represent <em>this</em> instance.
      */
-    protected DataBuilder(final C core, final Function<C, T> mapping, final Class<B> builderClass) {
+    protected DataBuilder(final C core, final Function<? super C, ? extends T> mapping, final Class<B> builderClass) {
         super(core, builderClass);
         this.mapping = mapping;
     }
@@ -48,7 +48,7 @@ public class DataBuilder<C, T, B extends ProtoBuilder<C, B>> extends ProtoBuilde
      * but must not be "hijacked" from the context of the call or the executing thread.
      * Otherwise, you may produce uncontrollable side effects!
      */
-    public final <R> R peek(final Function<C, R> function) {
+    public final <R> R peek(final Function<? super C, R> function) {
         return build(function);
     }
 

@@ -17,12 +17,13 @@ import java.util.stream.Stream;
  * @param <R> the intended result type.
  * @see de.team33.patterns.decision.carpo package
  */
-public class Choices<I, R> {
+public final class Choices<I, R> {
 
-    private final Variety<I> variety;
+    private final Variety<? super I> variety;
     private final List<Function<I, R>> methods;
 
-    private Choices(final Variety<I> variety) {
+    private Choices(final Variety<? super I> variety) {
+        //noinspection ReturnOfNull
         final Supplier<Function<I, R>> noMethod = () -> null;
         this.variety = variety;
         this.methods = Stream.generate(noMethod)
@@ -30,8 +31,8 @@ public class Choices<I, R> {
                              .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    static <I> Start<I> start(final Variety<I> variety) {
-        return bitSets -> new Cases.Start<I>() {
+    static <I> Start<I> start(final Variety<? super I> variety) {
+        return bitSets -> new Cases.Start<>() {
             @Override
             public <R> Choices<I, R> apply(final Function<I, R> function) {
                 return new Choices<I, R>(variety).on(bitSets)
@@ -40,8 +41,8 @@ public class Choices<I, R> {
         };
     }
 
-    private static <I, R> Function<I, R> toFunction(final Variety<I> variety,
-                                                    final List<Function<I, R>> methods) {
+    private static <I, R> Function<I, R> toFunction(final Variety<? super I> variety,
+                                                    final List<? extends Function<I, R>> methods) {
         return input -> {
             final int bitSet = variety.apply(input);
             return Optional.ofNullable(methods.get(bitSet))
@@ -69,6 +70,7 @@ public class Choices<I, R> {
      * that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
      */
     public final Function<I, R> toFunction() {
+        //noinspection Java9CollectionFactory
         return toFunction(variety, Collections.unmodifiableList(new ArrayList<>(methods)));
     }
 
@@ -78,6 +80,7 @@ public class Choices<I, R> {
      *
      * @param <I> the intended input type.
      */
+    @FunctionalInterface
     interface Start<I> {
 
         /**

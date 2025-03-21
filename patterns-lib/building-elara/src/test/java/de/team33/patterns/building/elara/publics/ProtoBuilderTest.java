@@ -15,7 +15,7 @@ class ProtoBuilderTest {
 
     @Test
     final void illegal() {
-        assertThrows(IllegalArgumentException.class, () -> new IllegalBuilder());
+        assertThrows(IllegalArgumentException.class, IllegalBuilder::new);
     }
 
     private static final ProtoBuilder.Lifecycle LIFECYCLE = new ProtoBuilder.Lifecycle() {
@@ -32,15 +32,15 @@ class ProtoBuilderTest {
 
     static class LegalBuilder extends ProtoBuilder<StringBuilder, LegalBuilder> {
 
-        protected LegalBuilder() {
-            super(new StringBuilder(), LIFECYCLE, LegalBuilder.class);
+        LegalBuilder() {
+            super(new StringBuilder(0), LIFECYCLE, LegalBuilder.class);
         }
     }
 
     static class IllegalBuilder extends ProtoBuilder<StringBuilder, LegalBuilder> {
 
-        protected IllegalBuilder() {
-            super(new StringBuilder(), LIFECYCLE, LegalBuilder.class);
+        IllegalBuilder() {
+            super(new StringBuilder(0), LIFECYCLE, LegalBuilder.class);
         }
     }
 }

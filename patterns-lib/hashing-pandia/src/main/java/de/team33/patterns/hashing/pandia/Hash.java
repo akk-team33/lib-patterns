@@ -8,11 +8,16 @@ import java.util.Arrays;
 /**
  * Represents a hash value.
  */
+@SuppressWarnings("WeakerAccess")
 public class Hash {
 
     private final byte[] bytes;
     private final transient Lazy<BigInteger> lazyBigInteger = Lazy.init(this::newBigInteger);
 
+    /**
+     * @param bytes CAUTION: will not be cloned!
+     */
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     Hash(final byte[] bytes) {
         if ((null != bytes) && (0 < bytes.length)) {
             this.bytes = bytes;
@@ -53,12 +58,12 @@ public class Hash {
      */
     public final String toString(final String chars) {
         final BigInteger base = BigInteger.valueOf(chars.length());
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder(0);
         for (BigInteger tail = toBigInteger(); BigInteger.ZERO.compareTo(tail) != 0; tail = tail.divide(base)) {
             final int digit = tail.mod(base).intValue();
             result.insert(0, chars.charAt(digit));
         }
-        return result.length() > 0 ? result.toString() : chars.substring(0, 1);
+        return result.isEmpty() ? chars.substring(0, 1) : result.toString();
     }
 
     @Override
@@ -72,7 +77,7 @@ public class Hash {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Hash) && Arrays.equals(bytes, ((Hash) obj).bytes));
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof final Hash other) && Arrays.equals(bytes, other.bytes));
     }
 }

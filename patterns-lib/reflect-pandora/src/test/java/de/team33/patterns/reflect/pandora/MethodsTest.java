@@ -1,7 +1,7 @@
 package de.team33.patterns.reflect.pandora;
 
-import de.team33.patterns.testing.reflect.pandora.BeanClass;
-import de.team33.patterns.testing.reflect.pandora.BeanInterface;
+import de.team33.patterns.reflect.pandora.testing.BeanClass;
+import de.team33.patterns.reflect.pandora.testing.BeanInterface;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 

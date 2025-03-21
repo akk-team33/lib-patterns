@@ -1,7 +1,7 @@
 package de.team33.patterns.arbitrary.mimas;
 
-import de.team33.patterns.arbitrary.mimas.sample.Generic;
 import de.team33.patterns.arbitrary.mimas.sample.Buildable;
+import de.team33.patterns.arbitrary.mimas.sample.Generic;
 import de.team33.patterns.arbitrary.mimas.sample.Record;
 import de.team33.patterns.arbitrary.mimas.sample.Sample;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,14 +43,14 @@ class MethodsTest {
 
     enum Case {
 
-        SAMPLE(Sample.class, asList(
+        SAMPLE(Sample.class, List.of(
                 "public final Sample Sample.setBooleanValue(boolean)",
                 "public final Sample Sample.setIntValue(int)",
                 "public final Sample Sample.setLongList(java.util.List<java.lang.Long>)",
                 "public final Sample Sample.setLongValue(java.lang.Long)",
                 "public final Sample Sample.setStringList(java.util.List<java.lang.String>)",
                 "public final Sample Sample.setStringValue(java.lang.String)"
-        ), asList(
+        ), List.of(
                 "public final boolean Sample.isBooleanValue()",
                 "public final int Sample.getIntValue()",
                 "public final java.lang.Long Sample.getLongValue()",
@@ -60,7 +59,7 @@ class MethodsTest {
                 "public final java.util.List<java.lang.String> Sample.getStringList()"
         )),
 
-        BUILDABLE(Buildable.class, emptyList(), asList(
+        BUILDABLE(Buildable.class, emptyList(), List.of(
                 "public final int Buildable.getIntValue()",
                 "public final java.lang.Long Buildable.getLongValue()",
                 "public final java.lang.String Buildable.getStringValue()",
@@ -68,7 +67,7 @@ class MethodsTest {
                 "public final java.util.List<java.lang.String> Buildable.getStringList()"
         )),
 
-        BUILDABLE_BUILDER(Buildable.Builder.class, asList(
+        BUILDABLE_BUILDER(Buildable.Builder.class, List.of(
                 "public final Builder Builder.setIntValue(int)",
                 "public final Builder Builder.setLongList(java.util.List<java.lang.Long>)",
                 "public final Builder Builder.setLongValue(java.lang.Long)",
@@ -84,7 +83,7 @@ class MethodsTest {
                 "public final T Generic.getTValue()"
         )),
 
-        RECORD(Record.class, emptyList(), asList(
+        RECORD(Record.class, emptyList(), List.of(
                 "public final boolean Record.booleanValue()",
                 "public final java.util.List<java.lang.Object> Record.toList()",
                 "public final int Record.intValue()",

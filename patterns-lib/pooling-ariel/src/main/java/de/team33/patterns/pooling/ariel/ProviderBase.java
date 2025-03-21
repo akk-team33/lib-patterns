@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 class ProviderBase<I> extends Mutual<I, RuntimeException> {
 
-    ProviderBase(final XSupplier<XSupplier<I, RuntimeException>, RuntimeException> newItem) {
+    ProviderBase(final XSupplier<? extends XSupplier<I, RuntimeException>, ? extends RuntimeException> newItem) {
         super(newItem);
     }
 

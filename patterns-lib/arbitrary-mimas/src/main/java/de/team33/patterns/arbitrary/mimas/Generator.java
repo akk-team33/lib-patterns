@@ -13,6 +13,7 @@ import java.util.Random;
  *
  * @see de.team33.patterns.arbitrary.mimas package
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 @FunctionalInterface
 public interface Generator extends BitGenerator {
 
@@ -27,7 +28,7 @@ public interface Generator extends BitGenerator {
 
     /**
      * <b>Utility method:</b>
-     * Provides a new {@link Generator} based on a given {@link Random}.
+     * Provides a new instance based on a given {@link Random}.
      */
     static Generator of(final Random random) {
         return numBits -> anyBits(numBits, random);
@@ -275,6 +276,13 @@ public interface Generator extends BitGenerator {
         return Generating.anyString(this, length, characters);
     }
 
+    /**
+     * Returns a {@link String} with a <em>length</em> between 1 and 64 consisting of a predefined character set.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)} and uses
+     * {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}
+     * as predefined character set.
+     */
     default String anyString() {
         return Generating.anyString(this);
     }
@@ -287,7 +295,7 @@ public interface Generator extends BitGenerator {
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"OverloadedVarargsMethod", "unchecked"})
     default <T> T anyOf(final T... values) {
         return Generating.anyOf(this, values);
     }

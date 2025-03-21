@@ -45,7 +45,7 @@ class CollectingTest {
     @Test
     final void add_Charger() {
         final List<String> expected = SUPPLY.anyStringList(3);
-        final List<String> result = Collecting.charger(new ArrayList<String>())
+        final List<String> result = Collecting.charger(new ArrayList<String>(3))
                                               .add(expected.get(0))
                                               .add(expected.get(1))
                                               .add(expected.get(2))
@@ -56,7 +56,7 @@ class CollectingTest {
     @Test
     final void add_Builder() {
         final List<String> expected = SUPPLY.anyStringList(3);
-        final List<String> result = Collecting.builder(() -> new ArrayList<String>())
+        final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
                                               .add(expected.get(0))
                                               .add(expected.get(1))
                                               .add(expected.get(2))
@@ -67,7 +67,7 @@ class CollectingTest {
     @Test
     final void addAll_Charger() {
         final List<String> expected = SUPPLY.anyStringList(3);
-        final List<String> result = Collecting.charger(new ArrayList<String>())
+        final List<String> result = Collecting.charger(new ArrayList<String>(3))
                                               .addAll(expected)
                                               .charged();
         assertEquals(expected, result);
@@ -76,7 +76,7 @@ class CollectingTest {
     @Test
     final void addAll_Builder() {
         final List<String> expected = SUPPLY.anyStringList(3);
-        final List<String> result = Collecting.builder(() -> new ArrayList<String>())
+        final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
                                               .addAll(expected)
                                               .build();
         assertEquals(expected, result);

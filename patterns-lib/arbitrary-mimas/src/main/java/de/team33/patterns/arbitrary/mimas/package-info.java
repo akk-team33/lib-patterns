@@ -35,6 +35,6 @@
  * {@link de.team33.patterns.arbitrary.mimas.Initiator} interfaces are used to charge/initiate the complex,
  * contextual types (Person, Customer, Employee, ...) with random content.
  *
- * @see <a href="https://de.wikipedia.org/wiki/Mimas_(Mond)">Mimas</a>
+ * @see <a href="https://de.wikipedia.org/wiki/Mimas_(Mond)">Mimas (Mond)</a>
  */
 package de.team33.patterns.arbitrary.mimas;

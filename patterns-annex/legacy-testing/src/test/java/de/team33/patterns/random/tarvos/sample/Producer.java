@@ -5,13 +5,16 @@ import de.team33.patterns.random.tarvos.Generator;
 import de.team33.patterns.random.tarvos.Initiator;
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
-public class Producer extends Random implements Generator, Charger, Initiator {
+public class Producer implements Generator, Charger, Initiator {
+
+    private final Random random = new SecureRandom();
 
     @Override
     public final BigInteger nextBits(final int numBits) {
-        return new BigInteger(numBits, this);
+        return new BigInteger(numBits, random);
     }
 
     public final Person nextPerson() {

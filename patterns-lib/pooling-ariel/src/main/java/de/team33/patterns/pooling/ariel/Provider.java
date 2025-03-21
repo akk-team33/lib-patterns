@@ -29,7 +29,7 @@ public class Provider<I> extends ProviderBase<I> {
      * Initializes a new instance giving a {@link Supplier} that defines the intended initialization of a
      * new <em>item</em>.
      */
-    public Provider(final Supplier<I> newItem) {
+    public Provider(final Supplier<? extends I> newItem) {
         super(() -> {
             final I item = newItem.get();
             return () -> item;

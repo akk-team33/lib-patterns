@@ -2,19 +2,14 @@ package de.team33.patterns.arbitrary.mimas.publics;
 
 import de.team33.patterns.arbitrary.mimas.Bridge;
 import de.team33.patterns.arbitrary.mimas.Generator;
-import de.team33.patterns.arbitrary.mimas.sample.Producer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import java.util.EnumSet;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
@@ -23,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class GeneratorTest {
 
@@ -325,9 +319,10 @@ class GeneratorTest {
         assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
     }
 
+    @SuppressWarnings({"unused", "PackageVisibleField"})
     enum Case {
 
-        FIXED_MIN(numBits -> BigInteger.ZERO,
+        FIXED_MIN(numBits -> ZERO,
                   false, 0, 0, 0, 0),
 
         FIXED_MEAN(numBits -> ONE.shiftLeft(numBits / 2).subtract(ONE),
@@ -336,7 +331,7 @@ class GeneratorTest {
         FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE),
                   true, -1, -1, -1, -1),
 
-        RANDOM(Generator.of(new Random())),
+        RANDOM(Generator.of(new SecureRandom())),
 
         SECURE_RANDOM(Generator.of(new SecureRandom()));
 
@@ -351,6 +346,7 @@ class GeneratorTest {
             this(generator, null, null, null, null, null);
         }
 
+        @SuppressWarnings({"ConstructorWithTooManyParameters", "NumericCastThatLosesPrecision"})
         Case(final Generator generator,
              final boolean expBoolean, final int expByte, final int expShort, final int expInt, final long expLong) {
             this(generator,

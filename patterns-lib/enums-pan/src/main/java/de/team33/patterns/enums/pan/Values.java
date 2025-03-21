@@ -10,10 +10,12 @@ import java.util.stream.Stream;
  *
  * @param <E> The enum type whose values should be handled.
  */
-public class Values<E extends Enum<E>> {
+@SuppressWarnings("WeakerAccess")
+public final class Values<E extends Enum<E>> {
 
     private final Class<E> enumClass;
 
+    @SuppressWarnings("BoundedWildcard")
     private Values(final Class<E> enumClass) {
         this.enumClass = enumClass;
     }
@@ -74,7 +76,7 @@ public class Values<E extends Enum<E>> {
     /**
      * Just like {@link #stream()}.{@link Stream#map(Function) map(mapping)}.
      */
-    public final <T> Stream<T> mapAll(final Function<E, T> mapping) {
+    public final <T> Stream<T> mapAll(final Function<? super E, ? extends T> mapping) {
         return stream().map(mapping);
     }
 
@@ -82,7 +84,7 @@ public class Values<E extends Enum<E>> {
      * Just like {@link #findAll(Predicate) findAll(filter)}.{@link Stream#map(Function) map(mapping)}.
      */
     public final <T> Stream<T> mapAll(final Predicate<? super E> filter,
-                                      final Function<E, T> mapping) {
+                                      final Function<? super E, ? extends T> mapping) {
         return findAll(filter).map(mapping);
     }
 

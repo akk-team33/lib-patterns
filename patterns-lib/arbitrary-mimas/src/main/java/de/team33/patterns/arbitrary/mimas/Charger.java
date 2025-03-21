@@ -1,6 +1,6 @@
 package de.team33.patterns.arbitrary.mimas;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * A utility interface:
@@ -31,15 +31,15 @@ import java.util.Arrays;
 public interface Charger {
 
     /**
-     * Initializes the properties of a given {@code target} instance with values provided by this Charger instance
+     * Initializes the properties of a given {@code target} instance with values provided by <em>this</em> Charger instance
      * itself and returns the initialized target.
      * <p>
      * In order for a property to be initialized, the {@code target}'s class must provide a corresponding setter
-     * that is actually accessible from this {@link Charger}. In addition, this {@link Charger}'s implementation class
+     * that is actually accessible from <em>this</em>. In addition, <em>this</em> Charger's implementation class
      * must provide a parameterless method that can return an appropriate value for the property in question.
      * <p>
      * The default implementation provides the intended functionality.
-     * It makes little sense to override this method or then even use this interface at all.
+     * It makes little sense to override <em>this</em> method or then even use <em>this</em> interface at all.
      *
      * @param target The target of the operation.
      * @param ignore The names of methods that shell be ignored.
@@ -47,6 +47,6 @@ public interface Charger {
      * @return The target.
      */
     default <T> T charge(final T target, final String... ignore) {
-        return new Charging<>(this, target, Arrays.asList(ignore)).result();
+        return new Charging<>(this, target, List.of(ignore)).result();
     }
 }

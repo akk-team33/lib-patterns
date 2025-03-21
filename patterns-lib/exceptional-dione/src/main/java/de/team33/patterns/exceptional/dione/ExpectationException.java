@@ -32,15 +32,14 @@ public class ExpectationException extends RuntimeException {
         super(parameters.message, parameters.cause);
     }
 
-    private static final class Parameters {
-
-        private final String message;
-        private final Throwable cause;
+    private record Parameters(String message, Throwable cause) {
 
         private Parameters(final String message, final Throwable cause) {
-            this.message = (null != message) ? message : "Unexpected: " + Optional.ofNullable(cause)
-                                                                                  .map(Parameters::toMessage)
-                                                                                  .orElse("unknown condition");
+            this.message = (null != message)
+                    ? message :
+                    "Unexpected: " + Optional.ofNullable(cause)
+                                             .map(Parameters::toMessage)
+                                             .orElse("unknown condition");
             this.cause = cause;
         }
 

@@ -1,12 +1,13 @@
 package de.team33.patterns.arbitrary.mimas.sample;
 
 import de.team33.patterns.arbitrary.mimas.Charger;
-import de.team33.patterns.arbitrary.mimas.Initiator;
 import de.team33.patterns.arbitrary.mimas.Generator;
+import de.team33.patterns.arbitrary.mimas.Initiator;
 
 import java.math.BigInteger;
 import java.util.Random;
 
+@SuppressWarnings("unused")
 public class Producer extends Random implements Generator, Charger, Initiator {
 
     @Override

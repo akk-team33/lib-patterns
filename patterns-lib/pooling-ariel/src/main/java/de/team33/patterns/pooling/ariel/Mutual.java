@@ -12,9 +12,9 @@ class Mutual<S, E extends Exception> {
     private static final Void VOID = null;
 
     private final Queue<XSupplier<S, E>> stock = new ConcurrentLinkedQueue<>();
-    private final XSupplier<XSupplier<S, E>, E> newItem;
+    private final XSupplier<? extends XSupplier<S, E>, ? extends E> newItem;
 
-    Mutual(final XSupplier<XSupplier<S, E>, E> newItem) {
+    Mutual(final XSupplier<? extends XSupplier<S, E>, ? extends E> newItem) {
         this.newItem = newItem;
     }
 

@@ -4,7 +4,7 @@ import de.team33.patterns.arbitrary.mimas.sample.Sample;
 
 import java.util.Date;
 
-@SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
+@SuppressWarnings({"AssignmentOrReturnOfFieldWithMutableType", "UseOfObsoleteDateTimeApi", "unused"})
 class SampleEx extends Sample {
 
     private Date dateValue;

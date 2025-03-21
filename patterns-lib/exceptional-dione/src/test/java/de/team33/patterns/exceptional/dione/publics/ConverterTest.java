@@ -1,19 +1,20 @@
 package de.team33.patterns.exceptional.dione.publics;
 
-import de.team33.patterns.exceptional.dione.Conversion;
 import de.team33.patterns.exceptional.dione.Converter;
 import de.team33.patterns.exceptional.dione.WrappedException;
 import de.team33.patterns.exceptional.dione.Wrapping;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 class ConverterTest {
@@ -123,7 +124,7 @@ class ConverterTest {
     @EnumSource(Case.class)
     final void biPredicate(final Case cs) {
         // normal ...
-        assertTrue(cs.wrapper.biPredicate((Integer i, Integer k) -> i % 2 == 0 && k % 2 == 1).test(8, 9));
+        assertTrue(cs.wrapper.biPredicate((Integer i, Integer k) -> ((i % 2) == 0) && ((k % 2) != 0)).test(8, 9));
 
         // exceptional ...
         try {
@@ -193,8 +194,8 @@ class ConverterTest {
         RUNTIME_EXCEPTION(RuntimeException.class,
                           Converter.using(Wrapping.varying(RuntimeException::new)));
 
-        final Class<?> runtimeExceptionType;
-        final Converter wrapper;
+        private final Class<?> runtimeExceptionType;
+        private final Converter wrapper;
 
         Case(final Class<?> runtimeExceptionType, final Converter wrapper) {
             this.runtimeExceptionType = runtimeExceptionType;

@@ -10,32 +10,38 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class IgnoringTest {
 
-    static final Ignoring<IOException> IGNORING_IO_EXCEPTION = Ignoring.any(IOException.class);
-    static final Ignoring<IOException> IGNORING_IO_IA_IS_EXCEPTION = Ignoring.any(IOException.class,
-                                                                                  IllegalArgumentException.class,
-                                                                                  IllegalStateException.class);
+    private static final Ignoring<IOException> IGNORING_IO_EXCEPTION =
+            Ignoring.any(IOException.class);
+    private static final Ignoring<IOException> IGNORING_IO_IA_IS_EXCEPTION =
+            Ignoring.any(IOException.class, IllegalArgumentException.class, IllegalStateException.class);
     @SuppressWarnings("rawtypes")
-    static final Ignoring IGNORING_MISLEADING = Ignoring.any(SQLException.class);
+    private static final Ignoring IGNORING_MISLEADING = Ignoring.any(SQLException.class);
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static String throwingAnIOException() throws IOException {
         throw new IOException("throwing an IOException");
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static String throwingAnIllegalArgumentException() {
         throw new IllegalArgumentException("throwing an IllegalArgumentException");
     }
 
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
     private static String throwingAnIllegalStateException() {
         throw new IllegalStateException("throwing an IllegalStateException");
     }
 
     @ParameterizedTest
     @EnumSource
-    void run(final Case testCase) {
+    final void run(final Case testCase) {
         final String[] result = {null};
         try {
             testCase.ignoring.run(() -> result[0] = testCase.supplier.get());
@@ -52,7 +58,7 @@ class IgnoringTest {
 
     @ParameterizedTest
     @EnumSource
-    void get(final Case testCase) {
+    final void get(final Case testCase) {
         try {
             final Optional<String> result = testCase.ignoring.get(testCase.supplier);
             assertNull(testCase.expectedException);
@@ -95,10 +101,10 @@ class IgnoringTest {
                     null,
                     IllegalStateException.class);
 
-        final Ignoring<IOException> ignoring;
-        final XSupplier<String, IOException> supplier;
-        final String rawExpected;
-        final Class<? extends Exception> expectedException;
+        private final Ignoring<IOException> ignoring;
+        private final XSupplier<String, IOException> supplier;
+        private final String rawExpected;
+        private final Class<? extends Exception> expectedException;
 
         Case(final Ignoring<IOException> ignoring,
              final XSupplier<String, IOException> supplier,

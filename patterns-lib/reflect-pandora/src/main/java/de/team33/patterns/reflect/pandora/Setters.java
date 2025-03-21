@@ -18,7 +18,7 @@ import static java.util.Collections.unmodifiableMap;
  *
  * @param <T> The data object class in question.
  */
-public class Setters<T> {
+public final class Setters<T> {
 
     private final Map<String, List<Setter<T>>> backing;
 
@@ -43,7 +43,7 @@ public class Setters<T> {
                                              Map::putAll));
     }
 
-    private static <T> void put(final Map<String, List<Setter<T>>> map, final Setter<T> setter) {
+    private static <T> void put(final Map<? super String, List<Setter<T>>> map, final Setter<T> setter) {
         map.computeIfAbsent(setter.name(), name -> new LinkedList<>())
            .add(setter);
     }

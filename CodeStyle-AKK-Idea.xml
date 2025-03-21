@@ -1,5 +1,7 @@
-<code_scheme name="Default" version="173">
+<code_scheme name="Default copy" version="173">
   <JavaCodeStyleSettings>
+    <option name="GENERATE_FINAL_LOCALS" value="true" />
+    <option name="GENERATE_FINAL_PARAMETERS" value="true" />
     <option name="ALIGN_MULTILINE_ANNOTATION_PARAMETERS" value="true" />
   </JavaCodeStyleSettings>
   <codeStyleSettings language="JAVA">

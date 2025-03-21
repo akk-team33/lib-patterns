@@ -8,12 +8,12 @@ package de.team33.patterns.reflect.pandora;
  * @param <S> The source type.
  * @param <T> The target type.
  */
-public class Mapper<S, T> {
+public final class Mapper<S, T> {
 
-    private final Getters<S> getters;
-    private final Setters<T> setters;
+    private final Getters<? super S> getters;
+    private final Setters<? super T> setters;
 
-    private Mapper(final Getters<S> getters, final Setters<T> setters) {
+    private Mapper(final Getters<? super S> getters, final Setters<? super T> setters) {
         this.getters = getters;
         this.setters = setters;
     }
@@ -24,7 +24,8 @@ public class Mapper<S, T> {
      * @param <S> The source type.
      * @param <T> The target type.
      */
-    public static <S, T> Mapper<S, T> mapping(final Class<S> sourceClass, final Class<T> targetClass) {
+    @SuppressWarnings("WeakerAccess")
+    public static <S, T> Mapper<S, T> mapping(final Class<? super S> sourceClass, final Class<? super T> targetClass) {
         return mapping(Getters.of(sourceClass), Setters.of(targetClass));
     }
 
@@ -34,7 +35,7 @@ public class Mapper<S, T> {
      * @param <S> The source type.
      * @param <T> The target type.
      */
-    public static <S, T> Mapper<S, T> mapping(final Getters<S> getters, final Class<T> targetClass) {
+    public static <S, T> Mapper<S, T> mapping(final Getters<? super S> getters, final Class<? super T> targetClass) {
         return mapping(getters, Setters.of(targetClass));
     }
 
@@ -45,7 +46,8 @@ public class Mapper<S, T> {
      * @param <S> The source type.
      * @param <T> The target type.
      */
-    public static <S, T> Mapper<S, T> mapping(final Getters<S> getters, final Setters<T> setters) {
+    @SuppressWarnings("WeakerAccess")
+    public static <S, T> Mapper<S, T> mapping(final Getters<? super S> getters, final Setters<? super T> setters) {
         return new Mapper<>(getters, setters);
     }
 

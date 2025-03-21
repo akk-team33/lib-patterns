@@ -22,7 +22,7 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String, Throwable)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> method(final BiFunction<String, X1, X2> biFunction) {
+    Function<X1, X2> method(final BiFunction<? super String, ? super X1, ? extends X2> biFunction) {
         return x1 -> biFunction.apply(x1.getMessage(), x1);
     }
 
@@ -37,7 +37,8 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String, Throwable)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> method(final String message, final BiFunction<String, X1, X2> biFunction) {
+    Function<X1, X2> method(final String message,
+                            final BiFunction<? super String, ? super X1, ? extends X2> biFunction) {
         return x1 -> biFunction.apply(message, x1);
     }
 
@@ -53,7 +54,7 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> varying(final Function<String, X2> function) {
+    Function<X1, X2> varying(final Function<? super String, ? extends X2> function) {
         return x1 -> apply(x1, x1.getMessage(), function);
     }
 
@@ -69,12 +70,12 @@ public final class Wrapping {
      * @see RuntimeException#RuntimeException(String)
      */
     public static <X1 extends Throwable, X2 extends Throwable>
-    Function<X1, X2> varying(final String message, final Function<String, X2> function) {
+    Function<X1, X2> varying(final String message, final Function<? super String, ? extends X2> function) {
         return x1 -> apply(x1, message, function);
     }
 
     private static <X1 extends Throwable, X2 extends Throwable>
-    X2 apply(final X1 x1, final String message, final Function<String, X2> function) {
+    X2 apply(final X1 x1, final String message, final Function<? super String, X2> function) {
         final X2 x2 = function.apply(message);
         x2.initCause(x1);
         return x2;

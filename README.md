@@ -4,11 +4,11 @@ Team33 Patterns Library Collection
 
 ## Home
 
-http://www.team33.de/dev/patterns/1.x
+http://www.team33.de/dev/patterns/2.x
 
 ## Requires
 
-    Java 8 or later
+    Java 17 or later
 
 ## Artifacts
 
@@ -16,7 +16,6 @@ http://www.team33.de/dev/patterns/1.x
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * building-elara (Team33 Building Library - Edition "elara")
-  * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-carpo (Team33 Decision Library - Edition "carpo")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
@@ -24,15 +23,46 @@ http://www.team33.de/dev/patterns/1.x
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * io-deimos (Team33 IO Library - Edition "deimos")
-  * io-phobos (Team33 IO Library - Edition "phobos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
-  * notes-eris (Team33 Notifications Library - Edition "eris")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
 
+## Still Supported
+
+### development preliminary suspended
+
+* (patterns-lib - previous releases)
+  * collection-ceres (Team33 Collection Library - Edition "ceres") - 1.25.0
+  * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
+  * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
+  * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
+  * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
+  * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
+  * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
+
+### deprecated
+
+* (patterns-lib - previous releases)
+  * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
+  * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
+
 ## Change Log
+
+### 2.0.3
+
+* Set java language level to 17
+* Removed some deprecated items
+* Several refinements
+* Refined module lazy-narvy ...
+  * Added class ReLazy
+  * Added class XReLazy
+  * Added class InitException
+  * Marked class Lazy.InitException as deprecated
+* Nailed module io-phobos to 1.25.0
+* Nailed module notes-eris to 1.25.0
+* Nailed module collection-ceres to 1.25.0
 
 ### 1.25.0
 
@@ -40,17 +70,17 @@ http://www.team33.de/dev/patterns/1.x
 
 ### 1.24.1
 
-* Nailed module serial-charon to 1.24.0 (discontinued)
-* Nailed module tuple-janus to 1.24.0 (discontinued)
+* Nailed module serial-charon to 1.24.0
+* Nailed module tuple-janus to 1.24.0
 
 ### 1.24.0
 
-* Nailed module decision-leda to 1.23.0 (discontinued)
+* Nailed module decision-leda to 1.23.0
 * Added module decision-carpo
 
 ### 1.23.0
 
-* Nailed module decision-telesto to 1.22.0 (discontinued)
+* Nailed module decision-telesto to 1.22.0
 * Added module decision-leda
 
 ### 1.22.0

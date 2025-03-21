@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 
+@SuppressWarnings("unused")
 public class SimpleAsyncExecutor implements Executor {
 
     private static final Logger LOG = Logger.getLogger(SimpleAsyncExecutor.class.getCanonicalName());

@@ -2,7 +2,6 @@ package de.team33.patterns.arbitrary.mimas;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -14,9 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
-import static java.util.Collections.unmodifiableMap;
 
 final class Types {
 
@@ -26,12 +23,12 @@ final class Types {
     }
 
     private static Map<Type, Collection<Type>> newMatching() {
-        final Map<Type, Collection<Type>> result = new HashMap<>();
+        final Map<Type, Collection<Type>> result = new HashMap<>(2 * Primary.values().length);
         for (final Primary primary : Primary.values()) {
             result.put(primary.type, primary.matching);
             result.put(primary.boxed, primary.matching);
         }
-        return unmodifiableMap(result);
+        return Map.copyOf(result);
     }
 
     static Naming naming(final Type type) {
@@ -57,7 +54,6 @@ final class Types {
                        .contains(desired);
     }
 
-    @SuppressWarnings("PackageVisibleField")
     private enum Primary {
 
         BOOLEAN(boolean.class, Boolean.class, false),
@@ -78,7 +74,7 @@ final class Types {
             this.type = type;
             this.boxed = boxed;
             this.value = value;
-            this.matching = asList(type, boxed);
+            this.matching = List.of(type, boxed);
         }
     }
 
@@ -103,7 +99,7 @@ final class Types {
         }
 
         private static String toParameters(final ParameterizedType type) {
-            return Arrays.stream(type.getActualTypeArguments())
+            return Stream.of(type.getActualTypeArguments())
                          .map(pType -> naming(pType).simpleName(pType))
                          .collect(Collectors.joining(", ", "<", ">"));
         }

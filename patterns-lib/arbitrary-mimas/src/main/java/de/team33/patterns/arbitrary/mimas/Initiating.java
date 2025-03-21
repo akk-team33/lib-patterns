@@ -47,23 +47,28 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
 
     private Object[] arguments() {
         return Stream.of(parameters)
-                     .map(parameter -> {
-                         final Type parameterType = parameter.getParameterizedType();
-                         final Supplier<?> supplier = desiredSupplier(parameterType, preference(parameter));
-                         if (ignorable.contains(parameter.getName())) {
-                             return Types.defaultValue(parameterType);
-                         } else if (null != supplier) {
-                             return supplier.get();
-                         } else {
-                             throw new LocalException(this, parameter.getName(), parameterType);
-                         }
-                     })
+                     .map(this::argument)
                      .toArray(Object[]::new);
     }
 
-    private BinaryOperator<Method> preference(final Parameter parameter) {
-        // TODO?
-        return (left, right) -> left;
+    private Object argument(final Parameter parameter) {
+        final Type parameterType = parameter.getParameterizedType();
+        final Supplier<?> supplier = desiredSupplier(parameterType, preference(parameter));
+        if (ignorable.contains(parameter.getName())) {
+            return Types.defaultValue(parameterType);
+        } else if (null != supplier) {
+            return supplier.get();
+        } else {
+            throw new LocalException(this, parameter.getName(), parameterType);
+        }
+    }
+
+    private static BinaryOperator<Method> preference(final Parameter parameter) {
+        return (left, right) -> preference(parameter.getName(), left, right);
+    }
+
+    private static Method preference(final String parameterName, final Method left, final Method right) {
+        return Methods.normalName(right).equals(parameterName) ? right : left;
     }
 
     final T result() {

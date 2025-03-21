@@ -6,7 +6,6 @@ import de.team33.patterns.arbitrary.mimas.sample.Record;
 import de.team33.patterns.arbitrary.mimas.sample.Sample;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,8 +18,8 @@ public class InitiatorTest implements Initiator {
                                                "ABC",
                                                0,
                                                Long.MAX_VALUE,
-                                               Arrays.asList("abc", "def", "ghi"),
-                                               Arrays.asList(4L, 69L, 345L));
+                                               List.of("abc", "def", "ghi"),
+                                               List.of(4L, 69L, 345L));
 
     @Test
     final void record_behavior() {

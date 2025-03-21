@@ -18,6 +18,9 @@ final class Methods {
     private static final Set<Signature> NON_INHERENT_SIGNATURES = publicOf(Object.class).map(Signature::new)
                                                                                         .collect(toSet());
 
+    private Methods() {
+    }
+
     static Stream<Method> publicOf(final Class<?> subjectClass) {
         return Stream.of(subjectClass.getMethods());
     }
@@ -26,19 +29,19 @@ final class Methods {
         return publicOf(subjectClass).filter(Methods::isInherent);
     }
 
-    static <T> Stream<Method> publicGettersOf(final Class<?> subjectClass) {
+    static Stream<Method> publicGettersOf(final Class<?> subjectClass) {
         return publicInherentOf(subjectClass).filter(Methods::isGetter);
     }
 
-    static <T> Stream<Method> publicSettersOf(final Class<?> subjectClass) {
+    static Stream<Method> publicSettersOf(final Class<?> subjectClass) {
         return publicInherentOf(subjectClass).filter(Methods::isSetter);
     }
 
-    static <T> Stream<Method> classicGettersOf(final Class<?> subjectClass) {
+    static Stream<Method> classicGettersOf(final Class<?> subjectClass) {
         return publicGettersOf(subjectClass).filter(Methods::isGetterPrefixed);
     }
 
-    static <T> Stream<Method> classicSettersOf(final Class<?> subjectClass) {
+    static Stream<Method> classicSettersOf(final Class<?> subjectClass) {
         return publicSettersOf(subjectClass).filter(Methods::isSetterPrefixed);
     }
 

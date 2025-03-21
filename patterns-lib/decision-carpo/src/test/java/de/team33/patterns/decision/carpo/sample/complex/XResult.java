@@ -5,6 +5,7 @@ import de.team33.patterns.decision.carpo.testing.Input;
 
 import java.util.function.Function;
 
+@SuppressWarnings("unused")
 public enum XResult {
 
     A, B, C, D, E;

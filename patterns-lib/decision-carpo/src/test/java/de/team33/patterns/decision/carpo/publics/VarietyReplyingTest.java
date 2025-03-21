@@ -52,7 +52,7 @@ class VarietyReplyingTest {
 
     @ParameterizedTest
     @EnumSource
-    void apply(final Result given) {
+    final void apply(final Result given) {
         final Result result = function.apply(new InputImpl(given.ordinal()));
         assertEquals(given, result);
     }

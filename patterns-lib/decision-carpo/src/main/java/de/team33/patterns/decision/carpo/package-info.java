@@ -100,6 +100,6 @@
  * }
  * </pre>
  *
- * @see <a href="https://de.wikipedia.org/wiki/Carpo_(Mond)">Carpo (Mond)</a>
+ * @see <a href="https://de.wikipedia.org/wiki/Carpo_(Mond)" target="_blank">Carpo (Mond)</a>
  */
 package de.team33.patterns.decision.carpo;

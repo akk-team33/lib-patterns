@@ -56,31 +56,26 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
     }
 
     final T result() {
-        desiredSetters().forEach(setter -> {
-            final Type valueType = setter.getGenericParameterTypes()[0];
-            final Supplier<?> supplier = desiredSupplier(valueType, preference(setter));
-            if (null == supplier) {
-                throw new LocalException(this, setter, valueType);
-            } else {
-                setter(setter).accept(supplier.get());
-            }
-        });
+        desiredSetters().forEach(this::apply);
         return target;
     }
 
+    private void apply(final Method setter) {
+        final Type valueType = setter.getGenericParameterTypes()[0];
+        final Supplier<?> supplier = desiredSupplier(valueType, preference(setter));
+        if (null == supplier) {
+            throw new LocalException(this, setter, valueType);
+        } else {
+            setter(setter).accept(supplier.get());
+        }
+    }
+
     private static BinaryOperator<Method> preference(final Method setter) {
-        final String setterName = Methods.normalName(setter);
-        return (left, right) -> {
-            final String leftName = Methods.normalName(left);
-            final String rightName = Methods.normalName(right);
-            if (leftName.equals(setterName)) {
-                return left;
-            } else if (rightName.equals(setterName)) {
-                return right;
-            } else {
-                return left;
-            }
-        };
+        return (left, right) -> preference(Methods.normalName(setter), left, right);
+    }
+
+    private static Method preference(final String setterName, final Method left, final Method right) {
+        return Methods.normalName(right).equals(setterName) ? right : left;
     }
 
     private static final class LocalException extends UnfitConditionException {

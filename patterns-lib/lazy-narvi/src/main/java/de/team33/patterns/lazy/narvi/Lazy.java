@@ -6,7 +6,7 @@ import de.team33.patterns.exceptional.dione.XSupplier;
 import java.util.function.Supplier;
 
 /**
- * Implements a kind of supplier that provides a virtually fixed value.
+ * Implements a {@link Supplier} that provides a virtually fixed value.
  * That value is only actually determined when it is accessed for the first time.
  * <p>
  * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
@@ -18,9 +18,12 @@ import java.util.function.Supplier;
  * *Pure read accesses are of course not really competing.
  *
  * @see XLazy
+ * @see ReLazy
  */
-public class Lazy<T> extends Mutual<T, RuntimeException> {
+public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
+    @Deprecated(forRemoval = true)
     private static final Converter CNV = Converter.using(InitException::new);
 
     private Lazy(final Supplier<? extends T> initial) {
@@ -28,7 +31,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
     }
 
     /**
-     * Returns a new {@link Lazy} instance giving a {@link Supplier} that defines the intended initialization of the
+     * Returns a new instance giving a {@link Supplier} that defines the intended initialization of the
      * represented value.
      *
      * @param <T> The result type of the initialisation code.
@@ -39,7 +42,7 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
     }
 
     /**
-     * Returns a new {@link Lazy} instance giving an {@link XSupplier} that defines the intended initialization of the
+     * Returns a new instance giving an {@link XSupplier} that defines the intended initialization of the
      * represented value. The initialization code may throw a checked exception. If so, it is caught, wrapped in an
      * {@link InitException}, and rethrown.
      *
@@ -61,13 +64,14 @@ public class Lazy<T> extends Mutual<T, RuntimeException> {
     }
 
     /**
-     * An unchecked exception type that may be thrown, when the {@linkplain #initEx(XSupplier) initialization code}
-     * of a {@link Lazy} instance causes a checked exception.
+     * @deprecated use {@link de.team33.patterns.lazy.narvi.InitException} instead!
      */
-    public static class InitException extends RuntimeException {
+    @SuppressWarnings({"ClassNameSameAsAncestorName", "DeprecatedIsStillUsed"})
+    @Deprecated(forRemoval = true)
+    public static final class InitException extends de.team33.patterns.lazy.narvi.InitException {
 
         private InitException(final Throwable cause) {
-            super(cause.getMessage(), cause);
+            super(cause);
         }
     }
 }
