@@ -1,7 +1,7 @@
-package de.team33.patterns.collection.ceres.publics;
+package de.team33.test.patterns.collection.ceres.publics;
 
 import de.team33.patterns.collection.ceres.Mapping;
-import de.team33.patterns.collection.ceres.testing.Supply;
+import de.team33.test.patterns.collection.ceres.testing.Supply;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +9,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 class MappingTest extends Supply
 {
 
@@ -26,7 +27,7 @@ class MappingTest extends Supply
         final Map<String, String> expected = Collections.singletonMap(key, value);
         final HashMap<String, String> stage = new HashMap<>(1);
 
-        final HashMap<String, String> result = Mapping.put(stage, key, value);
+        final Map<String, String> result = Mapping.put(stage, key, value);
 
         assertEquals(expected, result);
         assertSame(stage, result);
@@ -34,9 +35,9 @@ class MappingTest extends Supply
 
     @Test
     final void putAll() {
-        final HashMap<String, String> stage = new HashMap<>(3);
+        final Map<String, String> stage = new HashMap<>(3);
 
-        final HashMap<String, String> result = Mapping.putAll(stage, samples);
+        final Map<String, String> result = Mapping.putAll(stage, samples);
 
         assertEquals(samples, result);
         assertSame(stage, result);
@@ -44,9 +45,9 @@ class MappingTest extends Supply
 
     @Test
     final void clear() {
-        final HashMap<String, String> stage = new HashMap<>(samples);
+        final Map<String, String> stage = new HashMap<>(samples);
 
-        final HashMap<String, String> result = Mapping.clear(stage);
+        final Map<String, String> result = Mapping.clear(stage);
 
         assertEquals(Collections.emptyMap(), result);
         assertSame(stage, result);
@@ -147,9 +148,9 @@ class MappingTest extends Supply
 
     @Test
     final void containsValue_null() {
-        final Map<String, String> subject = new TreeMap<String, String>(samples) {
+        final Map<String, String> subject = new TreeMap<>(samples) {
             @Override
-            public boolean containsValue(Object value) {
+            public boolean containsValue(final Object value) {
                 return super.containsValue(Objects.requireNonNull(value));
             }
         };
@@ -172,9 +173,9 @@ class MappingTest extends Supply
     @Test
     final void containsValue_incompatible() {
         final long longValue = anyLong();
-        final Map<String, String> subject = new TreeMap<String, String>(samples) {
+        final Map<String, String> subject = new TreeMap<>(samples) {
             @Override
-            public boolean containsValue(Object value) {
+            public boolean containsValue(final Object value) {
                 //noinspection RedundantCast
                 return super.containsValue((String) value);
             }
@@ -189,8 +190,7 @@ class MappingTest extends Supply
 
     @Test
     final void get() {
-        samples.keySet().forEach(key -> {
-            final String expected = samples.get(key);
+        samples.forEach((key, expected) -> {
             final String result = Mapping.get(samples, key);
             assertEquals(expected, result);
         });

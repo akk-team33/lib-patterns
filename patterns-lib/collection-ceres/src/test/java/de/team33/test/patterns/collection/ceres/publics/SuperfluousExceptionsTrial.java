@@ -1,6 +1,6 @@
-package de.team33.patterns.collection.ceres.publics;
+package de.team33.test.patterns.collection.ceres.publics;
 
-import de.team33.patterns.collection.ceres.testing.Supply;
+import de.team33.test.patterns.collection.ceres.testing.Supply;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -10,6 +10,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("SuspiciousMethodCalls")
 class SuperfluousExceptionsTrial {
 
     private static final Supply SUPPLY = new Supply();
@@ -150,6 +151,7 @@ class SuperfluousExceptionsTrial {
         }
     }
 
+    @SuppressWarnings("unused")
     enum ContainsCase {
 
         ARRAY_LIST(ArrayList.class, ArrayList::new, false),
@@ -161,12 +163,12 @@ class SuperfluousExceptionsTrial {
 
         private final Class<?> subjectClass;
         @SuppressWarnings("rawtypes")
-        private final Function<Collection, Collection> toSubject;
+        private final Function<? super Collection, ? extends Collection> toSubject;
         private final boolean fail;
 
         @SuppressWarnings("rawtypes")
         ContainsCase(final Class<?> subjectClass,
-                     final Function<Collection, Collection> toSubject,
+                     final Function<? super Collection, ? extends Collection> toSubject,
                      final boolean fail) {
             this.subjectClass = subjectClass;
             this.toSubject = toSubject;

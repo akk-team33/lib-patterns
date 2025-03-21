@@ -1,7 +1,7 @@
-package de.team33.patterns.collection.ceres.publics;
+package de.team33.test.patterns.collection.ceres.publics;
 
 import de.team33.patterns.collection.ceres.Collecting;
-import de.team33.patterns.collection.ceres.testing.Supply;
+import de.team33.test.patterns.collection.ceres.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<String>, S>> {
 
     private static final Supply SUPPLY = new Supply();
+    private static final String[] EMPTY_STRING_ARRAY = {};
 
     abstract S setup();
 
@@ -29,7 +30,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @Test
     final void add_more() {
         final List<String> original = SUPPLY.anyStringList(9);
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             addAll(2, Arrays.asList(null, null, null, null, null));
         }};
         final List<String> result = resultOf(setup().add(original.get(0), original.get(1))
@@ -70,7 +71,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @Test
     final void remove_single() {
         final List<String> original = SUPPLY.anyStringList(20);
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             removeAll(original.subList(0, 1));
             removeAll(original.subList(3, 4));
             removeAll(original.subList(7, 8));
@@ -85,7 +86,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
     @Test
     final void remove_more() {
         final List<String> original = SUPPLY.anyStringList(20);
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             removeAll(original.subList(1, 3));
             removeAll(original.subList(4, 6));
             removeAll(original.subList(9, 10));
@@ -112,7 +113,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final Iterator<String> iterator = subList1216.iterator();
         final String[] array = original.subList(16, 24).toArray(new String[6]);
 
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             removeAll(original.subList(0, 24));
         }};
         final List<String> result = resultOf(setup().addAll(original)
@@ -130,7 +131,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final List<String> original = SUPPLY.anyStringList(36);
         final Collection<String> removable = original.subList(0, 18);
 
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             removeAll(removable);
         }};
         final List<String> result = resultOf(setup().addAll(original)
@@ -160,9 +161,9 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         final List<String> subList1216 = original.subList(6, 31);
         final Iterable<String> iterable2 = () -> subList1216.iterator();
         final Iterator<String> iterator = subList1216.iterator();
-        final String[] array = original.subList(9, 26).toArray(new String[]{});
+        final String[] array = original.subList(9, 26).toArray(EMPTY_STRING_ARRAY);
 
-        final List<String> expected = new ArrayList<String>(original) {{
+        final List<String> expected = new ArrayList<>(original) {{
             retainAll(original.subList(0, 25));
             retainAll(original.subList(10, 36));
             retainAll(original.subList(3, 28));

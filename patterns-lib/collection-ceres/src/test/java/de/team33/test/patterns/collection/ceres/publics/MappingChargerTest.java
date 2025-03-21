@@ -1,4 +1,4 @@
-package de.team33.patterns.collection.ceres.publics;
+package de.team33.test.patterns.collection.ceres.publics;
 
 import de.team33.patterns.collection.ceres.Mapping;
 
@@ -9,7 +9,7 @@ import java.util.TreeMap;
 class MappingChargerTest
         extends MappingSetupTestBase<Mapping.Charger<String, List<String>, Map<String, List<String>>>> {
 
-    private Map<String, List<String>> newMap() {
+    private static Map<String, List<String>> newMap() {
         return new TreeMap<>();
     }
 
