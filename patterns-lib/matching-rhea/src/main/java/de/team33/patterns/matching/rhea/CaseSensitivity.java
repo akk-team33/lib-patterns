@@ -6,6 +6,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 enum CaseSensitivity {
 
     CS(Pattern::compile),
@@ -13,9 +14,9 @@ enum CaseSensitivity {
 
     private static final Values<CaseSensitivity> VALUES = Values.of(CaseSensitivity.class);
 
-    private final Function<String, Pattern> toPattern;
+    private final Function<? super String, Pattern> toPattern;
 
-    CaseSensitivity(final Function<String, Pattern> toPattern) {
+    CaseSensitivity(final Function<? super String, Pattern> toPattern) {
         this.toPattern = toPattern;
     }
 

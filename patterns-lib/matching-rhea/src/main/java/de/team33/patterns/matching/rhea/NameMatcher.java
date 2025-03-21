@@ -5,7 +5,7 @@ import de.team33.patterns.io.deimos.TextIO;
 import java.nio.file.Path;
 import java.util.regex.Pattern;
 
-public class NameMatcher {
+public final class NameMatcher {
 
     private final Pattern pattern;
 
@@ -34,12 +34,12 @@ public class NameMatcher {
         return (1 == parts.length) ? parseEx("", parts[0]) : parseEx(parts[0], parts[1]);
     }
 
-    private static NameMatcher parseEx(final String head, final String tail) throws InternalException {
-        return parseEx(head.split("/", 2), tail);
+    private static NameMatcher parseEx(final String head, final String value) throws InternalException {
+        return parseEx(head.split("/", 2), value);
     }
 
-    private static NameMatcher parseEx(final String[] parts, final String tail) throws InternalException {
-        return (1 == parts.length) ? parseEx(parts[0], "", tail) : parseEx(parts[0], parts[1], tail);
+    private static NameMatcher parseEx(final String[] parts, final String value) throws InternalException {
+        return (1 == parts.length) ? parseEx(parts[0], "", value) : parseEx(parts[0], parts[1], value);
     }
 
     private static NameMatcher parseEx(final String method,

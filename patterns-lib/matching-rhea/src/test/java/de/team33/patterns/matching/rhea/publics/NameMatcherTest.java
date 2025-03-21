@@ -8,10 +8,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("HardcodedFileSeparator")
 class NameMatcherTest {
 
     @Test
@@ -58,7 +57,7 @@ class NameMatcherTest {
     final void parse_fail(final String given) {
         try {
             final NameMatcher matcher = NameMatcher.parse(given);
-            fail("expected to fail - but was " + matcher);
+            fail("expected to fail - but matcher.matches(\"%s\") was %s".formatted(given, matcher.matches(given)));
         } catch (final ParseException e) {
             // as expected -> OK!
             // e.printStackTrace();

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WildcardString {
+public final class WildcardString {
 
     private static final Pattern WILDCARD = Pattern.compile("[*?]");
 
@@ -43,14 +43,11 @@ public class WildcardString {
         }
 
         static String toRegEx(final String subs) {
-            switch (subs) {
-            case "*":
-                return ".*";
-            case "?":
-                return ".";
-            default:
-                return Pattern.quote(subs);
-            }
+            return switch (subs) {
+                case "*" -> ".*";
+                case "?" -> ".";
+                default -> Pattern.quote(subs);
+            };
         }
     }
 }
