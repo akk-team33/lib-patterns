@@ -6,7 +6,7 @@
     <parent>
         <groupId>de.team33.patterns.annex</groupId>
         <artifactId>patterns-annex</artifactId>
-        <version>2.0.2-SNAPSHOT</version>
+        <version>2.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>cmd-pwgen</artifactId>
