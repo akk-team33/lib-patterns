@@ -450,6 +450,59 @@ public final class Collecting {
     }
 
     /**
+     * Similar to {@link Collection#retainAll(Collection) subject.retainAll(List.of(element))},
+     * but returns the <em>subject</em>.
+     * <p>
+     * If <em>subject</em> contains the <em>element</em> several times, each occurrence will be retained.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support the requested
+     * <em>element</em>.
+     *
+     * @throws UnsupportedOperationException if {@link Collection#retainAll(Collection)} is not supported by the
+     *                                       <em>subject</em>.
+     * @throws NullPointerException          if <em>subject</em> is {@code null}.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retain(Collection, Object, Object, Object...)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Iterator)
+     * @see Collecting#retainAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C retain(final C subject, final Object element) {
+        return retainAll(subject, Collections.singleton(element));
+    }
+
+    /**
+     * Similar to {@link Collecting#retain(Collection, Object)}, but allows to retain two or more elements.
+     * <p>
+     * If <em>subject</em> contains some of the <em>elements</em> several times, each occurrence will be retained.
+     * <p>
+     * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by
+     * {@link Collection#retainAll(Collection)} when the <em>subject</em> does not support the requested
+     * <em>elements</em>.
+     *
+     * @throws NullPointerException          if <em>subject</em> is {@code null} or if the {@code array} of
+     *                                       {@code more} elements is {@code null}.
+     * @throws UnsupportedOperationException if {@link Collection#removeAll(Collection)} is not supported by the
+     *                                       <em>subject</em>.
+     * @see Collection#retainAll(Collection)
+     * @see Collecting#retain(Collection, Object)
+     * @see Collecting#retainAll(Collection, Collection)
+     * @see Collecting#retainAll(Collection, Stream)
+     * @see Collecting#retainAll(Collection, Iterable)
+     * @see Collecting#retainAll(Collection, Iterator)
+     * @see Collecting#retainAll(Collection, Object[])
+     */
+    public static <C extends Collection<?>> C retain(final C subject,
+                                                     final Object element0,
+                                                     final Object element1,
+                                                     final Object... more) {
+        return retainAll(subject, Stream.concat(Stream.of(element0, element1), Stream.of(more)));
+    }
+
+    /**
      * Just like {@link Collection#retainAll(Collection) subject.retainAll(elements)}, but returns the <em>subject</em>.
      * <p>
      * Avoids an unnecessary {@link ClassCastException} or {@link NullPointerException} which might be caused by

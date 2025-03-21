@@ -200,6 +200,34 @@ class CollectingTest {
 
     @ParameterizedTest
     @EnumSource
+    final void retain_single(final RemoveCase rmCase) {
+        final List<String> origin = SUPPLY.anyStringList(4);
+        final Object obsolete = rmCase.obsolete.apply(origin);
+        final Set<String> expected = new HashSet<>(origin) {{
+            retainAll(Arrays.asList(obsolete));
+        }};
+        final Set<String> result = Collecting.retain(new TreeSet<>(origin), obsolete);
+        assertEquals(expected, result);
+
+        assertThrows(NullPointerException.class, () -> Collecting.retain(null, obsolete));
+    }
+
+    @Test
+    final void retain_more() {
+        final List<String> origin = SUPPLY.anyStringList(8);
+        final String[] obsolete = {origin.get(1), origin.get(6), origin.get(3)};
+        final List<String> expected = new ArrayList<>(origin) {{
+            retainAll(Arrays.asList(obsolete));
+        }};
+        final List<String> result = Collecting.retain(new ArrayList<>(origin),
+                                                      obsolete[0],
+                                                      obsolete[1],
+                                                      obsolete[2]);
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @EnumSource
     final void retainAll_Collection(final RemoveCase rmCase) {
         final List<String> origin = SUPPLY.anyStringList(8);
         final List<?> relevant = rmCase.obsoleteList.apply(origin);
