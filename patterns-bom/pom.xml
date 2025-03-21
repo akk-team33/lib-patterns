@@ -87,11 +87,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>collection-ceres</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>hashing-pandia</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -100,6 +95,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>notes-eris</artifactId>
+                <version>1.25.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>collection-ceres</artifactId>
                 <version>1.25.0</version>
             </dependency>
             <dependency>
