@@ -10,6 +10,10 @@
     </parent>
 
     <artifactId>pwgen-main</artifactId>
+    <packaging>jar</packaging>
+
+    <name>PWGen Main</name>
+    <description>A command line tool to generate passwords - main module.</description>
 
     <dependencies>
         <dependency>
