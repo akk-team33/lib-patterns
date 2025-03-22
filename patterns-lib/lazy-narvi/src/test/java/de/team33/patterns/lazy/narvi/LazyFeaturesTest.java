@@ -9,15 +9,13 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("MethodOnlyUsedFromInnerClass")
+@SuppressWarnings({"MethodOnlyUsedFromInnerClass", "TypeMayBeWeakened"})
 final class LazyFeaturesTest implements Generator {
 
     private final Random random = new SecureRandom();
@@ -32,7 +30,17 @@ final class LazyFeaturesTest implements Generator {
         return new BigInteger(numBits, random);
     }
 
-    @SuppressWarnings("TypeMayBeWeakened")
+    @ParameterizedTest
+    @MethodSource("keys")
+    final <R> void peek(final Key<R> key) {
+        assertEquals(Optional.empty(), features.peek(key));
+
+        final R expected = features.get(key);
+        assertEquals(expected, features.peek(key)
+                                       .orElseThrow(() -> new AssertionError(
+                                               "expected to be present - but was absent")));
+    }
+
     @ParameterizedTest
     @MethodSource("keys")
     final <R> void get_reset_one(final Key<R> key) {
@@ -69,6 +77,7 @@ final class LazyFeaturesTest implements Generator {
     }
 
     @SuppressWarnings("ClassNameSameAsAncestorName")
+
     @FunctionalInterface
     interface Key<R> extends LazyFeatures.Key<Features, R> {
 
@@ -78,9 +87,10 @@ final class LazyFeaturesTest implements Generator {
         Key<List<Object>> TO_LIST = Features::newToList;
         Key<Integer> HASH_CODE = Features::newHashCode;
         Key<String> TO_STRING = Features::newToString;
+        // Key<Object> NULL = host -> null;
 
         @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
-        List<Key<?>> VALUES = List.of(INTEGER, STRING, INSTANT, TO_STRING, HASH_CODE, TO_LIST);
+        List<Key<?>> VALUES = List.of(INTEGER, STRING, INSTANT, TO_STRING, HASH_CODE, TO_LIST/*, NULL*/);
     }
 
     @SuppressWarnings("ReturnOfInnerClass")

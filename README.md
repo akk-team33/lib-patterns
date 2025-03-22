@@ -50,6 +50,11 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### 2.1.1
+
+* Refined module lazy-narvy ...
+  * Added method peek() to class LazyFeatures
+
 ### 2.1.0
 
 * Revoked and refined module collection-ceres

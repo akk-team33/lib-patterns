@@ -1,8 +1,17 @@
 package de.team33.patterns.lazy.narvi;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A tool for managing properties of a host instance, which typically result from other properties of the host
+ * and are only actually determined when needed. Once determined, properties are retained until reset.
+ *
+ * @param <H> The host type.
+ * @see #reset(Key)
+ * @see #reset()
+ */
 @SuppressWarnings({"WeakerAccess", "AbstractClassWithOnlyOneDirectInheritor"})
 public abstract class LazyFeatures<H> {
 
@@ -12,7 +21,13 @@ public abstract class LazyFeatures<H> {
     protected abstract H host();
 
     @SuppressWarnings("unchecked")
-    public final <R> R get(final Key<H, R> key) {
+    public final <R> Optional<R> peek(final Key<? super H, ? extends R> key) {
+        return Optional.ofNullable((Lazy<R>) backing.get(key))
+                       .map(Lazy::get);
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <R> R get(final Key<? super H, ? extends R> key) {
         final Lazy<R> lazy = backing.computeIfAbsent(key, this::newLazy);
         return lazy.get();
     }
