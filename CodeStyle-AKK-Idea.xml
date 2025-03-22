@@ -1,4 +1,4 @@
-<code_scheme name="Default copy" version="173">
+<code_scheme name="Default copy1" version="173">
   <JavaCodeStyleSettings>
     <option name="GENERATE_FINAL_LOCALS" value="true" />
     <option name="GENERATE_FINAL_PARAMETERS" value="true" />
@@ -14,6 +14,7 @@
     <option name="ALIGN_MULTILINE_METHOD_BRACKETS" value="true" />
     <option name="METHOD_CALL_CHAIN_WRAP" value="1" />
     <option name="TERNARY_OPERATION_SIGNS_ON_NEXT_LINE" value="true" />
-    <option name="ENUM_CONSTANTS_WRAP" value="1" />
+    <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
+    <option name="ENUM_CONSTANTS_WRAP" value="2" />
   </codeStyleSettings>
 </code_scheme>
