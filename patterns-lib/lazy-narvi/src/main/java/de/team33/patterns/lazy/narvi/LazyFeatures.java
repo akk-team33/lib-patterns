@@ -1,8 +1,9 @@
 package de.team33.patterns.lazy.narvi;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A tool for managing properties of a host instance, which typically result from other properties of the host
@@ -16,18 +17,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class LazyFeatures<H> {
 
     @SuppressWarnings("rawtypes")
-    private final Map<Key, Lazy> backing = new ConcurrentHashMap<>(0);
+    private final Map<Key, Lazy> backing = Collections.synchronizedMap(new HashMap<>(0));
 
     protected abstract H host();
 
-    @SuppressWarnings("unchecked")
     public final <R> Optional<R> peek(final Key<? super H, ? extends R> key) {
-        return Optional.ofNullable((Lazy<R>) backing.get(key))
-                       .map(Lazy::get);
+        @SuppressWarnings("unchecked")
+        final Lazy<R> lazy = backing.get(key);
+        return Optional.ofNullable(lazy).map(Lazy::get);
     }
 
-    @SuppressWarnings("unchecked")
     public final <R> R get(final Key<? super H, ? extends R> key) {
+        @SuppressWarnings("unchecked")
         final Lazy<R> lazy = backing.computeIfAbsent(key, this::newLazy);
         return lazy.get();
     }

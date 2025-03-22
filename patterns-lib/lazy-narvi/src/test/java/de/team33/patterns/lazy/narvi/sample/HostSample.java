@@ -1,0 +1,92 @@
+package de.team33.patterns.lazy.narvi.sample;
+
+import de.team33.patterns.lazy.narvi.LazyFeatures;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.List;
+
+public class HostSample {
+
+    private final transient HostFeatures features = new HostFeatures();
+    private int intValue;
+    private String stringValue;
+    private Instant instantValue;
+
+    public final int getIntValue() {
+        return intValue;
+    }
+
+    public final HostSample setIntValue(final int intValue) {
+        features.reset();
+        this.intValue = intValue;
+        return this;
+    }
+
+    public final String getStringValue() {
+        return stringValue;
+    }
+
+    public final HostSample setStringValue(final String stringValue) {
+        features.reset();
+        this.stringValue = stringValue;
+        return this;
+    }
+
+    public final Instant getInstantValue() {
+        return instantValue;
+    }
+
+    public final HostSample setInstantValue(final Instant instantValue) {
+        features.reset();
+        this.instantValue = instantValue;
+        return this;
+    }
+
+    public final List<Object> toList() {
+        return features.get(Key.LIST);
+    }
+
+    @Override
+    public final boolean equals(final Object obj) {
+        return this == obj || (obj instanceof final HostSample other && toList().equals(other.toList()));
+    }
+
+    @Override
+    public final int hashCode() {
+        return features.get(Key.HASH);
+    }
+
+    @Override
+    public final String toString() {
+        return features.get(Key.STRING);
+    }
+
+    @FunctionalInterface
+    private interface Key<R> extends LazyFeatures.Key<HostFeatures, R> {
+
+        Key<List<Object>> LIST = HostFeatures::newList;
+        Key<Integer> HASH = HostFeatures::newHash;
+        Key<String> STRING = HostFeatures::newString;
+    }
+
+    private class HostFeatures extends LazyFeatures<HostFeatures> {
+
+        @Override
+        protected final HostFeatures host() {
+            return this;
+        }
+
+        private List<Object> newList() {
+            return Arrays.asList(intValue, stringValue, instantValue);
+        }
+
+        private Integer newHash() {
+            return toList().hashCode();
+        }
+
+        private String newString() {
+            return HostSample.class.getSimpleName() + toList().toString();
+        }
+    }
+}
