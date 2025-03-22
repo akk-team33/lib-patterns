@@ -1,4 +1,4 @@
-package de.team33.test.patterns.lazy.narvi.publics;
+package de.team33.patterns.lazy.narvi.publics;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 import de.team33.patterns.lazy.narvi.InitException;
@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ReLazyTest extends LazyTestBase<ReLazy<Integer>> {
 

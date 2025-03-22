@@ -1,4 +1,4 @@
-package de.team33.test.patterns.lazy.narvi.publics;
+package de.team33.patterns.lazy.narvi.publics;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 import de.team33.patterns.lazy.narvi.Lazy;
@@ -15,9 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static de.team33.patterns.exceptional.dione.Conversion.supplier;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class LazyTestBase<T> {
 

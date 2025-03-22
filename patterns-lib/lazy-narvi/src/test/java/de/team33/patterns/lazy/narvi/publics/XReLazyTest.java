@@ -1,4 +1,4 @@
-package de.team33.test.patterns.lazy.narvi.publics;
+package de.team33.patterns.lazy.narvi.publics;
 
 import de.team33.patterns.lazy.narvi.XReLazy;
 import org.junit.jupiter.api.Test;
