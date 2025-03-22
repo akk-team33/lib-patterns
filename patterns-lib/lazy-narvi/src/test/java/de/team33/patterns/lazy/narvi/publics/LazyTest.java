@@ -1,6 +1,7 @@
 package de.team33.patterns.lazy.narvi.publics;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
+import de.team33.patterns.lazy.narvi.InitException;
 import de.team33.patterns.lazy.narvi.Lazy;
 import org.junit.jupiter.api.Test;
 
@@ -16,13 +17,13 @@ class LazyTest extends LazyTestBase<Lazy<Integer>> {
 
     /**
      * Ensures that {@link Lazy#initEx(XSupplier)} encapsulates code so that any checked exception
-     * that is thrown is wrapped in an (unchecked) {@link Lazy.InitException}.
+     * that is thrown is wrapped in an (unchecked) {@link InitException}.
      */
     @Test
     final void exceptional() {
         final Lazy<?> lazy = Lazy.initEx(() -> {
             throw new SQLException("this is a test");
         });
-        assertThrows(Lazy.InitException.class, lazy::get);
+        assertThrows(InitException.class, lazy::get);
     }
 }

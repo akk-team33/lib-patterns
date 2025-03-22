@@ -18,9 +18,7 @@ public class HostSample {
     }
 
     public final HostSample setIntValue(final int intValue) {
-        features.reset();
-        this.intValue = intValue;
-        return this;
+        return features.reset(() -> this.intValue = intValue);
     }
 
     public final String getStringValue() {
@@ -28,9 +26,7 @@ public class HostSample {
     }
 
     public final HostSample setStringValue(final String stringValue) {
-        features.reset();
-        this.stringValue = stringValue;
-        return this;
+        return features.reset(() -> this.stringValue = stringValue);
     }
 
     public final Instant getInstantValue() {
@@ -38,9 +34,7 @@ public class HostSample {
     }
 
     public final HostSample setInstantValue(final Instant instantValue) {
-        features.reset();
-        this.instantValue = instantValue;
-        return this;
+        return features.reset(() -> this.instantValue = instantValue);
     }
 
     public final List<Object> toList() {
@@ -49,7 +43,7 @@ public class HostSample {
 
     @Override
     public final boolean equals(final Object obj) {
-        return this == obj || (obj instanceof final HostSample other && toList().equals(other.toList()));
+        return (this == obj) || ((obj instanceof final HostSample other) && toList().equals(other.toList()));
     }
 
     @Override
@@ -87,6 +81,12 @@ public class HostSample {
 
         private String newString() {
             return HostSample.class.getSimpleName() + toList().toString();
+        }
+
+        private HostSample reset(final Runnable runnable) {
+            reset();
+            runnable.run();
+            return HostSample.this;
         }
     }
 }
