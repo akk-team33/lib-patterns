@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.singletonMap;
 
+@SuppressWarnings("WeakerAccess")
 public class Supply implements Generator {
 
     private static final String CHARACTERS = "abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
@@ -18,14 +19,6 @@ public class Supply implements Generator {
     @Override
     public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, RANDOM);
-    }
-
-    public final int anyLength() {
-        return anyInt(24);
-    }
-
-    public final String anyString() {
-        return anyString(anyLength(), CHARACTERS);
     }
 
     public final List<String> anyStringList(final int size) {
