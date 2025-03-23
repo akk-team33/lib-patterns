@@ -24,7 +24,7 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
 
     @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated(forRemoval = true)
-    private static final Converter CNV = Converter.using(InitException::new);
+    private static final Converter CNV = Converter.using(Lazy.InitException::new);
 
     private Lazy(final Supplier<? extends T> initial) {
         super(initial::get);
@@ -44,7 +44,7 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
     /**
      * Returns a new instance giving an {@link XSupplier} that defines the intended initialization of the
      * represented value. The initialization code may throw a checked exception. If so, it is caught, wrapped in an
-     * {@link InitException}, and rethrown.
+     * {@link de.team33.patterns.lazy.narvi.InitException}, and rethrown.
      *
      * @param <T> The result type of the initialisation code.
      * @see #init(Supplier)
