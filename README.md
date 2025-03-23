@@ -54,6 +54,7 @@ http://www.team33.de/dev/patterns/2.x
 
 * Refined module lazy-narvy ...
   * Added method peek() to class LazyFeatures
+  * Added javadoc to class LazyFeatures
 
 ### 2.1.0
 
