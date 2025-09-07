@@ -52,6 +52,7 @@ http://www.team33.de/dev/patterns/2.x
 
 ### 2.1.2
 
+* Using de.team33:mvn-config-alpha:2.0.0 as super parent pom
 * Refined module decision-carpo ...
   * fixed: Cases may reply _null_
 
