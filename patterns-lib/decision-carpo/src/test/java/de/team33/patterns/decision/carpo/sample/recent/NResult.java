@@ -16,7 +16,7 @@ public enum NResult {
                    .on(0b001, 0b110).reply(B)
                    .on(0b010).reply(C)
                    .on(0b100).reply(E)
-                   .on(0b111).reply(C)
+                   .on(0b111).reply(null)
                    .toFunction();
 
     public static NResult map(final Input input) {

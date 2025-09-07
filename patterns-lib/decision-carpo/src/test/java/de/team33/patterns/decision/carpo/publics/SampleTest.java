@@ -8,8 +8,7 @@ import de.team33.patterns.decision.carpo.testing.Input;
 import de.team33.patterns.decision.carpo.testing.InputImpl;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("MethodWithMultipleLoops")
 class SampleTest {
@@ -57,5 +56,11 @@ class SampleTest {
             // e.printStackTrace();
             assertEquals("Case 11 is not supported", e.getMessage());
         }
+    }
+
+    @Test
+    final void nullResult() {
+        final Input input = new InputImpl(true, true, true);
+        assertNull(NResult.map(input));
     }
 }

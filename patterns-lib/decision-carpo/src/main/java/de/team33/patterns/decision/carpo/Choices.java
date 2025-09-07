@@ -46,9 +46,9 @@ public final class Choices<I, R> {
         return input -> {
             final int bitSet = variety.apply(input);
             return Optional.ofNullable(methods.get(bitSet))
-                           .map(method -> method.apply(input))
                            .orElseThrow(() -> new UnsupportedOperationException(
-                                   String.format("Case %s is not supported", Integer.toBinaryString(bitSet))));
+                                   String.format("Case %s is not supported", Integer.toBinaryString(bitSet))))
+                           .apply(input);
         };
     }
 

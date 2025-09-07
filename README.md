@@ -50,6 +50,11 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### 2.1.2
+
+* Refined module decision-carpo ...
+  * fixed: Cases may reply _null_
+
 ### 2.1.1
 
 * Refined module lazy-narvy ...
