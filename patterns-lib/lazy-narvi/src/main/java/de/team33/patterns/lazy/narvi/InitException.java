@@ -10,12 +10,12 @@ import de.team33.patterns.exceptional.dione.XSupplier;
  * @see Lazy#initEx(XSupplier)
  * @see ReLazy#initEx(XSupplier)
  */
-public class InitException extends RuntimeException {
+public final class InitException extends RuntimeException {
 
     @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     static final Converter CNV = Converter.using(InitException::new);
 
-    InitException(final Throwable cause) {
+    private InitException(final Throwable cause) {
         super(cause.getMessage(), cause);
     }
 }

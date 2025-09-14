@@ -1,9 +1,10 @@
 package de.team33.patterns.lazy.narvi;
 
-import de.team33.patterns.exceptional.dione.Converter;
 import de.team33.patterns.exceptional.dione.XSupplier;
 
 import java.util.function.Supplier;
+
+import static de.team33.patterns.lazy.narvi.InitException.CNV;
 
 /**
  * Implements a {@link Supplier} that provides a virtually fixed value.
@@ -20,11 +21,7 @@ import java.util.function.Supplier;
  * @see XLazy
  * @see ReLazy
  */
-public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
-
-    @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated(forRemoval = true)
-    private static final Converter CNV = Converter.using(Lazy.InitException::new);
+public final class Lazy<T> extends Mutual<T, RuntimeException, Lazy<T>> implements Supplier<T> {
 
     private Lazy(final Supplier<? extends T> initial) {
         super(initial::get);
@@ -54,24 +51,15 @@ public final class Lazy<T> extends Mutual<T, RuntimeException> implements Suppli
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Executes the {@linkplain #init(Supplier) originally defined initialization code} once on the first call
      * and returns its result on that and every subsequent call without executing the initialization code again.
-     * This method is thread safe.
+     * <p>
+     * This implementation is thread safe.
      */
     @Override
     public final T get() {
         return super.get();
-    }
-
-    /**
-     * @deprecated use {@link de.team33.patterns.lazy.narvi.InitException} instead!
-     */
-    @SuppressWarnings({"ClassNameSameAsAncestorName", "DeprecatedIsStillUsed"})
-    @Deprecated(forRemoval = true)
-    public static final class InitException extends de.team33.patterns.lazy.narvi.InitException {
-
-        private InitException(final Throwable cause) {
-            super(cause);
-        }
     }
 }

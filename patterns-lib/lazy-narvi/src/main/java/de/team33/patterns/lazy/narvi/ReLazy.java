@@ -24,7 +24,7 @@ import static de.team33.patterns.lazy.narvi.InitException.CNV;
  * @see XReLazy
  */
 @SuppressWarnings("WeakerAccess")
-public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
+public final class ReLazy<T> extends Mutual<T, RuntimeException, ReLazy<T>> implements Supplier<T> {
 
     private final Supplier<? extends T> initial;
 
@@ -57,9 +57,12 @@ public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supp
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Executes the {@linkplain #init(Supplier) originally defined initialization code} once on the first call
      * and returns its result on that and every subsequent call without executing the initialization code again.
-     * This method is thread safe.
+     * <p>
+     * This implementation is thread safe.
      */
     @Override
     public final T get() {
@@ -70,7 +73,6 @@ public final class ReLazy<T> extends Mutual<T, RuntimeException> implements Supp
      * Resets <em>this</em> to the initial state and returns <em>this</em>.
      */
     public final ReLazy<T> reset() {
-        reset(initial::get);
-        return this;
+        return reset(initial::get);
     }
 }

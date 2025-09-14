@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @see XLazy
  * @see ReLazy
  */
-public final class XReLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
+public final class XReLazy<T, X extends Exception> extends Mutual<T, X, XReLazy<T, X>> implements XSupplier<T, X> {
 
     private final XSupplier<? extends T, ? extends X> initial;
 
@@ -42,9 +42,12 @@ public final class XReLazy<T, X extends Exception> extends Mutual<T, X> implemen
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Executes the {@linkplain #init(XSupplier) originally defined initialization code} once on the first call
      * and returns its result on that and every subsequent call without executing the initialization code again.
-     * This method is thread safe.
+     * <p>
+     * This implementation is thread safe.
      */
     @Override
     public final T get() throws X {
@@ -55,7 +58,6 @@ public final class XReLazy<T, X extends Exception> extends Mutual<T, X> implemen
      * Resets <em>this</em> to the initial state and returns <em>this</em>.
      */
     public final XReLazy<T, X> reset() {
-        reset(initial);
-        return this;
+        return reset(initial);
     }
 }

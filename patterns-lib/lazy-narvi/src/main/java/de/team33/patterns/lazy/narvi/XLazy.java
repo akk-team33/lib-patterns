@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * @see Lazy
  * @see XReLazy
  */
-public final class XLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
+public final class XLazy<T, X extends Exception> extends Mutual<T, X, XLazy<T, X>> implements XSupplier<T, X> {
 
     private XLazy(final XSupplier<? extends T, ? extends X> initial) {
         super(initial);
@@ -37,9 +37,12 @@ public final class XLazy<T, X extends Exception> extends Mutual<T, X> implements
     }
 
     /**
+     * {@inheritDoc}
+     * <p>
      * Executes the {@linkplain #init(XSupplier) originally defined initialization code} once on the first call
      * and returns its result on that and every subsequent call without executing the initialization code again.
-     * This method is thread safe.
+     * <p>
+     * This implementation is thread safe.
      */
     @Override
     public final T get() throws X {
