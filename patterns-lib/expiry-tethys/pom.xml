@@ -26,5 +26,10 @@
             <groupId>de.team33.testing</groupId>
             <artifactId>async-thebe</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>lazy-narvi</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
