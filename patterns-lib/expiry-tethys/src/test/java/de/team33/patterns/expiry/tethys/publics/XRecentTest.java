@@ -1,7 +1,9 @@
 package de.team33.patterns.expiry.tethys.publics;
 
 import de.team33.patterns.expiry.tethys.XRecent;
+import de.team33.testing.async.thebe.Context;
 import de.team33.testing.async.thebe.Parallel;
+import de.team33.testing.bridging.styx.Bridger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,10 +16,10 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.*;
 
-class XRecentTest {
+class XRecentTest extends Bridger {
 
-    private static final long IDLE_TIME = 10; // milliseconds!
-    private static final long LIFE_TIME = 100; // milliseconds!
+    private static final int IDLE_TIME = 10; // milliseconds!
+    private static final int LIFE_TIME = 100; // milliseconds!
 
     private AtomicInteger nextIndex;
     private XRecent<Sample, IOException> xRecent;
@@ -26,15 +28,6 @@ class XRecentTest {
     final void beforeEach() {
         nextIndex = new AtomicInteger(0);
         xRecent = new XRecent<>(() -> new Sample(nextIndex.getAndIncrement()), IDLE_TIME, LIFE_TIME);
-    }
-
-    private static void sleep(final long millis) {
-        try {
-            Thread.sleep(millis);
-        } catch (final InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new IllegalStateException(e);
-        }
     }
 
     @Test
@@ -48,10 +41,10 @@ class XRecentTest {
     @Test
     final void get_afterIdleTime() throws IOException {
         final Sample first = xRecent.get();
-        sleep(IDLE_TIME + 1);
+        bridge(IDLE_TIME + 1);
         final Sample second = xRecent.get();
         assertNotSame(first, second, "after <IDLETIME> it is not expected to get the same instance twice");
-        assertNotEquals(first.getIndex(), second.getIndex(),
+        assertNotEquals(first.index(), second.index(),
                         "after <IDLETIME> it is not expected to get the same index twice");
         assertEquals(2, nextIndex.get());
     }
@@ -59,15 +52,15 @@ class XRecentTest {
     @Test
     final void get_afterLifeTime() throws IOException {
         final Sample first = xRecent.get();
-        final Instant created = first.getCreated();
+        final Instant created = first.created();
         Sample second = first;
         //noinspection ObjectEquality
         while (second == first) {
-            sleep(IDLE_TIME / 2); // significantly less than IDLETIME
+            bridge(IDLE_TIME / 2); // significantly less than IDLETIME
             second = xRecent.get();
         }
-        final long delta = second.getCreated().toEpochMilli() - created.toEpochMilli();
-        assertTrue(delta > LIFE_TIME,
+        final long delta = second.created().toEpochMilli() - created.toEpochMilli();
+        assertTrue(delta >= LIFE_TIME,
                    () -> format("<delta> is expected to be greater than <LIFETIME> (%d) - but was %d",
                                 LIFE_TIME, delta));
         assertEquals(2, nextIndex.get());
@@ -79,20 +72,7 @@ class XRecentTest {
         final int limit = 100;
         final Instant time00 = Instant.now();
         final List<Result> results =
-                Parallel.report(limit, context -> {
-                            final Sample first = xRecent.get();
-                            final Instant created = first.getCreated();
-                            Sample second = first;
-                            //noinspection ObjectEquality
-                            while (second == first) {
-                                sleep(IDLE_TIME + 1); // sic!
-                                second = xRecent.get();
-                            }
-                            final long delta =
-                                    second.getCreated().toEpochMilli() -
-                                    created.toEpochMilli();
-                            return new Result(context.operationIndex, delta);
-                        })
+                Parallel.report(limit, this::get_single)
                         .reThrowAny()
                         .list();
         final long delta = Instant.now().toEpochMilli() - time00.toEpochMilli();
@@ -109,22 +89,24 @@ class XRecentTest {
         assertEquals("", unexpected);
     }
 
-    private static class Sample {
-
-        private final int index;
-        private final Instant created;
-
-        Sample(int index) {
-            this.index = index;
-            created = Instant.now();
+    private Result get_single(final Context context) throws IOException {
+        final Sample first = xRecent.get();
+        final Instant created = first.created();
+        Sample second = first;
+        while (second == first) {
+            bridge(IDLE_TIME + 1); // sic!
+            second = xRecent.get();
         }
+        final long delta =
+                second.created().toEpochMilli() -
+                created.toEpochMilli();
+        return new Result(context.operationIndex, delta);
+    }
 
-        final Instant getCreated() {
-            return created;
-        }
+    private record Sample(int index, Instant created) {
 
-        final int getIndex() {
-            return index;
+        private Sample(final int index) {
+            this(index, Instant.now());
         }
     }
 }

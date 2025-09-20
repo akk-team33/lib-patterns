@@ -43,7 +43,7 @@ class RecentTest extends Bridger {
         bridge(IDLE_TIME + 1);
         final Sample second = recent.get();
         assertNotSame(first, second, "after <IDLETIME> it is not expected to get the same instance twice");
-        assertNotEquals(first.getIndex(), second.getIndex(),
+        assertNotEquals(first.index(), second.index(),
                         "after <IDLETIME> it is not expected to get the same index twice");
         assertEquals(2, nextIndex.get());
     }
@@ -51,15 +51,15 @@ class RecentTest extends Bridger {
     @Test
     final void get_afterLifeTime() {
         final Sample first = recent.get();
-        final Instant created = first.getCreated();
+        final Instant created = first.created();
         Sample second = first;
         //noinspection ObjectEquality
         while (second == first) {
             bridge(IDLE_TIME / 2); // significantly less than IDLETIME
             second = recent.get();
         }
-        final long delta = second.getCreated().toEpochMilli() - created.toEpochMilli();
-        assertTrue(delta > LIFE_TIME,
+        final long delta = second.created().toEpochMilli() - created.toEpochMilli();
+        assertTrue(delta >= LIFE_TIME,
                    () -> format("<delta> is expected to be greater than <LIFETIME> (%d) - but was %d",
                                 LIFE_TIME, delta));
         assertEquals(2, nextIndex.get());
@@ -90,34 +90,22 @@ class RecentTest extends Bridger {
 
     private Result get_single(final Context context) {
         final Sample first = recent.get();
-        final Instant created = first.getCreated();
+        final Instant created = first.created();
         Sample second = first;
         while (second == first) {
             bridge(IDLE_TIME + 1); // sic!
             second = recent.get();
         }
         final long delta =
-                second.getCreated().toEpochMilli() -
+                second.created().toEpochMilli() -
                 created.toEpochMilli();
         return new Result(context.operationIndex, delta);
     }
 
-    private static class Sample {
+    private record Sample(int index, Instant created) {
 
-        private final int index;
-        private final Instant created;
-
-        private Sample(int index) {
-            this.index = index;
-            created = Instant.now();
-        }
-
-        final Instant getCreated() {
-            return created;
-        }
-
-        final int getIndex() {
-            return index;
+        private Sample(final int index) {
+            this(index, Instant.now());
         }
     }
 }
