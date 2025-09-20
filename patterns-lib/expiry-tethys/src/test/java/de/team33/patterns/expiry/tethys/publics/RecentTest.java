@@ -1,4 +1,4 @@
-package de.team33.test.patterns.expiry.tethys;
+package de.team33.patterns.expiry.tethys.publics;
 
 import de.team33.patterns.expiry.tethys.Recent;
 import de.team33.testing.async.thebe.Parallel;
