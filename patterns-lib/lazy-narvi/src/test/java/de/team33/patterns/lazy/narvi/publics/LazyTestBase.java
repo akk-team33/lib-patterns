@@ -23,7 +23,7 @@ abstract class LazyTestBase<T> {
     private final AtomicInteger counter = new AtomicInteger(0);
     private final XSupplier<Integer, ?> initial = () -> {
         // This operation should take a little time and give other threads a chance ...
-        Thread.sleep(1);
+        Thread.sleep(2);
         return counter.incrementAndGet();
     };
     private final XSupplier<Integer, Exception> lazyIndex;
