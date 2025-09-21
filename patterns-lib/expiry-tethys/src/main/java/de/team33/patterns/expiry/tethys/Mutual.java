@@ -2,6 +2,7 @@ package de.team33.patterns.expiry.tethys;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
+import java.time.Duration;
 import java.time.Instant;
 
 class Mutual<T, X extends Exception> {
@@ -25,27 +26,28 @@ class Mutual<T, X extends Exception> {
      * @param maxIdle    the maximum idle time in milliseconds
      * @param maxLiving  the maximum lifetime in milliseconds
      */
-    Mutual(final XSupplier<? extends T, ? extends X> newSubject, final long maxIdle, final long maxLiving) {
+    Mutual(final XSupplier<? extends T, ? extends X> newSubject,
+           final Duration maxIdle, final Duration maxLiving) {
         this(new Rule<>(newSubject, maxIdle, maxLiving));
     }
 
     @SuppressWarnings("DesignForExtension")
     T get() throws X {
-        return approved(actual);
+        return approved(actual, Instant.now());
     }
 
-    private T approved(final Actual<? extends T> candidate) throws X {
-        return candidate.isTimeout(Instant.now()) ? updated(candidate) : candidate.get();
+    private T approved(final Actual<? extends T> candidate, final Instant now) throws X {
+        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get(now);
     }
 
     @SuppressWarnings("ObjectEquality")
-    private T updated(final Actual<? extends T> outdated) throws X {
+    private T updated(final Actual<? extends T> outdated, final Instant now) throws X {
         final T result;
         synchronized (rule) {
             if (actual == outdated) {
-                actual = new Substantial();
+                actual = new Substantial(now);
             }
-            result = actual.get();
+            result = actual.get(now);
         }
         return result;
     }
@@ -56,7 +58,7 @@ class Mutual<T, X extends Exception> {
 
         boolean isTimeout(final Instant now);
 
-        default T get() {
+        default T get(final Instant now) {
             throw new UnsupportedOperationException("method not supported");
         }
     }
@@ -67,25 +69,26 @@ class Mutual<T, X extends Exception> {
         private final Instant lifeTimeout;
         private volatile Instant idleTimeout;
 
-        Substantial() throws X {
-            final Instant now = Instant.now();
-            this.lifeTimeout = now.plusMillis(rule.maxLife);
-            this.idleTimeout = now.plusMillis(rule.maxIdle);
+        Substantial(final Instant now) throws X {
+            this.lifeTimeout = now.plus(rule.maxLife);
+            this.idleTimeout = now.plus(rule.maxIdle);
             this.subject = rule.newSubject.get();
         }
 
         @Override
         public final boolean isTimeout(final Instant now) {
-            return (now.compareTo(lifeTimeout) > 0) || (now.compareTo(idleTimeout) > 0);
+            return now.isAfter(lifeTimeout) || now.isAfter(idleTimeout);
         }
 
         @Override
-        public final T get() {
-            idleTimeout = Instant.now().plusMillis(rule.maxIdle);
+        public final T get(final Instant now) {
+            idleTimeout = now.plus(rule.maxIdle);
             return subject;
         }
     }
 
-    private record Rule<T, X extends Exception>(XSupplier<? extends T, ? extends X> newSubject, long maxIdle, long maxLife) {
+    private record Rule<T, X extends Exception>(XSupplier<? extends T, ? extends X> newSubject,
+                                                Duration maxIdle,
+                                                Duration maxLife) {
     }
 }

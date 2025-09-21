@@ -1,5 +1,6 @@
 package de.team33.patterns.expiry.tethys;
 
+import java.time.Duration;
 import java.util.function.Supplier;
 
 /**
@@ -32,7 +33,7 @@ public class Recent<T> extends Mutual<T, RuntimeException> implements Supplier<T
      * @param maxLiving  the maximum lifetime in milliseconds
      */
     public Recent(final Supplier<? extends T> newSubject, final long maxIdle, final long maxLiving) {
-        super(newSubject::get, maxIdle, maxLiving);
+        super(newSubject::get, Duration.ofMillis(maxIdle), Duration.ofMillis(maxLiving));
     }
 
     @Override

@@ -2,6 +2,8 @@ package de.team33.patterns.expiry.tethys;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
+import java.time.Duration;
+
 
 /**
  * Defines a container type for handling instances, which in principle can be defined globally and
@@ -33,7 +35,7 @@ public class XRecent<T, X extends Exception> extends Mutual<T, X> implements XSu
      * @param maxLiving  the maximum lifetime in milliseconds
      */
     public XRecent(final XSupplier<? extends T, ? extends X> newSubject, final long maxIdle, final long maxLiving) {
-        super(newSubject, maxIdle, maxLiving);
+        super(newSubject, Duration.ofMillis(maxIdle), Duration.ofMillis(maxLiving));
     }
 
     @Override
