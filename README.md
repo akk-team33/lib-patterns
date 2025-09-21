@@ -52,9 +52,12 @@ http://www.team33.de/dev/patterns/2.x
 
 ### next
 
-* Refined module lazy-narvi
+* Refined module lazy-narvi ...
   * removed deprecated items
   * slightly refactored
+* Refined module expiry-tethys ...
+  * slightly refactored implementation
+  * thoroughly refactored tests to reduce fragility
 
 ### 2.1.2
 
