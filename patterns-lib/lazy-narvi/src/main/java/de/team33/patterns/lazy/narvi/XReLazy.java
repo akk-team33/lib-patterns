@@ -2,6 +2,7 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -53,5 +54,14 @@ public final class XReLazy<T, X extends Exception> extends ReMutual<T, X, XReLaz
     @Override
     public final T get() throws X {
         return super.get();
+    }
+
+    /**
+     * @see #reset()
+     * @see #get()
+     */
+    @Override
+    public final T getAfterResetIf(final BooleanSupplier condition) throws X {
+        return super.getAfterResetIf(condition);
     }
 }
