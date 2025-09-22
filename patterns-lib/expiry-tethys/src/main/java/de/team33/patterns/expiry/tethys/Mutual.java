@@ -1,21 +1,21 @@
 package de.team33.patterns.expiry.tethys;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
+import de.team33.patterns.lazy.narvi.XReLazy;
 
 import java.time.Duration;
 import java.time.Instant;
 
 class Mutual<T, X extends Exception> {
 
-    private final Rule<? extends T, ? extends X> rule;
-    private volatile Actual<T> actual = now -> true;
-
-    private Mutual(final Rule<? extends T, ? extends X> rule) {
-        this.rule = rule;
-    }
+    private final XReLazy<? extends T, ? extends X> backing;
+    private final Duration maxIdle;
+    private final Duration maxLiving;
+    private volatile Instant lastAccess = Instant.MIN;
+    private volatile Instant lastReset = Instant.MIN;
 
     /**
-     * Initializes a new instance of this container type given a {@link XSupplier} for the type to be handled and
+     * Initializes a new instance of this container type given an {@link XSupplier} for the type to be handled and
      * an intended lifetime of such instances.
      * <p>
      * CAUTION: The given lifetime should be significantly smaller than the actually expected
@@ -26,69 +26,28 @@ class Mutual<T, X extends Exception> {
      * @param maxIdle    the maximum idle time in milliseconds
      * @param maxLiving  the maximum lifetime in milliseconds
      */
-    Mutual(final XSupplier<? extends T, ? extends X> newSubject,
-           final Duration maxIdle, final Duration maxLiving) {
-        this(new Rule<>(newSubject, maxIdle, maxLiving));
+    Mutual(final XSupplier<? extends T, ? extends X> newSubject, final Duration maxIdle, final Duration maxLiving) {
+        this.backing = XReLazy.init(newSubject);
+        this.maxIdle = maxIdle;
+        this.maxLiving = maxLiving;
     }
 
     @SuppressWarnings("DesignForExtension")
     T get() throws X {
-        return approved(actual, Instant.now());
+        return backing.getAfterResetIf(() -> isTimeout(Instant.now()));
     }
 
-    private T approved(final Actual<? extends T> candidate, final Instant now) throws X {
-        return candidate.isTimeout(now) ? updated(candidate, now) : candidate.get(now);
-    }
-
-    @SuppressWarnings("ObjectEquality")
-    private T updated(final Actual<? extends T> outdated, final Instant now) throws X {
-        final T result;
-        synchronized (rule) {
-            if (actual == outdated) {
-                actual = new Substantial(now);
+    private boolean isTimeout(final Instant now) {
+        final boolean result;
+        synchronized (backing) {
+            if (now.isAfter(lastReset.plus(maxLiving)) || now.isAfter(lastAccess.plus(maxIdle))) {
+                lastReset = now;
+                result = true;
+            } else {
+                result = false;
             }
-            result = actual.get(now);
+            lastAccess = now;
         }
         return result;
-    }
-
-    @SuppressWarnings("InterfaceWithOnlyOneDirectInheritor")
-    @FunctionalInterface
-    private interface Actual<T> {
-
-        boolean isTimeout(final Instant now);
-
-        default T get(final Instant now) {
-            throw new UnsupportedOperationException("method not supported");
-        }
-    }
-
-    private class Substantial implements Actual<T> {
-
-        private final T subject;
-        private final Instant lifeTimeout;
-        private volatile Instant idleTimeout;
-
-        Substantial(final Instant now) throws X {
-            this.lifeTimeout = now.plus(rule.maxLife);
-            this.idleTimeout = now.plus(rule.maxIdle);
-            this.subject = rule.newSubject.get();
-        }
-
-        @Override
-        public final boolean isTimeout(final Instant now) {
-            return now.isAfter(lifeTimeout) || now.isAfter(idleTimeout);
-        }
-
-        @Override
-        public final T get(final Instant now) {
-            idleTimeout = now.plus(rule.maxIdle);
-            return subject;
-        }
-    }
-
-    private record Rule<T, X extends Exception>(XSupplier<? extends T, ? extends X> newSubject,
-                                                Duration maxIdle,
-                                                Duration maxLife) {
     }
 }

@@ -20,6 +20,10 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>exceptional-dione</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>lazy-narvi</artifactId>
+        </dependency>
 
         <!-- testing -->
         <dependency>
@@ -29,11 +33,6 @@
         <dependency>
             <groupId>de.team33.testing</groupId>
             <artifactId>bridging-styx</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>lazy-narvi</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
