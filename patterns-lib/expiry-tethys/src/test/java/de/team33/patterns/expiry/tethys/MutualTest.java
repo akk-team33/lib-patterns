@@ -20,7 +20,7 @@ class MutualTest extends Bridger {
 
     private static final System.Logger LOG = System.getLogger(MutualTest.class.getCanonicalName());
     private static final int MAX_IDLE = 10;
-    private static final int MAX_LIVING = 25;
+    private static final int MAX_LIVING = 50;
 
     private final Lazy<Long> time0 = Lazy.init(System::currentTimeMillis);
     private final Supplier<Long> initial = () -> System.currentTimeMillis() - time0.get();

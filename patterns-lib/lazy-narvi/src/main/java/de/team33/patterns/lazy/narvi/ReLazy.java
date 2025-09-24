@@ -2,7 +2,6 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import static de.team33.patterns.lazy.narvi.InitException.CNV;
@@ -62,20 +61,11 @@ public final class ReLazy<T> extends ReMutual<T, RuntimeException, ReLazy<T>> im
      * <p>
      * This implementation is thread safe.
      * <p>
-     * <sup>(1)</sup> after initialization or after latest {@link #reset()}.<br>
+     * <sup>(1)</sup> after creation or after latest {@link #reset()}.<br>
      * <sup>(2)</sup> until next {@link #reset()}.
      */
     @Override
     public final T get() {
         return super.get();
-    }
-
-    /**
-     * @see #reset()
-     * @see #get()
-     */
-    @Override
-    public final T getAfterResetIf(final BooleanSupplier condition) {
-        return super.getAfterResetIf(condition);
     }
 }

@@ -11,8 +11,8 @@ class Mutual<T, X extends Exception> {
     private final XReLazy<? extends T, ? extends X> backing;
     private final Duration maxIdle;
     private final Duration maxLiving;
-    private volatile Instant lastAccess = Instant.MIN;
-    private volatile Instant lastReset = Instant.MIN;
+    private volatile Instant idleTimeout = Instant.MIN;
+    private volatile Instant lifeTimeout = Instant.MIN;
 
     /**
      * Initializes a new instance of this container type given an {@link XSupplier} for the type to be handled and
@@ -34,20 +34,17 @@ class Mutual<T, X extends Exception> {
 
     @SuppressWarnings("DesignForExtension")
     T get() throws X {
-        return backing.getAfterResetIf(() -> isTimeout(Instant.now()));
+        return (isTimeout(Instant.now()) ? backing.reset() : backing).get();
     }
 
     private boolean isTimeout(final Instant now) {
-        final boolean result;
         synchronized (backing) {
-            if (now.isAfter(lastReset.plus(maxLiving)) || now.isAfter(lastAccess.plus(maxIdle))) {
-                lastReset = now;
-                result = true;
-            } else {
-                result = false;
+            final Instant soFarLifeTimeout = lifeTimeout;
+            if (now.isAfter(lifeTimeout) || now.isAfter(idleTimeout)) {
+                lifeTimeout = now.plus(maxLiving);
             }
-            lastAccess = now;
+            idleTimeout = now.plus(maxIdle);
+            return soFarLifeTimeout != lifeTimeout;
         }
-        return result;
     }
 }
