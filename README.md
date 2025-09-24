@@ -50,15 +50,15 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### next
+### 2.1.3
 
 * Refined module lazy-narvi ...
   * removed deprecated items
-  * slightly refactored
-  * added method getAfterResetIf(BooleanSupplier) to ReLazy & XReLazy
+  * ReLazy & XReLazy: refactored reset() to avoid unnecessary activity
 * Refined module expiry-tethys ...
   * refactored implementation
   * thoroughly refactored tests to reduce fragility
+* Some more slight refinements
 
 ### 2.1.2
 
