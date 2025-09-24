@@ -16,7 +16,11 @@ class ReMutual<T, X extends Exception, R extends ReMutual<T, X, R>> extends Mutu
      */
     @SuppressWarnings("unchecked")
     public final R reset() {
-        reset(initial);
+        synchronized (initial) {
+            if (!isProvident(initial)) {
+                reset(initial);
+            }
+        }
         return (R) this;
     }
 }

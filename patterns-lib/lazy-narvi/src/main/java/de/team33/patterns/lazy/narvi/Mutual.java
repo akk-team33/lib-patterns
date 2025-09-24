@@ -7,24 +7,11 @@ class Mutual<T, X extends Exception> {
     private volatile XSupplier<T, X> backing;
 
     Mutual(final XSupplier<? extends T, ? extends X> initial) {
-        this.backing = provident(initial);
+        this.backing = new Provident(initial);
     }
 
-    private XSupplier<T, X> provident(final XSupplier<? extends T, ? extends X> initial) {
-        return new XSupplier<>() {
-
-            @SuppressWarnings("SynchronizedMethod")
-            @Override
-            public synchronized T get() throws X {
-                if (backing == this) {
-                    backing = definite(initial.get());
-                }
-                return backing.get();
-            }
-        };
-    }
-
-    private XSupplier<T, X> definite(final T value) {
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
+    private static <T, X extends Exception> XSupplier<T, X> definite(final T value) {
         return () -> value;
     }
 
@@ -33,7 +20,29 @@ class Mutual<T, X extends Exception> {
         return backing.get();
     }
 
+    final boolean isProvident(final XSupplier<?,?> initial) {
+        return (backing instanceof final Provident provident) && (initial == provident.initial);
+    }
+
     final void reset(final XSupplier<? extends T, ? extends X> initial) {
-        this.backing = provident(initial);
+        this.backing = new Provident(initial);
+    }
+
+    private final class Provident implements XSupplier<T, X> {
+
+        private final XSupplier<? extends T, ? extends X> initial;
+
+        private Provident(final XSupplier<? extends T, ? extends X> initial) {
+            this.initial = initial;
+        }
+
+        @SuppressWarnings("SynchronizedMethod")
+        @Override
+        public synchronized T get() throws X {
+            if (backing == this) {
+                backing = definite(initial.get());
+            }
+            return backing.get();
+        }
     }
 }
