@@ -15,6 +15,7 @@ http://www.team33.de/dev/patterns/2.x
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
+  * building-anthe (Team33 Building Library - Edition "anthe")
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-carpo (Team33 Decision Library - Edition "carpo")
@@ -49,6 +50,10 @@ http://www.team33.de/dev/patterns/2.x
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### 2.2.0
+
+* Added module building-anthe
 
 ### 2.1.3
 
