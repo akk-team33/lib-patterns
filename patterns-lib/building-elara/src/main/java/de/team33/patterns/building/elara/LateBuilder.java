@@ -17,6 +17,7 @@ import java.util.function.Supplier;
  *            That type is expected to be mutable.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
+@SuppressWarnings("deprecation")
 public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
 
     private final List<Consumer<? super T>> setups;

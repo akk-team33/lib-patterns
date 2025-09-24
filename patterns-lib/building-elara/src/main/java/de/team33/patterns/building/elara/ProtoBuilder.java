@@ -21,6 +21,7 @@ import java.util.function.Function;
  *            That type is expected to be mutable, at least in the scope of the concrete builder implementation.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
+@SuppressWarnings("deprecation")
 public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends BuilderBase<B> implements Setup<C, B> {
 
     private final C core;

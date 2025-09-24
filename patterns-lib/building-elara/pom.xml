@@ -17,6 +17,11 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>building-anthe</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>reflect-luna</artifactId>
             <scope>test</scope>
         </dependency>

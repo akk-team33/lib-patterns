@@ -51,9 +51,16 @@ http://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### near future
+
+* Refined module building-elara ...
+  * removed deprecated class BuilderBase
+
 ### 2.2.0
 
 * Added module building-anthe
+* Refined module building-elara ...
+  * Marked class BuilderBase as deprecated
 
 ### 2.1.3
 
