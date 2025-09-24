@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * @see Lazy
  * @see XReLazy
  */
-public final class XLazy<T, X extends Exception> extends Mutual<T, X, XLazy<T, X>> implements XSupplier<T, X> {
+public final class XLazy<T, X extends Exception> extends Mutual<T, X> implements XSupplier<T, X> {
 
     private XLazy(final XSupplier<? extends T, ? extends X> initial) {
         super(initial);

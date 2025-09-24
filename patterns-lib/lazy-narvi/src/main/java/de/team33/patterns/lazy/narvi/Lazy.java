@@ -21,7 +21,7 @@ import static de.team33.patterns.lazy.narvi.InitException.CNV;
  * @see XLazy
  * @see ReLazy
  */
-public final class Lazy<T> extends Mutual<T, RuntimeException, Lazy<T>> implements Supplier<T> {
+public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
 
     private Lazy(final Supplier<? extends T> initial) {
         super(initial::get);

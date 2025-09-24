@@ -2,7 +2,7 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
-class ReMutual<T, X extends Exception, R extends ReMutual<T, X, R>> extends Mutual<T, X, R> {
+class ReMutual<T, X extends Exception, R extends ReMutual<T, X, R>> extends Mutual<T, X> {
 
     private final XSupplier<? extends T, ? extends X> initial;
 
@@ -12,9 +12,11 @@ class ReMutual<T, X extends Exception, R extends ReMutual<T, X, R>> extends Mutu
     }
 
     /**
-     * Resets <em>this</em> to the initial state and returns <em>this</em>.
+     * Resets <em>this</em> to its initial state and returns <em>this</em>.
      */
+    @SuppressWarnings("unchecked")
     public final R reset() {
-        return reset(initial);
+        reset(initial);
+        return (R) this;
     }
 }

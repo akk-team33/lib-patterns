@@ -2,7 +2,7 @@ package de.team33.patterns.lazy.narvi;
 
 import de.team33.patterns.exceptional.dione.XSupplier;
 
-class Mutual<T, X extends Exception, M extends Mutual<T, X, M>> {
+class Mutual<T, X extends Exception> {
 
     private volatile XSupplier<T, X> backing;
 
@@ -33,9 +33,7 @@ class Mutual<T, X extends Exception, M extends Mutual<T, X, M>> {
         return backing.get();
     }
 
-    @SuppressWarnings("unchecked")
-    final M reset(final XSupplier<? extends T, ? extends X> initial) {
+    final void reset(final XSupplier<? extends T, ? extends X> initial) {
         this.backing = provident(initial);
-        return (M) this;
     }
 }
