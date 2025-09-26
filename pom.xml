@@ -15,7 +15,7 @@
 
     <name>Team33 Patterns Library Root</name>
     <description>Root of team33 patterns library collection</description>
-    <url>http://team33.de/dev/patterns/2.x</url>
+    <url>https://www.team33.de/dev/patterns/2.x</url>
 
     <licenses>
         <license>
@@ -31,15 +31,14 @@
             <organizationUrl>https://github.com/akk-team33/</organizationUrl>
         </developer>
     </developers>
-    <scm>
+
+    <scm child.scm.connection.inherit.append.path="false"
+         child.scm.developerConnection.inherit.append.path="false"
+         child.scm.url.inherit.append.path="false">
         <connection>scm:git:git://github.com/akk-team33/lib-patterns.git</connection>
         <developerConnection>scm:git:ssh://github.com:akk-team33/lib-patterns.git</developerConnection>
         <url>https://github.com/akk-team33/lib-patterns</url>
     </scm>
-
-    <!--properties>
-        <skipPublishing>true</skipPublishing>
-    </properties-->
 
     <modules>
         <module>patterns-bom</module>

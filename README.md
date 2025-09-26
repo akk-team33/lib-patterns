@@ -4,7 +4,7 @@ Team33 Patterns Library Collection
 
 ## Home
 
-http://www.team33.de/dev/patterns/2.x
+https://www.team33.de/dev/patterns/2.x
 
 ## Requires
 
