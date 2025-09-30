@@ -16,4 +16,11 @@
     <name>Team33 Stream Library - Edition "galatea"</name>
     <description>Provides streamable classes.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
