@@ -30,6 +30,7 @@ https://www.team33.de/dev/patterns/2.x
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
+  * stream-galatea (Team33 Stream Library - Edition "galatea")
 
 ## Still Supported
 
@@ -55,6 +56,10 @@ https://www.team33.de/dev/patterns/2.x
 
 * Refined module building-elara ...
   * removed deprecated class BuilderBase
+
+### next
+
+* Added module stream-galatea
 
 ### 2.2.0
 
