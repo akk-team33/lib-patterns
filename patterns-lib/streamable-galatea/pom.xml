@@ -10,10 +10,10 @@
         <version>2.3.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>stream-galatea</artifactId>
+    <artifactId>streamable-galatea</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Stream Library - Edition "galatea"</name>
+    <name>Team33 Streamable Library - Edition "galatea"</name>
     <description>Provides streamable classes.</description>
 
     <dependencies>

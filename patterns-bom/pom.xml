@@ -102,7 +102,7 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>stream-galatea</artifactId>
+                <artifactId>streamable-galatea</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

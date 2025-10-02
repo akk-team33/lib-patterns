@@ -31,7 +31,7 @@
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
         <module>matching-rhea</module>
-        <module>stream-galatea</module>
+        <module>streamable-galatea</module>
     </modules>
 
     <dependencyManagement>
