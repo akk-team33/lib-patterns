@@ -1,4 +1,4 @@
-package de.team33.patterns.stream.galatea;
+package de.team33.patterns.streamable.galatea;
 
 import java.util.Objects;
 import java.util.function.Consumer;

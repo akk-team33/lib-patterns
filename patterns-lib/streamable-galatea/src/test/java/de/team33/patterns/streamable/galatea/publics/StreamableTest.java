@@ -1,7 +1,7 @@
-package de.team33.patterns.stream.galatea.publics;
+package de.team33.patterns.streamable.galatea.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
-import de.team33.patterns.stream.galatea.Streamable;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
