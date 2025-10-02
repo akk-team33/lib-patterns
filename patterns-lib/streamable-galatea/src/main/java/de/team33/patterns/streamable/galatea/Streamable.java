@@ -1,9 +1,12 @@
 package de.team33.patterns.streamable.galatea;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @FunctionalInterface
 public interface Streamable<E> {
@@ -17,8 +20,29 @@ public interface Streamable<E> {
     }
 
     @SafeVarargs
-    static <E> Streamable<E> of(final E element0, final E element1, final E ... more) {
+    static <E> Streamable<E> of(final E element0, final E element1, final E... more) {
         return () -> Stream.concat(Stream.of(element0, element1), Stream.of(more));
+    }
+
+    static <E> Streamable<E> of(final E[] elements) {
+        return () -> Stream.of(elements);
+    }
+
+    static <E> Streamable<E> of(final Iterable<E> iterable) {
+        if (iterable instanceof final Collection<E> collection) {
+            return collection::stream;
+        } else {
+            return () -> StreamSupport.stream(iterable.spliterator(), false);
+        }
+    }
+
+    static <E, X> Streamable<X> map(final Streamable<E> origin,
+                                    final Function<? super Stream<E>, ? extends Stream<X>> mapping) {
+        return origin.map(mapping);
+    }
+
+    static <E extends X, X> Streamable<X> map(final Streamable<E> origin) {
+        return origin.map(stream -> stream.map(e -> (X) e));
     }
 
     /**
@@ -27,6 +51,20 @@ public interface Streamable<E> {
      * An implementation may or may not specify a streaming order.
      */
     Stream<E> stream();
+
+    /**
+     * Returns {@code true} if <em>this</em> streamable contains no elements.
+     */
+    default boolean isEmpty() {
+        return stream().findAny().isEmpty();
+    }
+
+    /**
+     * Returns {@code true} if <em>this</em> aggregate contains any element.
+     */
+    default boolean containsAny() {
+        return stream().findAny().isPresent();
+    }
 
     /**
      * Returns {@code true} if <em>this</em> streamable contains at least one <em>element</em>
@@ -47,8 +85,19 @@ public interface Streamable<E> {
     /**
      * Returns {@code true} if <em>this</em> streamable contains all the specified <em>candidates</em>.
      */
-    default boolean containsAll(final Streamable<?> candidates) {
+    default <X> boolean containsAny(final Streamable<X> candidates) {
+        return candidates.stream().anyMatch(this::contains);
+    }
+
+    /**
+     * Returns {@code true} if <em>this</em> streamable contains all the specified <em>candidates</em>.
+     */
+    default <X> boolean containsAll(final Streamable<X> candidates) {
         return candidates.stream().allMatch(this::contains);
+    }
+
+    default <X> Streamable<X> map(final Function<? super Stream<E>, ? extends Stream<X>> mapping) {
+        return () -> mapping.apply(stream());
     }
 
     /**
