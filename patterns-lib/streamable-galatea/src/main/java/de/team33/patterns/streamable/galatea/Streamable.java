@@ -3,7 +3,6 @@ package de.team33.patterns.streamable.galatea;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -28,29 +27,6 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} that contains a single given <em>element</em>.
-     *
-     * @param <E> The type of the contained element.
-     */
-    static <E> Streamable<E> of(final E element) {
-        return () -> Stream.of(element);
-    }
-
-    /**
-     * Returns a {@link Streamable} that contains two or more given <em>elements</em>.
-     *
-     * @param <E> The type of the contained elements.
-     */
-    @SafeVarargs
-    static <E> Streamable<E> of(final E element0, final E element1, final E... more) {
-        return () -> Stream.concat(Stream.of(element0, element1), Stream.of(more));
-    }
-
-    static <E> Streamable<E> of(final E[] elements) {
-        return () -> Stream.of(elements);
-    }
-
-    /**
      * Returns a {@link Streamable} backed by a given {@link Iterable}.
      *
      * @param <E> The type of the contained elements.
@@ -61,15 +37,6 @@ public interface Streamable<E> {
         } else {
             return () -> StreamSupport.stream(iterable.spliterator(), false);
         }
-    }
-
-    static <E, X> Streamable<X> map(final Streamable<E> origin,
-                                    final Function<? super Stream<E>, ? extends Stream<X>> mapping) {
-        return origin.map(mapping);
-    }
-
-    static <E extends X, X> Streamable<X> map(final Streamable<E> origin) {
-        return origin.map(stream -> stream.map(e -> e));
     }
 
     /**
@@ -139,10 +106,6 @@ public interface Streamable<E> {
      */
     default <X> boolean containsAll(final Streamable<X> other) {
         return other.containsAll(this::contains);
-    }
-
-    default <X> Streamable<X> map(final Function<? super Stream<E>, ? extends Stream<X>> mapping) {
-        return () -> mapping.apply(stream());
     }
 
     /**
