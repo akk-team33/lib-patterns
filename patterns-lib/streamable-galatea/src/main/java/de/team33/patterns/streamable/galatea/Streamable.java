@@ -50,6 +50,11 @@ public interface Streamable<E> {
         return () -> Stream.of(elements);
     }
 
+    /**
+     * Returns a {@link Streamable} backed by a given {@link Iterable}.
+     *
+     * @param <E> The type of the contained elements.
+     */
     static <E> Streamable<E> of(final Iterable<E> iterable) {
         if (iterable instanceof final Collection<E> collection) {
             return collection::stream;
