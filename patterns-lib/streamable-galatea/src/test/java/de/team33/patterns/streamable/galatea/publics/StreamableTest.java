@@ -65,7 +65,39 @@ class StreamableTest {
     @Test
     final void addAll_array() {
         final String[] array = other.toArray(String[]::new);
-        assertEquals(combined, Streamable.of(origin).addAll(array).stream().toList());
+        assertEquals(combined, Streamable.of(origin).add(array).stream().toList());
+    }
+
+    @Test
+    final void removeIf() {
+        assertEquals(origin, Streamable.of(combined).removeIf(other::contains).stream().toList());
+    }
+
+    @Test
+    final void removeAll() {
+        assertEquals(origin, Streamable.of(combined).removeAll(other::stream).stream().toList());
+    }
+
+    @Test
+    final void remove() {
+        final Object[] array = other.toArray(Object[]::new);
+        assertEquals(origin, Streamable.of(combined).remove(array).stream().toList());
+    }
+
+    @Test
+    final void retainIf() {
+        assertEquals(origin, Streamable.of(combined).retainIf(origin::contains).stream().toList());
+    }
+
+    @Test
+    final void retainAll() {
+        assertEquals(origin, Streamable.of(combined).retainAll(origin::stream).stream().toList());
+    }
+
+    @Test
+    final void retain() {
+        final Object[] array = origin.toArray(Object[]::new);
+        assertEquals(origin, Streamable.of(combined).retain(array).stream().toList());
     }
 
     @Test
