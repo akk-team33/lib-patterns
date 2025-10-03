@@ -35,6 +35,40 @@ class StreamableTest {
     }
 
     @Test
+    final void concat() {
+        final List<Integer> left = Stream.generate(GENERATOR::anyInt).limit(GENERATOR.anyInt(4, 8)).toList();
+        final List<Double> right = Stream.generate(GENERATOR::anyDouble).limit(GENERATOR.anyInt(4, 8)).toList();
+        final List<? extends Number> expected = Stream.concat(left.stream(), right.stream()).toList();
+        final List<? extends Number> result = Streamable.concat(left::stream, right::stream).stream().toList();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void add() {
+        assertEquals(combined.subList(0, origin.size() + 1),
+                     Streamable.of(origin).add(other.get(0)).stream().toList());
+    }
+
+    @Test
+    final void add_more() {
+        assertEquals(combined.subList(0, origin.size() + 4),
+                     Streamable.of(origin)
+                               .add(other.get(0), other.get(1), other.get(2), other.get(3))
+                               .stream().toList());
+    }
+
+    @Test
+    final void addAll() {
+        assertEquals(combined, Streamable.of(origin).addAll(other::stream).stream().toList());
+    }
+
+    @Test
+    final void addAll_array() {
+        final String[] array = other.toArray(String[]::new);
+        assertEquals(combined, Streamable.of(origin).addAll(array).stream().toList());
+    }
+
+    @Test
     final void of_Iterable() {
         //noinspection FunctionalExpressionCanBeFolded
         assertEquals(origin, Streamable.of(origin::iterator).stream().toList());

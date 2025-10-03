@@ -40,6 +40,20 @@ public interface Streamable<E> {
     }
 
     /**
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of the <em>left</em> argument
+     * followed by all the elements of the <em>right</em> argument.
+     * The result has a streaming order if both of the arguments have a streaming order.
+     *
+     * @param <E> The element type of the resulting {@link Streamable}.
+     * @param <F> The element type of the <em>left</em> argument.
+     * @param <G> The element type of the <em>right</em> argument.
+     * @throws NullPointerException if one of the arguments is {@code null}.
+     */
+    static <E, F extends E, G extends E> Streamable<E> concat(final Streamable<F> left, final Streamable<G> right) {
+        return () -> Stream.concat(left.stream(), right.stream());
+    }
+
+    /**
      * Returns a sequential {@code Stream} with <em>this</em> {@link Streamable} as its source.
      * <p>
      * An implementation may or may not specify a streaming order.
@@ -118,5 +132,47 @@ public interface Streamable<E> {
      */
     default void forEach(final Consumer<? super E> action) {
         stream().forEach(action);
+    }
+
+    /**
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
+     * followed by the given <em>element</em>.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     */
+    default Streamable<E> add(final E element) {
+        return addAll(() -> Stream.of(element));
+    }
+
+    /**
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
+     * followed by all the given <em>elements</em>.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     */
+    @SuppressWarnings("unchecked")
+    default Streamable<E> add(final E element0, final E element1, final E... more) {
+        return addAll(() -> Stream.concat(Stream.of(element0, element1), Stream.of(more)));
+    }
+
+    /**
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
+     * followed by all the elements of the given <em>array</em>.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     *
+     * @throws NullPointerException if <em>array</em> is {@code null}.
+     */
+    default Streamable<E> addAll(final E[] array) {
+        return addAll(() -> Stream.of(array));
+    }
+
+    /**
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
+     * followed by all the elements of the <em>other</em> {@link Streamable}.
+     * The result has a streaming order if both, <em>this</em> and <em>other</em>, have a streaming order.
+     *
+     * @param <F> The element type of the <em>other</em> {@link Streamable}.
+     * @throws NullPointerException if <em>other</em> is {@code null}.
+     */
+    default <F extends E> Streamable<E> addAll(final Streamable<F> other) {
+        return concat(this, other);
     }
 }
