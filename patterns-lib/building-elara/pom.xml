@@ -19,6 +19,10 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>building-anthe</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>streamable-galatea</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>de.team33.patterns</groupId>

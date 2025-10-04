@@ -24,6 +24,7 @@
         <module>pooling-ariel</module>
         <module>reflect-luna</module>
         <module>reflect-pandora</module>
+        <module>streamable-galatea</module>
         <module>building-anthe</module>
         <module>building-elara</module>
         <module>execution-metis</module>
@@ -31,7 +32,6 @@
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
         <module>matching-rhea</module>
-        <module>streamable-galatea</module>
     </modules>
 
     <dependencyManagement>

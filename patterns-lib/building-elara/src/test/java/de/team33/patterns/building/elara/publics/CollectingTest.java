@@ -2,15 +2,13 @@ package de.team33.patterns.building.elara.publics;
 
 import de.team33.patterns.building.elara.sample.Collecting;
 import de.team33.patterns.building.elara.sample.Supply;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CollectingTest {
 
@@ -54,12 +52,32 @@ class CollectingTest {
     }
 
     @Test
+    final void add_Charger_forEach() {
+        final List<String> expected = SUPPLY.anyStringList(3);
+        final List<String> result = Collecting.charger(new ArrayList<String>(3))
+                                              .forEach(expected::stream, Collecting.Charger::add)
+                                              .forEach(Streamable.<String>empty(), Collecting.Setup::add)
+                                              .charged();
+        assertEquals(expected, result);
+    }
+
+    @Test
     final void add_Builder() {
         final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
                                               .add(expected.get(0))
                                               .add(expected.get(1))
                                               .add(expected.get(2))
+                                              .build();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void add_Builder_forEach() {
+        final List<String> expected = SUPPLY.anyStringList(3);
+        final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
+                                              .forEach(expected::stream, Collecting.Builder::add)
+                                              .forEach(Streamable.<String>empty(), Collecting.Setup::add)
                                               .build();
         assertEquals(expected, result);
     }
