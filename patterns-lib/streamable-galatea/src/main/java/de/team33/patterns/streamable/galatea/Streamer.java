@@ -6,11 +6,9 @@ import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 
 /**
- * Represents instances that (virtually or really) contain elements of a specific type
- * and can provide a {@link Stream} over those elements when needed.
+ * Represents a {@link Streamable} type that provides a kind of builder pattern.
  *
  * @param <E> The type of contained elements.
- * @see #stream()
  */
 @FunctionalInterface
 public interface Streamer<E> extends Streamable<E> {
