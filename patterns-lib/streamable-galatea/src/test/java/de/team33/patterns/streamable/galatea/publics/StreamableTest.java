@@ -5,7 +5,6 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -30,10 +29,6 @@ class StreamableTest {
                                              .toList();
     private final List<String> combined = Stream.concat(origin.stream(), other.stream())
                                                 .toList();
-
-    private static <E> Streamable<E> streamable(final Collection<E> collection) {
-        return collection::stream;
-    }
 
     @Test
     final void concat() {
@@ -129,60 +124,60 @@ class StreamableTest {
     @Test
     final void isEmpty() {
         assertTrue(Streamable.empty().isEmpty());
-        assertTrue(streamable(EMPTY_LIST).isEmpty());
-        assertEquals(EMPTY_LIST.isEmpty(), streamable(EMPTY_LIST).isEmpty());
-        assertFalse(streamable(origin).isEmpty());
-        assertEquals(origin.isEmpty(), streamable(origin).isEmpty());
+        assertTrue(Streamable.of(EMPTY_LIST).isEmpty());
+        assertEquals(EMPTY_LIST.isEmpty(), Streamable.of(EMPTY_LIST).isEmpty());
+        assertFalse(Streamable.of(origin).isEmpty());
+        assertEquals(origin.isEmpty(), Streamable.of(origin).isEmpty());
     }
 
     @Test
     final void containsAny() {
         assertTrue(Streamable.of(List.of(GENERATOR.anyString())).containsAny());
-        assertTrue(streamable(origin).containsAny());
-        assertEquals(0 < origin.size(), streamable(origin).containsAny());
-        assertFalse(streamable(EMPTY_LIST).containsAny());
-        assertEquals(0 < EMPTY_LIST.size(), streamable(EMPTY_LIST).containsAny());
+        assertTrue(Streamable.of(origin).containsAny());
+        assertEquals(0 < origin.size(), Streamable.of(origin).containsAny());
+        assertFalse(Streamable.of(EMPTY_LIST).containsAny());
+        assertEquals(0 < EMPTY_LIST.size(), Streamable.of(EMPTY_LIST).containsAny());
     }
 
     @Test
     final void containsAny_withPredicate() {
         for (final String element : combined) {
             assertEquals(origin.contains(element),
-                         streamable(origin).containsAny(item -> Objects.equals(item, element)));
+                         Streamable.of(origin).containsAny(item -> Objects.equals(item, element)));
         }
 
-        assertThrows(NullPointerException.class, () -> streamable(origin).containsAny((Predicate<Object>) null));
+        assertThrows(NullPointerException.class, () -> Streamable.of(origin).containsAny((Predicate<Object>) null));
         assertThrows(NullPointerException.class, () -> Streamable.empty().containsAny((Predicate<Object>) null));
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
     @Test
     final void containsAll_withPredicate() {
-        assertTrue(streamable(combined).containsAll(combined::contains));
-        assertTrue(streamable(origin).containsAll(combined::contains));
+        assertTrue(Streamable.of(combined).containsAll(combined::contains));
+        assertTrue(Streamable.of(origin).containsAll(combined::contains));
         assertTrue(Streamable.empty().containsAll(origin::contains));
-        assertFalse(streamable(combined).containsAll(origin::contains));
+        assertFalse(Streamable.of(combined).containsAll(origin::contains));
 
-        assertThrows(NullPointerException.class, () -> streamable(origin).containsAll((Predicate<Object>) null));
+        assertThrows(NullPointerException.class, () -> Streamable.of(origin).containsAll((Predicate<Object>) null));
         assertThrows(NullPointerException.class, () -> Streamable.empty().containsAll((Predicate<Object>) null));
     }
 
     @Test
     final void contains() {
         for (final String element : combined) {
-            assertEquals(origin.contains(element), streamable(origin).contains(element));
+            assertEquals(origin.contains(element), Streamable.of(origin).contains(element));
         }
-        assertEquals(origin.contains(null), streamable(origin).contains(null));
+        assertEquals(origin.contains(null), Streamable.of(origin).contains(null));
     }
 
     @Test
     final void containsAny_candidates() {
-        assertTrue(streamable(origin).containsAny(combined::stream));
-        assertFalse(streamable(origin).containsAny(other::stream));
+        assertTrue(Streamable.of(origin).containsAny(combined::stream));
+        assertFalse(Streamable.of(origin).containsAny(other::stream));
 
         assertFalse(Streamable.empty().containsAny(origin::stream));
         assertFalse(Streamable.empty().containsAny(Streamable.empty()));
-        assertFalse(streamable(origin).containsAny(Streamable.empty()));
+        assertFalse(Streamable.of(origin).containsAny(Streamable.empty()));
 
         //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> Streamable.empty().containsAny((Streamable<?>) null));
@@ -190,26 +185,26 @@ class StreamableTest {
 
     @Test
     final void containsAll_candidates() {
-        assertTrue(streamable(combined).containsAll(List.of(combined.get(0),
+        assertTrue(Streamable.of(combined).containsAll(List.of(combined.get(0),
                                                             combined.get(2),
                                                             combined.get(3),
                                                             combined.get(5))::stream));
 
-        assertTrue(streamable(combined).containsAll(origin::stream));
-        assertEquals(combined.containsAll(origin), streamable(combined).containsAll(origin::stream));
+        assertTrue(Streamable.of(combined).containsAll(origin::stream));
+        assertEquals(combined.containsAll(origin), Streamable.of(combined).containsAll(origin::stream));
 
-        assertTrue(streamable(origin).containsAll(EMPTY_LIST::stream));
-        assertEquals(origin.containsAll(EMPTY_LIST), streamable(origin).containsAll(EMPTY_LIST::stream));
+        assertTrue(Streamable.of(origin).containsAll(EMPTY_LIST::stream));
+        assertEquals(origin.containsAll(EMPTY_LIST), Streamable.of(origin).containsAll(EMPTY_LIST::stream));
 
-        assertFalse(streamable(origin).containsAll(other::stream));
-        assertEquals(origin.containsAll(other), streamable(origin).containsAll(other::stream));
+        assertFalse(Streamable.of(origin).containsAll(other::stream));
+        assertEquals(origin.containsAll(other), Streamable.of(origin).containsAll(other::stream));
 
-        assertFalse(streamable(origin).containsAll(combined::stream));
-        assertEquals(origin.containsAll(combined), streamable(origin).containsAll(combined::stream));
+        assertFalse(Streamable.of(origin).containsAll(combined::stream));
+        assertEquals(origin.containsAll(combined), Streamable.of(origin).containsAll(combined::stream));
 
         assertFalse(Streamable.empty().containsAll(origin::stream));
         assertTrue(Streamable.empty().containsAll(Streamable.empty()));
-        assertTrue(streamable(origin).containsAll(Streamable.empty()));
+        assertTrue(Streamable.of(origin).containsAll(Streamable.empty()));
 
         //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> Streamable.empty().containsAll((Streamable<?>) null));
@@ -218,15 +213,15 @@ class StreamableTest {
     @Test
     final void forEach() {
         final List<String> result = new LinkedList<>();
-        streamable(origin).forEach(result::add);
+        Streamable.of(origin).forEach(result::add);
         assertEquals(origin, result);
     }
 
     @Test
     final void forEach_null() {
-        assertThrows(NullPointerException.class, () -> streamable(origin).forEach(null));
+        assertThrows(NullPointerException.class, () -> Streamable.of(origin).forEach(null));
         assertThrows(NullPointerException.class, () -> Streamable.empty().forEach(null));
-        assertThrows(NullPointerException.class, () -> streamable(EMPTY_LIST).forEach(null));
+        assertThrows(NullPointerException.class, () -> Streamable.of(EMPTY_LIST).forEach(null));
         assertThrows(NullPointerException.class, () -> Streamable.of(EMPTY_LIST).forEach(null));
     }
 }
