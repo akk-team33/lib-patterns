@@ -16,6 +16,7 @@ import static java.util.function.Predicate.not;
  * @param <E> The type of contained elements.
  * @see #stream()
  */
+@SuppressWarnings("ClassWithTooManyMethods")
 @FunctionalInterface
 public interface Streamable<E> {
 
@@ -26,6 +27,34 @@ public interface Streamable<E> {
      */
     static <E> Streamable<E> empty() {
         return Stream::empty;
+    }
+
+    /**
+     * Returns a {@link Streamable} that contains a single given <em>element</em>.
+     *
+     * @param <E> The type of the contained element.
+     */
+    static <E> Streamable<E> of(final E element) {
+        return () -> Stream.of(element);
+    }
+
+    /**
+     * Returns a {@link Streamable} that contains two or more given <em>elements</em>.
+     *
+     * @param <E> The type of the contained elements.
+     */
+    @SafeVarargs
+    static <E> Streamable<E> of(final E element0, final E element1, final E... more) {
+        return () -> Stream.concat(Stream.of(element0, element1), Stream.of(more));
+    }
+
+    /**
+     * Returns a {@link Streamable} backed by an array of <em>elements</em>.
+     *
+     * @param <E> The type of the contained elements.
+     */
+    static <E> Streamable<E> of(final E[] elements) {
+        return () -> Stream.of(elements);
     }
 
     /**
@@ -138,14 +167,11 @@ public interface Streamable<E> {
 
     /**
      * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
-     * followed by all the elements of the given <em>elements</em>.
+     * followed by the given <em>element</em>.
      * The result has a streaming order if <em>this</em> has a streaming order.
-     *
-     * @throws NullPointerException if <em>elements</em> is {@code null}.
      */
-    @SuppressWarnings("unchecked")
-    default Streamable<E> add(final E... elements) {
-        return addAll(() -> Stream.of(elements));
+    default Streamable<E> add(final E element) {
+        return addAll(of(element));
     }
 
     /**
@@ -161,13 +187,11 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
-     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code false}.
-     *
-     * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
+     * but not the given <em>candidate</em>.
      */
-    default Streamable<E> removeIf(final Predicate<? super E> condition) {
-        return retainIf(not(condition));
+    default Streamable<E> remove(final Object candidate) {
+        return removeAll(of(candidate));
     }
 
     /**
@@ -181,23 +205,13 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are not contained in the given <em>candidates</em>.
-     *
-     * @throws NullPointerException if <em>candidates</em> is {@code null}.
-     */
-    default Streamable<E> remove(final Object... candidates) {
-        return removeAll(() -> Stream.of(candidates));
-    }
-
-    /**
      * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
-     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code true}.
+     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code false}.
      *
      * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
      */
-    default Streamable<E> retainIf(final Predicate<? super E> condition) {
-        return () -> stream().filter(condition);
+    default Streamable<E> removeIf(final Predicate<? super E> condition) {
+        return retainIf(not(condition));
     }
 
     /**
@@ -211,12 +225,12 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are contained in the given <em>candidates</em>.
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
+     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code true}.
      *
-     * @throws NullPointerException if <em>candidates</em> is {@code null}.
+     * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
      */
-    default Streamable<E> retain(final Object... candidates) {
-        return retainAll(() -> Stream.of(candidates));
+    default Streamable<E> retainIf(final Predicate<? super E> condition) {
+        return () -> stream().filter(condition);
     }
 }
