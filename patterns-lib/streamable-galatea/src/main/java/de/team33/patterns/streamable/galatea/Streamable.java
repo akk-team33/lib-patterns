@@ -7,8 +7,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static java.util.function.Predicate.not;
-
 /**
  * Represents instances that (virtually or really) contain elements of a specific type
  * and can provide a {@link Stream} over those elements when needed.
@@ -16,7 +14,6 @@ import static java.util.function.Predicate.not;
  * @param <E> The type of contained elements.
  * @see #stream()
  */
-@SuppressWarnings("ClassWithTooManyMethods")
 @FunctionalInterface
 public interface Streamable<E> {
 
@@ -68,20 +65,6 @@ public interface Streamable<E> {
         } else {
             return () -> StreamSupport.stream(iterable.spliterator(), false);
         }
-    }
-
-    /**
-     * Returns a concatenated {@link Streamable} whose elements are all the elements of the <em>left</em> argument
-     * followed by all the elements of the <em>right</em> argument.
-     * The result has a streaming order if both of the arguments have a streaming order.
-     *
-     * @param <E> The element type of the resulting {@link Streamable}.
-     * @param <F> The element type of the <em>left</em> argument.
-     * @param <G> The element type of the <em>right</em> argument.
-     * @throws NullPointerException if one of the arguments is {@code null}.
-     */
-    static <E, F extends E, G extends E> Streamable<E> concat(final Streamable<F> left, final Streamable<G> right) {
-        return () -> Stream.concat(left.stream(), right.stream());
     }
 
     /**
@@ -163,74 +146,5 @@ public interface Streamable<E> {
      */
     default void forEach(final Consumer<? super E> action) {
         stream().forEach(action);
-    }
-
-    /**
-     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
-     * followed by the given <em>element</em>.
-     * The result has a streaming order if <em>this</em> has a streaming order.
-     */
-    default Streamable<E> add(final E element) {
-        return addAll(of(element));
-    }
-
-    /**
-     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
-     * followed by all the elements of the <em>other</em> {@link Streamable}.
-     * The result has a streaming order if both, <em>this</em> and <em>other</em>, have a streaming order.
-     *
-     * @param <X> The element type of the <em>other</em> {@link Streamable}.
-     * @throws NullPointerException if <em>other</em> is {@code null}.
-     */
-    default <X extends E> Streamable<E> addAll(final Streamable<X> other) {
-        return concat(this, other);
-    }
-
-    /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * but not the given <em>candidate</em>.
-     */
-    default Streamable<E> remove(final Object candidate) {
-        return removeAll(of(candidate));
-    }
-
-    /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are not contained in the <em>other</em> {@link Streamable}.
-     *
-     * @throws NullPointerException if the specified <em>other</em> {@link Streamable} is {@code null}.
-     */
-    default <X> Streamable<E> removeAll(final Streamable<X> other) {
-        return removeIf(other::contains);
-    }
-
-    /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
-     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code false}.
-     *
-     * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
-     */
-    default Streamable<E> removeIf(final Predicate<? super E> condition) {
-        return retainIf(not(condition));
-    }
-
-    /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are contained in the <em>other</em> {@link Streamable}.
-     *
-     * @throws NullPointerException if the specified <em>other</em> {@link Streamable} is {@code null}.
-     */
-    default <X> Streamable<E> retainAll(final Streamable<X> other) {
-        return retainIf(other::contains);
-    }
-
-    /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
-     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code true}.
-     *
-     * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
-     */
-    default Streamable<E> retainIf(final Predicate<? super E> condition) {
-        return () -> stream().filter(condition);
     }
 }

@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SuppressWarnings("ClassWithTooManyMethods")
 class StreamableTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
@@ -29,90 +28,6 @@ class StreamableTest {
                                              .toList();
     private final List<String> combined = Stream.concat(origin.stream(), other.stream())
                                                 .toList();
-
-    @Test
-    final void concat() {
-        final List<Integer> left = Stream.generate(GENERATOR::anyInt).limit(GENERATOR.anyInt(4, 8)).toList();
-        final List<Double> right = Stream.generate(GENERATOR::anyDouble).limit(GENERATOR.anyInt(4, 8)).toList();
-        final List<? extends Number> expected = Stream.concat(left.stream(), right.stream()).toList();
-        final List<? extends Number> result = Streamable.concat(left::stream, right::stream).stream().toList();
-        assertEquals(expected, result);
-    }
-
-    @Test
-    final void add() {
-        assertEquals(combined.subList(0, origin.size() + 1),
-                     Streamable.of(origin).add(other.get(0)).stream().toList());
-    }
-
-    @Test
-    final void add_more() {
-        assertEquals(combined.subList(0, origin.size() + 4),
-                     Streamable.of(origin)
-                               .addAll(Streamable.of(other.get(0), other.get(1), other.get(2), other.get(3)))
-                               .stream().toList());
-    }
-
-    @Test
-    final void addAll() {
-        assertEquals(combined, Streamable.of(origin).addAll(other::stream).stream().toList());
-    }
-
-    @Test
-    final void addAll_array() {
-        final String[] array = other.toArray(String[]::new);
-        assertEquals(combined, Streamable.of(origin)
-                                         .addAll(Streamable.of(array))
-                                         .stream().toList());
-    }
-
-    @Test
-    final void removeIf() {
-        assertEquals(origin, Streamable.of(combined).removeIf(other::contains).stream().toList());
-    }
-
-    @Test
-    final void remove() {
-        assertEquals(origin.stream()
-                           .filter(not(e -> e.equals(origin.get(2))))
-                           .toList(),
-                     Streamable.of(origin)
-                               .remove(origin.get(2))
-                               .stream().toList());
-    }
-
-    @Test
-    final void removeAll() {
-        assertEquals(origin, Streamable.of(combined)
-                                       .removeAll(other::stream)
-                                       .stream().toList());
-    }
-
-    @Test
-    final void removeAll_array() {
-        final Object[] array = other.toArray(Object[]::new);
-        assertEquals(origin, Streamable.of(combined)
-                                       .removeAll(Streamable.of(array))
-                                       .stream().toList());
-    }
-
-    @Test
-    final void retainIf() {
-        assertEquals(origin, Streamable.of(combined).retainIf(origin::contains).stream().toList());
-    }
-
-    @Test
-    final void retainAll() {
-        assertEquals(origin, Streamable.of(combined).retainAll(origin::stream).stream().toList());
-    }
-
-    @Test
-    final void retainAll_array() {
-        final Object[] array = origin.toArray(Object[]::new);
-        assertEquals(origin, Streamable.of(combined)
-                                       .retainAll(Streamable.of(array))
-                                       .stream().toList());
-    }
 
     @Test
     final void of_Iterable() {
