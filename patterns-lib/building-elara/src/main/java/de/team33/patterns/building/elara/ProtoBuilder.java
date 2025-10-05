@@ -1,5 +1,7 @@
 package de.team33.patterns.building.elara;
 
+import de.team33.patterns.building.anthe.SelfReferring;
+
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -21,8 +23,7 @@ import java.util.function.Function;
  *            That type is expected to be mutable, at least in the scope of the concrete builder implementation.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-@SuppressWarnings({"deprecation", "removal"})
-public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends BuilderBase<B> implements Setup<C, B> {
+public class ProtoBuilder<C, B extends ProtoBuilder<C, B>> extends SelfReferring<B> implements Setup<C, B> {
 
     private final C core;
     private final Lifecycle lifecycle;

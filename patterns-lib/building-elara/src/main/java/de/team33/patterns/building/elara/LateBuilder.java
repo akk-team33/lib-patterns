@@ -1,5 +1,7 @@
 package de.team33.patterns.building.elara;
 
+import de.team33.patterns.building.anthe.SelfReferring;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,8 +19,7 @@ import java.util.function.Supplier;
  *            That type is expected to be mutable.
  * @param <B> The builder type: the intended effective type of the concrete builder implementation.
  */
-@SuppressWarnings({"deprecation", "removal"})
-public class LateBuilder<T, B extends LateBuilder<T, B>> extends BuilderBase<B> implements Setup<T, B> {
+public class LateBuilder<T, B extends LateBuilder<T, B>> extends SelfReferring<B> implements Setup<T, B> {
 
     private final List<Consumer<? super T>> setups;
     private final Supplier<? extends T> newResult;

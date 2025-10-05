@@ -52,16 +52,12 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### near future
-
-* Refined module building-elara ...
-  * removed deprecated class BuilderBase
-
 ### 2.3.0
 
 * Added module streamable-galatea
 * Refined module building-elara ...
   * added method Setup.forEach(...)
+  * removed deprecated class BuilderBase
 
 ### 2.2.0
 
