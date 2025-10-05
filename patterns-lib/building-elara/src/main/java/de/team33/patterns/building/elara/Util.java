@@ -12,7 +12,8 @@ final class Util {
     private Util() {
     }
 
-    static <A, B> Function<B, B> function(final BiFunction<? super B, ? super A, B> method, final A arg) {
-        return b -> method.apply(b, arg);
+    static <A, S> Function<S, S> function(final BiFunction<? super S, ? super A, ? extends S> setupMethod,
+                                          final A argument) {
+        return setup -> setupMethod.apply(setup, argument);
     }
 }

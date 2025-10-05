@@ -9,23 +9,29 @@ import java.util.function.Function;
 /**
  * Defines a generic interface for a uniform, basic implementation of a typical builder pattern.
  * It assumes that the information to be gathered during the build process should be collected in a
- * target instance attached to or created by the builder.
+ * target container instance attached to or created by the builder.
  *
- * @param <C> The container type.
- * @param <B> The builder type: the effective type of the derived builder implementation.
+ * @param <C> The underlying target container type.
+ * @param <S> The setup type: the intended effective type of the concrete builder implementation.
  */
 @FunctionalInterface
-public interface Setup<C, B> {
+public interface Setup<C, S> {
 
     /**
-     * Accepts a {@link Consumer} as modifying operation to be performed on a target instance immediately
-     * or no later than the final build() operation and returns the builder instance itself.
+     * Accepts a {@link Consumer} as modifying operation to be performed on a target container instance immediately
+     * or no later than the final build() operation and returns the setup instance itself.
      */
-    B setup(Consumer<? super C> consumer);
+    S setup(Consumer<? super C> consumer);
 
-    default <A> B forEach(final Streamable<A> args, final BiFunction<? super B, ? super A, B> builderMethod) {
-        return args.stream()
-                   .map(arg -> Util.function(builderMethod, arg))
+    /**
+     * Performs a given <em>setupMethod</em> for each <em>argument</em> provided by the given {@link Streamable}
+     * and return the setup instance itself.
+     *
+     * @param <A> The <em>argument</em> type.
+     */
+    default <A> S forEach(final Streamable<A> arguments, final BiFunction<? super S, ? super A, S> setupMethod) {
+        return arguments.stream()
+                   .map(arg -> Util.function(setupMethod, arg))
                    .reduce(Function::andThen)
                    .orElse(Function.identity())
                    .apply(setup(Util.NOP));
