@@ -2,6 +2,7 @@ package de.team33.patterns.proving.kerberos.publics;
 
 import de.team33.patterns.proving.kerberos.Guard;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
@@ -14,6 +15,13 @@ class GuardTest {
 
     private static final System.Logger LOGGER =
             System.getLogger(GuardTest.class.getCanonicalName());
+    private static final Guard<Integer, IllegalArgumentException> INT_GUARD =
+            Guard.proving(input -> 0 < input,
+                          "<input> is expected to be greater than 0 - but was %d"::formatted);
+    private static final Guard<String, IOException> STR_GUARD =
+            Guard.<String>proving(input -> null != input && input.length() > 3,
+                                  "<input>.length is expected to be greater than 3 - but <input> was '%s'"::formatted)
+                 .thatThrows(IOException::new);
 
     @SuppressWarnings("ConstantValue")
     @ParameterizedTest
@@ -32,7 +40,7 @@ class GuardTest {
     @SuppressWarnings("ConstantValue")
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
-    final void prove(final boolean condition) {
+    final void prove_message(final boolean condition) {
         final String message = UUID.randomUUID().toString();
         try {
             Guard.prove(condition, () -> message);
@@ -62,11 +70,8 @@ class GuardTest {
     @ParameterizedTest
     @ValueSource(ints = {-5, -3, -1, 1, 3, 5})
     final void proved(final int given) {
-        final Guard<Integer, IllegalArgumentException> guard =
-                Guard.proving(input -> 0 < input,
-                              "<input> is expected to be greater than 0 - but was %d"::formatted);
         try {
-            final int result = guard.proved(given);
+            final int result = INT_GUARD.proved(given);
             assertEquals(given, result);
             assertTrue(0 < given, () -> ("<given> is expected to be greater than 0 " +
                                          "- but was %s").formatted(given));
@@ -75,6 +80,25 @@ class GuardTest {
             assertFalse(0 < given, () -> ("<given> is expected to be less than or equal to 0 " +
                                           "- but was %s").formatted(given));
             assertEquals("<input> is expected to be greater than 0 - but was %d".formatted(given), e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "1", "12", "123", "1234", "12345", "123456"})
+    @NullSource
+    final void proved(final String given) {
+        final int length = (null == given) ? -1 : given.length();
+        try {
+            final String result = STR_GUARD.proved(given);
+            assertSame(given, result);
+            assertTrue(3 < length, () -> ("<length>is expected to be greater than 3 " +
+                                          "- but was %d").formatted(length));
+        } catch (final IOException e) {
+            LOGGER.log(DEBUG, e::getMessage, e);
+            assertFalse(3 < length, () -> ("<length>is expected to be less than 4 " +
+                                           "- but was %d").formatted(length));
+            assertEquals("<input>.length is expected to be greater than 3 - but <input> was '%s'".formatted(given),
+                         e.getMessage());
         }
     }
 }

@@ -7,13 +7,13 @@ import java.util.function.Supplier;
 @SuppressWarnings("BooleanParameter")
 public final class Guard<I, E extends Exception> {
 
-    private final Predicate<I> condition;
-    private final Function<I, String> toMessage;
-    private final Function<String, E> toException;
+    private final Predicate<? super I> condition;
+    private final Function<? super I, String> toMessage;
+    private final Function<? super String, ? extends E> toException;
 
-    private Guard(final Predicate<I> condition,
-                  final Function<I, String> toMessage,
-                  final Function<String, E> toException) {
+    private Guard(final Predicate<? super I> condition,
+                  final Function<? super I, String> toMessage,
+                  final Function<? super String, ? extends E> toException) {
         this.condition = condition;
         this.toMessage = toMessage;
         this.toException = toException;
@@ -51,13 +51,17 @@ public final class Guard<I, E extends Exception> {
      * or throws an {@link IllegalArgumentException} with a message supplied by <em>toMessage</em>
      * if the input does not satisfy that <em>condition</em>.
      */
-    public static <I> Guard<I, IllegalArgumentException> proving(final Predicate<I> condition,
-                                                                 final Function<I, String> toMessage) {
+    public static <I> Guard<I, IllegalArgumentException> proving(final Predicate<? super I> condition,
+                                                                 final Function<? super I, String> toMessage) {
         return new Guard<>(condition, toMessage, IllegalArgumentException::new);
     }
 
     public <K extends I> K proved(final K input) throws E {
         prove(condition.test(input), () -> toMessage.apply(input), toException);
         return input;
+    }
+
+    public <X extends Exception> Guard<I, X> thatThrows(final Function<? super String, ? extends X> toException) {
+        return new Guard<>(condition, toMessage, toException);
     }
 }
