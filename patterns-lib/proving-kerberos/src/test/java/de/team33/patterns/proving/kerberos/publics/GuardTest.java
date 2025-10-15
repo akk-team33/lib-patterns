@@ -58,7 +58,7 @@ class GuardTest {
     final void prove_IOException(final boolean condition) {
         final String message = UUID.randomUUID().toString();
         try {
-            Guard.prove(condition, () -> message, IOException::new);
+            Guard.prove(condition, IOException::new, () -> message);
             assertTrue(condition, () -> "<condition> is expected to be true - but was %s".formatted(condition));
         } catch (final IOException e) {
             LOGGER.log(DEBUG, e::getMessage, e);
