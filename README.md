@@ -28,6 +28,7 @@ https://www.team33.de/dev/patterns/2.x
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
+  * proving-kerberos (Team33 Proving Library - Edition "kerberos")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
@@ -51,6 +52,10 @@ https://www.team33.de/dev/patterns/2.x
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### next
+
+* Added module proving-kerberos
 
 ### 2.3.0
 
