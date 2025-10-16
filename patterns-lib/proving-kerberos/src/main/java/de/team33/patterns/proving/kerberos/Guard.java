@@ -5,39 +5,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @SuppressWarnings("BooleanParameter")
-public final class Guard<I, E extends Exception> {
+public final class Guard {
 
     private static final String DEFAULT_MESSAGE = "prove failed";
-    private final Predicate<? super I> condition;
-    private final Function<? super String, ? extends E> toException;
-    private final Function<? super I, String> toMessage;
 
-    private Guard(final Predicate<? super I> condition,
-                  final Function<? super String, ? extends E> toException,
-                  final Function<? super I, String> toMessage) {
-        this.condition = condition;
-        this.toMessage = toMessage;
-        this.toException = toException;
-    }
-
-    /**
-     * Proves that the given <em>condition</em> is {@code true}.
-     * Otherwise, throws an exception provided by <em>toException</em> with a message supplied by <em>toMessage</em>.
-     */
-    public static <E extends Exception> void prove(final boolean condition,
-                                                   final Function<? super String, E> toException,
-                                                   final Supplier<String> toMessage) throws E {
-        if (!condition) {
-            throw toException.apply(toMessage.get());
-        }
-    }
-
-    /**
-     * Proves that the given <em>condition</em> is {@code true}.
-     * Otherwise, throws an {@link IllegalStateException} with a message supplied by <em>toMessage</em>.
-     */
-    public static void prove(final boolean condition, final Supplier<String> toMessage) {
-        prove(condition, IllegalStateException::new, toMessage);
+    private Guard() {
     }
 
     /**
@@ -49,31 +21,53 @@ public final class Guard<I, E extends Exception> {
     }
 
     /**
-     * Returns a {@link Guard} that can prove that an input of type {@code <I>} meets a given <em>condition</em>
-     * or throws an {@link IllegalArgumentException} with a message supplied by <em>toMessage</em>
-     * if the input does not satisfy that <em>condition</em>.
+     * Proves that the given <em>condition</em> is {@code true}.
+     * Otherwise, throws an {@link IllegalStateException} with a message supplied by <em>toMessage</em>.
      */
-    public static <I> Guard<I, IllegalArgumentException> proving(final Predicate<? super I> condition,
-                                                                 final Function<? super I, String> toMessage) {
-        return new Guard<>(condition, IllegalArgumentException::new, toMessage);
+    public static void prove(final boolean condition, final Supplier<String> toMessage) {
+        prove(condition, toMessage, IllegalStateException::new);
     }
 
     /**
-     * Returns a {@link Guard} that can prove that an input of type {@code <I>} meets a given <em>condition</em>
-     * or throws an {@link IllegalArgumentException} with a message supplied by <em>toMessage</em>
-     * if the input does not satisfy that <em>condition</em>.
+     * Proves that the given <em>condition</em> is {@code true}.
+     * Otherwise, throws an exception provided by <em>toException</em> with a message supplied by <em>toMessage</em>.
      */
-    public static <I> Guard<I, IllegalArgumentException> proving(final Predicate<? super I> condition) {
-        return new Guard<>(condition, IllegalArgumentException::new, any -> DEFAULT_MESSAGE);
+    public static <E extends Exception> void prove(final boolean condition,
+                                                   final Supplier<String> toMessage,
+                                                   final Function<? super String, E> toException) throws E {
+        if (!condition) {
+            throw toException.apply(toMessage.get());
+        }
     }
 
-    public <K extends I> K proved(final K input) throws E {
-        prove(condition.test(input), toException, () -> toMessage.apply(input));
-        return input;
+    /**
+     * Proves that a given <em>candidate</em> meets the given <em>condition</em>.
+     * Otherwise, throws an {@link IllegalArgumentException} with a message supplied by <em>toMessage</em>.
+     *
+     * @param <T> The type of candidate.
+     * @return The <em>candidate</em> if it meets the <em>condition</em>.
+     * @throws IllegalArgumentException if the <em>candidate</em> does not meet the <em>condition</em>.
+     */
+    public static <T> T proved(final T candidate,
+                               final Predicate<? super T> condition,
+                               final Function<? super T, String> toMessage) {
+        return proved(candidate, condition, toMessage, IllegalArgumentException::new);
     }
 
-    @SuppressWarnings("ParameterHidesMemberVariable")
-    public <X extends Exception> Guard<I, X> thatThrows(final Function<? super String, ? extends X> toException) {
-        return new Guard<>(condition, toException, toMessage);
+    /**
+     * Proves that a given <em>candidate</em> meets the given <em>condition</em>.
+     * Otherwise, throws an exception provided by <em>toException</em> with a message supplied by <em>toMessage</em>.
+     *
+     * @param <T> The type of candidate.
+     * @param <E> The type of exception.
+     * @return The <em>candidate</em> if it meets the <em>condition</em>.
+     * @throws E if the <em>candidate</em> does not meet the <em>condition</em>.
+     */
+    public static <T, E extends Exception> T proved(final T candidate,
+                                                    final Predicate<? super T> condition,
+                                                    final Function<? super T, String> toMessage,
+                                                    final Function<? super String, E> toException) throws E {
+        prove(condition.test(candidate), () -> toMessage.apply(candidate), toException);
+        return candidate;
     }
 }

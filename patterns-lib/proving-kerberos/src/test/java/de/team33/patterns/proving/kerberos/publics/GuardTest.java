@@ -7,6 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,13 +17,6 @@ class GuardTest {
 
     private static final System.Logger LOGGER =
             System.getLogger(GuardTest.class.getCanonicalName());
-    private static final Guard<Integer, IllegalArgumentException> INT_GUARD =
-            Guard.proving(input -> 0 < input,
-                          "<input> is expected to be greater than 0 - but was %d"::formatted);
-    private static final Guard<String, IOException> STR_GUARD =
-            Guard.<String>proving(input -> null != input && input.length() > 3,
-                                  "<input>.length is expected to be greater than 3 - but <input> was '%s'"::formatted)
-                 .thatThrows(IOException::new);
 
     @SuppressWarnings("ConstantValue")
     @ParameterizedTest
@@ -58,7 +53,7 @@ class GuardTest {
     final void prove_IOException(final boolean condition) {
         final String message = UUID.randomUUID().toString();
         try {
-            Guard.prove(condition, IOException::new, () -> message);
+            Guard.prove(condition, () -> message, IOException::new);
             assertTrue(condition, () -> "<condition> is expected to be true - but was %s".formatted(condition));
         } catch (final IOException e) {
             LOGGER.log(DEBUG, e::getMessage, e);
@@ -70,16 +65,17 @@ class GuardTest {
     @ParameterizedTest
     @ValueSource(ints = {-5, -3, -1, 1, 3, 5})
     final void proved(final int given) {
+        final Predicate<Integer> condition = input -> 0 < input;
+        final Function<Integer, String> toMessage = "<input> is expected to be greater than 0 - but was %d"::formatted;
         try {
-            final int result = INT_GUARD.proved(given);
+            final int result = Guard.proved(given, condition, toMessage);
+            assertTrue(condition.test(given), () -> toMessage.apply(given));
             assertEquals(given, result);
-            assertTrue(0 < given, () -> ("<given> is expected to be greater than 0 " +
-                                         "- but was %s").formatted(given));
         } catch (final IllegalArgumentException e) {
             LOGGER.log(DEBUG, e::getMessage, e);
-            assertFalse(0 < given, () -> ("<given> is expected to be less than or equal to 0 " +
-                                          "- but was %s").formatted(given));
-            assertEquals("<input> is expected to be greater than 0 - but was %d".formatted(given), e.getMessage());
+            assertFalse(condition.test(given), () -> toMessage.apply(given)
+                                                              .replace("greater than", "less than or equal to"));
+            assertEquals(toMessage.apply(given), e.getMessage());
         }
     }
 
@@ -89,7 +85,9 @@ class GuardTest {
     final void proved(final String given) {
         final int length = (null == given) ? -1 : given.length();
         try {
-            final String result = STR_GUARD.proved(given);
+            final String result = Guard.proved(given, input -> null != input && input.length() > 3,
+                                               "<input>.length is expected to be greater than 3 - but <input> was '%s'"::formatted,
+                                               IOException::new);
             assertSame(given, result);
             assertTrue(3 < length, () -> ("<length>is expected to be greater than 3 " +
                                           "- but was %d").formatted(length));
