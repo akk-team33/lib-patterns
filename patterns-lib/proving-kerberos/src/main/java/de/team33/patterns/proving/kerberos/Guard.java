@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 public final class Guard {
 
     private static final String DEFAULT_MESSAGE = "prove failed";
+    private static final Function<Object, String> DEFAULT_TO_MESSAGE =
+            candidate -> "%s: '%s'".formatted(DEFAULT_MESSAGE, candidate);
 
     private Guard() {
     }
@@ -41,11 +43,22 @@ public final class Guard {
     }
 
     /**
-     * Proves that a given <em>candidate</em> meets the given <em>condition</em>.
-     * Otherwise, throws an {@link IllegalArgumentException} with a message supplied by <em>toMessage</em>.
+     * Returns a given <em>candidate</em> if it meets the given <em>condition</em>.
+     * Otherwise, throws an exception with a default message.
      *
      * @param <T> The type of candidate.
-     * @return The <em>candidate</em> if it meets the <em>condition</em>.
+     * @throws IllegalArgumentException if the <em>candidate</em> does not meet the <em>condition</em>.
+     */
+    public static <T> T proved(final T candidate,
+                               final Predicate<? super T> condition) {
+        return proved(candidate, condition, DEFAULT_TO_MESSAGE);
+    }
+
+    /**
+     * Returns a given <em>candidate</em> if it meets the given <em>condition</em>.
+     * Otherwise, throws an exception with a message supplied by <em>toMessage</em>.
+     *
+     * @param <T> The type of candidate.
      * @throws IllegalArgumentException if the <em>candidate</em> does not meet the <em>condition</em>.
      */
     public static <T> T proved(final T candidate,

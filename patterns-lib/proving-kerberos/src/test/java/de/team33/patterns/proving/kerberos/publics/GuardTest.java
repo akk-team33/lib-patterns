@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -59,6 +60,25 @@ class GuardTest {
             LOGGER.log(DEBUG, e::getMessage, e);
             assertFalse(condition, () -> "<condition> is expected to be false - but was %s".formatted(condition));
             assertEquals(message, e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(longs = {-1000L, 0L, 1000L})
+    final void proved_default(final long delta) {
+        final Instant now = Instant.now();
+        final Instant given = now.plusSeconds(delta);
+        final Predicate<Instant> condition = now::isBefore;
+        try {
+            final Instant result = Guard.proved(given, condition);
+            assertTrue(condition.test(given),
+                       () -> "<instant> is expected to be after %s - but was %s".formatted(now, given));
+            assertSame(given, result);
+        } catch (final IllegalArgumentException e) {
+            LOGGER.log(DEBUG, e::getMessage, e);
+            assertFalse(condition.test(given),
+                        () -> "<instant> is expected to be not after %s - but was %s".formatted(now, given));
+            assertEquals("prove failed: '%s'".formatted(given), e.getMessage());
         }
     }
 
