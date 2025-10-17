@@ -2,6 +2,7 @@ package de.team33.patterns.proving.kerberos.publics;
 
 import de.team33.patterns.proving.kerberos.Guard;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -78,7 +79,7 @@ class GuardTest {
             LOGGER.log(DEBUG, e::getMessage, e);
             assertFalse(condition.test(given),
                         () -> "<instant> is expected to be not after %s - but was %s".formatted(now, given));
-            assertEquals("prove failed: '%s'".formatted(given), e.getMessage());
+            assertEquals("prove failed: <candidate> is <%s>".formatted(given), e.getMessage());
         }
     }
 
@@ -117,6 +118,37 @@ class GuardTest {
                                            "- but was %d").formatted(length));
             assertEquals("<input>.length is expected to be greater than 3 - but <input> was '%s'".formatted(given),
                          e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @EmptySource
+    @NullSource
+    final void nonNull_default(final String given) {
+        try {
+            final String result = Guard.nonNull(given);
+            assertNotNull(given, () -> "<given> is expected to be non-null - but was %s".formatted(given));
+            assertSame(given, result);
+        } catch (final NullPointerException e) {
+            LOGGER.log(DEBUG, e::getMessage, e);
+            assertNull(given);
+            assertEquals("prove failed: <candidate> is <null>", e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @EmptySource
+    @NullSource
+    final void nonNull(final String given) {
+        final Function<Object, String> toMessage = "<given> is expected to be non-null - but was %s"::formatted;
+        try {
+            final String result = Guard.nonNull(given, toMessage);
+            assertNotNull(given, () -> toMessage.apply(result));
+            assertSame(given, result);
+        } catch (final NullPointerException e) {
+            LOGGER.log(DEBUG, e::getMessage, e);
+            assertNull(given);
+            assertEquals(toMessage.apply(given), e.getMessage());
         }
     }
 }
