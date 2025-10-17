@@ -53,7 +53,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### next
+### 2.4.0
 
 * Added module proving-kerberos
 

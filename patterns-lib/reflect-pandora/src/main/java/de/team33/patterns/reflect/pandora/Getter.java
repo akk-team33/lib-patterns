@@ -1,5 +1,7 @@
 package de.team33.patterns.reflect.pandora;
 
+import de.team33.patterns.proving.kerberos.Guard;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.Function;
@@ -17,7 +19,7 @@ class Getter<T> implements Function<T, Object> {
     private final String name;
 
     Getter(final Method method) {
-        assert 0 == method.getParameterCount();
+        Guard.prove(0 == method.getParameterCount());
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         this.method = method;
         this.name = Methods.normalName(method);

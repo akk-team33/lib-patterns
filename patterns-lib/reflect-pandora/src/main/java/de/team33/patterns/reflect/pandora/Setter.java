@@ -1,5 +1,7 @@
 package de.team33.patterns.reflect.pandora;
 
+import de.team33.patterns.proving.kerberos.Guard;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.function.BiConsumer;
@@ -23,7 +25,7 @@ class Setter<T> implements BiConsumer<T, Object> {
     private final Class<?> type;
 
     Setter(final Method method) {
-        assert 1 == method.getParameterCount();
+        Guard.prove(1 == method.getParameterCount());
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - -
         this.method = method;
         this.name = Methods.normalName(method);
