@@ -10,10 +10,10 @@
         <version>2.5.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>decision-carpo</artifactId>
+    <artifactId>decision-thyone</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Decision Library - Edition "carpo"</name>
+    <name>Team33 Decision Library - Edition "thyone"</name>
     <description>Classes and utilities for implementing and handling complex decisions.</description>
 
 </project>

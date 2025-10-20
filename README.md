@@ -19,6 +19,7 @@ https://www.team33.de/dev/patterns/2.x
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-carpo (Team33 Decision Library - Edition "carpo")
+  * decision-thyone (Team33 Decision Library - Edition "thyone")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -52,6 +53,10 @@ https://www.team33.de/dev/patterns/2.x
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### next
+
+* Added module decision-thyone
 
 ### 2.4.0
 
