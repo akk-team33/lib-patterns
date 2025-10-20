@@ -37,7 +37,7 @@ class AlgorithmTest {
             fail("expected to fail - but was " + result);
         } catch (final IllegalStateException e) {
             // as expected!
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 
