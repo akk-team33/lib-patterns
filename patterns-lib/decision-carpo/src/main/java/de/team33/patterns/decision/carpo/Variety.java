@@ -1,10 +1,6 @@
 package de.team33.patterns.decision.carpo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
@@ -55,8 +51,7 @@ public final class Variety<I> {
         if (Integer.SIZE < size) {
             throw new IllegalArgumentException(String.format(TOO_MANY_CRITERIA, Integer.SIZE, size));
         } else {
-            //noinspection Java9CollectionFactory
-            this.criteria = Collections.unmodifiableList(new ArrayList<>(criteria));
+            this.criteria = List.copyOf(criteria);
             this.bitOp = bitOrder.operator(size - 1);
         }
     }
