@@ -112,13 +112,13 @@
                 <artifactId>decision-telesto</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
-            <!-- nailed (discontinued) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-leda</artifactId>
-                <version>1.23.0</version>
+                <version>${project.version}</version>
             </dependency>
+
+            <!-- nailed (discontinued) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>tuple-janus</artifactId>
