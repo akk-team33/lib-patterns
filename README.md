@@ -34,6 +34,18 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
+### near future
+
+* Nailed module decision-leda to 1.26.0 (deprecated)
+* Nailed module decision-telesto to 1.26.0 (deprecated)
+
+### 1.26.0
+
+* Resume module decision-leda
+  * Marked module as deprecated
+* Resume module decision-telesto
+  * Marked module as deprecated
+
 ### 1.25.0
 
 * Added module matching-rhea
