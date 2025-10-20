@@ -106,16 +106,18 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <!-- newly deprecated -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>decision-telesto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
             <!-- nailed (discontinued) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-leda</artifactId>
                 <version>1.23.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-telesto</artifactId>
-                <version>1.22.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
