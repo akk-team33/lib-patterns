@@ -38,8 +38,6 @@ https://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
-  * decision-leda (Team33 Decision Library - Edition "leda") - 1.23.0
-  * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.22.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
@@ -48,10 +46,17 @@ https://www.team33.de/dev/patterns/2.x
 ### deprecated
 
 * (patterns-lib - previous releases)
+  * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
+  * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### next
+
+* Re-nailed module decision-leda to 1.26.0 (deprecated)
+* Re-nailed module decision-telesto to 1.26.0 (deprecated)
 
 ### 2.4.0
 
