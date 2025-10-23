@@ -53,7 +53,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### next
+### 2.4.1
 
 * Re-nailed module decision-leda to 1.26.0 (deprecated)
 * Re-nailed module decision-telesto to 1.26.0 (deprecated)
