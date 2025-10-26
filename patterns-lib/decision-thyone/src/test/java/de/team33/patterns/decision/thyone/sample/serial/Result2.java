@@ -11,7 +11,7 @@ public enum Result2 {
 
     private static final Function<String, Result2> FUNCTION =
             Choices.serial(Objects::isNull, String::isEmpty, String::isBlank, input -> 1 == input.length())
-                   .mapping(i -> switch (i) {
+                   .andThen(i -> switch (i) {
                        case 0 -> CASE_NULL;
                        case 1 -> CASE_EMPTY;
                        case 2 -> CASE_BLANK;
