@@ -18,7 +18,6 @@ https://www.team33.de/dev/patterns/2.x
   * building-anthe (Team33 Building Library - Edition "anthe")
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
-  * decision-carpo (Team33 Decision Library - Edition "carpo")
   * decision-thyone (Team33 Decision Library - Edition "thyone")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
@@ -39,6 +38,7 @@ https://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.4.1
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
@@ -54,9 +54,13 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
-### 2.4.1
+### 2.5.0
 
 * Added module decision-thyone
+* Nailed module decision-carpo to 2.4.1 (suspended)
+
+### 2.4.1
+
 * Re-nailed module decision-leda to 1.26.0 (deprecated)
 * Re-nailed module decision-telesto to 1.26.0 (deprecated)
 
