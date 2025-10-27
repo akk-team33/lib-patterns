@@ -5,12 +5,12 @@
     <parent>
         <groupId>de.team33</groupId>
         <artifactId>mvn-config-alpha</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
     </parent>
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-root</artifactId>
-    <version>2.5.0</version>
+    <version>2.6.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Root</name>
