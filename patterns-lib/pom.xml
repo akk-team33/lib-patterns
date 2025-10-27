@@ -29,7 +29,6 @@
         <module>building-anthe</module>
         <module>building-elara</module>
         <module>execution-metis</module>
-        <module>decision-carpo</module>
         <module>decision-thyone</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
