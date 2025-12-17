@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33</groupId>
         <artifactId>mvn-config-alpha</artifactId>
-        <version>1.0.0</version>
+        <version>1.0.2</version>
     </parent>
 
     <groupId>de.team33.patterns</groupId>
@@ -26,7 +26,7 @@
     <developers>
         <developer>
             <name>Andreas Kluge-Kaindl</name>
-            <email>akk-pg@team33.de</email>
+            <email>akk-dev@team33.de</email>
             <organization>team33.de</organization>
             <organizationUrl>https://github.com/akk-team33/</organizationUrl>
         </developer>
@@ -37,9 +37,9 @@
         <url>https://github.com/akk-team33/lib-patterns</url>
     </scm>
 
-    <!--properties>
-        <skipPublishing>true</skipPublishing>
-    </properties-->
+    <properties>
+        <copyright.year>2025</copyright.year>
+    </properties>
 
     <modules>
         <module>patterns-bom</module>
