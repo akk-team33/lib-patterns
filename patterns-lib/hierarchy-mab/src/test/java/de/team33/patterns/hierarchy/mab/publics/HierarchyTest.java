@@ -35,9 +35,9 @@ class HierarchyTest {
                                               "hierarchy", "mab", "Hierarchy.java", "package-info.java");
         final FileEntry entry = new FileEntry(Path.of("src"));
 
-        final List<String> result = STREAMER.skip(e -> e.path().endsWith("test"))
-                                            .skip(e -> e.path().endsWith("resources"))
-                                            .stream(entry)
+        final Hierarchy.Streamer<FileEntry> streamer = STREAMER.skip(e -> e.path().endsWith("test"))
+                                                               .skip(e -> e.path().endsWith("resources"));
+        final List<String> result = streamer.stream(entry)
                                             .map(FileEntry::path)
                                             .filter(not(path -> path.endsWith("src")))
                                             .filter(not(path -> path.endsWith("main")))
@@ -51,12 +51,14 @@ class HierarchyTest {
     @Test
     void streamer_skipFirst_stream() {
         final FileEntry entry = new FileEntry(Path.of("src"));
-        final List<String> result = STREAMER.skip(FileEntry::isDirectory)
-                                            .stream(entry)
+        final Hierarchy.Streamer<FileEntry> streamer = STREAMER.skip(FileEntry::isDirectory);
+
+        final List<String> result = streamer.stream(entry)
                                             .map(FileEntry::path)
                                             .map(Path::getFileName)
                                             .map(Path::toString)
                                             .toList();
+
         assertEquals(List.of(), result);
     }
 }
