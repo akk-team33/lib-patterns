@@ -15,12 +15,13 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>hierarchy-mab</module>
+        <module>decision-thyone</module>
         <module>proving-kerberos</module>
         <module>enums-pan</module>
         <module>arbitrary-mimas</module>
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>
+        <module>hierarchy-mab</module>
         <module>io-deimos</module>
         <module>expiry-tethys</module>
         <module>pooling-ariel</module>
@@ -30,7 +31,6 @@
         <module>building-anthe</module>
         <module>building-elara</module>
         <module>execution-metis</module>
-        <module>decision-thyone</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
         <module>matching-rhea</module>

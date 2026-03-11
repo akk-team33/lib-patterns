@@ -10,11 +10,21 @@
     </parent>
 
     <artifactId>hierarchy-mab</artifactId>
+    <packaging>jar</packaging>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <name>Team33 Hierarchy Library - Edition "mab"</name>
+    <description>Tools for processing hierarchically organized data.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>decision-thyone</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>lazy-narvi</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
