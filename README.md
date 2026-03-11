@@ -24,6 +24,7 @@ https://www.team33.de/dev/patterns/2.x
   * execution-metis (Team33 Execution Library - Edition "metis")
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
+  * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
@@ -53,6 +54,10 @@ https://www.team33.de/dev/patterns/2.x
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
 
 ## Change Log
+
+### 2.6.0
+
+* Added module hierarchy-mab
 
 ### 2.5.0
 

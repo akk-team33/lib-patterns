@@ -15,6 +15,7 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>hierarchy-mab</module>
         <module>proving-kerberos</module>
         <module>enums-pan</module>
         <module>arbitrary-mimas</module>
