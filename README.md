@@ -25,6 +25,7 @@ https://www.team33.de/dev/patterns/2.x
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
+  * io-adrastea (Team33 IO Library - Edition "adrastea")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
@@ -58,6 +59,7 @@ https://www.team33.de/dev/patterns/2.x
 ### 2.6.0
 
 * Added module hierarchy-mab
+* Added module io-adrastea
 
 ### 2.5.0
 
