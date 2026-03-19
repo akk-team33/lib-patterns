@@ -210,10 +210,14 @@ public class FileEntry {
         return path.toString();
     }
 
+    public record Problem(FileEntry node, IOException cause)
+            implements de.team33.patterns.hierarchy.mab.Problem<FileEntry> {
+    }
+
     /**
-     * A tool that serves to list the immediate contents of any directory represented by a {@link FileEntry}.
+     * A tool that serves to list the immediate contents of any file represented by a {@link FileEntry}.
      */
-    public static final class Lister {
+    public static final class Lister implements de.team33.patterns.hierarchy.mab.Lister<FileEntry, Problem> {
 
         private static final Choices<Lister> CHOICES = Choices.parallel(Lister::isPathOrder, Lister::isEntryOrder);
 
@@ -260,12 +264,13 @@ public class FileEntry {
          *
          * @see FileEntry#isDirectory()
          */
-        public final List<FileEntry> list(final FileEntry entry, final Consumer<IOProblem> onProblem) {
+        @Override
+        public final List<FileEntry> list(final FileEntry entry, final Consumer<? super Problem> onProblem) {
             if (entry.isDirectory()) {
                 try (final Stream<Path> paths = Files.list(entry.path())) {
                     return mapping.get().apply(paths).toList();
                 } catch (final IOException caught) {
-                    onProblem.accept(new IOProblem(entry.path(), caught));
+                    onProblem.accept(new Problem(entry, caught));
                 }
             }
             return List.of();
@@ -299,47 +304,14 @@ public class FileEntry {
     /**
      * A tool that serves to stream the recursive contents of any directory represented by a {@link FileEntry}.
      */
-    public static final class Streamer {
-
-        private final Lister lister;
-        private final Predicate<FileEntry> skipCondition;
+    public static final class Streamer extends de.team33.patterns.hierarchy.mab.Streamer<FileEntry, Problem, Lister> {
 
         private Streamer(final Lister lister, final Predicate<FileEntry> skipCondition) {
-            this.lister = lister;
-            this.skipCondition = skipCondition;
-        }
-
-        /**
-         * Returns a {@link Stream} starting with the given <em>entry</em>,
-         * followed by its recursive content if it is a directory.
-         * <p>
-         * If a problem occurs during the process, such as insufficient permissions,
-         * the problem is reported to the given {@link Consumer}.
-         *
-         * @see FileEntry#isDirectory()
-         */
-        public final Stream<FileEntry> stream(final FileEntry entry, final Consumer<IOProblem> onProblem) {
-            return new Worker(onProblem).stream(entry);
+            super(lister, skipCondition);
         }
 
         public final Streamer skip(final Predicate<? super FileEntry> condition) {
-            return new Streamer(lister, skipCondition.or(condition));
-        }
-
-        private class Worker {
-
-            private final Consumer<IOProblem> onProblem;
-
-            private Worker(final Consumer<IOProblem> onProblem) {
-                this.onProblem = onProblem;
-            }
-
-            private Stream<FileEntry> stream(final FileEntry entry) {
-                if (skipCondition.test(entry)) {
-                    return Stream.empty();
-                }
-                return Stream.concat(Stream.of(entry), lister.list(entry, onProblem).stream().flatMap(this::stream));
-            }
+            return new Streamer(lister(), skipCondition().or(condition));
         }
     }
 }

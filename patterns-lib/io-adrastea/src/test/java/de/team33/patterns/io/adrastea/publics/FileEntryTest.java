@@ -2,7 +2,6 @@ package de.team33.patterns.io.adrastea.publics;
 
 import de.team33.patterns.exceptional.dione.XConsumer;
 import de.team33.patterns.io.adrastea.FileEntry;
-import de.team33.patterns.io.adrastea.IOProblem;
 import de.team33.patterns.io.adrastea.TUtil;
 import org.junit.jupiter.api.Test;
 
@@ -219,7 +218,7 @@ class FileEntryTest {
     @Test
     final void list() {
         for (final Path path : paths()) {
-            final List<IOProblem> problems = new LinkedList<>();
+            final List<FileEntry.Problem> problems = new LinkedList<>();
             final FileEntry entry = FileEntry.of(path);
 
             final List<FileEntry> result = FileEntry.LISTER.list(entry, problems::add);
@@ -236,7 +235,7 @@ class FileEntryTest {
                 "directory.link", "link.link", "missing.link", "regular.link", "special.link");
         // no order ...
         final Set<String> expected = Set.copyOf(unexpected);
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<String> result = FileEntry.LISTER.noOrder()
@@ -254,7 +253,7 @@ class FileEntryTest {
     final void list_maxOrder() {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<String> result = FileEntry.LISTER.entryOrder(comparing(FileEntry::name).reversed())
@@ -271,7 +270,7 @@ class FileEntryTest {
     final void list_pathOrder() {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<String> result = FileEntry.LISTER.pathOrder(TUtil.PATH_ORDER.reversed())
@@ -288,7 +287,7 @@ class FileEntryTest {
     final void list_entryOrder() {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<String> result = FileEntry.LISTER.noOrder()
@@ -305,10 +304,10 @@ class FileEntryTest {
     @Test
     final void stream() {
         final List<String> expected = List.of(uuid, "directory.link", "de", "team33", "patterns", "io",
-                                              "adrastea", "FileEntry.java", "IOProblem.java", "Normality.java",
-                                              "package-info.java", "SymLinkAttributes.java", "Util.java", "link.link",
-                                              "missing.link", "regular.link", "special.link");
-        final List<IOProblem> problems = new LinkedList<>();
+                                              "adrastea", "FileEntry.java", "Normality.java", "package-info.java",
+                                              "SymLinkAttributes.java", "Util.java", "link.link", "missing.link",
+                                              "regular.link", "special.link");
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<String> result = FileEntry.STREAMER.stream(entry, problems::add)
@@ -321,7 +320,7 @@ class FileEntryTest {
 
     @Test
     final void stream_skip_origin() {
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath);
 
         final List<FileEntry> result = FileEntry.STREAMER.skip(FileEntry::isDirectory)
@@ -334,7 +333,7 @@ class FileEntryTest {
 
     @Test
     final void stream_forbidden() throws IOException {
-        final List<IOProblem> problems = new LinkedList<>();
+        final List<FileEntry.Problem> problems = new LinkedList<>();
         forbidden(testPath, path -> {
             final FileEntry entry = FileEntry.of(path);
 
@@ -344,6 +343,6 @@ class FileEntryTest {
             assertEquals(List.of(entry), result);
         });
         assertEquals(1, problems.size());
-        assertEquals(testPath.toAbsolutePath().normalize(), problems.get(0).path());
+        assertEquals(testPath.toAbsolutePath().normalize(), problems.get(0).node().path());
     }
 }
