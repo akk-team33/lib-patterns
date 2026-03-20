@@ -1,6 +1,6 @@
 package de.team33.patterns.hierarchy.mab.publics;
 
-import de.team33.patterns.hierarchy.mab.Streamer;
+import de.team33.patterns.hierarchy.mab.Nodes;
 import de.team33.patterns.hierarchy.mab.testing.PathLister;
 import de.team33.patterns.hierarchy.mab.testing.PathProblem;
 import org.junit.jupiter.api.Test;
@@ -20,8 +20,7 @@ class StreamerTest {
     @Test
     final void stream() {
         final List<String> expected = List.of("java", "de", "team33", "patterns", "hierarchy", "mab",
-                                              "Lister.java", "Problem.java", "Streamer.java", "Util.java",
-                                              "package-info.java");
+                                              "Nodes.java", "package-info.java");
         final Path entry = Path.of("src", "main", "java");
 
         final List<String> result = STREAMER.stream(entry)
@@ -35,8 +34,7 @@ class StreamerTest {
     @Test
     final void skip_stream() {
         final List<String> expected = List.of("java", "de", "team33", "patterns", "hierarchy", "mab",
-                                              "Lister.java", "Problem.java", "Streamer.java", "Util.java",
-                                              "package-info.java");
+                                              "Nodes.java", "package-info.java");
         final Path node = Path.of("src");
 
         final PathStreamer streamer = STREAMER.skip(path -> path.endsWith("test"))
@@ -64,7 +62,7 @@ class StreamerTest {
         assertEquals(List.of(), result);
     }
 
-    static class PathStreamer extends Streamer<Path, PathProblem, PathLister> {
+    static class PathStreamer extends Nodes.Streamer<Path, PathProblem, PathLister> {
 
         PathStreamer(final PathLister lister, final Predicate<? super Path> skipCondition) {
             super(lister, skipCondition);

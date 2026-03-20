@@ -8,11 +8,11 @@ import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class UtilTest {
+class NodesTest {
 
     @Test
     final void log() {
-        Util.log(new PathProblem(Path.of("pom.xml"), new IOException()));
+        Nodes.log(new PathProblem(Path.of("pom.xml"), new IOException()));
         assertTrue(true);
     }
 }

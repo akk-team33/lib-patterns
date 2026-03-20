@@ -1,6 +1,7 @@
 package de.team33.patterns.io.adrastea;
 
 import de.team33.patterns.decision.thyone.Choices;
+import de.team33.patterns.hierarchy.mab.Nodes;
 import de.team33.patterns.lazy.narvi.Lazy;
 
 import java.io.IOException;
@@ -232,13 +233,13 @@ public class FileEntry {
     }
 
     public record Problem(FileEntry node, IOException cause)
-            implements de.team33.patterns.hierarchy.mab.Problem<FileEntry> {
+            implements Nodes.Problem<FileEntry> {
     }
 
     /**
      * A tool that serves to list the immediate contents of any file represented by a {@link FileEntry}.
      */
-    public static final class Lister implements de.team33.patterns.hierarchy.mab.Lister<FileEntry, Problem> {
+    public static final class Lister implements Nodes.Lister<FileEntry, Problem> {
 
         private static final Choices<Lister> CHOICES = Choices.parallel(Lister::isPathOrder, Lister::isEntryOrder);
 
@@ -329,7 +330,7 @@ public class FileEntry {
     /**
      * A tool that serves to stream the recursive contents of any directory represented by a {@link FileEntry}.
      */
-    public static final class Streamer extends de.team33.patterns.hierarchy.mab.Streamer<FileEntry, Problem, Lister> {
+    public static final class Streamer extends Nodes.Streamer<FileEntry, Problem, Lister> {
 
         private Streamer(final Lister lister, final Predicate<FileEntry> skipCondition) {
             super(lister, skipCondition);

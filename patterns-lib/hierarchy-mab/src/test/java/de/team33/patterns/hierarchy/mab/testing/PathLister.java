@@ -1,6 +1,6 @@
 package de.team33.patterns.hierarchy.mab.testing;
 
-import de.team33.patterns.hierarchy.mab.Lister;
+import de.team33.patterns.hierarchy.mab.Nodes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
-public class PathLister implements Lister<Path, PathProblem> {
+public class PathLister implements Nodes.Lister<Path, PathProblem> {
 
     private static final List<Path> EMPTY_LIST = List.of();
 
