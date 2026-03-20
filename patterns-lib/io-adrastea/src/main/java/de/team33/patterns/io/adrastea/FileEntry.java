@@ -5,7 +5,6 @@ import de.team33.patterns.lazy.narvi.Lazy;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
@@ -17,6 +16,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.io.adrastea.LinkHandling.DISCLOSE;
+import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
+
 /**
  * Represents an entry from a virtual file index.
  * Includes some meta information about a file, particularly the file system path, file type, size,
@@ -26,60 +28,71 @@ import java.util.stream.Stream;
  * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
  * that the meta information is out of date because the underlying file may have been changed in the meantime.
  */
+@SuppressWarnings("unused")
 public class FileEntry {
-
-    /**
-     * A {@link Lister} that applies a default path order (by file name)
-     */
-    public static final Lister LISTER = new Lister(Util.PATH_ORDER, Util.NO_ORDER);
-
-    /**
-     * A {@link Streamer} that does not skip any entry
-     */
-    public static final Streamer STREAMER = streamer(LISTER);
 
     private final Path path;
     private final Lazy<BasicFileAttributes> lazyAttributes;
 
-    private FileEntry(final Path path, final Normality normality) {
+    private FileEntry(final Path path, final Normality normality, final LinkHandling linkHandling) {
         this.path = normality.apply(path);
-        this.lazyAttributes = Lazy.init(this::newAttributes);
+        this.lazyAttributes = Lazy.init(() -> newAttributes(linkHandling));
     }
 
-    private static BasicFileAttributes newAttributes(final Path path, final LinkOption[] linkOptions) {
+    private static BasicFileAttributes newAttributes(final Path path, final LinkHandling handling) {
         try {
-            return Files.readAttributes(path, BasicFileAttributes.class, linkOptions);
-        } catch (IOException e) {
+            return Files.readAttributes(path, BasicFileAttributes.class, handling.options());
+        } catch (final IOException ignored) {
             return Util.MISSING_FILE_ATTRIBUTES;
         }
-    }
-
-    private static BasicFileAttributes resolved(final BasicFileAttributes attributes) {
-        return (attributes instanceof SymLinkAttributes slAttributes) ? slAttributes.resolved() : attributes;
     }
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path}.
      */
-    public static FileEntry of(final Path path) {
-        return new FileEntry(path, Normality.UNKNOWN);
+    public static FileEntry of(final Path path, final LinkHandling linkHandling) {
+        return new FileEntry(path, Normality.UNKNOWN, linkHandling);
     }
 
-    private static FileEntry ofDefinite(final Path path) {
-        return new FileEntry(path, Normality.DEFINITE);
+    private static FileEntry ofDefinite(final Path path, final LinkHandling linkHandling) {
+        return new FileEntry(path, Normality.DEFINITE, linkHandling);
     }
 
+    /**
+     * Returns a new {@link Lister} that applies a default path order (by file name)
+     */
+    public static Lister lister(final LinkHandling linkHandling) {
+        return new Lister(linkHandling, Util.PATH_ORDER, Util.NO_ORDER);
+    }
+
+    /**
+     * Returns a new {@link Streamer} that does not skip any entry.
+     */
+    public static Streamer streamer(final LinkHandling linkHandling) {
+        return streamer(lister(linkHandling));
+    }
+
+    /**
+     * Returns a new {@link Streamer} that does not skip any entry.
+     */
     public static Streamer streamer(final Lister lister) {
         return new Streamer(lister, entry -> false);
     }
 
-    private BasicFileAttributes newAttributes() {
-        final BasicFileAttributes disclosed = newAttributes(path, Util.DISCLOSE_LINKS);
-        if (disclosed.isSymbolicLink()) {
-            final BasicFileAttributes resolved = newAttributes(path, Util.RESOLVE_LINKS);
-            return new SymLinkAttributes(disclosed, resolved);
+    private static BasicFileAttributes effective(final BasicFileAttributes attributes) {
+        return (attributes instanceof LinkAttributes linkAttributes) ? linkAttributes.backing() : attributes;
+    }
+
+    private BasicFileAttributes newAttributes(final LinkHandling handling) {
+        final BasicFileAttributes disclosed = newAttributes(path, DISCLOSE);
+        if (!disclosed.isSymbolicLink()) {
+            return disclosed;
         }
-        return disclosed;
+        if (DISCLOSE == handling) {
+            return new LinkAttributes(DISCLOSE, disclosed);
+        } else {
+            return new LinkAttributes(handling, newAttributes(path, handling));
+        }
     }
 
     private BasicFileAttributes attributes() {
@@ -99,6 +112,30 @@ public class FileEntry {
      */
     public final String name() {
         return Optional.ofNullable(path.getFileName()).orElse(path).toString();
+    }
+
+    public final FileEntry disclosed() {
+        return isDisclosed() ? this : new FileEntry(path, Normality.DEFINITE, DISCLOSE);
+    }
+
+    public final FileEntry resolved() {
+        return isResolved() ? this : new FileEntry(path, Normality.DEFINITE, RESOLVE);
+    }
+
+    public final boolean isDisclosed() {
+        if (attributes() instanceof LinkAttributes linkAttributes) {
+            return DISCLOSE == linkAttributes.handling();
+        } else {
+            return true;
+        }
+    }
+
+    public final boolean isResolved() {
+        if (attributes() instanceof LinkAttributes linkAttributes) {
+            return RESOLVE == linkAttributes.handling();
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -137,32 +174,16 @@ public class FileEntry {
 
     /**
      * Determines if the represented file is missing.
-     * <p>
-     * This is also the case if it {@link #isSymbolicLink()} and the finally linked file is missing.
-     * <p>
-     * NOTE that a symbolic link may be <em>missing</em> and <em>present</em> at the same time
-     * if and only if the finally linked file is missing!
-     *
-     * @see #isSymbolicLink()
-     * @see #isPresent()
      */
     public final boolean isMissing() {
-        return resolved(attributes()) == Util.MISSING_FILE_ATTRIBUTES;
+        return effective(attributes()) == Util.MISSING_FILE_ATTRIBUTES;
     }
 
     /**
      * Determines if the represented file is present.
-     * <p>
-     * This is also the case if it {@link #isSymbolicLink()} and the finally linked file is missing.
-     * <p>
-     * NOTE that a symbolic link may be <em>missing</em> and <em>present</em> at the same time
-     * if and only if the finally linked file is missing!
-     *
-     * @see #isSymbolicLink()
-     * @see #isMissing()
      */
     public final boolean isPresent() {
-        return attributes() != Util.MISSING_FILE_ATTRIBUTES;
+        return effective(attributes()) != Util.MISSING_FILE_ATTRIBUTES;
     }
 
     /**
@@ -221,11 +242,15 @@ public class FileEntry {
 
         private static final Choices<Lister> CHOICES = Choices.parallel(Lister::isPathOrder, Lister::isEntryOrder);
 
+        private final LinkHandling linkHandling;
         private final Comparator<? super Path> pathOrder;
         private final Comparator<? super FileEntry> entryOrder;
         private final Lazy<Function<Stream<Path>, Stream<FileEntry>>> mapping;
 
-        private Lister(final Comparator<? super Path> pathOrder, final Comparator<? super FileEntry> entryOrder) {
+        private Lister(final LinkHandling linkHandling,
+                       final Comparator<? super Path> pathOrder,
+                       final Comparator<? super FileEntry> entryOrder) {
+            this.linkHandling = linkHandling;
             this.pathOrder = pathOrder;
             this.entryOrder = entryOrder;
             this.mapping = Lazy.init(this::newMapping);
@@ -234,13 +259,13 @@ public class FileEntry {
         private Function<Stream<Path>, Stream<FileEntry>> newMapping() {
             return switch (CHOICES.apply(this)) {
                 case 0b11 -> paths -> paths.sorted(pathOrder)
-                                           .map(FileEntry::ofDefinite)
+                                           .map(path -> ofDefinite(path, linkHandling))
                                            .sorted(entryOrder);
                 case 0b10 -> paths -> paths.sorted(pathOrder)
-                                           .map(FileEntry::ofDefinite);
-                case 0b01 -> paths -> paths.map(FileEntry::ofDefinite)
+                                           .map(path -> ofDefinite(path, linkHandling));
+                case 0b01 -> paths -> paths.map(path -> ofDefinite(path, linkHandling))
                                            .sorted(entryOrder);
-                default -> paths -> paths.map(FileEntry::ofDefinite);
+                default -> paths -> paths.map(path -> ofDefinite(path, linkHandling));
             };
         }
 
@@ -281,7 +306,7 @@ public class FileEntry {
          * {@linkplain #list(FileEntry, Consumer) listing}.
          */
         public final Lister noOrder() {
-            return new Lister(Util.NO_ORDER, Util.NO_ORDER);
+            return new Lister(linkHandling, Util.NO_ORDER, Util.NO_ORDER);
         }
 
         /**
@@ -289,7 +314,7 @@ public class FileEntry {
          * {@linkplain #list(FileEntry, Consumer) listing}.
          */
         public final Lister pathOrder(final Comparator<? super Path> order) {
-            return new Lister(order, entryOrder);
+            return new Lister(linkHandling, order, entryOrder);
         }
 
         /**
@@ -297,7 +322,7 @@ public class FileEntry {
          * {@linkplain #list(FileEntry, Consumer) listing}.
          */
         public final Lister entryOrder(final Comparator<? super FileEntry> order) {
-            return new Lister(pathOrder, order);
+            return new Lister(linkHandling, pathOrder, order);
         }
     }
 

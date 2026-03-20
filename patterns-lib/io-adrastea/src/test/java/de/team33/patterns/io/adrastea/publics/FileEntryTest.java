@@ -15,6 +15,8 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.time.Instant;
 import java.util.*;
 
+import static de.team33.patterns.io.adrastea.LinkHandling.DISCLOSE;
+import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,7 +93,7 @@ class FileEntryTest {
     @Test
     final void path() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             assertTrue(entry.path().isAbsolute());
         });
     }
@@ -99,7 +101,7 @@ class FileEntryTest {
     @Test
     final void name() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             assertEquals(nameOf(path), entry.name());
         });
     }
@@ -107,7 +109,7 @@ class FileEntryTest {
     @Test
     final void testToString() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             assertEquals(path.toAbsolutePath().normalize().toString(), entry.toString());
         });
     }
@@ -115,7 +117,7 @@ class FileEntryTest {
     @Test
     final void isDirectory() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             assertEquals(Files.isDirectory(path), entry.isDirectory());
         });
     }
@@ -123,7 +125,7 @@ class FileEntryTest {
     @Test
     final void isRegularFile() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             assertEquals(Files.isRegularFile(path), entry.isRegularFile());
         });
     }
@@ -131,7 +133,7 @@ class FileEntryTest {
     @Test
     final void isSymbolicLink() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             assertEquals(Files.isSymbolicLink(path), entry.isSymbolicLink());
         });
     }
@@ -141,7 +143,7 @@ class FileEntryTest {
         for (final Path path : paths()) {
             // System.out.println(path);
             final boolean expected = readAttributes(path, TUtil.RESOLVE_LINKS).isOther();
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             assertEquals(expected, entry.isSpecialFile());
         }
     }
@@ -150,7 +152,7 @@ class FileEntryTest {
     final void isMissing() {
         paths().forEach(path -> {
             // System.out.println(path);
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             assertEquals(!Files.exists(path, TUtil.RESOLVE_LINKS), entry.isMissing());
         });
     }
@@ -159,7 +161,7 @@ class FileEntryTest {
     final void isPresent() {
         paths().forEach(path -> {
             // System.out.println(path);
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             assertEquals(Files.exists(path, TUtil.DISCLOSE_LINKS), entry.isPresent());
         });
     }
@@ -167,7 +169,7 @@ class FileEntryTest {
     @Test
     final void lastModified() throws IOException {
         for (final Path path : paths()) {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             if (entry.isMissing()) {
                 assertEquals(Instant.MAX, entry.lastModified());
             } else {
@@ -179,9 +181,12 @@ class FileEntryTest {
     @Test
     final void lastAccess() {
         for (final Path path : paths()) {
-            final FileEntry entry = FileEntry.of(path);
+            // System.out.println(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             if (entry.isPresent()) {
-                assertNotEquals(Instant.MAX, entry.lastAccess());
+                final Instant expected = readAttributes(path, TUtil.RESOLVE_LINKS).lastAccessTime()
+                                                                                  .toInstant();
+                assertEquals(expected, entry.lastAccess());
             } else {
                 assertEquals(Instant.MAX, entry.lastAccess());
             }
@@ -192,7 +197,7 @@ class FileEntryTest {
     final void creation() {
         for (final Path path : paths()) {
             // System.out.println(path);
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
             if (entry.isPresent()) {
                 final Instant expected = readAttributes(path, TUtil.DISCLOSE_LINKS).creationTime()
                                                                                    .toInstant();
@@ -206,7 +211,7 @@ class FileEntryTest {
     @Test
     final void size() throws IOException {
         for (final Path path : paths()) {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
             if (entry.isMissing()) {
                 assertEquals(0L, entry.size());
             } else {
@@ -219,9 +224,10 @@ class FileEntryTest {
     final void list() {
         for (final Path path : paths()) {
             final List<FileEntry.Problem> problems = new LinkedList<>();
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
+            final FileEntry.Lister lister = FileEntry.lister(RESOLVE);
 
-            final List<FileEntry> result = FileEntry.LISTER.list(entry, problems::add);
+            final List<FileEntry> result = lister.list(entry, problems::add);
 
             assertNotEquals(entry.isDirectory(), result.isEmpty());
             assertTrue(problems.isEmpty());
@@ -236,13 +242,13 @@ class FileEntryTest {
         // no order ...
         final Set<String> expected = Set.copyOf(unexpected);
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, RESOLVE);
+        final FileEntry.Lister lister = FileEntry.lister(RESOLVE).noOrder();
 
-        final List<String> result = FileEntry.LISTER.noOrder()
-                                                    .list(entry, problems::add)
-                                                    .stream()
-                                                    .map(FileEntry::name)
-                                                    .toList();
+        final List<String> result = lister.list(entry, problems::add)
+                                          .stream()
+                                          .map(FileEntry::name)
+                                          .toList();
 
         assertNotEquals(unexpected, result);
         assertEquals(expected, Set.copyOf(result));
@@ -254,13 +260,14 @@ class FileEntryTest {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
+        final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
+                                                 .entryOrder(comparing(FileEntry::name).reversed());
 
-        final List<String> result = FileEntry.LISTER.entryOrder(comparing(FileEntry::name).reversed())
-                                                    .list(entry, problems::add)
-                                                    .stream()
-                                                    .map(FileEntry::name)
-                                                    .toList();
+        final List<String> result = lister.list(entry, problems::add)
+                                          .stream()
+                                          .map(FileEntry::name)
+                                          .toList();
 
         assertEquals(expected, result);
         assertTrue(problems.isEmpty());
@@ -271,13 +278,14 @@ class FileEntryTest {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
+        final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
+                                                 .pathOrder(TUtil.PATH_ORDER.reversed());
 
-        final List<String> result = FileEntry.LISTER.pathOrder(TUtil.PATH_ORDER.reversed())
-                                                    .list(entry, problems::add)
-                                                    .stream()
-                                                    .map(FileEntry::name)
-                                                    .toList();
+        final List<String> result = lister.list(entry, problems::add)
+                                          .stream()
+                                          .map(FileEntry::name)
+                                          .toList();
 
         assertEquals(expected, result);
         assertTrue(problems.isEmpty());
@@ -288,14 +296,15 @@ class FileEntryTest {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, RESOLVE);
+        final FileEntry.Lister lister = FileEntry.lister(RESOLVE)
+                                                 .noOrder()
+                                                 .entryOrder(comparing(FileEntry::name).reversed());
 
-        final List<String> result = FileEntry.LISTER.noOrder()
-                                                    .entryOrder(comparing(FileEntry::name).reversed())
-                                                    .list(entry, problems::add)
-                                                    .stream()
-                                                    .map(FileEntry::name)
-                                                    .toList();
+        final List<String> result = lister.list(entry, problems::add)
+                                          .stream()
+                                          .map(FileEntry::name)
+                                          .toList();
 
         assertEquals(expected, result);
         assertTrue(problems.isEmpty());
@@ -304,15 +313,16 @@ class FileEntryTest {
     @Test
     final void stream() {
         final List<String> expected = List.of(uuid, "directory.link", "de", "team33", "patterns", "io",
-                                              "adrastea", "FileEntry.java", "Normality.java", "package-info.java",
-                                              "SymLinkAttributes.java", "Util.java", "link.link", "missing.link",
-                                              "regular.link", "special.link");
+                                              "adrastea", "FileEntry.java", "LinkAttributes.java", "LinkHandling.java",
+                                              "Normality.java", "package-info.java", "Util.java", "link.link",
+                                              "missing.link", "regular.link", "special.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, RESOLVE);
+        final FileEntry.Streamer streamer = FileEntry.streamer(RESOLVE);
 
-        final List<String> result = FileEntry.STREAMER.stream(entry, problems::add)
-                                                      .map(FileEntry::name)
-                                                      .toList();
+        final List<String> result = streamer.stream(entry, problems::add)
+                                            .map(FileEntry::name)
+                                            .toList();
 
         assertEquals(expected, result);
         assertTrue(problems.isEmpty());
@@ -321,11 +331,12 @@ class FileEntryTest {
     @Test
     final void stream_skip_origin() {
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath);
+        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
+        final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE)
+                                                     .skip(FileEntry::isDirectory);
 
-        final List<FileEntry> result = FileEntry.STREAMER.skip(FileEntry::isDirectory)
-                                                         .stream(entry, problems::add)
-                                                         .toList();
+        final List<FileEntry> result = streamer.stream(entry, problems::add)
+                                               .toList();
 
         assertEquals(List.of(), result);
         assertTrue(problems.isEmpty());
@@ -335,10 +346,11 @@ class FileEntryTest {
     final void stream_forbidden() throws IOException {
         final List<FileEntry.Problem> problems = new LinkedList<>();
         forbidden(testPath, path -> {
-            final FileEntry entry = FileEntry.of(path);
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE);
 
-            final List<FileEntry> result = FileEntry.STREAMER.stream(entry, problems::add)
-                                                             .toList();
+            final List<FileEntry> result = streamer.stream(entry, problems::add)
+                                                   .toList();
 
             assertEquals(List.of(entry), result);
         });
