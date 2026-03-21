@@ -257,16 +257,24 @@ public class FileEntry {
             this.mapping = Lazy.init(this::newMapping);
         }
 
+        private FileEntry entryOfDefinite(final Path path) {
+            return ofDefinite(path, linkHandling);
+        }
+
+        private FileEntry entryOf(final Path path) {
+            return of(path, linkHandling);
+        }
+
         private Function<Stream<Path>, Stream<FileEntry>> newMapping() {
             return switch (CHOICES.apply(this)) {
                 case 0b11 -> paths -> paths.sorted(pathOrder)
-                                           .map(path -> ofDefinite(path, linkHandling))
+                                           .map(this::entryOfDefinite)
                                            .sorted(entryOrder);
                 case 0b10 -> paths -> paths.sorted(pathOrder)
-                                           .map(path -> ofDefinite(path, linkHandling));
-                case 0b01 -> paths -> paths.map(path -> ofDefinite(path, linkHandling))
+                                           .map(this::entryOfDefinite);
+                case 0b01 -> paths -> paths.map(this::entryOfDefinite)
                                            .sorted(entryOrder);
-                default -> paths -> paths.map(path -> ofDefinite(path, linkHandling));
+                default -> paths -> paths.map(this::entryOfDefinite);
             };
         }
 
@@ -278,17 +286,83 @@ public class FileEntry {
             return Util.NO_ORDER != entryOrder;
         }
 
+        public final LinkHandling linkHandling() {
+            return linkHandling;
+        }
+
         /**
-         * Returns a {@link List} of the immediate contents of a given directory <em>entry</em>.
+         * Returns a {@link List} of the immediate contents of a given <em>path</em> from a directory structure.
          * <p>
-         * Returns an empty {@link List} if the given <em>entry</em> does not represent a directory.
+         * Returns an empty {@link List} if the given <em>path</em> does not represent a directory
+         * and thus cannot have any directory contents.
          * <p>
-         * Also returns an empty {@link List} if the given <em>entry</em> represents a directory but cannot be read,
-         * e.g., due to insufficient permissions.
+         * Also returns an empty {@link List} if the given <em>path</em> refuses access to its contents
+         * and throws an exception. In that case, the problem will be logged to a {@link System.Logger}.
          * <p>
-         * In the latter case, the problem is reported to the given {@link Consumer}.
+         * NOTE: an original {@link FileEntry} will be created from the given <em>path</em> using the associated
+         * {@link LinkHandling}. If this does not meet your requirements, use {@link #list(FileEntry)} instead.
          *
-         * @see FileEntry#isDirectory()
+         * @see #list(FileEntry)
+         * @see #list(Path, Consumer)
+         * @see #list(FileEntry, Consumer)
+         */
+        public final List<FileEntry> list(final Path path) {
+            return list(entryOf(path));
+        }
+
+        /**
+         * Returns a {@link List} of the immediate contents of a given <em>entry</em> from a directory structure.
+         * <p>
+         * Returns an empty {@link List} if the given <em>entry</em> does not represent a directory
+         * and thus cannot have any directory contents.
+         * <p>
+         * Also returns an empty {@link List} if the given <em>entry</em> refuses access to its contents
+         * and thus throws an exception. In that case, the problem will be logged to a {@link System.Logger}.
+         *
+         * @see #list(Path)
+         * @see #list(Path, Consumer)
+         * @see #list(FileEntry, Consumer)
+         */
+        @Override
+        public final List<FileEntry> list(final FileEntry entry) {
+            return Nodes.Lister.super.list(entry);
+        }
+
+        /**
+         * Returns a {@link List} of the immediate contents of a given <em>path</em> from a directory structure.
+         * <p>
+         * Returns an empty {@link List} if the given <em>path</em> does not represent a directory
+         * and thus cannot have any directory contents.
+         * <p>
+         * Also returns an empty {@link List} if the given <em>path</em> refuses access to its contents
+         * and thus throws an exception. In that case, a corresponding {@link Problem} will be reported
+         * to the given {@link Consumer}.
+         * <p>
+         * NOTE: an original {@link FileEntry} will be created from the given <em>path</em> using the associated
+         * {@link LinkHandling}. If this does not meet your requirements, use {@link #list(FileEntry, Consumer)}
+         * instead.
+         *
+         * @see #list(FileEntry, Consumer)
+         * @see #list(Path)
+         * @see #list(FileEntry)
+         */
+        public final List<FileEntry> list(final Path path, final Consumer<? super Problem> onProblem) {
+            return list(entryOf(path), onProblem);
+        }
+
+        /**
+         * Returns a {@link List} of the immediate contents of a given <em>entry</em> from a directory structure.
+         * <p>
+         * Returns an empty {@link List} if the given <em>entry</em> does not represent a directory
+         * and thus cannot have any directory contents.
+         * <p>
+         * Also returns an empty {@link List} if the given <em>entry</em> refuses access to its contents
+         * and throws an exception. In that case, a corresponding {@link Problem} will be reported
+         * to the given {@link Consumer}.
+         *
+         * @see #list(Path, Consumer)
+         * @see #list(FileEntry)
+         * @see #list(Path)
          */
         @Override
         public final List<FileEntry> list(final FileEntry entry, final Consumer<? super Problem> onProblem) {
@@ -336,8 +410,82 @@ public class FileEntry {
             super(lister, skipCondition);
         }
 
+        private FileEntry entryOf(final Path path) {
+            return of(path, lister().linkHandling());
+        }
+
+        /**
+         * Returns a new {@link Streamer} that skips all entries that meet the given <em>condition</em>,
+         * as well as their entire content.
+         */
         public final Streamer skip(final Predicate<? super FileEntry> condition) {
             return new Streamer(lister(), skipCondition().or(condition));
+        }
+
+        /**
+         * Returns a {@link Stream} starting with a {@link FileEntry} based on the given <em>path</em>
+         * followed by its recursive contents.
+         * <p>
+         * If an involved file refuses access to its contents and thus throws an {@link IOException},
+         * the problem will be logged to a {@link System.Logger}.
+         * <p>
+         * NOTE: the starting {@link FileEntry} will be created using the {@link LinkHandling} of the associated
+         * {@link Lister}. If this does not meet your requirements, use {@link #stream(FileEntry)} instead.
+         *
+         * @see #stream(FileEntry)
+         * @see #stream(Path, Consumer)
+         * @see #stream(FileEntry, Consumer)
+         */
+        public final Stream<FileEntry> stream(final Path path) {
+            return stream(entryOf(path));
+        }
+
+        /**
+         * Returns a {@link Stream} starting with the given <em>entry</em> followed by its recursive contents.
+         * <p>
+         * If an involved <em>entry</em> refuses access to its contents and thus throws an exception,
+         * the problem will be logged to a {@link System.Logger}.
+         *
+         * @see #stream(Path)
+         * @see #stream(Path, Consumer)
+         * @see #stream(FileEntry, Consumer)
+         */
+        @Override
+        public final Stream<FileEntry> stream(final FileEntry entry) {
+            return super.stream(entry);
+        }
+
+        /**
+         * Returns a {@link Stream} starting with a {@link FileEntry} based on the given <em>path</em>
+         * followed by its recursive contents.
+         * <p>
+         * If an involved file refuses access to its contents and thus throws an {@link IOException},
+         * a corresponding {@link Problem} will be reported to the given {@link Consumer}.
+         * <p>
+         * NOTE: the starting {@link FileEntry} will be created using the {@link LinkHandling} of the associated
+         * {@link Lister}. If this does not meet your requirements, use {@link #stream(FileEntry, Consumer)} instead.
+         *
+         * @see #stream(FileEntry, Consumer)
+         * @see #stream(Path)
+         * @see #stream(FileEntry)
+         */
+        public final Stream<FileEntry> stream(final Path path, final Consumer<? super Problem> onProblem) {
+            return stream(entryOf(path), onProblem);
+        }
+
+        /**
+         * Returns a {@link Stream} starting with the given <em>entry</em> followed by its recursive contents.
+         * <p>
+         * If an involved <em>entry</em> refuses access to its contents and thus throws an exception,
+         * a corresponding {@link Problem} will be reported to the given {@link Consumer}.
+         *
+         * @see #stream(Path, Consumer)
+         * @see #stream(FileEntry)
+         * @see #stream(Path)
+         */
+        @Override
+        public final Stream<FileEntry> stream(final FileEntry entry, final Consumer<? super Problem> onProblem) {
+            return super.stream(entry, onProblem);
         }
     }
 }

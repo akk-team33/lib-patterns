@@ -73,8 +73,8 @@ public final class Nodes {
          * hierarchical structure and thus cannot have any contents.
          * <p>
          * Also returns an empty {@link List} if the given <em>node</em> refuses access to its contents
-         * and throws an exception. In that case, a corresponding {@link Problem} will be reported to the given
-         * {@link Consumer}.
+         * and throws an exception. In that case, a corresponding {@link Problem} of type {@code <P>}
+         * will be reported to the given {@link Consumer}.
          */
         List<N> list(N node, Consumer<? super P> onProblem);
     }
@@ -118,20 +118,20 @@ public final class Nodes {
         /**
          * Returns a {@link Stream} starting with the given <em>node</em> followed by its recursive contents.
          * <p>
-         * If an involved <em>node</em> refuses access to its contents and throws an exception,
+         * If an involved <em>node</em> refuses access to its contents and thus throws an exception,
          * the problem will be logged to a {@link System.Logger}.
          */
-        public final Stream<N> stream(final N node) {
+        public Stream<N> stream(final N node) {
             return stream(node, Nodes::log);
         }
 
         /**
          * Returns a {@link Stream} starting with the given <em>node</em> followed by its recursive contents.
          * <p>
-         * If an involved <em>node</em> refuses access to its contents and throws an exception,
-         * a corresponding {@link Problem} will be reported to the given {@link Consumer}.
+         * If an involved <em>node</em> refuses access to its contents and thus throws an exception,
+         * a corresponding {@link Problem} of type {@code <P>} will be reported to the given {@link Consumer}.
          */
-        public final Stream<N> stream(final N node, final Consumer<? super P> onProblem) {
+        public Stream<N> stream(final N node, final Consumer<? super P> onProblem) {
             return new Actor(onProblem).stream(node);
         }
 
@@ -144,11 +144,8 @@ public final class Nodes {
             }
 
             private Stream<N> stream(final N node) {
-                if (skipCondition.test(node)) {
-                    return Stream.empty();
-                } else {
-                    return stream(Stream.of(node), lister.list(node, onProblem));
-                }
+                return skipCondition.test(node) ? Stream.empty()
+                                                : stream(Stream.of(node), lister.list(node, onProblem));
             }
 
             private Stream<N> stream(final Stream<N> head, final List<N> tail) {
