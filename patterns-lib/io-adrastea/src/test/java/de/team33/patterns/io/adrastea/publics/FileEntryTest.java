@@ -221,13 +221,49 @@ class FileEntryTest {
     }
 
     @Test
+    final void isDisclosed() {
+        paths().forEach(path -> {
+            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            assertTrue(entry.isDisclosed());
+            assertEquals(!Files.isSymbolicLink(path), entry.isResolved());
+        });
+    }
+
+    @Test
+    final void disclosed() {
+        paths().forEach(path -> {
+            final FileEntry entry = FileEntry.of(path, RESOLVE).disclosed();
+            assertTrue(entry.isDisclosed());
+            assertEquals(!Files.isSymbolicLink(path), entry.isResolved());
+        });
+    }
+
+    @Test
+    final void isResolved() {
+        paths().forEach(path -> {
+            final FileEntry entry = FileEntry.of(path, RESOLVE);
+            assertTrue(entry.isResolved());
+            assertEquals(!Files.isSymbolicLink(path), entry.isDisclosed());
+        });
+    }
+
+    @Test
+    final void resolved() {
+        paths().forEach(path -> {
+            final FileEntry entry = FileEntry.of(path, DISCLOSE).resolved();
+            assertTrue(entry.isResolved());
+            assertEquals(!Files.isSymbolicLink(path), entry.isDisclosed());
+        });
+    }
+
+    @Test
     final void list() {
         for (final Path path : paths()) {
             final List<FileEntry.Problem> problems = new LinkedList<>();
             final FileEntry entry = FileEntry.of(path, RESOLVE);
             final FileEntry.Lister lister = FileEntry.lister(RESOLVE);
 
-            final List<FileEntry> result = lister.list(entry, problems::add);
+            final List<FileEntry> result = lister.list(path, problems::add);
 
             assertNotEquals(entry.isDirectory(), result.isEmpty());
             assertTrue(problems.isEmpty());
@@ -241,18 +277,16 @@ class FileEntryTest {
                 "directory.link", "link.link", "missing.link", "regular.link", "special.link");
         // no order ...
         final Set<String> expected = Set.copyOf(unexpected);
-        final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath, RESOLVE);
+
         final FileEntry.Lister lister = FileEntry.lister(RESOLVE).noOrder();
 
-        final List<String> result = lister.list(entry, problems::add)
+        final List<String> result = lister.list(testPath)
                                           .stream()
                                           .map(FileEntry::name)
                                           .toList();
 
         assertNotEquals(unexpected, result);
         assertEquals(expected, Set.copyOf(result));
-        assertTrue(problems.isEmpty());
     }
 
     @Test
@@ -317,10 +351,9 @@ class FileEntryTest {
                                               "Normality.java", "package-info.java", "Util.java", "link.link",
                                               "missing.link", "regular.link", "special.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath, RESOLVE);
         final FileEntry.Streamer streamer = FileEntry.streamer(RESOLVE);
 
-        final List<String> result = streamer.stream(entry, problems::add)
+        final List<String> result = streamer.stream(testPath, problems::add)
                                             .map(FileEntry::name)
                                             .toList();
 
@@ -330,16 +363,13 @@ class FileEntryTest {
 
     @Test
     final void stream_skip_origin() {
-        final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
         final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE)
                                                      .skip(FileEntry::isDirectory);
 
-        final List<FileEntry> result = streamer.stream(entry, problems::add)
+        final List<FileEntry> result = streamer.stream(testPath)
                                                .toList();
 
         assertEquals(List.of(), result);
-        assertTrue(problems.isEmpty());
     }
 
     @Test
