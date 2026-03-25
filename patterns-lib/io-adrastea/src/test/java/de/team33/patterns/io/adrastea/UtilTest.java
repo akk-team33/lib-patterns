@@ -2,7 +2,6 @@ package de.team33.patterns.io.adrastea;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UtilTest {
@@ -14,6 +13,6 @@ class UtilTest {
 
     @Test
     final void missingFileAttributes() {
-        assertEquals(Util.MISSING_FILE_KEY, Util.MISSING_FILE_ATTRIBUTES.fileKey());
+        assertThrows(UnsupportedOperationException.class, Util.MISSING_FILE_ATTRIBUTES::fileKey);
     }
 }

@@ -32,7 +32,7 @@ record LinkAttributes(LinkHandling handling, BasicFileAttributes backing) implem
 
     @Override
     public final boolean isSymbolicLink() {
-        return backing.isSymbolicLink();
+        return true;
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.team33.patterns.io.adrastea.publics;
 import de.team33.patterns.exceptional.dione.XConsumer;
 import de.team33.patterns.io.adrastea.FileEntry;
 import de.team33.patterns.io.adrastea.TUtil;
+import de.team33.testing.io.hydra.ZipIO;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ class FileEntryTest {
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Path DEV_NULL = Paths.get("/dev/null"); // special file
     @SuppressWarnings("HardcodedFileSeparator")
-    private static final Path ROOT_HOME = Paths.get("/root"); // unreadable directory (linux)
+    private static final Path ROOT_HOME = Paths.get("/root"); // unreadable directory (Linux)
     @SuppressWarnings("HardcodedFileSeparator")
     private static final Path ROOT = Paths.get("/"); // root directory
 
@@ -39,12 +40,13 @@ class FileEntryTest {
     private final Path regularLink = testPath.resolve("regular.link");
     private final Path specialLink = testPath.resolve("special.link");
     private final Path linkLink = testPath.resolve("link.link");
-    private final Path missingFile = Path.of("file", "is", "missing");
-    private final Path directory = Path.of("src", "main", "java");
-    private final Path regularFile = Path.of("pom.xml");
+    private final Path missingFile = testPath.resolve("file/is/missing");
+    private final Path directory = testPath.resolve("de/team33");
+    private final Path regularFile = directory.resolve("cmd/files/Main.java");
 
     FileEntryTest() throws IOException {
         Files.createDirectories(testPath);
+        ZipIO.unzip(getClass(), "../files.zip", testPath);
         Files.createSymbolicLink(missingLink, missingFile.toAbsolutePath().normalize());
         Files.createSymbolicLink(dirLink, directory.toAbsolutePath().normalize());
         Files.createSymbolicLink(regularLink, regularFile.toAbsolutePath().normalize());
@@ -167,13 +169,19 @@ class FileEntryTest {
     }
 
     @Test
-    final void lastModified() throws IOException {
+    final void lastModified() {
         for (final Path path : paths()) {
+            // System.out.println(path);
             final FileEntry entry = FileEntry.of(path, RESOLVE);
-            if (entry.isMissing()) {
-                assertEquals(Instant.MAX, entry.lastModified());
-            } else {
-                assertEquals(Files.getLastModifiedTime(path).toInstant(), entry.lastModified());
+            try {
+                final Instant result = entry.lastModified();
+                assertFalse(entry.isMissing());
+                final Instant expected = readAttributes(path, TUtil.RESOLVE_LINKS).lastModifiedTime()
+                                                                                  .toInstant();
+                assertEquals(expected, result);
+            } catch (final UnsupportedOperationException caught) {
+                assertTrue(entry.isMissing());
+                assertEquals(entry.isSymbolicLink(), entry.isPresent());
             }
         }
     }
@@ -183,12 +191,15 @@ class FileEntryTest {
         for (final Path path : paths()) {
             // System.out.println(path);
             final FileEntry entry = FileEntry.of(path, RESOLVE);
-            if (entry.isPresent()) {
+            try {
+                final Instant result = entry.lastAccess();
+                assertFalse(entry.isMissing());
                 final Instant expected = readAttributes(path, TUtil.RESOLVE_LINKS).lastAccessTime()
                                                                                   .toInstant();
-                assertEquals(expected, entry.lastAccess());
-            } else {
-                assertEquals(Instant.MAX, entry.lastAccess());
+                assertEquals(expected, result);
+            } catch (final UnsupportedOperationException caught) {
+                assertTrue(entry.isMissing());
+                assertEquals(entry.isSymbolicLink(), entry.isPresent());
             }
         }
     }
@@ -198,12 +209,15 @@ class FileEntryTest {
         for (final Path path : paths()) {
             // System.out.println(path);
             final FileEntry entry = FileEntry.of(path, DISCLOSE);
-            if (entry.isPresent()) {
+            try {
+                final Instant result = entry.creation();
+                assertTrue(entry.isPresent());
                 final Instant expected = readAttributes(path, TUtil.DISCLOSE_LINKS).creationTime()
                                                                                    .toInstant();
-                assertEquals(expected, entry.creation());
-            } else {
-                assertEquals(Instant.MAX, entry.creation());
+                assertEquals(expected, result);
+            } catch (final UnsupportedOperationException caught) {
+                assertTrue(entry.isMissing());
+                assertFalse(entry.isSymbolicLink());
             }
         }
     }
@@ -223,7 +237,7 @@ class FileEntryTest {
     @Test
     final void isDisclosed() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.disclosed(path);
             assertTrue(entry.isDisclosed());
             assertEquals(!Files.isSymbolicLink(path), entry.isResolved());
         });
@@ -241,7 +255,7 @@ class FileEntryTest {
     @Test
     final void isResolved() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, RESOLVE);
+            final FileEntry entry = FileEntry.resolved(path);
             assertTrue(entry.isResolved());
             assertEquals(!Files.isSymbolicLink(path), entry.isDisclosed());
         });
@@ -274,7 +288,7 @@ class FileEntryTest {
     final void list_noOrder() {
         // alphabetic order ...
         final List<String> unexpected = List.of(
-                "directory.link", "link.link", "missing.link", "regular.link", "special.link");
+                "directory.link", "link.link", "missing.link", "regular.link", "special.link", "de");
         // no order ...
         final Set<String> expected = Set.copyOf(unexpected);
 
@@ -292,7 +306,7 @@ class FileEntryTest {
     @Test
     final void list_maxOrder() {
         final List<String> expected = List.of(
-                "special.link", "regular.link", "missing.link", "link.link", "directory.link");
+                "special.link", "regular.link", "missing.link", "link.link", "directory.link", "de");
         final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
         final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
@@ -310,7 +324,7 @@ class FileEntryTest {
     @Test
     final void list_pathOrder() {
         final List<String> expected = List.of(
-                "special.link", "regular.link", "missing.link", "link.link", "directory.link");
+                "special.link", "regular.link", "missing.link", "link.link", "directory.link", "de");
         final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
         final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
@@ -328,7 +342,7 @@ class FileEntryTest {
     @Test
     final void list_entryOrder() {
         final List<String> expected = List.of(
-                "special.link", "regular.link", "missing.link", "link.link", "directory.link");
+                "special.link", "regular.link", "missing.link", "link.link", "directory.link", "de");
         final List<FileEntry.Problem> problems = new LinkedList<>();
         final FileEntry entry = FileEntry.of(testPath, RESOLVE);
         final FileEntry.Lister lister = FileEntry.lister(RESOLVE)
@@ -346,12 +360,21 @@ class FileEntryTest {
 
     @Test
     final void stream() {
-        final List<String> expected = List.of(uuid, "directory.link", "de", "team33", "patterns", "io",
-                                              "adrastea", "FileEntry.java", "LinkAttributes.java", "LinkHandling.java",
-                                              "Normality.java", "package-info.java", "Util.java", "link.link",
-                                              "missing.link", "regular.link", "special.link");
+        final List<String> expected = List.of(uuid, "de", "team33", "cmd", "files", "common", "Counter.java",
+                                              "FileType.java", "HashId.java", "Output.java", "RequestException.java",
+                                              "TimeId.java", "Main.java", "matching", "CaseSensitivity.java",
+                                              "InternalException.java", "Method.java", "NameMatcher.java",
+                                              "TypeMatcher.java", "WildcardString.java", "tools", "io", "Bytes.java",
+                                              "FileHashing.java", "LazyHashing.java", "LazyTiming.java",
+                                              "StrictHashing.java", "directory.link", "link.link", "missing.link",
+                                              "regular.link", "special.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry.Streamer streamer = FileEntry.streamer(RESOLVE);
+        final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE)
+                                                     .skip(entry -> entry.path().endsWith("balancing"))
+                                                     .skip(entry -> entry.path().endsWith("cleaning"))
+                                                     .skip(entry -> entry.path().endsWith("job"))
+                                                     .skip(entry -> entry.path().endsWith("moving"))
+                                                     .skip(entry -> entry.path().endsWith("patterns"));
 
         final List<String> result = streamer.stream(testPath, problems::add)
                                             .map(FileEntry::name)
@@ -363,7 +386,7 @@ class FileEntryTest {
 
     @Test
     final void stream_skip_origin() {
-        final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE)
+        final FileEntry.Streamer streamer = FileEntry.streamer(RESOLVE)
                                                      .skip(FileEntry::isDirectory);
 
         final List<FileEntry> result = streamer.stream(testPath)

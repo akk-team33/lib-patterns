@@ -4,7 +4,6 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
-import java.time.Instant;
 import java.util.Comparator;
 
 final class Util {
@@ -14,23 +13,25 @@ final class Util {
     });
     static final LinkOption[] RESOLVE_LINKS = {};
     static final LinkOption[] DISCLOSE_LINKS = {LinkOption.NOFOLLOW_LINKS};
-    static final FileTime MISSING_FILE_TIME = FileTime.from(Instant.MAX);
-    static final Object MISSING_FILE_KEY = new Object();
     static final BasicFileAttributes MISSING_FILE_ATTRIBUTES = new BasicFileAttributes() {
+
+        private FileTime missingTime() {
+            throw new UnsupportedOperationException("File is missing - timestamp not available!");
+        }
 
         @Override
         public FileTime lastModifiedTime() {
-            return MISSING_FILE_TIME;
+            return missingTime();
         }
 
         @Override
         public FileTime lastAccessTime() {
-            return MISSING_FILE_TIME;
+            return missingTime();
         }
 
         @Override
         public FileTime creationTime() {
-            return MISSING_FILE_TIME;
+            return missingTime();
         }
 
         @Override
@@ -60,7 +61,7 @@ final class Util {
 
         @Override
         public Object fileKey() {
-            return MISSING_FILE_KEY;
+            throw new UnsupportedOperationException("File is missing - file key not available!");
         }
     };
     private static final Comparator<String> IGNORE_CASE = String::compareToIgnoreCase;

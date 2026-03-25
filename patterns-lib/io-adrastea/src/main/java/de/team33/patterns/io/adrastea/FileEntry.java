@@ -28,6 +28,9 @@ import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
  * Strictly speaking, the meta information only applies to the moment of instantiation.
  * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
  * that the meta information is out of date because the underlying file may have been changed in the meantime.
+ * <p>
+ * Use {@link #of(Path, LinkHandling)}, {@link #disclosed(Path)} or {@link #resolved(Path)}
+ * to get a new instance.
  */
 @SuppressWarnings("unused")
 public class FileEntry {
@@ -49,10 +52,24 @@ public class FileEntry {
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path}.
+     * Returns a new {@link FileEntry} based on a given {@link Path} and a given {@link LinkHandling}.
      */
     public static FileEntry of(final Path path, final LinkHandling linkHandling) {
         return new FileEntry(path, Normality.UNKNOWN, linkHandling);
+    }
+
+    /**
+     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isDisclosed()}.
+     */
+    public static FileEntry disclosed(final Path path) {
+        return of(path, DISCLOSE);
+    }
+
+    /**
+     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isResolved()}.
+     */
+    public static FileEntry resolved(final Path path) {
+        return of(path, RESOLVE);
     }
 
     private static FileEntry ofDefinite(final Path path, final LinkHandling linkHandling) {
@@ -60,21 +77,24 @@ public class FileEntry {
     }
 
     /**
-     * Returns a new {@link Lister} that applies a default path order (by file name)
+     * Returns a new {@link Lister} based on a given {@link LinkHandling}
+     * that applies a default path order (by file name).
      */
     public static Lister lister(final LinkHandling linkHandling) {
         return new Lister(linkHandling, Util.PATH_ORDER, Util.NO_ORDER);
     }
 
     /**
-     * Returns a new {@link Streamer} that does not skip any entry.
+     * Returns a new {@link Streamer} based on a given {@link LinkHandling}
+     * that does not skip any entry.
      */
     public static Streamer streamer(final LinkHandling linkHandling) {
         return streamer(lister(linkHandling));
     }
 
     /**
-     * Returns a new {@link Streamer} that does not skip any entry.
+     * Returns a new {@link Streamer} based on a given {@link Lister}
+     * that does not skip any entry.
      */
     public static Streamer streamer(final Lister lister) {
         return new Streamer(lister, entry -> false);
@@ -115,14 +135,26 @@ public class FileEntry {
         return Optional.ofNullable(path.getFileName()).orElse(path).toString();
     }
 
+    /**
+     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isDisclosed()}.
+     */
     public final FileEntry disclosed() {
         return isDisclosed() ? this : new FileEntry(path, Normality.DEFINITE, DISCLOSE);
     }
 
+    /**
+     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isResolved()}.
+     */
     public final FileEntry resolved() {
         return isResolved() ? this : new FileEntry(path, Normality.DEFINITE, RESOLVE);
     }
 
+    /**
+     * Determines whether <em>this</em> {@link FileEntry} discloses its original attributes,
+     * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
+     *
+     * @see #isResolved()
+     */
     public final boolean isDisclosed() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
             return DISCLOSE == linkAttributes.handling();
@@ -131,6 +163,12 @@ public class FileEntry {
         }
     }
 
+    /**
+     * Determines whether <em>this</em> {@link FileEntry} resolves its final attributes,
+     * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
+     *
+     * @see #isDisclosed()
+     */
     public final boolean isResolved() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
             return RESOLVE == linkAttributes.handling();
@@ -142,7 +180,7 @@ public class FileEntry {
     /**
      * Determines if the represented file is a directory.
      * <p>
-     * This is also the case if it {@link #isSymbolicLink()} and the finally linked file is a directory.
+     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
      */
     public final boolean isDirectory() {
         return attributes().isDirectory();
@@ -151,16 +189,16 @@ public class FileEntry {
     /**
      * Determines if the represented file is a regular file.
      * <p>
-     * This is also the case if it {@link #isSymbolicLink()} and the finally linked file is a regular file.
+     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
      */
     public final boolean isRegularFile() {
         return attributes().isRegularFile();
     }
 
     /**
-     * Determines if the represented file is a special file. Typically, a <em>device</em>.
+     * Determines if the represented file is a special file (typically, a <em>device</em>).
      * <p>
-     * This is also the case if it {@link #isSymbolicLink()} and the finally linked file is a special file.
+     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
      */
     public final boolean isSpecialFile() {
         return attributes().isOther();
@@ -168,6 +206,8 @@ public class FileEntry {
 
     /**
      * Determines if the represented file is a symbolic link.
+     * <p>
+     * No matter if it {@link #isDisclosed()} or {@link #isResolved()}.
      */
     public final boolean isSymbolicLink() {
         return attributes().isSymbolicLink();
@@ -175,6 +215,9 @@ public class FileEntry {
 
     /**
      * Determines if the represented file is missing.
+     * <p>
+     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
+     * NOTE that in this case, it {@link #isPresent()}, too!
      */
     public final boolean isMissing() {
         return effective(attributes()) == Util.MISSING_FILE_ATTRIBUTES;
@@ -182,17 +225,18 @@ public class FileEntry {
 
     /**
      * Determines if the represented file is present.
+     * <p>
+     * That is always the case if {@link #isRegularFile()}, {@link #isDirectory()}, {@link #isSpecialFile()}
+     * or {@link #isSymbolicLink()}, and therefore especially if a symbolic link {@link #isMissing()}!
      */
     public final boolean isPresent() {
-        return effective(attributes()) != Util.MISSING_FILE_ATTRIBUTES;
+        return attributes() != Util.MISSING_FILE_ATTRIBUTES;
     }
 
     /**
      * Returns the timestamp of the last modification of the represented file as an {@link Instant}.
-     * <p>
-     * If it {@link #isSymbolicLink()} returns that timestamp of the linked file!
-     * <p>
-     * If it {@link #isMissing()} returns {@link Instant#MAX}.
+     *
+     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
      */
     public final Instant lastModified() {
         return attributes().lastModifiedTime().toInstant();
@@ -200,8 +244,8 @@ public class FileEntry {
 
     /**
      * Returns the timestamp of the last access to the represented file as an {@link Instant}.
-     * <p>
-     * If it not {@link #isPresent()} returns {@link Instant#MAX}.
+     *
+     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
      */
     public final Instant lastAccess() {
         return attributes().lastAccessTime().toInstant();
@@ -209,8 +253,8 @@ public class FileEntry {
 
     /**
      * Returns the timestamp of the creation of the represented file as an {@link Instant}.
-     * <p>
-     * If it not {@link #isPresent()} returns {@link Instant#MAX}.
+     *
+     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
      */
     public final Instant creation() {
         return attributes().creationTime().toInstant();
@@ -219,9 +263,7 @@ public class FileEntry {
     /**
      * Returns the size of the represented file.
      * <p>
-     * If it {@link #isSymbolicLink()} returns the size of the linked file!
-     * <p>
-     * If it {@link #isMissing()} returns {@code 0L}.
+     * If <em>this</em> {@link #isMissing()} returns {@code 0L}.
      */
     public final long size() {
         return attributes().size();
@@ -232,8 +274,7 @@ public class FileEntry {
         return path.toString();
     }
 
-    public record Problem(FileEntry node, IOException cause)
-            implements Nodes.Problem<FileEntry> {
+    public record Problem(FileEntry node, IOException cause) implements Nodes.Problem<FileEntry> {
     }
 
     /**
@@ -286,7 +327,7 @@ public class FileEntry {
             return Util.NO_ORDER != entryOrder;
         }
 
-        public final LinkHandling linkHandling() {
+        private LinkHandling linkHandling() {
             return linkHandling;
         }
 
