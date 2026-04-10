@@ -91,6 +91,20 @@ public final class Nodes {
     @SuppressWarnings("unused")
     public static class Streamer<N, P extends Problem<N>, L extends Lister<N, P>> {
 
+        @SuppressWarnings("rawtypes")
+        private static final Predicate NEVER = new Predicate() {
+            @Override
+            public boolean test(final Object any) {
+                return false;
+            }
+
+            @SuppressWarnings("NullableProblems") // shit in -> shit out!
+            @Override
+            public Predicate or(final Predicate other) {
+                return other;
+            }
+        };
+
         private final L lister;
         private final Predicate<N> skipCondition;
 
@@ -101,10 +115,14 @@ public final class Nodes {
          *                      that will be used to list the immediate contents of a <em>node</em>.
          * @param skipCondition A {@link Predicate} that determines if a <em>node</em> (and its entire contents)
          *                      will be skipped and thus excluded from a resulting stream.
+         *                      <p>
+         *                      <b>NOTE</b>: Can be {@code null} to use a default {@link #skipCondition()}
+         *                      that never skips and is optimized for {@link Predicate#or(Predicate)}.
          */
-        public Streamer(final L lister, final Predicate<? super N> skipCondition) {
+        @SuppressWarnings("unchecked")
+        public Streamer(final L lister, final Predicate<N> skipCondition) {
             this.lister = lister;
-            this.skipCondition = skipCondition::test;
+            this.skipCondition = (null == skipCondition) ? NEVER : skipCondition;
         }
 
         protected final L lister() {

@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class StreamerTest {
 
-    private static final PathStreamer STREAMER = new PathStreamer(new PathLister(), any -> false);
+    private static final PathStreamer STREAMER = new PathStreamer(new PathLister(), null);
 
     @Test
     final void stream() {
@@ -64,7 +64,7 @@ class StreamerTest {
 
     static class PathStreamer extends Nodes.Streamer<Path, PathProblem, PathLister> {
 
-        PathStreamer(final PathLister lister, final Predicate<? super Path> skipCondition) {
+        PathStreamer(final PathLister lister, final Predicate<Path> skipCondition) {
             super(lister, skipCondition);
         }
 
