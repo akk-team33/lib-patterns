@@ -60,6 +60,8 @@ https://www.team33.de/dev/patterns/2.x
 
 * Added module hierarchy-mab
 * Added module io-adrastea
+* Refined module decision-thyone ...
+  * added methods Choices.applying(*)
 
 ### 2.5.0
 

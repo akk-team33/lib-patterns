@@ -52,7 +52,7 @@ class ParallelTest {
 
     @ParameterizedTest
     @MethodSource("input")
-    final void testResult3(final Input input) {
+    final void replying_Result3(final Input input) {
         final Result0 expected = Result0.of(input);
         final Result3 result = Result3.of(input);
         assertEquals(expected.name(), result.name());
@@ -60,13 +60,33 @@ class ParallelTest {
 
     @ParameterizedTest
     @MethodSource("input")
-    final void testResult3b(final Input input) {
+    final void replying_Result3b(final Input input) {
         try {
             final Result3b result = Result3b.of(input);
             fail(() -> "expected to fail - but was %s".formatted(result));
         } catch (final IllegalArgumentException e) {
             // ok - as expected
-            e.printStackTrace();
+            // e.printStackTrace();
+        }
+    }
+
+    @ParameterizedTest
+    @MethodSource("input")
+    final void applying_Result4(final Input input) {
+        final Result0 expected = Result0.of(input);
+        final Result4 result = Result4.of(input);
+        assertEquals(expected.name(), result.name());
+    }
+
+    @ParameterizedTest
+    @MethodSource("input")
+    final void applying_Result4b(final Input input) {
+        try {
+            final Result4b result = Result4b.of(input);
+            fail(() -> "expected to fail - but was %s".formatted(result));
+        } catch (final IllegalArgumentException e) {
+            // ok - as expected
+            // e.printStackTrace();
         }
     }
 }

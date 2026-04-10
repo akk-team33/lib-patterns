@@ -161,6 +161,7 @@ public abstract class Choices<I> {
     @SuppressWarnings("OverloadedVarargsMethod")
     @SafeVarargs
     public final <R> Function<I, R> replying(final R... results) {
+        // avoid List.of() because <null> may be an eligible result! ...
         return replying(Arrays.asList(results));
     }
 
@@ -189,6 +190,47 @@ public abstract class Choices<I> {
                                                     "    available results: %s").formatted(index, resultList), e);
             }
         });
+    }
+
+    /**
+     * Returns a {@link Function} that maps an input of type {@code <I>} to one of the given <em>methods</em>
+     * to finally get a result of type {@code <R>}.
+     * <p>
+     * The number of <em>results</em> should equal the number of possible results when
+     * {@linkplain #apply(Object) evaluating an input}. The latter depends on how <em>this</em>
+     * {@link Choices} were created.
+     *
+     * @see #serial(Predicate[])
+     * @see #serial(Collection)
+     * @see #parallel(Predicate[])
+     * @see #parallel(Collection)
+     */
+    @SuppressWarnings("OverloadedVarargsMethod")
+    @SafeVarargs
+    public final <R> Function<I, R> applying(final Function<? super I, ? extends R>... methods) {
+        // Using List.of() because a useful method cannot be <null> ...
+        return applying(List.of(methods));
+    }
+
+    /**
+     * Returns a {@link Function} that maps an input of type {@code <I>} to one of the given <em>methods</em>
+     * to finally get a result of type {@code <R>}.
+     * <p>
+     * The number of <em>methods</em> should equal the number of possible results when
+     * {@linkplain #apply(Object) evaluating an input}. The latter depends on how <em>this</em>
+     * {@link Choices} were created.
+     *
+     * @param methods CAUTION: be careful with {@link Collection}s other than {@link List}s:
+     *                The effective number and order of elements will be significant!
+     * @see #serial(Predicate[])
+     * @see #serial(Collection)
+     * @see #parallel(Predicate[])
+     * @see #parallel(Collection)
+     */
+    public final <R> Function<I, R> applying(final Collection<? extends Function<? super I, ? extends R>> methods) {
+        final Function<I, ? extends Function<? super I, ? extends R>> replying = replying(methods);
+        return input -> replying.apply(input)
+                                .apply(input);
     }
 
     private static final class Parallel<I> extends Choices<I> {
