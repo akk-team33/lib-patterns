@@ -39,24 +39,24 @@ class SymbolicLinkTrial {
     final void linkRegular() throws IOException {
         final Path path = regLinkPath;
         final Path realPath = regLinkPath.toRealPath();
-        final BasicFileAttributes disclosed =
-                Files.readAttributes(path, BasicFileAttributes.class, TUtil.DISCLOSE_LINKS);
+        final BasicFileAttributes original =
+                Files.readAttributes(path, BasicFileAttributes.class, TUtil.ORIGINAL_LINKS);
         final BasicFileAttributes resolved =
                 Files.readAttributes(path, BasicFileAttributes.class, TUtil.RESOLVE_LINKS);
         final BasicFileAttributes real =
-                Files.readAttributes(realPath, BasicFileAttributes.class, TUtil.DISCLOSE_LINKS);
+                Files.readAttributes(realPath, BasicFileAttributes.class, TUtil.ORIGINAL_LINKS);
 
         assertTrue(resolved.isRegularFile());
         assertFalse(resolved.isSymbolicLink());
 
-        assertFalse(disclosed.isRegularFile());
-        assertTrue(disclosed.isSymbolicLink());
+        assertFalse(original.isRegularFile());
+        assertTrue(original.isSymbolicLink());
 
         assertTrue(real.isRegularFile());
         assertFalse(real.isSymbolicLink());
 
-        assertNotEquals(disclosed.lastModifiedTime(), real.lastModifiedTime());
-        assertNotEquals(disclosed.size(), real.size());
+        assertNotEquals(original.lastModifiedTime(), real.lastModifiedTime());
+        assertNotEquals(original.size(), real.size());
 
         assertEquals(resolved.lastModifiedTime(), real.lastModifiedTime());
         assertEquals(resolved.size(), real.size());

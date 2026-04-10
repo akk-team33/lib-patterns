@@ -1,6 +1,7 @@
 package de.team33.patterns.io.adrastea;
 
 import de.team33.patterns.decision.thyone.Choices;
+import de.team33.patterns.enums.pan.Values;
 import de.team33.patterns.hierarchy.mab.Nodes;
 import de.team33.patterns.lazy.narvi.Lazy;
 
@@ -11,17 +12,18 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.team33.patterns.io.adrastea.LinkHandling.DISCLOSE;
+import static de.team33.patterns.io.adrastea.LinkHandling.ORIGINAL;
 import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
 
 /**
- * Represents an entry from a virtual file index.
+ * Represents an entry from an imaginary file index.
  * Includes some meta information about a file, particularly the file system path, file type, size,
  * and some timestamps.
  * <p>
@@ -29,7 +31,7 @@ import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
  * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
  * that the meta information is out of date because the underlying file may have been changed in the meantime.
  * <p>
- * Use {@link #of(Path, LinkHandling)}, {@link #disclosed(Path)} or {@link #resolved(Path)}
+ * Use {@link #of(Path, LinkHandling)}, {@link #original(Path)} or {@link #resolved(Path)}
  * to get a new instance.
  */
 @SuppressWarnings("unused")
@@ -37,10 +39,12 @@ public class FileEntry {
 
     private final Path path;
     private final Lazy<BasicFileAttributes> lazyAttributes;
+    private final Lazy<Type> lazyType;
 
     private FileEntry(final Path path, final Normality normality, final LinkHandling linkHandling) {
         this.path = normality.apply(path);
         this.lazyAttributes = Lazy.init(() -> newAttributes(linkHandling));
+        this.lazyType = Lazy.init(() -> Type.of(this));
     }
 
     private static BasicFileAttributes newAttributes(final Path path, final LinkHandling handling) {
@@ -59,14 +63,20 @@ public class FileEntry {
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isDisclosed()}.
+     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isOriginal()}.
+     *
+     * @see #of(Path, LinkHandling)
+     * @see LinkHandling#ORIGINAL
      */
-    public static FileEntry disclosed(final Path path) {
-        return of(path, DISCLOSE);
+    public static FileEntry original(final Path path) {
+        return of(path, ORIGINAL);
     }
 
     /**
      * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isResolved()}.
+     *
+     * @see #of(Path, LinkHandling)
+     * @see LinkHandling#RESOLVE
      */
     public static FileEntry resolved(final Path path) {
         return of(path, RESOLVE);
@@ -97,7 +107,7 @@ public class FileEntry {
      * that does not skip any entry.
      */
     public static Streamer streamer(final Lister lister) {
-        return new Streamer(lister, entry -> false);
+        return new Streamer(lister, null);
     }
 
     private static BasicFileAttributes effective(final BasicFileAttributes attributes) {
@@ -105,12 +115,17 @@ public class FileEntry {
     }
 
     private BasicFileAttributes newAttributes(final LinkHandling handling) {
-        final BasicFileAttributes disclosed = newAttributes(path, DISCLOSE);
-        if (!disclosed.isSymbolicLink()) {
-            return disclosed;
+        final BasicFileAttributes original = newAttributes(path, ORIGINAL);
+        if (original.isSymbolicLink()) {
+            return newLinkAttributes(handling, original);
+        } else {
+            return original;
         }
-        if (DISCLOSE == handling) {
-            return new LinkAttributes(DISCLOSE, disclosed);
+    }
+
+    private LinkAttributes newLinkAttributes(final LinkHandling handling, final BasicFileAttributes original) {
+        if (ORIGINAL == handling) {
+            return new LinkAttributes(ORIGINAL, original);
         } else {
             return new LinkAttributes(handling, newAttributes(path, handling));
         }
@@ -136,10 +151,10 @@ public class FileEntry {
     }
 
     /**
-     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isDisclosed()}.
+     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isOriginal()}.
      */
-    public final FileEntry disclosed() {
-        return isDisclosed() ? this : new FileEntry(path, Normality.DEFINITE, DISCLOSE);
+    public final FileEntry original() {
+        return isOriginal() ? this : new FileEntry(path, Normality.DEFINITE, ORIGINAL);
     }
 
     /**
@@ -150,14 +165,21 @@ public class FileEntry {
     }
 
     /**
-     * Determines whether <em>this</em> {@link FileEntry} discloses its original attributes,
+     * Returns the {@link Type} of <em>this</em> {@link FileEntry}.
+     */
+    public final Type type() {
+        return lazyType.get();
+    }
+
+    /**
+     * Determines whether <em>this</em> {@link FileEntry} exposes its original attributes,
      * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
      *
      * @see #isResolved()
      */
-    public final boolean isDisclosed() {
+    public final boolean isOriginal() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
-            return DISCLOSE == linkAttributes.handling();
+            return ORIGINAL == linkAttributes.handling();
         } else {
             return true;
         }
@@ -167,7 +189,7 @@ public class FileEntry {
      * Determines whether <em>this</em> {@link FileEntry} resolves its final attributes,
      * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
      *
-     * @see #isDisclosed()
+     * @see #isOriginal()
      */
     public final boolean isResolved() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
@@ -207,7 +229,7 @@ public class FileEntry {
     /**
      * Determines if the represented file is a symbolic link.
      * <p>
-     * No matter if it {@link #isDisclosed()} or {@link #isResolved()}.
+     * No matter if it {@link #isOriginal()} or {@link #isResolved()}.
      */
     public final boolean isSymbolicLink() {
         return attributes().isSymbolicLink();
@@ -217,7 +239,8 @@ public class FileEntry {
      * Determines if the represented file is missing.
      * <p>
      * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
-     * NOTE that in this case, it {@link #isPresent()}, too!
+     * <p>
+     * <b>NOTE</b> that in this case, it also {@link #isPresent()}!
      */
     public final boolean isMissing() {
         return effective(attributes()) == Util.MISSING_FILE_ATTRIBUTES;
@@ -227,7 +250,7 @@ public class FileEntry {
      * Determines if the represented file is present.
      * <p>
      * That is always the case if {@link #isRegularFile()}, {@link #isDirectory()}, {@link #isSpecialFile()}
-     * or {@link #isSymbolicLink()}, and therefore especially if a symbolic link {@link #isMissing()}!
+     * or {@link #isSymbolicLink()}, and therefore especially if a (resolved) symbolic link {@link #isMissing()}!
      */
     public final boolean isPresent() {
         return attributes() != Util.MISSING_FILE_ATTRIBUTES;
@@ -274,11 +297,61 @@ public class FileEntry {
         return path.toString();
     }
 
+    /**
+     * Symbolizes possible types of a file represented by a {@link FileEntry}.
+     */
+    public enum Type {
+
+        /**
+         * Symbolizes a regular file
+         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         */
+        REGULAR_FILE(FileEntry::isRegularFile),
+
+        /**
+         * Symbolizes a directory
+         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         */
+        DIRECTORY(FileEntry::isDirectory),
+
+        /**
+         * Symbolizes a special file (typically, a <em>device</em>)
+         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         */
+        SPECIAL_FILE(FileEntry::isSpecialFile),
+
+        /**
+         * Symbolizes a symbolic link (if it is not {@linkplain FileEntry#isResolved() resolved}).
+         */
+        SYMBOLIC_LINK(Util.and(FileEntry::isOriginal, FileEntry::isSymbolicLink)),
+
+        /**
+         * Symbolizes a missing file
+         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         */
+        MISSING(FileEntry::isMissing);
+
+        private static final Values<Type> VALUES = Values.of(Type.class);
+        private static final String UNKNOWN_TYPE = "Unknown type: <%s>";
+
+        private final Predicate<FileEntry> predicate;
+
+        Type(final Predicate<FileEntry> predicate) {
+            this.predicate = predicate;
+        }
+
+        private static Type of(final FileEntry entry) {
+            return VALUES.findFirst(type -> type.predicate.test(entry))
+                         .orElseThrow(() -> new NoSuchElementException(UNKNOWN_TYPE.formatted(entry)));
+        }
+    }
+
     public record Problem(FileEntry node, IOException cause) implements Nodes.Problem<FileEntry> {
     }
 
     /**
-     * A tool that serves to list the immediate contents of any file represented by a {@link FileEntry}.
+     * A tool that serves to list the immediate contents of any file represented by a
+     * {@link Path} or {@link FileEntry}.
      */
     public static final class Lister implements Nodes.Lister<FileEntry, Problem> {
 
@@ -329,6 +402,26 @@ public class FileEntry {
 
         private LinkHandling linkHandling() {
             return linkHandling;
+        }
+
+        /**
+         * Returns an instance that corresponds to <em>this</em> {@link Lister} but resolves symbolic links.
+         * Returns <em>this</em> {@link Lister} if it already resolves symbolic links.
+         *
+         * @see FileEntry#lister(LinkHandling)
+         */
+        public final Lister resolved() {
+            return (RESOLVE == linkHandling) ? this : new Lister(RESOLVE, pathOrder, entryOrder);
+        }
+
+        /**
+         * Returns an instance that corresponds to <em>this</em> {@link Lister} but handles original symbolic links.
+         * Returns <em>this</em> {@link Lister} if it already handles original symbolic links.
+         *
+         * @see FileEntry#lister(LinkHandling)
+         */
+        public final Lister original() {
+            return (ORIGINAL == linkHandling) ? this : new Lister(ORIGINAL, pathOrder, entryOrder);
         }
 
         /**
@@ -443,7 +536,8 @@ public class FileEntry {
     }
 
     /**
-     * A tool that serves to stream the recursive contents of any directory represented by a {@link FileEntry}.
+     * A tool that serves to stream the recursive contents of any directory represented by a
+     * {@link Path} or {@link FileEntry}.
      */
     public static final class Streamer extends Nodes.Streamer<FileEntry, Problem, Lister> {
 
@@ -453,6 +547,26 @@ public class FileEntry {
 
         private FileEntry entryOf(final Path path) {
             return of(path, lister().linkHandling());
+        }
+
+        /**
+         * Returns an instance that corresponds to <em>this</em> {@link Streamer} but resolves symbolic links.
+         * Returns <em>this</em> {@link Streamer} if it already resolves symbolic links.
+         *
+         * @see FileEntry#streamer(LinkHandling)
+         */
+        public final Streamer resolved() {
+            return (RESOLVE == lister().linkHandling) ? this : new Streamer(lister().resolved(), skipCondition());
+        }
+
+        /**
+         * Returns an instance that corresponds to <em>this</em> {@link Streamer} but handles original symbolic links.
+         * Returns <em>this</em> {@link Streamer} if it already handles original symbolic links.
+         *
+         * @see FileEntry#streamer(LinkHandling)
+         */
+        public final Streamer original() {
+            return (ORIGINAL == lister().linkHandling) ? this : new Streamer(lister().original(), skipCondition());
         }
 
         /**

@@ -16,7 +16,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.time.Instant;
 import java.util.*;
 
-import static de.team33.patterns.io.adrastea.LinkHandling.DISCLOSE;
+import static de.team33.patterns.io.adrastea.LinkHandling.ORIGINAL;
 import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
@@ -95,7 +95,7 @@ class FileEntryTest {
     @Test
     final void path() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
             assertTrue(entry.path().isAbsolute());
         });
     }
@@ -103,7 +103,7 @@ class FileEntryTest {
     @Test
     final void name() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
             assertEquals(nameOf(path), entry.name());
         });
     }
@@ -111,7 +111,7 @@ class FileEntryTest {
     @Test
     final void testToString() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
             assertEquals(path.toAbsolutePath().normalize().toString(), entry.toString());
         });
     }
@@ -135,7 +135,7 @@ class FileEntryTest {
     @Test
     final void isSymbolicLink() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
             assertEquals(Files.isSymbolicLink(path), entry.isSymbolicLink());
         });
     }
@@ -163,8 +163,8 @@ class FileEntryTest {
     final void isPresent() {
         paths().forEach(path -> {
             // System.out.println(path);
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
-            assertEquals(Files.exists(path, TUtil.DISCLOSE_LINKS), entry.isPresent());
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
+            assertEquals(Files.exists(path, TUtil.ORIGINAL_LINKS), entry.isPresent());
         });
     }
 
@@ -208,11 +208,11 @@ class FileEntryTest {
     final void creation() {
         for (final Path path : paths()) {
             // System.out.println(path);
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
             try {
                 final Instant result = entry.creation();
                 assertTrue(entry.isPresent());
-                final Instant expected = readAttributes(path, TUtil.DISCLOSE_LINKS).creationTime()
+                final Instant expected = readAttributes(path, TUtil.ORIGINAL_LINKS).creationTime()
                                                                                    .toInstant();
                 assertEquals(expected, result);
             } catch (final UnsupportedOperationException caught) {
@@ -235,19 +235,19 @@ class FileEntryTest {
     }
 
     @Test
-    final void isDisclosed() {
+    final void isOriginal() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.disclosed(path);
-            assertTrue(entry.isDisclosed());
+            final FileEntry entry = FileEntry.original(path);
+            assertTrue(entry.isOriginal());
             assertEquals(!Files.isSymbolicLink(path), entry.isResolved());
         });
     }
 
     @Test
-    final void disclosed() {
+    final void original() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, RESOLVE).disclosed();
-            assertTrue(entry.isDisclosed());
+            final FileEntry entry = FileEntry.of(path, RESOLVE).original();
+            assertTrue(entry.isOriginal());
             assertEquals(!Files.isSymbolicLink(path), entry.isResolved());
         });
     }
@@ -257,16 +257,16 @@ class FileEntryTest {
         paths().forEach(path -> {
             final FileEntry entry = FileEntry.resolved(path);
             assertTrue(entry.isResolved());
-            assertEquals(!Files.isSymbolicLink(path), entry.isDisclosed());
+            assertEquals(!Files.isSymbolicLink(path), entry.isOriginal());
         });
     }
 
     @Test
     final void resolved() {
         paths().forEach(path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE).resolved();
+            final FileEntry entry = FileEntry.of(path, ORIGINAL).resolved();
             assertTrue(entry.isResolved());
-            assertEquals(!Files.isSymbolicLink(path), entry.isDisclosed());
+            assertEquals(!Files.isSymbolicLink(path), entry.isOriginal());
         });
     }
 
@@ -308,8 +308,8 @@ class FileEntryTest {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link", "de");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
-        final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
+        final FileEntry entry = FileEntry.of(testPath, ORIGINAL);
+        final FileEntry.Lister lister = FileEntry.lister(ORIGINAL)
                                                  .entryOrder(comparing(FileEntry::name).reversed());
 
         final List<String> result = lister.list(entry, problems::add)
@@ -326,8 +326,8 @@ class FileEntryTest {
         final List<String> expected = List.of(
                 "special.link", "regular.link", "missing.link", "link.link", "directory.link", "de");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry entry = FileEntry.of(testPath, DISCLOSE);
-        final FileEntry.Lister lister = FileEntry.lister(DISCLOSE)
+        final FileEntry entry = FileEntry.of(testPath, ORIGINAL);
+        final FileEntry.Lister lister = FileEntry.lister(ORIGINAL)
                                                  .pathOrder(TUtil.PATH_ORDER.reversed());
 
         final List<String> result = lister.list(entry, problems::add)
@@ -369,7 +369,7 @@ class FileEntryTest {
                                               "StrictHashing.java", "directory.link", "link.link", "missing.link",
                                               "regular.link", "special.link");
         final List<FileEntry.Problem> problems = new LinkedList<>();
-        final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE)
+        final FileEntry.Streamer streamer = FileEntry.streamer(ORIGINAL)
                                                      .skip(entry -> entry.path().endsWith("balancing"))
                                                      .skip(entry -> entry.path().endsWith("cleaning"))
                                                      .skip(entry -> entry.path().endsWith("job"))
@@ -399,8 +399,8 @@ class FileEntryTest {
     final void stream_forbidden() throws IOException {
         final List<FileEntry.Problem> problems = new LinkedList<>();
         forbidden(testPath, path -> {
-            final FileEntry entry = FileEntry.of(path, DISCLOSE);
-            final FileEntry.Streamer streamer = FileEntry.streamer(DISCLOSE);
+            final FileEntry entry = FileEntry.of(path, ORIGINAL);
+            final FileEntry.Streamer streamer = FileEntry.streamer(ORIGINAL);
 
             final List<FileEntry> result = streamer.stream(entry, problems::add)
                                                    .toList();

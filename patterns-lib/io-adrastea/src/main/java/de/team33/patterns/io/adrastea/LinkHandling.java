@@ -8,12 +8,12 @@ import java.nio.file.LinkOption;
 public enum LinkHandling {
 
     /**
-     * Discloses symbolic links.
+     * Handles symbolic links including all their original attributes.
      */
-    DISCLOSE(Util.DISCLOSE_LINKS),
+    ORIGINAL(Util.ORIGINAL_LINKS),
 
     /**
-     * Resolves symbolic links.
+     * Resolves symbolic links including all their resolved attributes.
      */
     RESOLVE(Util.RESOLVE_LINKS);
 

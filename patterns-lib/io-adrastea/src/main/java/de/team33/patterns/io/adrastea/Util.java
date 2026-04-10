@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
+import java.util.function.Predicate;
 
 final class Util {
 
@@ -12,7 +13,7 @@ final class Util {
         throw new UnsupportedOperationException("This method should not actually be called!");
     });
     static final LinkOption[] RESOLVE_LINKS = {};
-    static final LinkOption[] DISCLOSE_LINKS = {LinkOption.NOFOLLOW_LINKS};
+    static final LinkOption[] ORIGINAL_LINKS = {LinkOption.NOFOLLOW_LINKS};
     static final BasicFileAttributes MISSING_FILE_ATTRIBUTES = new BasicFileAttributes() {
 
         private FileTime missingTime() {
@@ -71,5 +72,9 @@ final class Util {
     static final Comparator<Path> PATH_ORDER = Comparator.comparing(Path::getFileName, NAME_ORDER);
 
     private Util() {
+    }
+
+    static <T> Predicate<T> and(final Predicate<T> primary, final Predicate<? super T> secondary) {
+        return primary.and(secondary);
     }
 }
