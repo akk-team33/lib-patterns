@@ -37,13 +37,16 @@ http://www.team33.de/dev/patterns/1.x
 ### near future
 
 * Nailed module decision-carpo to 1.27.0 (deprecated)
+* Nailed module serial-charon to 1.27.0 (deprecated)
 
 ### 1.27.0
 
-* Added module decision-thyone
-* Marked module decision-carpo as deprecated
 * Nailed module decision-leda to 1.26.0 (deprecated)
 * Nailed module decision-telesto to 1.26.0 (deprecated)
+* Added module decision-thyone
+* Marked module decision-carpo as deprecated
+* Resume module serial-charon
+  * Marked module as deprecated
 
 ### 1.26.0
 
