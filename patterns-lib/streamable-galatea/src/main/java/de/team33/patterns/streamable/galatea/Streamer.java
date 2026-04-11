@@ -97,10 +97,10 @@ public interface Streamer<E> extends Streamable<E> {
 
     /**
      * Returns a concatenated {@link Streamer} whose elements are all the elements of <em>this</em>
-     * followed by all the elements of the <em>other</em> {@link Streamer}.
+     * followed by all the elements of the <em>other</em> {@link Streamable}.
      * The result has a streaming order if both, <em>this</em> and <em>other</em>, have a streaming order.
      *
-     * @param <X> The element type of the <em>other</em> {@link Streamer}.
+     * @param <X> The element type of the <em>other</em> {@link Streamable}.
      * @throws NullPointerException if <em>other</em> is {@code null}.
      */
     default <X extends E> Streamer<E> addAll(final Streamable<X> other) {
@@ -117,9 +117,9 @@ public interface Streamer<E> extends Streamable<E> {
 
     /**
      * Returns a {@link Streamer} consisting of the elements of <em>this</em>
-     * that are not contained in the <em>other</em> {@link Streamer}.
+     * that are not contained in the <em>other</em> {@link Streamable}.
      *
-     * @throws NullPointerException if the specified <em>other</em> {@link Streamer} is {@code null}.
+     * @throws NullPointerException if the specified <em>other</em> {@link Streamable} is {@code null}.
      */
     default <X> Streamer<E> removeAll(final Streamable<X> other) {
         return removeIf(other::contains);
