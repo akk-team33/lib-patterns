@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>de.team33.patterns - Java Development by Andreas Kluge-Kaindl, Bremen (de)</title>
     <style>
+        td {
+          text-align: left;
+          vertical-align: top;
+        }
         a:link {
             text-decoration: inherit;
         }
@@ -27,39 +31,70 @@
     <li><a href="https://repo.maven.apache.org/maven2/de/team33/patterns/" target="_blank">Maven Central</a></li>
 </ul>
 <h2>Modules</h2>
-<ul>
-    <li><a href="patterns-bom">patterns-bom</a></li>
-    <li>patterns-lib ...<ul>
-        <li><a href="patterns-lib/arbitrary-mimas">arbitrary-mimas</a></li>
-        <li><a href="patterns-lib/building-anthe">building-anthe</a></li>
-        <li><a href="patterns-lib/building-elara">building-elara</a></li>
-        <li><a href="patterns-lib/collection-ceres">collection-ceres</a></li>
-        <li><a href="patterns-lib/decision-carpo">decision-carpo</a> 2.4.1 (suspended)</li>
-        <li><a href="../1.x/patterns-lib/decision-leda">decision-leda</a> - 1.26.0 (deprecated)</li>
-        <li><a href="../1.x/patterns-lib/decision-telesto">decision-telesto</a> - 1.26.0 (deprecated)</li>
-        <li><a href="patterns-lib/decision-thyone">decision-thyone</a></li>
-        <li><a href="patterns-lib/enums-pan">enums-pan</a></li>
-        <li><a href="patterns-lib/exceptional-dione">exceptional-dione</a></li>
-        <li><a href="patterns-lib/execution-metis">execution-metis</a></li>
-        <li><a href="patterns-lib/expiry-tethys">expiry-tethys</a></li>
-        <li><a href="patterns-lib/hashing-pandia">hashing-pandia</a></li>
-        <li><a href="patterns-lib/hierarchy-mab">hierarchy-mab</a></li>
-        <li><a href="patterns-lib/io-adrastea">io-adrastea</a></li>
-        <li><a href="patterns-lib/io-deimos">io-deimos</a></li>
-        <li><a href="../1.x/patterns-lib/io-phobos">io-phobos</a> - 1.25.0 (suspended)</li>
-        <li><a href="patterns-lib/lazy-narvi">lazy-narvi</a></li>
-        <li><a href="patterns-lib/matching-rhea">matching-rhea</a></li>
-        <li><a href="../1.x/patterns-lib/notes-eris">notes-eris</a> - 1.25.0 (suspended)</li>
-        <li><a href="patterns-lib/pooling-ariel">pooling-ariel</a></li>
-        <li><a href="patterns-lib/proving-kerberos">proving-kerberos</a></li>
-        <li><a href="../1.x/patterns-lib/random-mimas">random-mimas</a> - 1.13.0 (deprecated)</li>
-        <li><a href="../1.x/patterns-lib/random-tarvos">random-tarvos</a> - 1.19.0 (deprecated)</li>
-        <li><a href="patterns-lib/reflect-luna">reflect-luna</a></li>
-        <li><a href="patterns-lib/reflect-pandora">reflect-pandora</a></li>
-        <li><a href="../1.x/patterns-lib/serial-charon">serial-charon</a> - 1.24.0 (suspended)</li>
-        <li><a href="patterns-lib/streamable-galatea">streamable-galatea</a></li>
-        <li><a href="../1.x/patterns-lib/tuple-janus">tuple-janus</a> - 1.24.0 (suspended)</li>
-    </ul></li>
-</ul>
+<table>
+    <tr>
+        <th>${project.version}</th>
+        <th>Suspended</th>
+        <th>Deprecated</th>
+    </tr>
+    <tr>
+        <td>
+            <ul>
+                <li><a href="patterns-bom">patterns-bom</a></li>
+                <li>patterns-lib ...
+                    <ul>
+                        <li><a href="patterns-lib/arbitrary-mimas">arbitrary-mimas</a></li>
+                        <li><a href="patterns-lib/building-anthe">building-anthe</a></li>
+                        <li><a href="patterns-lib/building-elara">building-elara</a></li>
+                        <li><a href="patterns-lib/collection-ceres">collection-ceres</a></li>
+                        <li><a href="patterns-lib/decision-thyone">decision-thyone</a></li>
+                        <li><a href="patterns-lib/enums-pan">enums-pan</a></li>
+                        <li><a href="patterns-lib/exceptional-dione">exceptional-dione</a></li>
+                        <li><a href="patterns-lib/execution-metis">execution-metis</a></li>
+                        <li><a href="patterns-lib/expiry-tethys">expiry-tethys</a></li>
+                        <li><a href="patterns-lib/hashing-pandia">hashing-pandia</a></li>
+                        <li><a href="patterns-lib/hierarchy-mab">hierarchy-mab</a></li>
+                        <li><a href="patterns-lib/io-adrastea">io-adrastea</a></li>
+                        <li><a href="patterns-lib/io-deimos">io-deimos</a></li>
+                        <li><a href="patterns-lib/lazy-narvi">lazy-narvi</a></li>
+                        <li><a href="patterns-lib/matching-rhea">matching-rhea</a></li>
+                        <li><a href="patterns-lib/pooling-ariel">pooling-ariel</a></li>
+                        <li><a href="patterns-lib/proving-kerberos">proving-kerberos</a></li>
+                        <li><a href="patterns-lib/reflect-luna">reflect-luna</a></li>
+                        <li><a href="patterns-lib/reflect-pandora">reflect-pandora</a></li>
+                        <li><a href="patterns-lib/streamable-galatea">streamable-galatea</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li>-</li>
+                <li>(patterns-lib) ...
+                    <ul>
+                        <li><a href="patterns-lib/decision-carpo">decision-carpo</a> - 2.4.1</li>
+                        <li><a href="../1.x/patterns-lib/io-phobos">io-phobos</a> - 1.25.0</li>
+                        <li><a href="../1.x/patterns-lib/notes-eris">notes-eris</a> - 1.25.0</li>
+                        <li><a href="../1.x/patterns-lib/serial-charon">serial-charon</a> - 1.24.0</li>
+                        <li><a href="../1.x/patterns-lib/tuple-janus">tuple-janus</a> - 1.24.0</li>
+                    </ul>
+                </li>
+            </ul>
+        </td>
+        <td>
+            <ul>
+                <li>-</li>
+                <li>(patterns-lib) ...
+                    <ul>
+                        <li><a href="../1.x/patterns-lib/decision-leda">decision-leda</a> - 1.26.0</li>
+                        <li><a href="../1.x/patterns-lib/decision-telesto">decision-telesto</a> - 1.26.0</li>
+                        <li><a href="../1.x/patterns-lib/random-mimas">random-mimas</a> - 1.13.0</li>
+                        <li><a href="../1.x/patterns-lib/random-tarvos">random-tarvos</a> - 1.19.0</li>
+                    </ul>
+                </li>
+            </ul>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
