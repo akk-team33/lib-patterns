@@ -47,7 +47,7 @@ https://www.team33.de/dev/patterns/2.x
 ### deprecated
 
 * (patterns-lib - previous releases)
-  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.7.0-SNAPSHOT
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
@@ -58,7 +58,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ### near future
 
-* Re-nailed module decision-carpo to 2.7.0-SNAPSHOT (deprecated)
+* Re-nailed module decision-carpo to 2.6.1 (deprecated)
 
 ### next
 

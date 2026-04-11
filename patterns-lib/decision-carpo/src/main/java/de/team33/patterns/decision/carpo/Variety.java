@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
- * @deprecated since 2.7.0-SNAPSHOT - consider module <em>decision-thyone</em> as replacement.
+ * @deprecated since 2.6.1 - consider module <em>decision-thyone</em> as replacement.
  */
 @Deprecated
 @SuppressWarnings("WeakerAccess")

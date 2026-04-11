@@ -3,7 +3,7 @@ package de.team33.patterns.decision.carpo;
 import java.util.function.Function;
 
 /**
- * @deprecated since 2.7.0-SNAPSHOT - consider module <em>decision-thyone</em> as replacement.
+ * @deprecated since 2.6.1 - consider module <em>decision-thyone</em> as replacement.
  */
 @Deprecated
 @FunctionalInterface

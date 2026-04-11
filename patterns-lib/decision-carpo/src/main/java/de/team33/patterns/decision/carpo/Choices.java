@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * @deprecated since 2.7.0-SNAPSHOT - consider module <em>decision-thyone</em> as replacement.
+ * @deprecated since 2.6.1 - consider module <em>decision-thyone</em> as replacement.
  */
 @Deprecated
 public final class Choices<I, R> {
