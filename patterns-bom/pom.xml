@@ -107,11 +107,6 @@
                 <artifactId>decision-carpo</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>serial-charon</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- nailed (discontinued) ... -->
             <dependency>
@@ -121,6 +116,11 @@
             </dependency>
 
             <!-- nailed (deprecated) ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>serial-charon</artifactId>
+                <version>1.27.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-telesto</artifactId>

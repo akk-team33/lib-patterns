@@ -34,7 +34,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### near future
+### next
 
 * Nailed module decision-carpo to 1.27.0 (deprecated)
 * Nailed module serial-charon to 1.27.0 (deprecated)
