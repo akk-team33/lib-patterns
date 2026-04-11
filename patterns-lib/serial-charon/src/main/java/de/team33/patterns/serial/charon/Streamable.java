@@ -3,10 +3,9 @@ package de.team33.patterns.serial.charon;
 import java.util.stream.Stream;
 
 /**
- * Represents something that may produce a {@link Stream} of elements of a specific type.
- *
- * @param <E> The element type.
+ * @deprecated It proved to be unnecessary.
  */
+@Deprecated
 public interface Streamable<E> {
 
     /**

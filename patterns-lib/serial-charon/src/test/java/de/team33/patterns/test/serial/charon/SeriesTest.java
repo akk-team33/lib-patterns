@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class SeriesTest {
 
     private static final Supply SUPPLY = new Supply();
@@ -123,11 +124,11 @@ class SeriesTest {
         final Series<String> left = Series.of(origin);
         final Series<String> right = Series.of(origin);
         assertNotSame(left, right,
-                      () -> "The following test result would not be significant if left and right were identical.");
+                      "The following test result would not be significant if left and right were identical.");
         assertEquals(left, right,
-                     () -> "Two series with the same origin are expected to be equal.");
+                     "Two series with the same origin are expected to be equal.");
         assertNotEquals(left, Series.of(SUPPLY.nextList(6, 10)),
-                        () -> "Two series with the different origins are expected to be different.");
+                        "Two series with the different origins are expected to be different.");
     }
 
     @Test
@@ -136,9 +137,9 @@ class SeriesTest {
         final Series<String> left = Series.of(origin);
         final Series<String> right = Series.of(origin);
         assertNotSame(left, right,
-                      () -> "The following test result would not be significant if left and right were identical.");
+                      "The following test result would not be significant if left and right were identical.");
         assertEquals(left.hashCode(), right.hashCode(),
-                     () -> "The hash code of two equal series are also expected to be equal.");
+                     "The hash code of two equal series are also expected to be equal.");
     }
 
     @Test
@@ -147,11 +148,11 @@ class SeriesTest {
         final Series<String> left = Series.of(origin);
         final Series<String> right = Series.of(origin);
         assertNotSame(left, right,
-                      () -> "The following test results would not be significant if left and right were identical.");
+                      "The following test results would not be significant if left and right were identical.");
         assertEquals(left.toString(), right.toString(),
-                     () -> "The string representations of two equal series are also expected to be equal.");
+                     "The string representations of two equal series are also expected to be equal.");
         assertEquals(origin.toString(), right.toString(),
-                     () -> "The string representation of a Series is expected to be equal to " +
-                           "the string representation of the original List.");
+                     "The string representation of a Series is expected to be equal to " +
+                     "the string representation of the original List.");
     }
 }
