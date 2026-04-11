@@ -16,7 +16,6 @@
 
     <modules>
         <module>arbitrary-mimas</module>
-        <module>decision-carpo</module>
         <module>decision-thyone</module>
         <module>enums-pan</module>
         <module>exceptional-dione</module>
