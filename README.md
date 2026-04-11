@@ -60,7 +60,7 @@ https://www.team33.de/dev/patterns/2.x
 
 * Re-nailed module decision-carpo to 2.6.1 (deprecated)
 
-### next
+### 2.6.1
 
 * Re-nailed module serial-charon to 1.27.0 (deprecated)
 * Resume module decision-carpo
