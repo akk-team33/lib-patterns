@@ -29,6 +29,10 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>decision-carpo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>random-tarvos</artifactId>
             <scope>test</scope>
         </dependency>
