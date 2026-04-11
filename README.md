@@ -40,7 +40,6 @@ https://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
-  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.4.1
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
@@ -48,6 +47,7 @@ https://www.team33.de/dev/patterns/2.x
 ### deprecated
 
 * (patterns-lib - previous releases)
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.7.0-SNAPSHOT
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
@@ -56,9 +56,15 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### near future
+
+* Re-nailed module decision-carpo to 2.7.0-SNAPSHOT (deprecated)
+
 ### next
 
 * Re-nailed module serial-charon to 1.27.0 (deprecated)
+* Resume module decision-carpo
+  * Marked module as deprecated
 
 ### 2.6.0
 

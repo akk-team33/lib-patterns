@@ -5,6 +5,7 @@ import de.team33.patterns.decision.carpo.testing.Input;
 
 import java.util.function.Function;
 
+@Deprecated
 public enum XResult {
 
     A, B, C, D, E;

@@ -9,7 +9,11 @@ import java.util.function.Function;
 @SuppressWarnings("unused")
 public enum NResult {
 
-    A, B, C, D, E;
+    A,
+    B,
+    C,
+    D,
+    E;
 
     private static final Function<Input, NResult> FUNCTION =
             Variety.joined(Input::isC, Input::isB, Input::isA)
