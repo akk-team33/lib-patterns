@@ -112,11 +112,6 @@
                 <artifactId>decision-telesto</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-leda</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- nailed (discontinued) ... -->
             <dependency>
@@ -131,6 +126,11 @@
             </dependency>
 
             <!-- nailed (deprecated) ... -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>decision-leda</artifactId>
+                <version>1.26.0</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>testing-titan</artifactId>
