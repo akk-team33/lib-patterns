@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Deprecated
 class VarietyTest {
 
     private static final Predicate<Input> P = i -> true;

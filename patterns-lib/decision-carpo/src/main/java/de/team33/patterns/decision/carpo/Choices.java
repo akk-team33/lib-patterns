@@ -10,13 +10,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A tool for collecting pairings of specific cases with an associated choice
- * and finally create a {@link Function} that maps an input of type &lt;I&gt; to a result of type &lt;R&gt;.
- *
- * @param <I> the intended input type.
- * @param <R> the intended result type.
+ * @deprecated since 1.27.0 - consider module <em>decision-thyone</em> as replacement.
  * @see de.team33.patterns.decision.carpo package
  */
+@Deprecated
 public class Choices<I, R> {
 
     private final Variety<I> variety;

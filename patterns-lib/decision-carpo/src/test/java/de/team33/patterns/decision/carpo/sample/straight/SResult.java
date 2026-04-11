@@ -3,6 +3,7 @@ package de.team33.patterns.decision.carpo.sample.straight;
 
 import de.team33.patterns.decision.carpo.testing.Input;
 
+@Deprecated
 public enum SResult {
 
     A, B, C, D, E;

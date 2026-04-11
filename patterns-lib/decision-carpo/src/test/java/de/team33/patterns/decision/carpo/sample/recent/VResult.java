@@ -3,6 +3,7 @@ package de.team33.patterns.decision.carpo.sample.recent;
 import de.team33.patterns.decision.carpo.Variety;
 import de.team33.patterns.decision.carpo.testing.Input;
 
+@Deprecated
 public enum VResult {
 
     A, B, C, D, E, F, G, H;

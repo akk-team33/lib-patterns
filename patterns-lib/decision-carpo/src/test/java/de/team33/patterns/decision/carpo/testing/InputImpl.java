@@ -1,5 +1,6 @@
 package de.team33.patterns.decision.carpo.testing;
 
+@Deprecated
 public class InputImpl implements Input {
 
     private final boolean a;

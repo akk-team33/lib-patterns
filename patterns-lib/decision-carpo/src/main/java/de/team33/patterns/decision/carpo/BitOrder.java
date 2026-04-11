@@ -4,8 +4,10 @@ import java.util.function.IntBinaryOperator;
 import java.util.function.IntUnaryOperator;
 
 /**
- * Defines the bit-order to be used for converting a series of boolean results into an <em>int</em> value.
+ * @deprecated since 1.27.0 - consider module <em>decision-thyone</em> as replacement.
+ * @see de.team33.patterns.decision.carpo package
  */
+@Deprecated
 public enum BitOrder {
 
     /**

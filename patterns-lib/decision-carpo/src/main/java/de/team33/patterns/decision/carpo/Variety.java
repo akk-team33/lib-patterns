@@ -11,34 +11,10 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 /**
- * A tool that combines the results of multiple independent boolean criteria
- * relating to an input of a specific type &lt;I&gt; into an int value,
- * which, when interpreted as bit patterns, reflect a combination of the boolean results.
- * <p>
- * Use e.g. {@link #joined(Predicate[])} to get an instance.
- * <p>
- * <b>Example:</b>
- * <pre>
- * public enum Result {
- *
- *     A, B, C, D, E, F, G, H;
- *
- *     private static final Variety&lt;Input&gt; VARIETY = Variety.joined(Input::isC, Input::isB, Input::isA);
- *
- *     public static Result of(final Input input) {
- *         return Result.values()[VARIETY.apply(input)];
- *     }
- * }
- * </pre>
- *
- * @param <I> The input type.
- * @see #apply(Object)
- * @see #joined(Predicate[])
- * @see #joined(BitOrder, Predicate[])
- * @see #joined(Collection)
- * @see #joined(BitOrder, Collection)
+ * @deprecated since 1.27.0 - consider module <em>decision-thyone</em> as replacement.
  * @see de.team33.patterns.decision.carpo package
  */
+@Deprecated
 public class Variety<I> {
 
     private static final String TOO_MANY_CRITERIA =

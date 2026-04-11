@@ -17,8 +17,7 @@ http://www.team33.de/dev/patterns/1.x
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
-  * decision-carpo (Team33 Decision Library - Edition "carpo")
-  * decision-telesto (Team33 Decision Library - Edition "telesto")
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - Deprecated
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -37,6 +36,11 @@ http://www.team33.de/dev/patterns/1.x
 
 ### near future
 
+* Nailed module decision-carpo to 1.27.0 (deprecated)
+
+### 1.27.0
+
+* Marked module decision-carpo as deprecated
 * Nailed module decision-leda to 1.26.0 (deprecated)
 * Nailed module decision-telesto to 1.26.0 (deprecated)
 

@@ -3,12 +3,10 @@ package de.team33.patterns.decision.carpo;
 import java.util.function.Function;
 
 /**
- * Represents a set of cases to be paired with a single choice.
- *
- * @param <I> an input type.
- * @param <R> a result type.
+ * @deprecated since 1.27.0 - consider module <em>decision-thyone</em> as replacement.
  * @see de.team33.patterns.decision.carpo package
  */
+@Deprecated
 @FunctionalInterface
 public interface Cases<I, R> {
 

@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+@Deprecated
 class VarietyReplyingTest {
 
     private final Variety<Input> variety = Variety.joined(Input::isC, Input::isB, Input::isA);
