@@ -40,6 +40,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ### 1.27.0
 
+* Added module decision-thyone
 * Marked module decision-carpo as deprecated
 * Nailed module decision-leda to 1.26.0 (deprecated)
 * Nailed module decision-telesto to 1.26.0 (deprecated)
