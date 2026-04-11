@@ -43,7 +43,6 @@ https://www.team33.de/dev/patterns/2.x
   * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.4.1
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
-  * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.24.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
 ### deprecated
@@ -53,8 +52,13 @@ https://www.team33.de/dev/patterns/2.x
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
+  * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
 
 ## Change Log
+
+### next
+
+* Re-nailed module serial-charon to 1.27.0 (deprecated)
 
 ### 2.6.0
 
