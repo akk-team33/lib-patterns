@@ -17,6 +17,7 @@ http://www.team33.de/dev/patterns/1.x
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
+  * decision-thyone (Team33 Decision Library - Edition "thyone") - Deprecated
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * execution-metis (Team33 Execution Library - Edition "metis")
