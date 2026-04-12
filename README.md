@@ -18,6 +18,7 @@ http://www.team33.de/dev/patterns/1.x
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-carpo (Team33 Decision Library - Edition "carpo") - Deprecated
+  * decision-thyone (Team33 Decision Library - Edition "thyone") - Deprecated
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * execution-metis (Team33 Execution Library - Edition "metis")
@@ -34,7 +35,7 @@ http://www.team33.de/dev/patterns/1.x
 
 ## Change Log
 
-### near future
+### next
 
 * Nailed module decision-carpo to 1.27.0 (deprecated)
 * Nailed module serial-charon to 1.27.0 (deprecated)
