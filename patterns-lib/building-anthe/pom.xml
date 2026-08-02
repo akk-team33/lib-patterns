@@ -11,6 +11,6 @@
     <artifactId>building-anthe</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Building Library - Edition "elara"</name>
-    <description>Classes and utilities for implementing and handling builders.</description>
+    <name>Team33 Building Library - Edition "anthe"</name>
+    <description>A basic class and concept for builder implementations.</description>
 </project>
