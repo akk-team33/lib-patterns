@@ -14,4 +14,17 @@
     <name>Team33 Records Library - Edition "triton"</name>
     <description>Provides tools for working with records.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>enums-pan</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 </project>
