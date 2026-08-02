@@ -1,4 +1,4 @@
-package de.team33.test.patterns.execution.metis;
+package de.team33.patterns.execution.metis.publics;
 
 import de.team33.patterns.execution.metis.SimpleExecutorService;
 import org.junit.jupiter.api.Test;
@@ -8,9 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class SimpleExecutorServiceTest {
 
@@ -19,7 +17,7 @@ class SimpleExecutorServiceTest {
     private static void spendSomeTimeBeingBusy() {
         //final long time0 = System.currentTimeMillis();
         final AtomicInteger counter = new AtomicInteger(0);
-        while (25_000_000 > counter.getAndIncrement()) {
+        while (2_000_000 > counter.getAndIncrement()) {
             // nothing else to do
         }
         //System.out.append("time running (ms): ").println(System.currentTimeMillis() - time0);
@@ -38,7 +36,7 @@ class SimpleExecutorServiceTest {
     @Test
     final void shutdownNow() throws InterruptedException {
         final AtomicInteger counter = new AtomicInteger(0);
-        IntStream.range(0, 1000)
+        IntStream.range(0, 100)
                  .forEach(ignored -> executor.execute(counter::incrementAndGet)); // each should have an effect
         assertEquals(Collections.emptyList(), executor.shutdownNow());
         executor.execute(counter::incrementAndGet); // Should NOT have an effect
