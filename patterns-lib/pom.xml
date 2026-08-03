@@ -32,7 +32,6 @@
         <module>streamable-galatea</module>
         <module>building-anthe</module>
         <module>building-elara</module>
-        <module>execution-metis</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
         <module>matching-rhea</module>

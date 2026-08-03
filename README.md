@@ -21,7 +21,6 @@ https://www.team33.de/dev/patterns/2.x
   * decision-thyone (Team33 Decision Library - Edition "thyone")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
-  * execution-metis (Team33 Execution Library - Edition "metis")
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
@@ -41,6 +40,7 @@ https://www.team33.de/dev/patterns/2.x
 ### development preliminary suspended
 
 * (patterns-lib - previous releases)
+  * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
@@ -56,6 +56,10 @@ https://www.team33.de/dev/patterns/2.x
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
 
 ## Change Log
+
+### 2.7.1
+
+* Nailed module execution-metis to 2.7.0 (suspended)
 
 ### 2.7.0
 
