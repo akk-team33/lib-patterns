@@ -102,7 +102,7 @@ public class BytesIO extends FileIO<byte[]> {
      *
      * @throws UncheckedIOException if an I/O error occurs while writing
      * @see #by(Path)
-     * @see #writeUnchecked(Object) ()
+     * @see #writeUnchecked(Object)
      */
     public static void write(final byte[] bytes, final Path path) {
         by(path).writeUnchecked(bytes);

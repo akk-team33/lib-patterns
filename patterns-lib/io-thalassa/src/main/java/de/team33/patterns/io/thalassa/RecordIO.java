@@ -15,9 +15,9 @@ import java.nio.file.Path;
  * <p>
  * Instances of this class map between JSON documents and record instances using {@link Triton}.
  * <p>
- * Unless specified otherwise, UTF-8 is used as character encoding.
+ * Unless specified otherwise, UTF-8 is used as character set.
  *
- * @param <T> The record type to be read and written.
+ * @param <T> the record type to be read and written.
  */
 public class RecordIO<T extends Record> extends FileIO<T> {
 
@@ -36,12 +36,12 @@ public class RecordIO<T extends Record> extends FileIO<T> {
     }
 
     /**
-     * Returns a {@code RecordIO} instance operating on the given file.
+     * Creates a new {@code RecordIO} for the given file using the specified character set.
      *
      * @param recordClass The record type.
      * @param path        The target file.
-     * @param charset     The character encoding used for reading and writing.
-     * @return A corresponding {@code RecordIO} instance.
+     * @param charset     The character set used for reading and writing.
+     * @return A {@code RecordIO} instance.
      */
     public static <T extends Record> RecordIO<T> by(final Class<T> recordClass,
                                                     final Path path,
@@ -50,11 +50,11 @@ public class RecordIO<T extends Record> extends FileIO<T> {
     }
 
     /**
-     * Returns a UTF-8 based {@code RecordIO} instance operating on the given file.
+     * Creates a new {@code RecordIO} for the given file using UTF-8.
      *
      * @param recordClass The record type.
      * @param path        The target file.
-     * @return A corresponding {@code RecordIO} instance.
+     * @return A {@code RecordIO} instance.
      */
     public static <T extends Record> RecordIO<T> by(final Class<T> recordClass,
                                                     final Path path) {
@@ -62,13 +62,12 @@ public class RecordIO<T extends Record> extends FileIO<T> {
     }
 
     /**
-     * Returns an {@link Input} reading JSON encoded record instances from the specified
-     * classpath resource.
+     * Creates an {@link Input} that reads JSON encoded record instances from the specified classpath resource.
      *
      * @param recordClass  The record type.
      * @param refClass     The reference class used to resolve the resource.
      * @param resourceName The resource name.
-     * @param charset      The character encoding used to read the resource.
+     * @param charset      The character set used to read the resource.
      * @return A corresponding {@link Input}.
      */
     public static <T extends Record> Input<T> by(final Class<T> recordClass,
@@ -80,8 +79,8 @@ public class RecordIO<T extends Record> extends FileIO<T> {
     }
 
     /**
-     * Returns a UTF-8 based {@link Input} reading JSON encoded record instances from the
-     * specified classpath resource.
+     * Creates an {@link Input} that reads JSON encoded record instances from the specified classpath resource
+     * using UTF-8.
      *
      * @param recordClass  The record type.
      * @param refClass     The reference class used to resolve the resource.
@@ -127,7 +126,7 @@ public class RecordIO<T extends Record> extends FileIO<T> {
      *
      * @throws UncheckedIOException if an I/O error occurs while writing
      * @see #by(Class, Path)
-     * @see #writeUnchecked(Object) ()
+     * @see #writeUnchecked(Object)
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
     public static <T extends Record> void write(final T record, final Path path) {

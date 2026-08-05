@@ -35,10 +35,10 @@ public class PropertiesIO extends FileIO<Properties> {
     }
 
     /**
-     * Creates a new {@code PropertiesIO} for the given file using the specified character encoding.
+     * Creates a new {@code PropertiesIO} for the given file using the specified character set.
      *
      * @param path    the file to read from and write to
-     * @param charset the character encoding used for reading and writing
+     * @param charset the character set used for reading and writing
      * @return a {@code PropertiesIO} for the specified file
      */
     public static PropertiesIO by(final Path path, final Charset charset) {
@@ -46,7 +46,7 @@ public class PropertiesIO extends FileIO<Properties> {
     }
 
     /**
-     * Creates a new {@code PropertiesIO} for the given file using UTF-8 encoding.
+     * Creates a new {@code PropertiesIO} for the given file using UTF-8.
      *
      * @param path the file to read from and write to
      * @return a {@code PropertiesIO} for the specified file
@@ -63,7 +63,7 @@ public class PropertiesIO extends FileIO<Properties> {
      *
      * @param refClass     the class used to resolve the resource
      * @param resourceName the resource name
-     * @param charset      the character encoding used for reading
+     * @param charset      the character set used for reading
      * @return an {@code Input} producing the loaded properties
      */
     public static Input<Properties> by(final Class<?> refClass, final String resourceName, final Charset charset) {
@@ -72,7 +72,7 @@ public class PropertiesIO extends FileIO<Properties> {
     }
 
     /**
-     * Creates an {@link Input} that reads the specified classpath resource as {@link Properties} instance,
+     * Creates an {@link Input} that reads the specified classpath resource as a {@link Properties} instance,
      * using UTF-8 decoding.
      * <p>
      * The resulting input only supports reading. The underlying input stream
@@ -116,7 +116,7 @@ public class PropertiesIO extends FileIO<Properties> {
      *
      * @throws UncheckedIOException if an I/O error occurs while writing
      * @see #by(Path)
-     * @see #writeUnchecked(Object) ()
+     * @see #writeUnchecked(Object)
      */
     public static void write(final Properties properties, final Path path) {
         by(path).writeUnchecked(properties);

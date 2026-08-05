@@ -10,7 +10,7 @@ import java.nio.file.Path;
 /**
  * Combines {@link Input} and {@link Output} for reading from and writing to the same file.
  * <p>
- * The actual conversion between the file contents and values of type {@code <T>} is supplied by the caller.
+ * The conversion between the file contents and values of type {@code <T>} is supplied by the caller.
  * Each invocation of {@link #read()} or {@link #write(Object)} opens a new stream, processes the file,
  * and closes the stream afterward.
  * <p>

@@ -34,11 +34,10 @@ public interface Reading {
     }
 
     /**
-     * Returns a {@code Reading} that opens an input stream for the specified
-     * classpath resource.
+     * Returns a {@code Reading} that opens an input stream for the specified classpath resource.
      * <p>
-     * The resulting {@code Reading} may return {@code null} if the requested
-     * resource cannot be found.
+     * The input stream returned by {@link #newInputStream()} may be {@code null}
+     * if the requested resource cannot be found.
      *
      * @param refClass     the class used to resolve the resource
      * @param resourceName the resource name

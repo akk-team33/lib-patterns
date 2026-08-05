@@ -10,7 +10,7 @@ import java.nio.file.Path;
  * <p>
  * The complete text content of the underlying file is held in memory when reading.
  * Writing replaces the current file content with the supplied text.
- * The character encoding is defined by the configured {@link Charset}.
+ * The configured {@link Charset} is used to convert between characters and bytes.
  */
 public class TextIO extends FileIO<String> {
 
@@ -44,10 +44,10 @@ public class TextIO extends FileIO<String> {
     }
 
     /**
-     * Creates a new {@code TextIO} for the given file using the specified character encoding.
+     * Creates a new {@code TextIO} for the given file using the specified character set.
      *
      * @param path    the file to read from and write to
-     * @param charset the character encoding used for reading and writing
+     * @param charset the character set used for reading and writing
      * @return a {@code TextIO} for the specified file
      */
     public static TextIO by(final Path path, final Charset charset) {
@@ -55,7 +55,7 @@ public class TextIO extends FileIO<String> {
     }
 
     /**
-     * Creates a new {@code TextIO} for the given file using UTF-8 encoding.
+     * Creates a new {@code TextIO} for the given file using UTF-8.
      *
      * @param path the file to read from and write to
      * @return a {@code TextIO} for the specified file
@@ -72,7 +72,7 @@ public class TextIO extends FileIO<String> {
      *
      * @param refClass     the class used to resolve the resource
      * @param resourceName the resource name
-     * @param charset      the character encoding used for reading
+     * @param charset      the character set used for reading
      * @return an {@code Input} producing the resource content as a string
      */
     public static Input<String> by(final Class<?> refClass, final String resourceName, final Charset charset) {
@@ -125,7 +125,7 @@ public class TextIO extends FileIO<String> {
      *
      * @throws UncheckedIOException if an I/O error occurs while writing
      * @see #by(Path)
-     * @see #writeUnchecked(Object) ()
+     * @see #writeUnchecked(Object)
      */
     public static void write(final String text, final Path path) {
         by(path).writeUnchecked(text);
