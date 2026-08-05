@@ -26,6 +26,7 @@ https://www.team33.de/dev/patterns/2.x
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
   * io-adrastea (Team33 IO Library - Edition "adrastea")
   * io-deimos (Team33 IO Library - Edition "deimos")
+  * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * records-triton (Team33 Records Library - Edition "triton")
   * reflect-luna (Team33 Reflection Library - Edition "luna")
