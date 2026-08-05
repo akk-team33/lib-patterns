@@ -90,5 +90,9 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>pooling-ariel</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>proving-kerberos</artifactId>
+        </dependency>
     </dependencies>
 </project>
