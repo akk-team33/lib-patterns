@@ -23,6 +23,7 @@
         <module>hierarchy-mab</module>
         <module>io-deimos</module>
         <module>io-adrastea</module>
+        <module>io-thalassa</module>
         <module>expiry-tethys</module>
         <module>records-triton</module>
         <module>reflect-luna</module>
