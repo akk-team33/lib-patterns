@@ -59,7 +59,13 @@ https://www.team33.de/dev/patterns/2.x
 
 ### 2.7.1
 
+* Added module io.thalassa
+* Refined module io-deimos ...
+  * Marked class TextIO as deprecated
 * Nailed module execution-metis to 2.7.0 (suspended)
+* Nailed module matching-rhea to 2.7.0 (suspended)
+* Nailed module pooling-ariel to 2.7.0 (suspended)
+* Nailed module proving-kerberos to 2.7.0 (suspended)
 
 ### 2.7.0
 
