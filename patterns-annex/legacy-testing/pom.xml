@@ -81,5 +81,10 @@
             <artifactId>execution-metis</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>matching-rhea</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

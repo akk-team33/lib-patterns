@@ -27,7 +27,6 @@ https://www.team33.de/dev/patterns/2.x
   * io-adrastea (Team33 IO Library - Edition "adrastea")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
-  * matching-rhea (Team33 Pattern Matching Library - Edition "rhea")
   * pooling-ariel (Team33 Pooling Library - Edition "ariel")
   * proving-kerberos (Team33 Proving Library - Edition "kerberos")
   * records-triton (Team33 Records Library - Edition "triton")
@@ -42,6 +41,7 @@ https://www.team33.de/dev/patterns/2.x
 * (patterns-lib - previous releases)
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
+  * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
