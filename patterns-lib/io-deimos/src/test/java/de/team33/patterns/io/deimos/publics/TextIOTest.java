@@ -7,10 +7,9 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class TextIOTest {
 
     private static final Path TEST_PATH = Paths.get("target", "testing", TextIOTest.class.getSimpleName())

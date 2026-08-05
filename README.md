@@ -57,6 +57,12 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Change Log
 
+### next
+
+* Refined module io-deimos ...
+  * refined dependencies
+  * fixed javadoc
+
 ### 2.7.1
 
 * Added module io-thalassa
