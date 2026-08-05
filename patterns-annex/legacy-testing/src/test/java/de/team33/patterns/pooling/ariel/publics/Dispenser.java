@@ -1,4 +1,4 @@
-package de.team33.test.patterns.pooling.ariel;
+package de.team33.patterns.pooling.ariel.publics;
 
 public class Dispenser {
 

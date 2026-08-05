@@ -25,7 +25,6 @@
         <module>io-deimos</module>
         <module>io-adrastea</module>
         <module>expiry-tethys</module>
-        <module>pooling-ariel</module>
         <module>records-triton</module>
         <module>reflect-luna</module>
         <module>reflect-pandora</module>

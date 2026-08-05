@@ -1,6 +1,6 @@
-package de.team33.test.patterns.pooling.ariel;
+package de.team33.patterns.pooling.ariel.publics;
 
-import de.team33.patterns.pooling.ariel.RProvider;
+import de.team33.patterns.pooling.ariel.Provider;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -11,15 +11,13 @@ import static de.team33.patterns.exceptional.dione.Conversion.function;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class RProviderTest {
+class ProviderTest {
 
     private static final int MAX = 500;
-    private static final long IDLE_TIME = 10; // milliseconds!
-    private static final long LIFE_TIME = 100; // milliseconds!
 
     @Test
     final void run_throwing() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertThrows(IOException.class, () -> provider.runEx(atom -> {
             throw new IOException();
         }));
@@ -27,7 +25,7 @@ class RProviderTest {
 
     @Test
     final void run_sequential() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -47,7 +45,7 @@ class RProviderTest {
 
     @Test
     final void run_parallel() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -70,7 +68,7 @@ class RProviderTest {
 
     @Test
     final void runEx_sequential() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -94,7 +92,7 @@ class RProviderTest {
 
     @Test
     final void runEx_parallel() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -121,7 +119,7 @@ class RProviderTest {
 
     @Test
     final void get_sequential() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -137,7 +135,7 @@ class RProviderTest {
 
     @Test
     final void get_parallel() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -154,7 +152,7 @@ class RProviderTest {
 
     @Test
     final void getEx_sequential() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -170,7 +168,7 @@ class RProviderTest {
 
     @Test
     final void getEx_parallel() {
-        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        final Provider<AtomicInteger> provider = new Provider<>(AtomicInteger::new);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int result = IntStream.range(0, MAX)

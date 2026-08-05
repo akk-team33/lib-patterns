@@ -52,11 +52,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>pooling-ariel</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>proving-kerberos</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -142,6 +137,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>matching-rhea</artifactId>
+                <version>2.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>pooling-ariel</artifactId>
                 <version>2.7.0</version>
             </dependency>
 

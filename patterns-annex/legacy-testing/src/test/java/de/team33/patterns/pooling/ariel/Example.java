@@ -1,7 +1,5 @@
 package de.team33.patterns.pooling.ariel;
 
-import de.team33.patterns.pooling.ariel.Provider;
-
 import java.util.Random;
 
 public class Example {

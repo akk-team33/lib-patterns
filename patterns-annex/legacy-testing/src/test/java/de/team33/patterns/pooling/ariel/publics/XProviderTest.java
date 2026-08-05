@@ -1,79 +1,39 @@
-package de.team33.test.patterns.pooling.ariel;
+package de.team33.patterns.pooling.ariel.publics;
 
-import de.team33.patterns.pooling.ariel.XRProvider;
+import de.team33.patterns.pooling.ariel.XProvider;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import static de.team33.patterns.exceptional.dione.Conversion.function;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-class XRProviderTest {
+class XProviderTest {
 
     private static final int MAX = 500;
-    private static final long IDLE_TIME = 10; // milliseconds!
-    private static final long LIFE_TIME = 100; // milliseconds!
 
-    private final XRProvider<AtomicInteger, SQLException> provider = //
-            new XRProvider<>(XRProviderTest::newAtomicInteger, IDLE_TIME, LIFE_TIME);
-    private final XRProvider<AtomicInteger, SQLException> failing = //
-            new XRProvider<>(XRProviderTest::newSQLException, IDLE_TIME, LIFE_TIME);
-
-    private static AtomicInteger newAtomicInteger() {
-        return new AtomicInteger();
-    }
-
-    private static AtomicInteger newSQLException() throws SQLException {
-        throw new SQLException("failing");
-    }
-
-    @Test
-    final void run_throwing_X() {
-        assertThrows(IOException.class, () -> provider.runEx(atom -> {
-            throw new IOException();
-        }));
-    }
-
-    @Test
-    final void run_throwing_R() {
-        assertThrows(SQLException.class, () -> failing.run(atom -> {
-        }));
-    }
-
-    @Test
-    final void runEx_throwing_R() {
-        assertThrows(SQLException.class, () -> failing.runEx(atom -> {
-        }));
-    }
-
-    @Test
-    final void get_throwing_R() {
-        assertThrows(SQLException.class, () -> failing.get(AtomicInteger::get));
-    }
-
-    @Test
-    final void getEx_throwing_R() {
-        assertThrows(SQLException.class, () -> failing.getEx(AtomicInteger::get));
+    private static XProvider<AtomicInteger, InterruptedException> newXProvider() {
+        return new XProvider<>(() -> {
+            Thread.sleep(0);
+            return new AtomicInteger();
+        });
     }
 
     @Test
     final void run_sequential() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .map(index -> {
+                                 .boxed()
+                                 .map(function(index -> {
                                      final int[] result = {-1};
-                                     try {
-                                         provider.run(atom -> result[0] = atom.incrementAndGet());
-                                     } catch (final SQLException e) {
-                                         fail("should not really occur: " + e);
-                                     }
+                                     provider.run(atom -> result[0] = atom.incrementAndGet());
                                      return result[0];
-                                 })
+                                 }))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -85,19 +45,17 @@ class XRProviderTest {
 
     @Test
     final void run_parallel() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
+                                 .boxed()
                                  .parallel()
-                                 .map(index -> {
+                                 .map(function(index -> {
                                      final int[] result = {-1};
-                                     try {
-                                         provider.run(atom -> result[0] = atom.incrementAndGet());
-                                     } catch (final SQLException e) {
-                                         fail("should not really occur: " + e);
-                                     }
+                                     provider.run(atom -> result[0] = atom.incrementAndGet());
                                      return result[0];
-                                 })
+                                 }))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertTrue(MAX > max,
@@ -111,6 +69,7 @@ class XRProviderTest {
 
     @Test
     final void runEx_sequential() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -134,6 +93,7 @@ class XRProviderTest {
 
     @Test
     final void runEx_parallel() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -160,17 +120,12 @@ class XRProviderTest {
 
     @Test
     final void get_sequential() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .map(index -> {
-                                     try {
-                                         return provider.get(AtomicInteger::incrementAndGet);
-                                     } catch (final SQLException e) {
-                                         fail("should not really occur: " + e);
-                                         return -1;
-                                     }
-                                 })
+                                 .boxed()
+                                 .map(function(index -> provider.get(AtomicInteger::incrementAndGet)))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -182,21 +137,16 @@ class XRProviderTest {
 
     @Test
     final void get_parallel() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
-        final int max = IntStream.range(0, MAX)
-                                 .parallel()
-                                 .map(index -> {
-                                     try {
-                                         return provider.get(AtomicInteger::incrementAndGet);
-                                     } catch (final SQLException e) {
-                                         fail("should not really occur: " + e);
-                                         return -1;
-                                     }
-                                 })
-                                 .reduce(Math::max)
-                                 .orElse(-1);
-        assertTrue(MAX > max);
+        final int result = IntStream.range(0, MAX)
+                                    .boxed()
+                                    .parallel()
+                                    .map(function(index -> provider.get(AtomicInteger::incrementAndGet)))
+                                    .reduce(Math::max)
+                                    .orElse(-1);
+        assertTrue(MAX > result);
         assertTrue(1 < provider.size(),
                    "After multiple parallel access, the provider must contain more than one subject.");
         assertTrue(MAX > provider.size(),
@@ -205,17 +155,12 @@ class XRProviderTest {
 
     @Test
     final void getEx_sequential() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .map(index -> {
-                                     try {
-                                         return provider.getEx(AtomicInteger::incrementAndGet);
-                                     } catch (final SQLException e) {
-                                         fail("should not really occur: " + e);
-                                         return -1;
-                                     }
-                                 })
+                                 .boxed()
+                                 .map(function(index -> provider.getEx(AtomicInteger::incrementAndGet)))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -227,18 +172,13 @@ class XRProviderTest {
 
     @Test
     final void getEx_parallel() {
+        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int result = IntStream.range(0, MAX)
+                                    .boxed()
                                     .parallel()
-                                    .map(index -> {
-                                        try {
-                                            return provider.getEx(AtomicInteger::incrementAndGet);
-                                        } catch (final SQLException e) {
-                                            fail("should not really occur: " + e);
-                                            return -1;
-                                        }
-                                    })
+                                    .map(function(index -> provider.getEx(AtomicInteger::incrementAndGet)))
                                     .reduce(Math::max)
                                     .orElse(-1);
         assertTrue(MAX > result);

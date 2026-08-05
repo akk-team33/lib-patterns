@@ -86,5 +86,9 @@
             <artifactId>matching-rhea</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>pooling-ariel</artifactId>
+        </dependency>
     </dependencies>
 </project>

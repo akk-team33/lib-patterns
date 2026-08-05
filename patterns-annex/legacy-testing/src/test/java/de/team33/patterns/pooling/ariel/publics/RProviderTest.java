@@ -1,39 +1,41 @@
-package de.team33.test.patterns.pooling.ariel;
+package de.team33.patterns.pooling.ariel.publics;
 
-import de.team33.patterns.pooling.ariel.XProvider;
+import de.team33.patterns.pooling.ariel.RProvider;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 import static de.team33.patterns.exceptional.dione.Conversion.function;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-class XProviderTest {
+class RProviderTest {
 
     private static final int MAX = 500;
+    private static final long IDLE_TIME = 10; // milliseconds!
+    private static final long LIFE_TIME = 100; // milliseconds!
 
-    private static XProvider<AtomicInteger, InterruptedException> newXProvider() {
-        return new XProvider<>(() -> {
-            Thread.sleep(0);
-            return new AtomicInteger();
-        });
+    @Test
+    final void run_throwing() {
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
+        assertThrows(IOException.class, () -> provider.runEx(atom -> {
+            throw new IOException();
+        }));
     }
 
     @Test
     final void run_sequential() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .boxed()
-                                 .map(function(index -> {
+                                 .map(index -> {
                                      final int[] result = {-1};
                                      provider.run(atom -> result[0] = atom.incrementAndGet());
                                      return result[0];
-                                 }))
+                                 })
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -45,17 +47,16 @@ class XProviderTest {
 
     @Test
     final void run_parallel() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .boxed()
                                  .parallel()
-                                 .map(function(index -> {
+                                 .map(index -> {
                                      final int[] result = {-1};
                                      provider.run(atom -> result[0] = atom.incrementAndGet());
                                      return result[0];
-                                 }))
+                                 })
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertTrue(MAX > max,
@@ -69,7 +70,7 @@ class XProviderTest {
 
     @Test
     final void runEx_sequential() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -93,7 +94,7 @@ class XProviderTest {
 
     @Test
     final void runEx_parallel() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
@@ -120,12 +121,11 @@ class XProviderTest {
 
     @Test
     final void get_sequential() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .boxed()
-                                 .map(function(index -> provider.get(AtomicInteger::incrementAndGet)))
+                                 .map(index -> provider.get(AtomicInteger::incrementAndGet))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -137,16 +137,15 @@ class XProviderTest {
 
     @Test
     final void get_parallel() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
-        final int result = IntStream.range(0, MAX)
-                                    .boxed()
-                                    .parallel()
-                                    .map(function(index -> provider.get(AtomicInteger::incrementAndGet)))
-                                    .reduce(Math::max)
-                                    .orElse(-1);
-        assertTrue(MAX > result);
+        final int max = IntStream.range(0, MAX)
+                                 .parallel()
+                                 .map(index -> provider.get(AtomicInteger::incrementAndGet))
+                                 .reduce(Math::max)
+                                 .orElse(-1);
+        assertTrue(MAX > max);
         assertTrue(1 < provider.size(),
                    "After multiple parallel access, the provider must contain more than one subject.");
         assertTrue(MAX > provider.size(),
@@ -155,12 +154,11 @@ class XProviderTest {
 
     @Test
     final void getEx_sequential() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int max = IntStream.range(0, MAX)
-                                 .boxed()
-                                 .map(function(index -> provider.getEx(AtomicInteger::incrementAndGet)))
+                                 .map(index -> provider.getEx(AtomicInteger::incrementAndGet))
                                  .reduce(Math::max)
                                  .orElse(-1);
         assertEquals(MAX, max,
@@ -172,13 +170,12 @@ class XProviderTest {
 
     @Test
     final void getEx_parallel() {
-        final XProvider<AtomicInteger, InterruptedException> provider = newXProvider();
+        final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
         final int result = IntStream.range(0, MAX)
-                                    .boxed()
                                     .parallel()
-                                    .map(function(index -> provider.getEx(AtomicInteger::incrementAndGet)))
+                                    .map(index -> provider.getEx(AtomicInteger::incrementAndGet))
                                     .reduce(Math::max)
                                     .orElse(-1);
         assertTrue(MAX > result);
