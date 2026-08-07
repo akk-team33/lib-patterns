@@ -60,6 +60,7 @@
                     <excludeArtifacts>
                         <artifact>patterns-home</artifact>
                         <artifact>patterns-annex</artifact>
+                        <artifact>concept-alpha</artifact>
                         <artifact>legacy-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
