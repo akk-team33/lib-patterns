@@ -22,9 +22,10 @@ https://www.team33.de/dev/patterns/2.x
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
+  * files-pluto (Team33 Files Library - Edition "pluto")
+  * files-styx (Team33 Files Library - Edition "styx")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
-  * io-adrastea (Team33 IO Library - Edition "adrastea")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
@@ -52,6 +53,7 @@ https://www.team33.de/dev/patterns/2.x
   * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
+  * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.7.2
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0

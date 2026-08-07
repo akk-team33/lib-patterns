@@ -21,6 +21,7 @@ import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
 import static java.util.Comparator.comparing;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class FileEntryTest {
 
     private static final String CLASS_NAME = FileEntryTest.class.getSimpleName();

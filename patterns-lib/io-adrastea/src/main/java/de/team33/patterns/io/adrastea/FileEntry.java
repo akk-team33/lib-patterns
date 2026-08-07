@@ -23,18 +23,11 @@ import static de.team33.patterns.io.adrastea.LinkHandling.ORIGINAL;
 import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
 
 /**
- * Represents an entry from an imaginary file index.
- * Includes some meta information about a file, particularly the file system path, file type, size,
- * and some timestamps.
- * <p>
- * Strictly speaking, the meta information only applies to the moment of instantiation.
- * Therefore, an instance should be short-lived. The longer an instance "lives", the more likely it is
- * that the meta information is out of date because the underlying file may have been changed in the meantime.
- * <p>
- * Use {@link #of(Path, LinkHandling)}, {@link #original(Path)} or {@link #resolved(Path)}
- * to get a new instance.
+ * @deprecated consider class FileEntry from module
+ * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
+ * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto/apidocs</a>
  */
-@SuppressWarnings("unused")
+@Deprecated
 public class FileEntry {
 
     private final Path path;
@@ -298,7 +291,9 @@ public class FileEntry {
     }
 
     /**
-     * Symbolizes possible types of a file represented by a {@link FileEntry}.
+     * @deprecated consider class FileType from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto/apidocs</a>
      */
     public enum Type {
 
@@ -346,12 +341,18 @@ public class FileEntry {
         }
     }
 
+    /**
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
+     * @deprecated consider class Problem from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     */
     public record Problem(FileEntry node, IOException cause) implements Nodes.Problem<FileEntry> {
     }
 
     /**
-     * A tool that serves to list the immediate contents of any file represented by a
-     * {@link Path} or {@link FileEntry}.
+     * @deprecated consider class Styx from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
      */
     public static final class Lister implements Nodes.Lister<FileEntry, Problem> {
 
@@ -536,8 +537,9 @@ public class FileEntry {
     }
 
     /**
-     * A tool that serves to stream the recursive contents of any directory represented by a
-     * {@link Path} or {@link FileEntry}.
+     * @deprecated consider class Styx from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
      */
     public static final class Streamer extends Nodes.Streamer<FileEntry, Problem, Lister> {
 
