@@ -62,12 +62,14 @@ https://www.team33.de/dev/patterns/2.x
 
 * Nailed module io-deimos to 2.7.2 (suspended)
 * Nailed module io-adrastea to 2.7.2 (deprecated)
+* Nailed module hierarchy-mab to 2.7.2 (deprecated)
 
 ### 2.7.2
 
 * Added module files-pluto
 * Added module files-styx
 * Marked module io-adrastea as deprecated
+* Marked module hierarchy-mab as deprecated
 * Refined module io-deimos ...
   * refined dependencies
   * fixed javadoc

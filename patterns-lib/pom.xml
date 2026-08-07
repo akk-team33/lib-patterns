@@ -20,6 +20,8 @@
         <module>enums-pan</module>
         <module>exceptional-dione</module>
         <module>lazy-narvi</module>
+        <module>files-pluto</module>
+        <module>files-styx</module>
         <module>hierarchy-mab</module>
         <module>io-thalassa</module>
         <module>io-deimos</module>
@@ -33,7 +35,6 @@
         <module>building-elara</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
-        <module>files-pluto</module>
     </modules>
 
     <dependencyManagement>
