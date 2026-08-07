@@ -22,12 +22,22 @@
         <dependencies>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>arbitrary-mimas</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>enums-pan</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>arbitrary-mimas</artifactId>
+                <artifactId>files-pluto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>files-styx</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

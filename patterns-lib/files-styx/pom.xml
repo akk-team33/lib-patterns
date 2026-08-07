@@ -15,4 +15,19 @@
     <name>Team33 Files Library - Edition "styx"</name>
     <description>Provides directory access via streaming.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>lazy-narvi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>files-pluto</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>io-hydra</artifactId>
+        </dependency>
+    </dependencies>
 </project>
