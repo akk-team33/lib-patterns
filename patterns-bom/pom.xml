@@ -107,11 +107,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>hierarchy-mab</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>streamable-galatea</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -120,6 +115,11 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>io-adrastea</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>hierarchy-mab</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

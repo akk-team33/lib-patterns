@@ -25,7 +25,6 @@ https://www.team33.de/dev/patterns/2.x
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
-  * hierarchy-mab (Team33 Hierarchy Library - Edition "mab")
   * io-deimos (Team33 IO Library - Edition "deimos")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
