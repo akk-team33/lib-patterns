@@ -33,6 +33,7 @@
         <module>building-elara</module>
         <module>collection-ceres</module>
         <module>hashing-pandia</module>
+        <module>files-pluto</module>
     </modules>
 
     <dependencyManagement>
