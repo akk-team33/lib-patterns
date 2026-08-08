@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+@Deprecated
 public class PathLister implements Nodes.Lister<Path, PathProblem> {
 
     private static final List<Path> EMPTY_LIST = List.of();

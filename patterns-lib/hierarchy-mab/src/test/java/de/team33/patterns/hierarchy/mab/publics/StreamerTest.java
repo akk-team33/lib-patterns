@@ -13,6 +13,7 @@ import java.util.function.Predicate;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Deprecated
 class StreamerTest {
 
     private static final PathStreamer STREAMER = new PathStreamer(new PathLister(), null);

@@ -27,6 +27,7 @@ import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
  * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
  * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto/apidocs</a>
  */
+@SuppressWarnings("unused")
 @Deprecated
 public class FileEntry {
 

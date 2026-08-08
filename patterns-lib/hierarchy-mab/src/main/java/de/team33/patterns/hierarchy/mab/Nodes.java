@@ -10,8 +10,12 @@ import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
- * Utility class to handle <em>nodes</em> within a hierarchical data structure.
+ * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
+ * @deprecated It is basically just an implementation core for the deprecated module
+ * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
+ * and is largely useless on its own.
  */
+@Deprecated
 public final class Nodes {
 
     private static final System.Logger LOGGER = System.getLogger(Nodes.class.getCanonicalName());
@@ -26,10 +30,12 @@ public final class Nodes {
     }
 
     /**
-     * Represents a problem that will be reported to a suitable consumer if a node cannot be listed due to an exception.
-     *
-     * @param <N> The node type.
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
+     * @deprecated It is basically just an implementation core for the deprecated module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
+     * and is largely useless on its own.
      */
+    @Deprecated
     public interface Problem<N> {
 
         /**
@@ -44,13 +50,12 @@ public final class Nodes {
     }
 
     /**
-     * Represents a tool that serves to list the immediate contents of any hierarchical structure
-     * represented by an abstract <em>node</em>.
-     *
-     * @param <N> The type of <em>node</em>.
-     * @param <P> A type of {@link Problem} that will be reported to a suitable {@link Consumer}
-     *            if a node cannot be listed due to an exception.
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
+     * @deprecated It is basically just an implementation core for the deprecated module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
+     * and is largely useless on its own.
      */
+    @Deprecated
     public interface Lister<N, P extends Problem<N>> {
 
         /**
@@ -80,15 +85,12 @@ public final class Nodes {
     }
 
     /**
-     * A tool that serves to stream the recursive contents of any hierarchical structure
-     * represented by an abstract <em>node</em>.
-     *
-     * @param <N> The type of <em>node</em>.
-     * @param <P> A type of {@link Problem} that will be reported to a suitable {@link Consumer}
-     *            if a node cannot be listed due to an exception.
-     * @param <L> A type of {@link Lister} that will be used to list the immediate contents of a <em>node</em>.
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
+     * @deprecated It is basically just an implementation core for the deprecated module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
+     * and is largely useless on its own.
      */
-    @SuppressWarnings("unused")
+    @Deprecated
     public static class Streamer<N, P extends Problem<N>, L extends Lister<N, P>> {
 
         @SuppressWarnings("rawtypes")
@@ -98,7 +100,6 @@ public final class Nodes {
                 return false;
             }
 
-            @SuppressWarnings("NullableProblems") // shit in -> shit out!
             @Override
             public Predicate or(final Predicate other) {
                 return other;
