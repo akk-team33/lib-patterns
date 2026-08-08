@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 @SuppressWarnings("NewClassNamingConvention")
 class SymbolicLinkTrial {
 

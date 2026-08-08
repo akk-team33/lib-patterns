@@ -4,6 +4,7 @@ import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.Comparator;
 
+@Deprecated
 final class Util {
 
     static final LinkOption[] RESOLVE_LINKS = {};

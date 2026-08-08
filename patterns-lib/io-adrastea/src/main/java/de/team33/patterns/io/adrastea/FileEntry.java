@@ -19,9 +19,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.team33.patterns.io.adrastea.LinkHandling.ORIGINAL;
-import static de.team33.patterns.io.adrastea.LinkHandling.RESOLVE;
-
 /**
  * @deprecated consider class FileEntry from module
  * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
@@ -63,7 +60,7 @@ public class FileEntry {
      * @see LinkHandling#ORIGINAL
      */
     public static FileEntry original(final Path path) {
-        return of(path, ORIGINAL);
+        return of(path, LinkHandling.ORIGINAL);
     }
 
     /**
@@ -73,7 +70,7 @@ public class FileEntry {
      * @see LinkHandling#RESOLVE
      */
     public static FileEntry resolved(final Path path) {
-        return of(path, RESOLVE);
+        return of(path, LinkHandling.RESOLVE);
     }
 
     private static FileEntry ofDefinite(final Path path, final LinkHandling linkHandling) {
@@ -109,7 +106,7 @@ public class FileEntry {
     }
 
     private BasicFileAttributes newAttributes(final LinkHandling handling) {
-        final BasicFileAttributes original = newAttributes(path, ORIGINAL);
+        final BasicFileAttributes original = newAttributes(path, LinkHandling.ORIGINAL);
         if (original.isSymbolicLink()) {
             return newLinkAttributes(handling, original);
         } else {
@@ -118,8 +115,8 @@ public class FileEntry {
     }
 
     private LinkAttributes newLinkAttributes(final LinkHandling handling, final BasicFileAttributes original) {
-        if (ORIGINAL == handling) {
-            return new LinkAttributes(ORIGINAL, original);
+        if (LinkHandling.ORIGINAL == handling) {
+            return new LinkAttributes(LinkHandling.ORIGINAL, original);
         } else {
             return new LinkAttributes(handling, newAttributes(path, handling));
         }
@@ -148,14 +145,14 @@ public class FileEntry {
      * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isOriginal()}.
      */
     public final FileEntry original() {
-        return isOriginal() ? this : new FileEntry(path, Normality.DEFINITE, ORIGINAL);
+        return isOriginal() ? this : new FileEntry(path, Normality.DEFINITE, LinkHandling.ORIGINAL);
     }
 
     /**
      * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isResolved()}.
      */
     public final FileEntry resolved() {
-        return isResolved() ? this : new FileEntry(path, Normality.DEFINITE, RESOLVE);
+        return isResolved() ? this : new FileEntry(path, Normality.DEFINITE, LinkHandling.RESOLVE);
     }
 
     /**
@@ -173,7 +170,7 @@ public class FileEntry {
      */
     public final boolean isOriginal() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
-            return ORIGINAL == linkAttributes.handling();
+            return LinkHandling.ORIGINAL == linkAttributes.handling();
         } else {
             return true;
         }
@@ -187,7 +184,7 @@ public class FileEntry {
      */
     public final boolean isResolved() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
-            return RESOLVE == linkAttributes.handling();
+            return LinkHandling.RESOLVE == linkAttributes.handling();
         } else {
             return true;
         }
@@ -413,7 +410,7 @@ public class FileEntry {
          * @see FileEntry#lister(LinkHandling)
          */
         public final Lister resolved() {
-            return (RESOLVE == linkHandling) ? this : new Lister(RESOLVE, pathOrder, entryOrder);
+            return (LinkHandling.RESOLVE == linkHandling) ? this : new Lister(LinkHandling.RESOLVE, pathOrder, entryOrder);
         }
 
         /**
@@ -423,7 +420,7 @@ public class FileEntry {
          * @see FileEntry#lister(LinkHandling)
          */
         public final Lister original() {
-            return (ORIGINAL == linkHandling) ? this : new Lister(ORIGINAL, pathOrder, entryOrder);
+            return (LinkHandling.ORIGINAL == linkHandling) ? this : new Lister(LinkHandling.ORIGINAL, pathOrder, entryOrder);
         }
 
         /**
@@ -559,7 +556,7 @@ public class FileEntry {
          * @see FileEntry#streamer(LinkHandling)
          */
         public final Streamer resolved() {
-            return (RESOLVE == lister().linkHandling) ? this : new Streamer(lister().resolved(), skipCondition());
+            return (LinkHandling.RESOLVE == lister().linkHandling) ? this : new Streamer(lister().resolved(), skipCondition());
         }
 
         /**
@@ -569,7 +566,7 @@ public class FileEntry {
          * @see FileEntry#streamer(LinkHandling)
          */
         public final Streamer original() {
-            return (ORIGINAL == lister().linkHandling) ? this : new Streamer(lister().original(), skipCondition());
+            return (LinkHandling.ORIGINAL == lister().linkHandling) ? this : new Streamer(lister().original(), skipCondition());
         }
 
         /**

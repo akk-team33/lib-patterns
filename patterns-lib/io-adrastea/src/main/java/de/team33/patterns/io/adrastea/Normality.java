@@ -3,6 +3,7 @@ package de.team33.patterns.io.adrastea;
 import java.nio.file.Path;
 import java.util.function.Function;
 
+@Deprecated
 interface Normality extends Function<Path, Path> {
 
     Normality UNKNOWN = path -> path.toAbsolutePath().normalize();

@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Comparator;
 
+@Deprecated
 public final class TUtil {
 
     public static final Comparator<Path> PATH_ORDER = Util.PATH_ORDER;

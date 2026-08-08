@@ -7,6 +7,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
+@Deprecated
 final class Util {
 
     static final Comparator<Object> NO_ORDER = ((o1, o2) -> {

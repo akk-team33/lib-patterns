@@ -3,6 +3,7 @@ package de.team33.patterns.io.adrastea;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 
+@Deprecated
 record LinkAttributes(LinkHandling handling, BasicFileAttributes backing) implements BasicFileAttributes {
 
     @Override

@@ -3,8 +3,11 @@ package de.team33.patterns.io.adrastea;
 import java.nio.file.LinkOption;
 
 /**
- * Controls the handling of symbolic links.
+ * @deprecated
+ * @see de.team33.patterns.io.adrastea package
+ * @see FileEntry
  */
+@Deprecated
 public enum LinkHandling {
 
     /**
