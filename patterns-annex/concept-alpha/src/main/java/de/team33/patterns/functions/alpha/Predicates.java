@@ -2,6 +2,9 @@ package de.team33.patterns.functions.alpha;
 
 import java.util.function.Predicate;
 
+/**
+ * A utility that provides special {@link Predicate}s.
+ */
 public final class Predicates {
 
     @SuppressWarnings("rawtypes")
@@ -74,7 +77,15 @@ public final class Predicates {
     }
 
     /**
-     * Returns a singleton {@link Predicate} that accepts any input.
+     * Returns a singleton {@link Predicate} such that {@link Predicate#test(Object) accept().test(anything)}
+     * always returns {@code true}.
+     * <p>
+     * Furthermore, ...
+     * <ul>
+     *     <li>{@link Predicate#and(Predicate) accept().and(other)} always returns {@code other}.</li>
+     *     <li>{@link Predicate#or(Predicate) accept().or(other)} always returns {@code accept()}.</li>
+     *     <li>{@link Predicate#negate() accept().negate()} always returns {@link #reject()}.</li>
+     * </ul>
      */
     @SuppressWarnings("unchecked")
     public static <T> Predicate<T> accept() {
@@ -82,7 +93,15 @@ public final class Predicates {
     }
 
     /**
-     * Returns a singleton {@link Predicate} that rejects any input.
+     * Returns a singleton {@link Predicate} such that {@link Predicate#test(Object) reject().test(anything)}
+     * always returns {@code false}.
+     * <p>
+     * Furthermore, ...
+     * <ul>
+     *      <li>{@link Predicate#and(Predicate) reject().and(other)} always returns {@code reject()}.</li>
+     *      <li>{@link Predicate#or(Predicate) reject().or(other)} always returns {@code other}.</li>
+     *      <li>{@link Predicate#negate() reject().negate()} always returns {@link #accept()}.</li>
+     *  </ul>
      */
     @SuppressWarnings("unchecked")
     public static <T> Predicate<T> reject() {

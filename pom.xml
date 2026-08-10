@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.team33</groupId>
         <artifactId>mvn-config-alpha</artifactId>
-        <version>2.0.2</version>
+        <version>2.0.3</version>
     </parent>
 
     <groupId>de.team33.patterns</groupId>
@@ -20,7 +20,7 @@
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
         </license>
     </licenses>
     <developers>
