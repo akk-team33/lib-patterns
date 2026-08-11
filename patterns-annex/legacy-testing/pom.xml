@@ -89,10 +89,17 @@
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>pooling-ariel</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>proving-kerberos</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>hashing-pandia</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
