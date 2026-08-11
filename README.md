@@ -8,7 +8,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ## Requires
 
-    Java 17 or later
+Java 17 or later
 
 ## Artifacts
 
@@ -33,9 +33,7 @@ https://www.team33.de/dev/patterns/2.x
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
 
-## Still Supported
-
-### development preliminary suspended
+## Still Featured
 
 * (patterns-lib - previous releases)
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
@@ -46,7 +44,7 @@ https://www.team33.de/dev/patterns/2.x
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
-### deprecated
+## Deprecated
 
 * (patterns-lib - previous releases)
   * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
@@ -61,9 +59,9 @@ https://www.team33.de/dev/patterns/2.x
 
 ### next
 
-* Nailed module io-deimos to 2.7.2 (suspended)
-* Nailed module io-adrastea to 2.7.2 (deprecated)
-* Nailed module hierarchy-mab to 2.7.2 (deprecated)
+* Market module io-deimos as deprecated
+* Pinned module io-adrastea to 2.7.2 (deprecated)
+* Pinned module hierarchy-mab to 2.7.2 (deprecated)
 
 ### 2.7.2
 
@@ -80,20 +78,20 @@ https://www.team33.de/dev/patterns/2.x
 * Added module io-thalassa
 * Refined module io-deimos ...
   * Marked class TextIO as deprecated
-* Nailed module execution-metis to 2.7.0 (suspended)
-* Nailed module matching-rhea to 2.7.0 (suspended)
-* Nailed module pooling-ariel to 2.7.0 (suspended)
-* Nailed module proving-kerberos to 2.7.0 (suspended)
+* Pinned module execution-metis to 2.7.0 (still featured)
+* Pinned module matching-rhea to 2.7.0 (still featured)
+* Pinned module pooling-ariel to 2.7.0 (still featured)
+* Pinned module proving-kerberos to 2.7.0 (still featured)
 
 ### 2.7.0
 
 * Added module records-triton
-* Re-nailed module decision-carpo to 2.6.1 (deprecated)
+* Pinned module decision-carpo to 2.6.1 (deprecated)
 
 ### 2.6.1
 
-* Re-nailed module serial-charon to 1.27.0 (deprecated)
-* Resume module decision-carpo
+* Pinned module serial-charon to 1.27.0 (deprecated)
+* Unpinned module decision-carpo
   * Marked module as deprecated
 
 ### 2.6.0
@@ -106,12 +104,12 @@ https://www.team33.de/dev/patterns/2.x
 ### 2.5.0
 
 * Added module decision-thyone
-* Nailed module decision-carpo to 2.4.1 (suspended)
+* Pinned module decision-carpo to 2.4.1 (still featured)
 
 ### 2.4.1
 
-* Re-nailed module decision-leda to 1.26.0 (deprecated)
-* Re-nailed module decision-telesto to 1.26.0 (deprecated)
+* Pinned module decision-leda to 1.26.0 (deprecated)
+* Pinned module decision-telesto to 1.26.0 (deprecated)
 
 ### 2.4.0
 
@@ -154,7 +152,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ### 2.1.0
 
-* Revoked and refined module collection-ceres
+* Unpinned and refined module collection-ceres
   * Added method Collecting.retain(Collection, Object)
   * Added method Collecting.retain(Collection, Object, Object, ...)
   * Added method Collecting.Setup.retain(Object)
@@ -170,9 +168,9 @@ https://www.team33.de/dev/patterns/2.x
   * Added class XReLazy
   * Added class InitException
   * Marked class Lazy.InitException as deprecated
-* Nailed module io-phobos to 1.25.0
-* Nailed module notes-eris to 1.25.0
-* Nailed module collection-ceres to 1.25.0
+* Pinned module io-phobos to 1.25.0
+* Pinned module notes-eris to 1.25.0
+* Pinned module collection-ceres to 1.25.0
 
 ### 1.25.0
 
@@ -180,17 +178,17 @@ https://www.team33.de/dev/patterns/2.x
 
 ### 1.24.1
 
-* Nailed module serial-charon to 1.24.0
-* Nailed module tuple-janus to 1.24.0
+* Pinned module serial-charon to 1.24.0
+* Pinned module tuple-janus to 1.24.0
 
 ### 1.24.0
 
-* Nailed module decision-leda to 1.23.0
+* Pinned module decision-leda to 1.23.0
 * Added module decision-carpo
 
 ### 1.23.0
 
-* Nailed module decision-telesto to 1.22.0
+* Pinned module decision-telesto to 1.22.0
 * Added module decision-leda
 
 ### 1.22.0
@@ -219,7 +217,7 @@ https://www.team33.de/dev/patterns/2.x
 
 ### 1.19.3
 
-* Nailed deprecated module testing-titan to 1.19.2
+* Pinned deprecated module testing-titan to 1.19.2
 
 ### 1.19.2
 
@@ -228,7 +226,7 @@ https://www.team33.de/dev/patterns/2.x
 ### 1.19.1
 
 * Refined module arbitrary-mimas
-* Nailed deprecated module random-tarvos to 1.19.0
+* Pinned deprecated module random-tarvos to 1.19.0
 
 ### 1.19.0
 
@@ -293,16 +291,16 @@ https://www.team33.de/dev/patterns/2.x
 
 ### 1.13.2
 
-* Nailed deprecated module exceptional-01 to 1.13.1
+* Pinned deprecated module exceptional-01 to 1.13.1
 * Prepared site url for multiple major releases
 
 ### 1.13.1
 
-* Nailed deprecated module exceptional-01 to 1.13.0
-* Nailed deprecated module production-01 to 1.13.0
-* Nailed deprecated module random-mimas to 1.13.0
-* Nailed deprecated module lazy-01 to 1.13.0
-* Nailed deprecated module properties-01 to 1.13.0
+* Pinned deprecated module exceptional-01 to 1.13.0
+* Pinned deprecated module production-01 to 1.13.0
+* Pinned deprecated module random-mimas to 1.13.0
+* Pinned deprecated module lazy-01 to 1.13.0
+* Pinned deprecated module properties-01 to 1.13.0
 * Added module pooling-ariel
   * Marked module pooling-01 as deprecated
 
@@ -310,8 +308,8 @@ https://www.team33.de/dev/patterns/2.x
 
 * Marked module properties-01 as deprecated
 * Marked module production-01 as deprecated
-* Nailed deprecated module random-01 to 1.12.2
-* Nailed deprecated module testing-01 to 1.12.2
+* Pinned deprecated module random-01 to 1.12.2
+* Pinned deprecated module testing-01 to 1.12.2
 * Added module exceptional-dione
   * Marked module exceptional-01 as deprecated
 * Refined module random-tarvos ...
