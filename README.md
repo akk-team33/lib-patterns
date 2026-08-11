@@ -58,12 +58,14 @@ Java 17 or later
 
 ## Change Log
 
-### 2.9.0-SNAPSHOT (TODO)
+### 2.9.0-SNAPSHOT
 
-* Pinned module io-deimos to 2.8.0 (deprecated) ✅
-* Pinned module io-adrastea to 2.8.0 (deprecated) ✅
-* Pinned module hierarchy-mab to 2.8.0 (deprecated) ✅
+* Pinned module io-deimos to 2.8.0 (deprecated)
+* Pinned module io-adrastea to 2.8.0 (deprecated)
+* Pinned module hierarchy-mab to 2.8.0 (deprecated)
 * Pinned module io-phobos to 2.8.0 (deprecated)
+* Pinned module building-anthe to 2.8.0 (still featured)
+* Pinned module building-elara to 2.8.0 (still featured)
 
 ### 2.8.0
 
