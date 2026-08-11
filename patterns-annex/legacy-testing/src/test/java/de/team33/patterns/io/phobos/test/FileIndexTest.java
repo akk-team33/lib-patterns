@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Deprecated
 class FileIndexTest extends IoTestBase {
 
     private static final String NEW_LINE = String.format("%n");

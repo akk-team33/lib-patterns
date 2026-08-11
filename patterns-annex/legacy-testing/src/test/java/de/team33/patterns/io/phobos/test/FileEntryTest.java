@@ -12,11 +12,7 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FileEntryTest {
 
@@ -34,15 +30,15 @@ class FileEntryTest {
                 ROOT);
     }
 
+    private static String nameOf(final Path path) {
+        return Optional.ofNullable(path.getFileName()).orElse(path).toString();
+    }
+
     @ParameterizedTest
     @MethodSource("paths")
     final void path(final Path path) {
         final FileEntry entry = FileEntry.of(path);
         assertTrue(entry.path().isAbsolute());
-    }
-
-    private static String nameOf(final Path path) {
-        return Optional.ofNullable(path.getFileName()).orElse(path).toString();
     }
 
     @ParameterizedTest
