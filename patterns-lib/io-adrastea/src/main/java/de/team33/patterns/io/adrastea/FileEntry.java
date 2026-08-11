@@ -20,9 +20,11 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * @deprecated consider class FileEntry from module
- * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
+ * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a>
  * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto/apidocs</a>
+ * @deprecated consider class FileEntry from module
+ * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto</a>
+ * as a replacement.
  */
 @SuppressWarnings("unused")
 @Deprecated
@@ -47,28 +49,25 @@ public class FileEntry {
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path} and a given {@link LinkHandling}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static FileEntry of(final Path path, final LinkHandling linkHandling) {
         return new FileEntry(path, Normality.UNKNOWN, linkHandling);
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isOriginal()}.
-     *
-     * @see #of(Path, LinkHandling)
-     * @see LinkHandling#ORIGINAL
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static FileEntry original(final Path path) {
         return of(path, LinkHandling.ORIGINAL);
     }
 
     /**
-     * Returns a new {@link FileEntry} based on a given {@link Path} that {@link #isResolved()}.
-     *
-     * @see #of(Path, LinkHandling)
-     * @see LinkHandling#RESOLVE
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static FileEntry resolved(final Path path) {
         return of(path, LinkHandling.RESOLVE);
     }
@@ -78,25 +77,25 @@ public class FileEntry {
     }
 
     /**
-     * Returns a new {@link Lister} based on a given {@link LinkHandling}
-     * that applies a default path order (by file name).
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static Lister lister(final LinkHandling linkHandling) {
         return new Lister(linkHandling, Util.PATH_ORDER, Util.NO_ORDER);
     }
 
     /**
-     * Returns a new {@link Streamer} based on a given {@link LinkHandling}
-     * that does not skip any entry.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static Streamer streamer(final LinkHandling linkHandling) {
         return streamer(lister(linkHandling));
     }
 
     /**
-     * Returns a new {@link Streamer} based on a given {@link Lister}
-     * that does not skip any entry.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public static Streamer streamer(final Lister lister) {
         return new Streamer(lister, null);
     }
@@ -127,47 +126,49 @@ public class FileEntry {
     }
 
     /**
-     * Returns the file system path of the represented file as an
-     * {@linkplain Path#toAbsolutePath() absolute} {@linkplain Path#normalize() normalized} {@link Path}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final Path path() {
         return path;
     }
 
     /**
-     * Returns the simple name of the represented file.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final String name() {
         return Optional.ofNullable(path.getFileName()).orElse(path).toString();
     }
 
     /**
-     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isOriginal()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final FileEntry original() {
         return isOriginal() ? this : new FileEntry(path, Normality.DEFINITE, LinkHandling.ORIGINAL);
     }
 
     /**
-     * Returns a {@link FileEntry} based on <em>this</em>' {@link #path()} that definitely {@link #isResolved()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final FileEntry resolved() {
         return isResolved() ? this : new FileEntry(path, Normality.DEFINITE, LinkHandling.RESOLVE);
     }
 
     /**
-     * Returns the {@link Type} of <em>this</em> {@link FileEntry}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final Type type() {
         return lazyType.get();
     }
 
     /**
-     * Determines whether <em>this</em> {@link FileEntry} exposes its original attributes,
-     * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
-     *
-     * @see #isResolved()
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isOriginal() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
             return LinkHandling.ORIGINAL == linkAttributes.handling();
@@ -177,11 +178,9 @@ public class FileEntry {
     }
 
     /**
-     * Determines whether <em>this</em> {@link FileEntry} resolves its final attributes,
-     * even if it {@linkplain #isSymbolicLink() is a symbolic link}.
-     *
-     * @see #isOriginal()
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isResolved() {
         if (attributes() instanceof LinkAttributes linkAttributes) {
             return LinkHandling.RESOLVE == linkAttributes.handling();
@@ -191,137 +190,132 @@ public class FileEntry {
     }
 
     /**
-     * Determines if the represented file is a directory.
-     * <p>
-     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isDirectory() {
         return attributes().isDirectory();
     }
 
     /**
-     * Determines if the represented file is a regular file.
-     * <p>
-     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isRegularFile() {
         return attributes().isRegularFile();
     }
 
     /**
-     * Determines if the represented file is a special file (typically, a <em>device</em>).
-     * <p>
-     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isSpecialFile() {
         return attributes().isOther();
     }
 
     /**
-     * Determines if the represented file is a symbolic link.
-     * <p>
-     * No matter if it {@link #isOriginal()} or {@link #isResolved()}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isSymbolicLink() {
         return attributes().isSymbolicLink();
     }
 
     /**
-     * Determines if the represented file is missing.
-     * <p>
-     * This may also be the case if it {@link #isSymbolicLink()} and {@link #isResolved()}.
-     * <p>
-     * <b>NOTE</b> that in this case, it also {@link #isPresent()}!
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isMissing() {
         return effective(attributes()) == Util.MISSING_FILE_ATTRIBUTES;
     }
 
     /**
-     * Determines if the represented file is present.
-     * <p>
-     * That is always the case if {@link #isRegularFile()}, {@link #isDirectory()}, {@link #isSpecialFile()}
-     * or {@link #isSymbolicLink()}, and therefore especially if a (resolved) symbolic link {@link #isMissing()}!
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final boolean isPresent() {
         return attributes() != Util.MISSING_FILE_ATTRIBUTES;
     }
 
     /**
-     * Returns the timestamp of the last modification of the represented file as an {@link Instant}.
-     *
-     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final Instant lastModified() {
         return attributes().lastModifiedTime().toInstant();
     }
 
     /**
-     * Returns the timestamp of the last access to the represented file as an {@link Instant}.
-     *
-     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final Instant lastAccess() {
         return attributes().lastAccessTime().toInstant();
     }
 
     /**
-     * Returns the timestamp of the creation of the represented file as an {@link Instant}.
-     *
-     * @throws UnsupportedOperationException if <em>this</em> {@link #isMissing()}
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final Instant creation() {
         return attributes().creationTime().toInstant();
     }
 
     /**
-     * Returns the size of the represented file.
-     * <p>
-     * If <em>this</em> {@link #isMissing()} returns {@code 0L}.
+     * @deprecated see {@link FileEntry}
      */
+    @Deprecated
     public final long size() {
         return attributes().size();
     }
 
+    /**
+     * @deprecated see {@link FileEntry}
+     */
+    @Deprecated
     @Override
     public final String toString() {
         return path.toString();
     }
 
     /**
-     * @deprecated consider class FileType from module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/">files-pluto</a>
      * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto/apidocs</a>
+     * @deprecated consider class FileType from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-pluto/apidocs/">files-pluto</a>
+     * as a replacement
      */
+    @Deprecated
     public enum Type {
 
         /**
-         * Symbolizes a regular file
-         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         * @deprecated see {@link Type}.
          */
+        @Deprecated
         REGULAR_FILE(FileEntry::isRegularFile),
 
         /**
-         * Symbolizes a directory
-         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         * @deprecated see {@link Type}.
          */
+        @Deprecated
         DIRECTORY(FileEntry::isDirectory),
 
         /**
-         * Symbolizes a special file (typically, a <em>device</em>)
-         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         * @deprecated see {@link Type}.
          */
+        @Deprecated
         SPECIAL_FILE(FileEntry::isSpecialFile),
 
         /**
-         * Symbolizes a symbolic link (if it is not {@linkplain FileEntry#isResolved() resolved}).
+         * @deprecated see {@link Type}.
          */
+        @Deprecated
         SYMBOLIC_LINK(Util.and(FileEntry::isOriginal, FileEntry::isSymbolicLink)),
 
         /**
-         * Symbolizes a missing file
-         * (maybe a resolved symbolic link if it is not {@linkplain FileEntry#isOriginal() original}).
+         * @deprecated see {@link Type}.
          */
+        @Deprecated
         MISSING(FileEntry::isMissing);
 
         private static final Values<Type> VALUES = Values.of(Type.class);
@@ -340,18 +334,24 @@ public class FileEntry {
     }
 
     /**
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a>
      * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
      * @deprecated consider class Problem from module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx</a>
+     * as a replacement.
      */
+    @Deprecated
     public record Problem(FileEntry node, IOException cause) implements Nodes.Problem<FileEntry> {
     }
 
     /**
-     * @deprecated consider class Styx from module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a>
      * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
+     * @deprecated consider class Styx from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx</a>
+     * as a replacement
      */
+    @Deprecated
     public static final class Lister implements Nodes.Lister<FileEntry, Problem> {
 
         private static final Choices<Lister> CHOICES = Choices.parallel(Lister::isPathOrder, Lister::isEntryOrder);
@@ -404,99 +404,50 @@ public class FileEntry {
         }
 
         /**
-         * Returns an instance that corresponds to <em>this</em> {@link Lister} but resolves symbolic links.
-         * Returns <em>this</em> {@link Lister} if it already resolves symbolic links.
-         *
-         * @see FileEntry#lister(LinkHandling)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final Lister resolved() {
             return (LinkHandling.RESOLVE == linkHandling) ? this : new Lister(LinkHandling.RESOLVE, pathOrder, entryOrder);
         }
 
         /**
-         * Returns an instance that corresponds to <em>this</em> {@link Lister} but handles original symbolic links.
-         * Returns <em>this</em> {@link Lister} if it already handles original symbolic links.
-         *
-         * @see FileEntry#lister(LinkHandling)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final Lister original() {
             return (LinkHandling.ORIGINAL == linkHandling) ? this : new Lister(LinkHandling.ORIGINAL, pathOrder, entryOrder);
         }
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>path</em> from a directory structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>path</em> does not represent a directory
-         * and thus cannot have any directory contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>path</em> refuses access to its contents
-         * and throws an exception. In that case, the problem will be logged to a {@link System.Logger}.
-         * <p>
-         * NOTE: an original {@link FileEntry} will be created from the given <em>path</em> using the associated
-         * {@link LinkHandling}. If this does not meet your requirements, use {@link #list(FileEntry)} instead.
-         *
-         * @see #list(FileEntry)
-         * @see #list(Path, Consumer)
-         * @see #list(FileEntry, Consumer)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final List<FileEntry> list(final Path path) {
             return list(entryOf(path));
         }
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>entry</em> from a directory structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>entry</em> does not represent a directory
-         * and thus cannot have any directory contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>entry</em> refuses access to its contents
-         * and thus throws an exception. In that case, the problem will be logged to a {@link System.Logger}.
-         *
-         * @see #list(Path)
-         * @see #list(Path, Consumer)
-         * @see #list(FileEntry, Consumer)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         @Override
         public final List<FileEntry> list(final FileEntry entry) {
             return Nodes.Lister.super.list(entry);
         }
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>path</em> from a directory structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>path</em> does not represent a directory
-         * and thus cannot have any directory contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>path</em> refuses access to its contents
-         * and thus throws an exception. In that case, a corresponding {@link Problem} will be reported
-         * to the given {@link Consumer}.
-         * <p>
-         * NOTE: an original {@link FileEntry} will be created from the given <em>path</em> using the associated
-         * {@link LinkHandling}. If this does not meet your requirements, use {@link #list(FileEntry, Consumer)}
-         * instead.
-         *
-         * @see #list(FileEntry, Consumer)
-         * @see #list(Path)
-         * @see #list(FileEntry)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final List<FileEntry> list(final Path path, final Consumer<? super Problem> onProblem) {
             return list(entryOf(path), onProblem);
         }
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>entry</em> from a directory structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>entry</em> does not represent a directory
-         * and thus cannot have any directory contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>entry</em> refuses access to its contents
-         * and throws an exception. In that case, a corresponding {@link Problem} will be reported
-         * to the given {@link Consumer}.
-         *
-         * @see #list(Path, Consumer)
-         * @see #list(FileEntry)
-         * @see #list(Path)
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         @Override
         public final List<FileEntry> list(final FileEntry entry, final Consumer<? super Problem> onProblem) {
             if (entry.isDirectory()) {
@@ -510,35 +461,38 @@ public class FileEntry {
         }
 
         /**
-         * Returns a copy of <em>this</em> {@link Lister}, with no order applied to the
-         * {@linkplain #list(FileEntry, Consumer) listing}.
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final Lister noOrder() {
             return new Lister(linkHandling, Util.NO_ORDER, Util.NO_ORDER);
         }
 
         /**
-         * Returns a copy of <em>this</em> {@link Lister}, with the given path order applied to the
-         * {@linkplain #list(FileEntry, Consumer) listing}.
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final Lister pathOrder(final Comparator<? super Path> order) {
             return new Lister(linkHandling, order, entryOrder);
         }
 
         /**
-         * Returns a copy of <em>this</em> {@link Lister}, with the given entry order applied to the
-         * {@linkplain #list(FileEntry, Consumer) listing}.
+         * @deprecated see {@link Lister}.
          */
+        @Deprecated
         public final Lister entryOrder(final Comparator<? super FileEntry> order) {
             return new Lister(linkHandling, pathOrder, order);
         }
     }
 
     /**
-     * @deprecated consider class Styx from module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a> as a replacement
+     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/">files-styx</a>
      * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx/apidocs</a>
+     * @deprecated consider class Styx from module
+     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/files-styx/apidocs/">files-styx</a>
+     * as a replacement
      */
+    @Deprecated
     public static final class Streamer extends Nodes.Streamer<FileEntry, Problem, Lister> {
 
         private Streamer(final Lister lister, final Predicate<FileEntry> skipCondition) {
@@ -550,94 +504,58 @@ public class FileEntry {
         }
 
         /**
-         * Returns an instance that corresponds to <em>this</em> {@link Streamer} but resolves symbolic links.
-         * Returns <em>this</em> {@link Streamer} if it already resolves symbolic links.
-         *
-         * @see FileEntry#streamer(LinkHandling)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         public final Streamer resolved() {
             return (LinkHandling.RESOLVE == lister().linkHandling) ? this : new Streamer(lister().resolved(), skipCondition());
         }
 
         /**
-         * Returns an instance that corresponds to <em>this</em> {@link Streamer} but handles original symbolic links.
-         * Returns <em>this</em> {@link Streamer} if it already handles original symbolic links.
-         *
-         * @see FileEntry#streamer(LinkHandling)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         public final Streamer original() {
             return (LinkHandling.ORIGINAL == lister().linkHandling) ? this : new Streamer(lister().original(), skipCondition());
         }
 
         /**
-         * Returns a new {@link Streamer} that skips all entries that meet the given <em>condition</em>,
-         * as well as their entire content.
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         public final Streamer skip(final Predicate<? super FileEntry> condition) {
             return new Streamer(lister(), skipCondition().or(condition));
         }
 
         /**
-         * Returns a {@link Stream} starting with a {@link FileEntry} based on the given <em>path</em>
-         * followed by its recursive contents.
-         * <p>
-         * If an involved file refuses access to its contents and thus throws an {@link IOException},
-         * the problem will be logged to a {@link System.Logger}.
-         * <p>
-         * NOTE: the starting {@link FileEntry} will be created using the {@link LinkHandling} of the associated
-         * {@link Lister}. If this does not meet your requirements, use {@link #stream(FileEntry)} instead.
-         *
-         * @see #stream(FileEntry)
-         * @see #stream(Path, Consumer)
-         * @see #stream(FileEntry, Consumer)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         public final Stream<FileEntry> stream(final Path path) {
             return stream(entryOf(path));
         }
 
         /**
-         * Returns a {@link Stream} starting with the given <em>entry</em> followed by its recursive contents.
-         * <p>
-         * If an involved <em>entry</em> refuses access to its contents and thus throws an exception,
-         * the problem will be logged to a {@link System.Logger}.
-         *
-         * @see #stream(Path)
-         * @see #stream(Path, Consumer)
-         * @see #stream(FileEntry, Consumer)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         @Override
         public final Stream<FileEntry> stream(final FileEntry entry) {
             return super.stream(entry);
         }
 
         /**
-         * Returns a {@link Stream} starting with a {@link FileEntry} based on the given <em>path</em>
-         * followed by its recursive contents.
-         * <p>
-         * If an involved file refuses access to its contents and thus throws an {@link IOException},
-         * a corresponding {@link Problem} will be reported to the given {@link Consumer}.
-         * <p>
-         * NOTE: the starting {@link FileEntry} will be created using the {@link LinkHandling} of the associated
-         * {@link Lister}. If this does not meet your requirements, use {@link #stream(FileEntry, Consumer)} instead.
-         *
-         * @see #stream(FileEntry, Consumer)
-         * @see #stream(Path)
-         * @see #stream(FileEntry)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         public final Stream<FileEntry> stream(final Path path, final Consumer<? super Problem> onProblem) {
             return stream(entryOf(path), onProblem);
         }
 
         /**
-         * Returns a {@link Stream} starting with the given <em>entry</em> followed by its recursive contents.
-         * <p>
-         * If an involved <em>entry</em> refuses access to its contents and thus throws an exception,
-         * a corresponding {@link Problem} will be reported to the given {@link Consumer}.
-         *
-         * @see #stream(Path, Consumer)
-         * @see #stream(FileEntry)
-         * @see #stream(Path)
+         * @deprecated see {@link Streamer}.
          */
+        @Deprecated
         @Override
         public final Stream<FileEntry> stream(final FileEntry entry, final Consumer<? super Problem> onProblem) {
             return super.stream(entry, onProblem);

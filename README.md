@@ -60,7 +60,7 @@ Java 17 or later
 ### 2.8.0-SNAPSHOT
 
 * Market module io-deimos as deprecated ✅
-* Pinned module io-adrastea to 2.7.2 (deprecated)
+* Marked module io-adrastea as deprecated (refined)
 * Pinned module hierarchy-mab to 2.7.2 (deprecated)
 
 ### 2.7.2
