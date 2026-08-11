@@ -28,7 +28,6 @@
         <module>files-styx</module>
         <module>io-thalassa</module>
         <module>records-triton</module>
-        <module>reflect-pandora</module>
         <module>streamable-galatea</module>
         <module>building-anthe</module>
         <module>building-elara</module>
