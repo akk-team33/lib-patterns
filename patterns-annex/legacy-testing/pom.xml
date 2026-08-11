@@ -46,6 +46,11 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>reflect-pandora</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>notes-eris</artifactId>
             <scope>test</scope>
         </dependency>
