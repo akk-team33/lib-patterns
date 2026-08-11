@@ -60,7 +60,7 @@ Java 17 or later
 
 ### 2.9.0-SNAPSHOT (TODO)
 
-* Pinned module io-deimos to 2.8.0 (deprecated)
+* Pinned module io-deimos to 2.8.0 (deprecated) ✅
 * Pinned module io-adrastea to 2.8.0 (deprecated)
 * Pinned module hierarchy-mab to 2.8.0 (deprecated)
 * Pinned module io-phobos to 2.8.0 (deprecated)
