@@ -58,7 +58,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.9.0-SNAPSHOT
+### 2.9.0-SNAPSHOT (TODO)
 
 * Pinned module io-deimos to 2.8.0 (deprecated)
 * Pinned module io-adrastea to 2.8.0 (deprecated)
