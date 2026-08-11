@@ -58,13 +58,19 @@ Java 17 or later
 
 ## Change Log
 
+### 2.9.0-SNAPSHOT
+
+* Pinned module io-deimos to 2.8.0 (deprecated)
+* Pinned module io-adrastea to 2.8.0 (deprecated)
+* Pinned module hierarchy-mab to 2.8.0 (deprecated)
+* Pinned module io-phobos to 2.8.0 (deprecated)
+
 ### 2.8.0
 
 * Market module io-deimos as deprecated ✅
 * Marked module io-adrastea as deprecated (refined) ✅
 * Marked module hierarchy-mab as deprecated (refined) ✅
-* Unpinned and refined module io-phobos ... ✅
-  * Marked module as deprecated ✅
+* Unpinned and marked module io-phobos as deprecated ✅
 * Pinned module hashing-pandia to 2.7.2 (still featured) ✅
 * Pinned module expiry-tethys to 2.7.2 (still featured) ✅
 * Pinned module reflect-luna to 2.7.2 (still featured) ✅
