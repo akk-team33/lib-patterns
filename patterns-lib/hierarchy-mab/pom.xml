@@ -13,7 +13,9 @@
     <packaging>jar</packaging>
 
     <name>Team33 Hierarchy Library - Edition "mab"</name>
-    <description>DEPRECATED - see Java Doc</description>
+    <description>Deprecated: This module is basically just an implementation core for the deprecated module io-adrastea
+        and is largely useless on its own.
+    </description>
 
     <dependencies>
         <dependency>

@@ -10,9 +10,10 @@ import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
+ * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
  * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
- * @deprecated It is basically just an implementation core for the deprecated module
- * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
+ * @deprecated this is basically just an implementation core for the deprecated module
+ * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea</a>
  * and is largely useless on its own.
  */
 @Deprecated
@@ -30,65 +31,47 @@ public final class Nodes {
     }
 
     /**
-     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
-     * @deprecated It is basically just an implementation core for the deprecated module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
-     * and is largely useless on its own.
+     * @deprecated see {@link Nodes}.
      */
     @Deprecated
     public interface Problem<N> {
 
         /**
-         * Returns the <em>node</em> that cannot be listed.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         N node();
 
         /**
-         * Returns the exception that causes <em>this</em> {@link Problem}.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         Exception cause();
     }
 
     /**
-     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
-     * @deprecated It is basically just an implementation core for the deprecated module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
-     * and is largely useless on its own.
+     * @deprecated see {@link Nodes}.
      */
     @Deprecated
     public interface Lister<N, P extends Problem<N>> {
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>node</em> within a hierarchical structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>node</em> represents a <em>'leaf'</em> within the respective
-         * hierarchical structure and thus cannot have any contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>node</em> refuses access to its contents
-         * and throws an exception. In that case, the problem will be logged to a {@link System.Logger}.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         default List<N> list(final N node) {
             return list(node, Nodes::log);
         }
 
         /**
-         * Returns a {@link List} of the immediate contents of a given <em>node</em> within a hierarchical structure.
-         * <p>
-         * Returns an empty {@link List} if the given <em>node</em> represents a <em>'leaf'</em> within the respective
-         * hierarchical structure and thus cannot have any contents.
-         * <p>
-         * Also returns an empty {@link List} if the given <em>node</em> refuses access to its contents
-         * and throws an exception. In that case, a corresponding {@link Problem} of type {@code <P>}
-         * will be reported to the given {@link Consumer}.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         List<N> list(N node, Consumer<? super P> onProblem);
     }
 
     /**
-     * @see <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/apidocs/">io-adrastea/apidocs</a>
-     * @deprecated It is basically just an implementation core for the deprecated module
-     * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/io-adrastea/">io-adrastea</a>
-     * and is largely useless on its own.
+     * @deprecated see {@link Nodes}.
      */
     @Deprecated
     public static class Streamer<N, P extends Problem<N>, L extends Lister<N, P>> {
@@ -110,17 +93,10 @@ public final class Nodes {
         private final Predicate<N> skipCondition;
 
         /**
-         * Initializes a new instance.
-         *
-         * @param lister        A {@link Lister} of type {@code <L>}
-         *                      that will be used to list the immediate contents of a <em>node</em>.
-         * @param skipCondition A {@link Predicate} that determines if a <em>node</em> (and its entire contents)
-         *                      will be skipped and thus excluded from a resulting stream.
-         *                      <p>
-         *                      <b>NOTE</b>: Can be {@code null} to use a default {@link #skipCondition()}
-         *                      that never skips and is optimized for {@link Predicate#or(Predicate)}.
+         * @deprecated see {@link Nodes}.
          */
         @SuppressWarnings("unchecked")
+        @Deprecated
         public Streamer(final L lister, final Predicate<N> skipCondition) {
             this.lister = lister;
             this.skipCondition = (null == skipCondition) ? NEVER : skipCondition;
@@ -135,21 +111,17 @@ public final class Nodes {
         }
 
         /**
-         * Returns a {@link Stream} starting with the given <em>node</em> followed by its recursive contents.
-         * <p>
-         * If an involved <em>node</em> refuses access to its contents and thus throws an exception,
-         * the problem will be logged to a {@link System.Logger}.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         public Stream<N> stream(final N node) {
             return stream(node, Nodes::log);
         }
 
         /**
-         * Returns a {@link Stream} starting with the given <em>node</em> followed by its recursive contents.
-         * <p>
-         * If an involved <em>node</em> refuses access to its contents and thus throws an exception,
-         * a corresponding {@link Problem} of type {@code <P>} will be reported to the given {@link Consumer}.
+         * @deprecated see {@link Nodes}.
          */
+        @Deprecated
         public Stream<N> stream(final N node, final Consumer<? super P> onProblem) {
             return new Actor(onProblem).stream(node);
         }
