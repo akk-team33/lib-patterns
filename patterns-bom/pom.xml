@@ -97,11 +97,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>hashing-pandia</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>streamable-galatea</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -131,23 +126,23 @@
             <!-- nailed (suspended) ... -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>notes-eris</artifactId>
-                <version>1.25.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>tuple-janus</artifactId>
-                <version>1.24.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>execution-metis</artifactId>
                 <version>2.7.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>hashing-pandia</artifactId>
+                <version>2.7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>matching-rhea</artifactId>
                 <version>2.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>notes-eris</artifactId>
+                <version>1.25.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
@@ -158,6 +153,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>proving-kerberos</artifactId>
                 <version>2.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>tuple-janus</artifactId>
+                <version>1.24.0</version>
             </dependency>
 
             <!-- nailed (deprecated) ... -->

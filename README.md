@@ -24,7 +24,6 @@ Java 17 or later
   * expiry-tethys (Team33 Expiration Library - Edition "tethys")
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
-  * hashing-pandia (Team33 Hashing Library - Edition "pandia")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * records-triton (Team33 Records Library - Edition "triton")
@@ -36,6 +35,7 @@ Java 17 or later
 
 * (patterns-lib - previous releases)
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
+  * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
@@ -65,6 +65,7 @@ Java 17 or later
 * Marked module hierarchy-mab as deprecated (refined) ✅
 * Unpinned and refined module io-phobos ... ✅
   * Marked module as deprecated ✅
+* Pinned module hashing-pandia to 2.7.2 (still featured)
 
 ### 2.7.2
 

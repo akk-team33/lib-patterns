@@ -35,7 +35,6 @@
         <module>building-anthe</module>
         <module>building-elara</module>
         <module>collection-ceres</module>
-        <module>hashing-pandia</module>
     </modules>
 
     <dependencyManagement>
