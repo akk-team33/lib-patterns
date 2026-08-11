@@ -62,11 +62,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>reflect-luna</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-pandora</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -153,6 +148,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>proving-kerberos</artifactId>
                 <version>2.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>reflect-luna</artifactId>
+                <version>2.7.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

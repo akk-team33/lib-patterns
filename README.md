@@ -26,7 +26,6 @@ Java 17 or later
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * records-triton (Team33 Records Library - Edition "triton")
-  * reflect-luna (Team33 Reflection Library - Edition "luna")
   * reflect-pandora (Team33 Reflection Library - Edition "pandora")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
 
@@ -40,6 +39,7 @@ Java 17 or later
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
+  * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
 ## Deprecated
@@ -67,6 +67,7 @@ Java 17 or later
   * Marked module as deprecated ✅
 * Pinned module hashing-pandia to 2.7.2 (still featured) ✅
 * Pinned module expiry-tethys to 2.7.2 (still featured) ✅
+* Pinned module reflect-luna to 2.7.2 (still featured) ✅
 
 ### 2.7.2
 
