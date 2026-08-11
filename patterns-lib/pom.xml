@@ -22,7 +22,6 @@
         <module>lazy-narvi</module>
         <module>hierarchy-mab</module>
         <module>io-phobos</module>
-        <module>io-adrastea</module>
         <module>files-pluto</module>
         <module>files-styx</module>
         <module>io-thalassa</module>
