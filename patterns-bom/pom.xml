@@ -47,11 +47,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>io-deimos</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>exceptional-dione</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -112,6 +107,11 @@
             </dependency>
 
             <!-- newly deprecated -->
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>io-deimos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>io-adrastea</artifactId>

@@ -25,7 +25,6 @@ Java 17 or later
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
   * hashing-pandia (Team33 Hashing Library - Edition "pandia")
-  * io-deimos (Team33 IO Library - Edition "deimos")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * records-triton (Team33 Records Library - Edition "triton")
@@ -51,15 +50,16 @@ Java 17 or later
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.7.2
+  * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0-SNAPSHOT
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
 
 ## Change Log
 
-### next
+### 2.8.0-SNAPSHOT
 
-* Market module io-deimos as deprecated
+* Market module io-deimos as deprecated ✅
 * Pinned module io-adrastea to 2.7.2 (deprecated)
 * Pinned module hierarchy-mab to 2.7.2 (deprecated)
 

@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Deprecated
 class ResourceTest {
 
     private static final String RESOURCE_NAME = ResourceTest.class.getSimpleName() + ".txt";

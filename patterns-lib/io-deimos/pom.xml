@@ -13,7 +13,7 @@
     <artifactId>io-deimos</artifactId>
 
     <name>Team33 IO Library - Edition "deimos"</name>
-    <description>Provides simple convenient file access.</description>
+    <description>Deprecated - consider module io-thalassa as a replacement.</description>
 
     <dependencies>
         <dependency>
