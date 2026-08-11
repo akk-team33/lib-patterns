@@ -67,14 +67,14 @@ Java 17 or later
 
 ### 2.8.0
 
-* Market module io-deimos as deprecated ✅
-* Marked module io-adrastea as deprecated (refined) ✅
-* Marked module hierarchy-mab as deprecated (refined) ✅
-* Unpinned and marked module io-phobos as deprecated ✅
-* Pinned module hashing-pandia to 2.7.2 (still featured) ✅
-* Pinned module expiry-tethys to 2.7.2 (still featured) ✅
-* Pinned module reflect-luna to 2.7.2 (still featured) ✅
-* Pinned module reflect-pandora to 2.7.2 (still featured) ✅
+* Market module io-deimos as deprecated
+* Marked module io-adrastea as deprecated (refined)
+* Marked module hierarchy-mab as deprecated (refined)
+* Unpinned and marked module io-phobos as deprecated
+* Pinned module hashing-pandia to 2.7.2 (still featured)
+* Pinned module expiry-tethys to 2.7.2 (still featured)
+* Pinned module reflect-luna to 2.7.2 (still featured)
+* Pinned module reflect-pandora to 2.7.2 (still featured)
 
 ### 2.7.2
 
