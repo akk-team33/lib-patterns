@@ -25,7 +25,6 @@
         <module>io-thalassa</module>
         <module>records-triton</module>
         <module>streamable-galatea</module>
-        <module>building-anthe</module>
         <module>building-elara</module>
         <module>collection-ceres</module>
     </modules>
