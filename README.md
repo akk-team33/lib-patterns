@@ -66,6 +66,10 @@ Java 17 or later
 * Pinned module io-phobos to 2.8.0 (deprecated)
 * Pinned module building-anthe to 2.8.0 (still featured)
 * Pinned module building-elara to 2.8.0 (still featured)
+* Refined module records-triton ...
+  * Added options to JSON rendering ✅
+  * Added support for 'stringable' classes
+  * Added support for 'mappable' classes
 
 ### 2.8.0
 

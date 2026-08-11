@@ -4,13 +4,15 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RendererTest {
 
-    static Stream<JsonValue> renderCases() {
+    static Stream<JsonValue> jsonValues() {
         return Stream.of(JsonValue.NULL,
                          new JsonBoolean(true),
                          new JsonBoolean(false),
@@ -37,6 +39,16 @@ class RendererTest {
                                                  .build())
                                   .build(),
                          JsonObject.builder()
+                                   .put("name1", JsonValue.NULL)
+                                   .put("name2", JsonValue.NULL)
+                                   .put("name3",
+                                        JsonArray.builder()
+                                                 .add(JsonValue.NULL)
+                                                 .add(JsonValue.NULL)
+                                                 .add(new JsonNumber(BigDecimal.valueOf(3)))
+                                                 .build())
+                                   .build(),
+                         JsonObject.builder()
                                    .put("name1", new JsonString("value1"))
                                    .put("name2", new JsonString("value2"))
                                    .put("name3",
@@ -48,10 +60,45 @@ class RendererTest {
                                    .build());
     }
 
+    static Stream<RenderCase> renderCases() {
+        return Stream.of(EnumSet.noneOf(RenderOption.class),
+                         EnumSet.of(RenderOption.SKIP_NULL),
+                         EnumSet.of(RenderOption.INLINE_OBJECT),
+                         EnumSet.of(RenderOption.FORMAT_ARRAY),
+                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT),
+                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.FORMAT_ARRAY),
+                         EnumSet.of(RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY),
+                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY))
+                     .flatMap(RendererTest::renderCases);
+    }
+
+    private static Stream<RenderCase> renderCases(final EnumSet<RenderOption> options) {
+        return jsonValues().map(value -> renderCase(options, value));
+    }
+
+    private static RenderCase renderCase(final EnumSet<RenderOption> options, final JsonValue value) {
+        return new RenderCase(value, options, expected(value, options));
+    }
+
+    private static JsonValue expected(final JsonValue value, final EnumSet<RenderOption> options) {
+        if (value instanceof JsonObject object && options.contains(RenderOption.SKIP_NULL)) {
+            final JsonObject.Builder builder = JsonObject.builder();
+            object.stream()
+                  .filter(entry -> JsonValue.NULL != entry.value())
+                  .forEach(entry -> builder.put(entry.name(), entry.value()));
+            return builder.build();
+        }
+        return value;
+    }
+
     @ParameterizedTest
     @MethodSource("renderCases")
-    final void render(final JsonValue expected) {
-        final String result = Renderer.render(expected);
-        assertEquals(expected, Parser.parse(result));
+    final void render(final RenderCase given) {
+        final String result = Renderer.render(given.source, given.options);
+        // System.out.println(result);
+        assertEquals(given.expected, Parser.parse(result));
+    }
+
+    record RenderCase(JsonValue source, Set<RenderOption> options, JsonValue expected) {
     }
 }

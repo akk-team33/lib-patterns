@@ -22,6 +22,7 @@ public final class Triton {
 
     @SuppressWarnings("rawtypes")
     private static final Map<Class, Reflector> CACHE = new ConcurrentHashMap<>();
+    private static final RenderOption[] EMPTY_OPTIONS = {};
 
     private Triton() {
     }
@@ -32,8 +33,19 @@ public final class Triton {
      * @see de.team33.patterns.records.triton package
      */
     public static String toJson(final Record source) {
+        return toJson(source, EMPTY_OPTIONS);
+    }
+
+    /**
+     * Returns a JSON-formatted {@link String} representation of the given <em>source</em>
+     * with <em>options</em>.
+     *
+     * @see RenderOption
+     * @see de.team33.patterns.records.triton package
+     */
+    public static String toJson(final Record source, final RenderOption... options) {
         final JsonValue value = Generalizer.map(source);
-        return Renderer.render(value);
+        return Renderer.render(value, Set.of(options));
     }
 
     /**

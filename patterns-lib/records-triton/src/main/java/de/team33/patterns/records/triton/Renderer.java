@@ -2,8 +2,12 @@ package de.team33.patterns.records.triton;
 
 import de.team33.patterns.enums.pan.Values;
 
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.records.triton.RenderOption.*;
 import static java.util.stream.Collectors.joining;
 
 final class Renderer {
@@ -11,14 +15,23 @@ final class Renderer {
     private static final String NEWLINE = "%n".formatted();
 
     private final StringBuilder target;
+    private final Predicate<JsonObject.Entry> entryFilter;
+    private final Separation arrSeparation;
+    private final Separation objSeparation;
 
-    private Renderer() {
+    private Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonValue.NULL != entry.value()
+                                                       : entry -> true;
+        this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
+                                                             : new FormattedSeparation();
+        this.arrSeparation = options.contains(FORMAT_ARRAY) ? new FormattedSeparation()
+                                                            : new InlineSeparation();
     }
 
-    static String render(final JsonValue source) {
-        return new Renderer().add(source, 0)
-                             .toString();
+    static String render(final JsonValue source, final Set<RenderOption> options) {
+        return new Renderer(options).add(source, 0)
+                                    .toString();
     }
 
     private Renderer add(final String source) {
@@ -51,38 +64,55 @@ final class Renderer {
     }
 
     private Renderer addObject(final JsonObject source, final int indentation) {
-        return add("{").addObjectBody(source, indentation + 1).add("}");
+        return add("{").addObjectBody(source, objSeparation.next(indentation)).add("}");
     }
 
     private Renderer addObjectBody(final JsonObject source, final int indentation) {
-        final int size = source.size();
+        final List<JsonObject.Entry> entries = source.stream()
+                                                     .filter(entryFilter)
+                                                     .toList();
+        final int size = entries.size();
         if (0 < size) {
             for (int index = 0; index < size; index++) {
-                if (0 < index) {
-                    add(",");
-                }
-                addNewLine(indentation);
-                final JsonObject.Entry entry = source.get(index);
+                final JsonObject.Entry entry = entries.get(index);
+                objSeparation.addSeparator(index, indentation);
                 add(StringLiteral.render(entry.name())).add(" : ").add(entry.value(), indentation);
             }
-            return addNewLine(indentation - 1);
+            return objSeparation.addSeparator(0, objSeparation.prev(indentation));
         } else {
             return this;
         }
     }
 
     private Renderer addArray(final JsonArray source, final int indentation) {
-        return add("[").addArrayBody(source, indentation).add("]");
+        return add("[").addArrayBody(source, arrSeparation.next(indentation)).add("]");
     }
 
     private Renderer addArrayBody(final JsonArray source, final int indentation) {
-        for (int index = 0; index < source.size(); ++index) {
-            if (0 < index) {
-                add(", ");
+        final int size = source.size();
+        if (0 < size) {
+            for (int index = 0; index < source.size(); ++index) {
+                arrSeparation.addSeparator(index, indentation);
+                add(source.get(index), indentation);
             }
-            add(source.get(index), indentation);
+            return arrSeparation.addSeparator(0, arrSeparation.prev(indentation));
+        } else {
+            return this;
+        }
+    }
+
+    private Renderer addInlineSeparator(final int index) {
+        if (0 < index) {
+            add(", ");
         }
         return this;
+    }
+
+    private Renderer addFormattedSeparator(final int index, final int indentation) {
+        if (0 < index) {
+            add(",");
+        }
+        return addNewLine(indentation);
     }
 
     private Renderer addString(final JsonString source, final int indentation) {
@@ -135,6 +165,51 @@ final class Renderer {
         @SuppressWarnings("unchecked")
         default Renderer render(final Renderer renderer, final JsonValue source, final int indentation) {
             return renderT(renderer, (T) source, indentation);
+        }
+    }
+
+    private interface Separation {
+
+        int next(int indentation);
+
+        int prev(int indentation);
+
+        Renderer addSeparator(int index, int indentation);
+    }
+
+    private class InlineSeparation implements Separation {
+
+        @Override
+        public final int next(final int indentation) {
+            return indentation;
+        }
+
+        @Override
+        public final int prev(final int indentation) {
+            return indentation;
+        }
+
+        @Override
+        public final Renderer addSeparator(final int index, final int indentation) {
+            return addInlineSeparator(index);
+        }
+    }
+
+    private class FormattedSeparation implements Separation {
+
+        @Override
+        public final int next(final int indentation) {
+            return indentation + 1;
+        }
+
+        @Override
+        public final int prev(final int indentation) {
+            return indentation - 1;
+        }
+
+        @Override
+        public final Renderer addSeparator(final int index, final int indentation) {
+            return addFormattedSeparator(index, indentation);
         }
     }
 }
