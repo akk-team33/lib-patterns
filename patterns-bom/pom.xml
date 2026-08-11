@@ -114,6 +114,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>io-phobos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>io-adrastea</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -133,11 +138,6 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>tuple-janus</artifactId>
                 <version>1.24.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>io-phobos</artifactId>
-                <version>1.25.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

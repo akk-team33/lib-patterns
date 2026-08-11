@@ -36,7 +36,6 @@ Java 17 or later
 
 * (patterns-lib - previous releases)
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
-  * io-phobos (Team33 IO Library - Edition "phobos") - 1.25.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
@@ -49,8 +48,10 @@ Java 17 or later
   * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
-  * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.7.2
+  * hierarchy-mab (Team33 Hierarchy Library - Edition "mab") - 2.8.0-SNAPSHOT
+  * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.8.0-SNAPSHOT
   * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0-SNAPSHOT
+  * io-phobos (Team33 IO Library - Edition "phobos") - 2.8.0-SNAPSHOT
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
@@ -62,6 +63,8 @@ Java 17 or later
 * Market module io-deimos as deprecated ✅
 * Marked module io-adrastea as deprecated (refined) ✅
 * Marked module hierarchy-mab as deprecated (refined) ✅
+* Unpinned and refined module io-phobos ... ✅
+  * Marked module as deprecated ✅
 
 ### 2.7.2
 
