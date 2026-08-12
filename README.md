@@ -50,7 +50,7 @@ Java 17 or later
 ### Deprecated
 
 * (patterns-lib - previous releases)
-  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.9.0-SNAPSHOT
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab") - 2.8.0
@@ -67,6 +67,7 @@ Java 17 or later
 
 ### ☐ near future
 
+* ☐ Pinned module decision-carpo to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Pinned module notes-eris to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Pinned module tuple-janus to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
@@ -82,6 +83,8 @@ Java 17 or later
 * Pinned module exceptional-dione to 2.8.1 (still featured)
 * Pinned module lazy-narvi to 2.8.1 (still featured)
 * Pinned module streamable-galatea to 2.8.1 (still featured)
+* Unpinned deprecated module decision-carpo to rebuild
+  * (something seams wrong with 2.6,1)
 * Unpinned module notes-eris and marked as deprecated
 * Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info

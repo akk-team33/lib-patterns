@@ -15,6 +15,7 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>decision-carpo</module>
         <module>files-pluto</module>
         <module>files-styx</module>
         <module>io-thalassa</module>

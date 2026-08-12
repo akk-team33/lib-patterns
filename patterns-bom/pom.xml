@@ -45,6 +45,11 @@
             <!-- newly deprecated -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>decision-carpo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>notes-eris</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -142,11 +147,6 @@
             </dependency>
 
             <!-- pinned (deprecated) ... -->
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-carpo</artifactId>
-                <version>2.4.1</version>
-            </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-leda</artifactId>
