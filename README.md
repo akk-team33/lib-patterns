@@ -30,7 +30,7 @@ Java 17 or later
 ### Drafts - not deployed, not in BOM
 
 * (patterns-lib)
-  * ...
+  * zz-00-alpha (Sample Draft Module)
 
 ### Still Featured
 

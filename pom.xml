@@ -64,6 +64,7 @@
                         <artifact>legacy-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
+                        <artifact>zz-00-alpha</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>
