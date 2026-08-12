@@ -25,7 +25,6 @@
         <module>lazy-narvi</module>
         <module>records-triton</module>
         <module>streamable-galatea</module>
-        <module>collection-ceres</module>
     </modules>
 
     <dependencyManagement>

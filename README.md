@@ -15,7 +15,6 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
-  * collection-ceres (Team33 Collection Library - Edition "ceres")
   * decision-thyone (Team33 Decision Library - Edition "thyone")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
@@ -31,6 +30,7 @@ Java 17 or later
 * (patterns-lib - previous releases)
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.8.0
+  * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
@@ -73,6 +73,7 @@ Java 17 or later
 * Pinned module io-phobos to 2.8.0 (deprecated)
 * Pinned module building-anthe to 2.8.0 (still featured)
 * Pinned module building-elara to 2.8.0 (still featured)
+* Pinned module collection-ceres to 2.8.0 (still featured)
 * Module records-triton: added Options to JSON rendering
 * Module files-styx:
   * Fixed basic ordering (IGNORE_CASE, RESPECT_CASE)
