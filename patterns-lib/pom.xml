@@ -15,7 +15,6 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>arbitrary-mimas</module>
         <module>decision-thyone</module>
         <module>enums-pan</module>
         <module>exceptional-dione</module>

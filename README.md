@@ -16,7 +16,6 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * decision-thyone (Team33 Decision Library - Edition "thyone")
   * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
@@ -35,6 +34,7 @@ Java 17 or later
 ### Still Featured
 
 * (patterns-lib - previous releases)
+  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.8.1
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.8.0
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0

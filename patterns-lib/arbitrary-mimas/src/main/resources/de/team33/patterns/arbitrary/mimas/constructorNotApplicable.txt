@@ -1,6 +1,0 @@
-Constructor not applicable!
-
-    target type: %1$s
-    constructor: %2$s
-
-    Maybe the target type is not public?
