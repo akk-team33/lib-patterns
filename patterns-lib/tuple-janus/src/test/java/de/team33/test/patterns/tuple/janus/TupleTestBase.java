@@ -1,4 +1,4 @@
-package de.team33.patterns.tuple.janus;
+package de.team33.test.patterns.tuple.janus;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 

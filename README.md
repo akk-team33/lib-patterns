@@ -21,7 +21,7 @@ Java 17 or later
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-triton (Team33 Records Library - Edition "triton")
 
-### Drafts - not deployed, not in BOM
+### Drafts - not deployed, not featured
 
 * (patterns-lib)
   * zz-00-alpha (Sample Draft Module)
@@ -41,13 +41,11 @@ Java 17 or later
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.8.1
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
-  * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.8.1
-  * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
 ### Deprecated
 
@@ -59,9 +57,11 @@ Java 17 or later
   * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.8.0
   * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 2.8.0
+  * notes-eris (Team33 Notifications Library - Edition "eris") - 2.9.0-SNAPSHOT
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
+  * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.9.0-SNAPSHOT
 
 ## Change Log
 
@@ -83,7 +83,7 @@ Java 17 or later
 * Pinned module lazy-narvi to 2.8.1 (still featured)
 * Pinned module streamable-galatea to 2.8.1 (still featured)
 * Unpinned module notes-eris and marked as deprecated
-* ☐ Unpinned module tuple-janus and marked as deprecated
+* Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info
 
 ### 2.8.1

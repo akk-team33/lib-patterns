@@ -20,6 +20,7 @@
         <module>io-thalassa</module>
         <module>notes-eris</module>
         <module>records-triton</module>
+        <module>tuple-janus</module>
         <module>zz-00-alpha</module>
     </modules>
 

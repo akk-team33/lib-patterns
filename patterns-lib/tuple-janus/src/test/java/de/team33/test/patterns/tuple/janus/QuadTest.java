@@ -1,5 +1,6 @@
-package de.team33.patterns.tuple.janus;
+package de.team33.test.patterns.tuple.janus;
 
+import de.team33.patterns.tuple.janus.Quad;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;

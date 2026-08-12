@@ -48,6 +48,11 @@
                 <artifactId>notes-eris</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>tuple-janus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- pinned (still featured) ... -->
             <dependency>
@@ -134,11 +139,6 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>streamable-galatea</artifactId>
                 <version>2.8.1</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>tuple-janus</artifactId>
-                <version>1.24.0</version>
             </dependency>
 
             <!-- pinned (deprecated) ... -->
