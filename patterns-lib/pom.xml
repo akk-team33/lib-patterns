@@ -18,6 +18,7 @@
         <module>files-pluto</module>
         <module>files-styx</module>
         <module>io-thalassa</module>
+        <module>notes-eris</module>
         <module>records-triton</module>
         <module>zz-00-alpha</module>
     </modules>

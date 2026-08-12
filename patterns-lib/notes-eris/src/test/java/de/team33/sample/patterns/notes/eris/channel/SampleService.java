@@ -1,17 +1,14 @@
-package de.team33.patterns.notes.eris.sample.channel;
+package de.team33.sample.patterns.notes.eris.channel;
 
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.function.Function;
 
-@Deprecated
 public class SampleService {
 
     private Path path;
     private Instant timestamp;
 
-    @FunctionalInterface
-    @Deprecated
     public interface Channel<M> extends de.team33.patterns.notes.eris.Channel<M>, Function<SampleService, M> {
 
         Channel<Path> NEW_PATH = service -> service.path;

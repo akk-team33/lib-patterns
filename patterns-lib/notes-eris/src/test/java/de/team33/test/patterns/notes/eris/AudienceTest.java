@@ -1,10 +1,9 @@
-package de.team33.patterns.notes.eris.publics;
+package de.team33.test.patterns.notes.eris;
 
 import de.team33.patterns.notes.eris.Audience;
 import de.team33.patterns.reflect.luna.Fields;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Map;
 import java.util.Random;
@@ -12,10 +11,9 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@Deprecated
 class AudienceTest {
 
-    private static final Random RANDOM = new SecureRandom();
+    private static final Random RANDOM = new Random();
 
     private final Data data = new Data(RANDOM.nextInt(),
                                        RANDOM.nextDouble(),
@@ -47,7 +45,17 @@ class AudienceTest {
         assertNotEquals(data, listened);
     }
 
-    @SuppressWarnings("PackageVisibleField")
+    @SuppressWarnings("ClassNameSameAsAncestorName")
+    @FunctionalInterface
+    interface Channel<M> extends de.team33.patterns.notes.eris.Channel<M> {
+
+        Channel<Integer> SET_INTEGER = test -> test.data.intValue;
+        Channel<Double> SET_DOUBLE = test -> test.data.doubleValue;
+        Channel<Instant> SET_INSTANT = test -> test.data.instantValue;
+
+        M getMessage(AudienceTest source);
+    }
+
     static class Data {
 
         private static final Fields FIELDS = Fields.of(Data.class);
@@ -83,16 +91,5 @@ class AudienceTest {
         public final String toString() {
             return toMap().toString();
         }
-    }
-
-    @SuppressWarnings("ClassNameSameAsAncestorName")
-    @FunctionalInterface
-    interface Channel<M> extends de.team33.patterns.notes.eris.Channel<M> {
-
-        Channel<Integer> SET_INTEGER = test -> test.data.intValue;
-        Channel<Double> SET_DOUBLE = test -> test.data.doubleValue;
-        Channel<Instant> SET_INSTANT = test -> test.data.instantValue;
-
-        M getMessage(AudienceTest source);
     }
 }

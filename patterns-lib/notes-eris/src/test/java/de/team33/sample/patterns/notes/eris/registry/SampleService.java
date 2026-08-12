@@ -1,4 +1,4 @@
-package de.team33.patterns.notes.eris.sample.registry;
+package de.team33.sample.patterns.notes.eris.registry;
 
 import de.team33.patterns.notes.eris.Channel;
 import de.team33.patterns.notes.eris.Registry;
@@ -12,23 +12,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
-@SuppressWarnings("unused")
-@Deprecated
 public class SampleService implements Registry {
 
     private Path path;
     private Instant timestamp;
     @SuppressWarnings("rawtypes")
-    private final Map<Channel, List<Consumer>> audience = new ConcurrentHashMap<>();
-
-    @Deprecated
-    @Override
-    public final <M> void add(final Channel<M> channel, final Consumer<? super M> listener) {
-        audience.computeIfAbsent(channel, SampleService::newList).add(listener);
-    }
+    private Map<Channel, List<Consumer>> audience = new ConcurrentHashMap<>();
 
     @SuppressWarnings("rawtypes")
     private static List<Consumer> newList(final Channel channel) {
         return Collections.synchronizedList(new LinkedList<>());
+    }
+
+    @Override
+    public final <M> void add(final Channel<M> channel, final Consumer<? super M> listener) {
+        audience.computeIfAbsent(channel, SampleService::newList).add(listener);
     }
 }

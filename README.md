@@ -82,7 +82,7 @@ Java 17 or later
 * Pinned module exceptional-dione to 2.8.1 (still featured)
 * Pinned module lazy-narvi to 2.8.1 (still featured)
 * Pinned module streamable-galatea to 2.8.1 (still featured)
-* ☐ Unpinned module notes-eris and marked as deprecated
+* Unpinned module notes-eris and marked as deprecated
 * ☐ Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info
 

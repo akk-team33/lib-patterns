@@ -1,4 +1,4 @@
-package de.team33.patterns.notes.eris.publics;
+package de.team33.test.patterns.notes.eris;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.notes.eris.Audience;
@@ -13,19 +13,17 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Deprecated
-@SuppressWarnings({"WeakerAccess", "UnusedReturnValue"})
+@SuppressWarnings("WeakerAccess")
 class ProtoServiceTest extends ProtoService<ProtoServiceTest> {
 
     private static final Random RANDOM = new SecureRandom();
     private static final Generator GENERATOR = numBits -> new BigInteger(numBits, RANDOM);
-
-    ProtoServiceTest() {
-        super(new Audience(), ProtoServiceTest.class);
-    }
-
     private int intValue;
     private String stringValue;
     private Instant instantValue;
+    ProtoServiceTest() {
+        super(new Audience(), ProtoServiceTest.class);
+    }
 
     @Test
     final void register_and_fire() {
@@ -48,6 +46,15 @@ class ProtoServiceTest extends ProtoService<ProtoServiceTest> {
         assertEquals(instantValue, instantMutable.getValue());
     }
 
+    @FunctionalInterface
+    interface Channel<M> extends ProtoService.Channel<ProtoServiceTest, M> {
+
+        Channel<Integer> SET_INTEGER = service -> service.intValue;
+        Channel<String> SET_STRING = service -> service.stringValue;
+        Channel<Instant> SET_INSTANT = service -> service.instantValue;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
     private static class Mutable<T> {
 
         private T value;
@@ -60,13 +67,5 @@ class ProtoServiceTest extends ProtoService<ProtoServiceTest> {
             this.value = value;
             return this;
         }
-    }
-
-    @FunctionalInterface
-    interface Channel<M> extends ProtoService.Channel<ProtoServiceTest, M> {
-
-        Channel<Integer> SET_INTEGER = service -> service.intValue;
-        Channel<String> SET_STRING = service -> service.stringValue;
-        Channel<Instant> SET_INSTANT = service -> service.instantValue;
     }
 }
