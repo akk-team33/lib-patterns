@@ -58,7 +58,14 @@ Java 17 or later
 
 ## Change Log
 
-### 2.9.0-SNAPSHOT
+### ☐ near future
+
+* ☐ Module records-triton:
+  * ☐ Support for 'stringable' types
+  * ☐ Support for 'listable' types
+  * ☐ Support for 'mapable' types
+
+### ☐ 2.9.0-SNAPSHOT
 
 * Pinned module io-deimos to 2.8.0 (deprecated)
 * Pinned module io-adrastea to 2.8.0 (deprecated)
@@ -66,10 +73,8 @@ Java 17 or later
 * Pinned module io-phobos to 2.8.0 (deprecated)
 * Pinned module building-anthe to 2.8.0 (still featured)
 * Pinned module building-elara to 2.8.0 (still featured)
-* Refined module records-triton ...
-  * Added options to JSON rendering ✅
-  * Added support for 'stringable' classes
-  * Added support for 'mappable' classes
+* Module records-triton: added Options to JSON rendering
+* ☐ Module files-styx: Added/refined javadoc
 
 ### 2.8.0
 
