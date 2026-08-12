@@ -18,7 +18,6 @@
     <properties>
         <skipJavadoc>true</skipJavadoc>
         <skipHome>true</skipHome>
-        <skipDeploy>true</skipDeploy>
         <skipGPG>true</skipGPG>
     </properties>
 

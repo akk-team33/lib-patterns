@@ -20,6 +20,7 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- in progress -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>arbitrary-mimas</artifactId>

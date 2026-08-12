@@ -16,7 +16,6 @@
 
     <properties>
         <skipHome>true</skipHome>
-        <skipDeploy>true</skipDeploy>
         <skipGPG>true</skipGPG>
     </properties>
 
