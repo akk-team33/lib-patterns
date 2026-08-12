@@ -80,7 +80,7 @@ Java 17 or later
 
 ### 2.8.0
 
-* Market module io-deimos as deprecated
+* Marked module io-deimos as deprecated
 * Marked module io-adrastea as deprecated (refined)
 * Marked module hierarchy-mab as deprecated (refined)
 * Unpinned and marked module io-phobos as deprecated
