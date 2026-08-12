@@ -16,10 +16,23 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toCollection;
 
+/**
+ * Provides streams for traversing file-system hierarchies.
+ * <p>
+ * A traversal starts at a given {@link FileEntry} and can include the entry itself, its direct children,
+ * or all of its descendants.
+ * Entries are traversed in lexicographical order by name, ignoring character case first
+ * and using case-sensitive comparison as a tie-breaker.
+ * <p>
+ * Traversal behavior can be customized through {@link Options}, for example to resolve symbolic links,
+ * to skip complete subtrees, or to handle problems encountered while accessing the file system.
+ *
+ * @see FileEntry
+ */
 public final class Styx {
 
     private static final Comparator<String> IGNORE_CASE = String::compareToIgnoreCase;
-    private static final Comparator<String> RESPECT_CASE = String::compareToIgnoreCase;
+    private static final Comparator<String> RESPECT_CASE = String::compareTo;
     private static final Comparator<String> STRING_ORDER = IGNORE_CASE.thenComparing(RESPECT_CASE);
     private static final Comparator<FileEntry> ENTRY_ORDER = Comparator.comparing(FileEntry::name, STRING_ORDER);
     private static final Supplier<TreeSet<FileEntry>> NEW_TREE_SET = () -> new TreeSet<>(ENTRY_ORDER);
@@ -34,30 +47,79 @@ public final class Styx {
         this.options = options;
     }
 
+    /**
+     * Returns a stream containing the given <em>head</em> entry and all of its descendants.
+     *
+     * @see #descendants(FileEntry)
+     * @see #children(FileEntry)
+     */
     public static Stream<FileEntry> stream(final FileEntry head) {
         return stream(head, Options.DEFAULT);
     }
 
+    /**
+     * Returns a stream containing the given <em>head</em> entry and all of its descendants.
+     * <p>
+     * The supplied <em>options</em> determine how entries are created and how the traversal handles skipped entries
+     * and file-system problems.
+     *
+     * @see #stream(FileEntry)
+     */
     public static Stream<FileEntry> stream(final FileEntry head, final Options options) {
         return new Styx(0, Integer.MAX_VALUE, options).stream(0, head);
     }
 
+    /**
+     * Returns a stream containing all descendants of the given <em>head</em> entry,
+     * excluding the <em>head</em> itself.
+     *
+     * @see #stream(FileEntry)
+     * @see #children(FileEntry)
+     */
     public static Stream<FileEntry> descendants(final FileEntry head) {
         return descendants(head, Options.DEFAULT);
     }
 
+    /**
+     * Returns a stream containing all descendants of the given <em>head</em> entry,
+     * excluding the <em>head</em> itself.
+     * <p>
+     * The supplied <em>options</em> determine how entries are created and how the traversal handles skipped entries
+     * and file-system problems.
+     *
+     * @see #descendants(FileEntry)
+     */
     public static Stream<FileEntry> descendants(final FileEntry head, final Options options) {
         return new Styx(1, Integer.MAX_VALUE, options).stream(0, head);
     }
 
+    /**
+     * Returns a stream containing the direct children of the given <em>head</em> entry.
+     *
+     * @see #stream(FileEntry)
+     * @see #descendants(FileEntry)
+     */
     public static Stream<FileEntry> children(final FileEntry head) {
         return children(head, Options.DEFAULT);
     }
 
+    /**
+     * Returns a stream containing the direct children of the given <em>head</em> entry.
+     * <p>
+     * The supplied <em>options</em> determine how entries are created and how the traversal handles skipped entries
+     * and file-system problems.
+     *
+     * @see #children(FileEntry)
+     */
     public static Stream<FileEntry> children(final FileEntry head, final Options options) {
         return new Styx(1, 2, options).stream(0, head);
     }
 
+    /**
+     * Returns a reusable {@link Streamer} configured with the supplied <em>options</em>.
+     * <p>
+     * A {@code Streamer} is useful when the same traversal options are to be applied to multiple traversals.
+     */
     public static Streamer streamer(final Options options) {
         return new Streamer(options);
     }
@@ -89,9 +151,32 @@ public final class Styx {
         return List.of();
     }
 
+    /**
+     * Defines options controlling the behavior of a {@link Styx} traversal.
+     * <p>
+     * Instances of this class are immutable. Methods that modify an option
+     * return a new instance and leave the original instance unchanged.
+     */
     public static final class Options {
 
+        /**
+         * The default traversal options.
+         * <p>
+         * Entries are created exposing their original file attributes. No entries are skipped,
+         * and problems encountered while accessing the file system are logged to a {@link System.Logger}.
+         *
+         * @see FileEntry#isOriginal()
+         */
         public static final Options DEFAULT = new Options(FileEntry::original, Predicates.reject(), Problem::log);
+
+        /**
+         * Traversal options that resolve symbolic links.
+         * <p>
+         * Entries are created exposing their resolved file attributes. No entries are skipped,
+         * and problems encountered while accessing the file system are logged to a {@link System.Logger}.
+         *
+         * @see FileEntry#isResolved()
+         */
         public static final Options RESOLVE = new Options(FileEntry::resolved, Predicates.reject(), Problem::log);
 
         private final Function<Path, FileEntry> toEntry;
@@ -106,15 +191,36 @@ public final class Styx {
             this.onProblem = onProblem;
         }
 
+        /**
+         * Returns options that additionally skip traversing entries matching the given <em>condition</em>.
+         * <p>
+         * If an entry matches the <em>condition</em>, its descendants are not traversed.
+         * The matching entry itself is not affected.
+         * <p>
+         * The supplied <em>condition</em> is combined with any conditions previously configured through this method.
+         */
         public final Options skip(final Predicate<? super FileEntry> condition) {
             return new Options(toEntry, skipCondition.or(condition), onProblem);
         }
 
+        /**
+         * Returns options that report traversal problems to the supplied <em>consumer</em>.
+         * <p>
+         * A problem encountered while accessing a directory is reported to the <em>consumer</em>
+         * and does not terminate the traversal.
+         * <p>
+         * The supplied <em>consumer</em> replaces any previously configured problem handler.
+         */
         public final Options onProblem(final Consumer<? super Problem> consumer) {
             return new Options(toEntry, skipCondition, consumer::accept);
         }
     }
 
+    /**
+     * Provides traversal operations using a fixed set of {@link Options}.
+     * <p>
+     * A streamer is useful when several traversals are to use the same {@link Options}.
+     */
     public static final class Streamer {
 
         private final Options options;
@@ -123,14 +229,30 @@ public final class Styx {
             this.options = options;
         }
 
+        /**
+         * Returns a stream containing the given <em>head</em> entry and all of its descendants.
+         *
+         * @see Styx#stream(FileEntry, Options)
+         */
         public final Stream<FileEntry> stream(final FileEntry head) {
             return Styx.stream(head, options);
         }
 
+        /**
+         * Returns a stream containing all descendants of the given <em>head</em> entry,
+         * excluding the <em>head</em> itself.
+         *
+         * @see Styx#descendants(FileEntry, Options)
+         */
         public final Stream<FileEntry> descendants(final FileEntry head) {
             return Styx.descendants(head, options);
         }
 
+        /**
+         * Returns a stream containing the direct children of the given <em>head</em> entry.
+         *
+         * @see Styx#children(FileEntry, Options)
+         */
         public final Stream<FileEntry> children(final FileEntry head) {
             return Styx.children(head, options);
         }

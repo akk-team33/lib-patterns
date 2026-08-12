@@ -74,7 +74,9 @@ Java 17 or later
 * Pinned module building-anthe to 2.8.0 (still featured)
 * Pinned module building-elara to 2.8.0 (still featured)
 * Module records-triton: added Options to JSON rendering
-* ☐ Module files-styx: Added/refined javadoc
+* Module files-styx:
+  * Fixed basic ordering (IGNORE_CASE, RESPECT_CASE)
+  * Added/refined javadoc
 
 ### 2.8.0
 

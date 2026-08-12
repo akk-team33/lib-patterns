@@ -8,6 +8,13 @@ import java.io.IOException;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.WARNING;
 
+/**
+ * Represents a problem encountered while accessing a file-system entry
+ * during a {@link Styx} traversal.
+ *
+ * @param entry the file-system entry that could not be accessed
+ * @param cause the exception describing the access problem
+ */
 public record Problem(FileEntry entry, IOException cause) {
 
     private static final System.Logger LOGGER = System.getLogger(Problem.class.getCanonicalName());
