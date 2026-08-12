@@ -18,9 +18,7 @@
         <module>files-pluto</module>
         <module>files-styx</module>
         <module>io-thalassa</module>
-        <module>lazy-narvi</module>
         <module>records-triton</module>
-        <module>streamable-galatea</module>
         <module>zz-00-alpha</module>
     </modules>
 

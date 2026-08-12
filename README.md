@@ -19,9 +19,7 @@ Java 17 or later
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
-  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi")
   * records-triton (Team33 Records Library - Edition "triton")
-  * streamable-galatea (Team33 Streamable Library - Edition "galatea")
 
 ### Drafts - not deployed, not in BOM
 
@@ -41,12 +39,14 @@ Java 17 or later
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
+  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.8.1
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 1.25.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
+  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.8.1
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
 ### Deprecated
@@ -76,12 +76,12 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
-* ☐ Pinned module arbitrary-mimas to 2.8.1 (still featured)
-* ☐ Pinned module decision-thyone to 2.8.1 (still featured)
-* ☐ Pinned module enums-pan to 2.8.1 (still featured)
-* ☐ Pinned module exceptional-dione to 2.8.1 (still featured)
-* ☐ Pinned module lazy-narvi to 2.8.1 (still featured)
-* ☐ Pinned module streamable-galatea to 2.8.1 (still featured)
+* Pinned module arbitrary-mimas to 2.8.1 (still featured)
+* Pinned module decision-thyone to 2.8.1 (still featured)
+* Pinned module enums-pan to 2.8.1 (still featured)
+* Pinned module exceptional-dione to 2.8.1 (still featured)
+* Pinned module lazy-narvi to 2.8.1 (still featured)
+* Pinned module streamable-galatea to 2.8.1 (still featured)
 * ☐ Unpinned module notes-eris and marked as deprecated
 * ☐ Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info
