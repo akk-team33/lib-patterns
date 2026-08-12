@@ -27,7 +27,22 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>collection-ceres</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>decision-thyone</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>enums-pan</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>exceptional-dione</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -47,27 +62,12 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>exceptional-dione</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>lazy-narvi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>records-triton</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>decision-thyone</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>collection-ceres</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -144,7 +144,7 @@
             <dependency>
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>decision-carpo</artifactId>
-                <version>2.6.1</version>
+                <version>2.4.1</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
