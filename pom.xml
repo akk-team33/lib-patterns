@@ -61,7 +61,7 @@
                         <artifact>patterns-home</artifact>
                         <artifact>patterns-annex</artifact>
                         <artifact>concept-alpha</artifact>
-                        <artifact>legacy-testing</artifact>
+                        <artifact>pinned-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-00-alpha</artifact>

@@ -3,7 +3,7 @@ package de.team33.patterns.decision.telesto.publics;
 import de.team33.patterns.decision.telesto.sample.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ChoiceTest {
 

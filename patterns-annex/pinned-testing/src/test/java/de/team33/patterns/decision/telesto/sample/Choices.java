@@ -2,9 +2,9 @@ package de.team33.patterns.decision.telesto.sample;
 
 import de.team33.patterns.decision.telesto.Choice;
 
-import static de.team33.patterns.decision.telesto.sample.Result.*;
-
 import java.util.function.Function;
+
+import static de.team33.patterns.decision.telesto.sample.Result.*;
 
 public class Choices {
 

@@ -25,7 +25,7 @@
 
     <modules>
         <module>concept-alpha</module>
-        <module>legacy-testing</module>
+        <module>pinned-testing</module>
         <module>pwgen-main</module>
         <module>pwgen-fat</module>
     </modules>
