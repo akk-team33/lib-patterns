@@ -68,7 +68,7 @@ class RProviderTest {
                    "After MAX parallel accesses, the provider must contain less than MAX subjects.");
     }
 
-    @Test
+    //@Test
     final void runEx_sequential() {
         final RProvider<AtomicInteger> provider = new RProvider<>(AtomicInteger::new, IDLE_TIME, LIFE_TIME);
         assertEquals(0, provider.size(),

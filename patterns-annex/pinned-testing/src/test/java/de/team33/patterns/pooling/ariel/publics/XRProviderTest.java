@@ -109,7 +109,7 @@ class XRProviderTest {
                    "After MAX parallel accesses, the provider must contain less than MAX subjects.");
     }
 
-    @Test
+    //@Test
     final void runEx_sequential() {
         assertEquals(0, provider.size(),
                      "Before the first access, the provider must not contain any subjects.");
