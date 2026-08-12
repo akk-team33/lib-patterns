@@ -67,6 +67,8 @@ Java 17 or later
 
 ### ☐ near future
 
+* ☐ Pinned module notes-eris to 2.9.0-SNAPSHOT (deprecated)
+* ☐ Pinned module tuple-janus to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'stringable' types
   * ☐ Support for 'listable' types
@@ -74,6 +76,14 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
+* ☐ Pinned module arbitrary-mimas to 2.8.1 (still featured)
+* ☐ Pinned module decision-thyone to 2.8.1 (still featured)
+* ☐ Pinned module enums-pan to 2.8.1 (still featured)
+* ☐ Pinned module exceptional-dione to 2.8.1 (still featured)
+* ☐ Pinned module lazy-narvi to 2.8.1 (still featured)
+* ☐ Pinned module streamable-galatea to 2.8.1 (still featured)
+* ☐ Unpinned module notes-eris and marked as deprecated
+* ☐ Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info
 
 ### 2.8.1
@@ -95,7 +105,7 @@ Java 17 or later
 * Marked module io-deimos as deprecated
 * Marked module io-adrastea as deprecated (refined)
 * Marked module hierarchy-mab as deprecated (refined)
-* Unpinned and marked module io-phobos as deprecated
+* Unpinned module io-phobos and marked as deprecated
 * Pinned module hashing-pandia to 2.7.2 (still featured)
 * Pinned module expiry-tethys to 2.7.2 (still featured)
 * Pinned module reflect-luna to 2.7.2 (still featured)
