@@ -12,6 +12,8 @@ Java 17 or later
 
 ## Artifacts
 
+### In Progress
+
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
@@ -25,7 +27,12 @@ Java 17 or later
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
 
-## Still Featured
+### Drafts - not deployed, not in BOM
+
+* (patterns-lib)
+  * ...
+
+### Still Featured
 
 * (patterns-lib - previous releases)
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
@@ -42,7 +49,7 @@ Java 17 or later
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 1.24.0
 
-## Deprecated
+### Deprecated
 
 * (patterns-lib - previous releases)
   * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.6.1
@@ -64,6 +71,10 @@ Java 17 or later
   * ☐ Support for 'stringable' types
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
+
+### ☐ 2.9.0-SNAPSHOT
+
+* Module files-styx: refined package-info
 
 ### 2.8.1
 
