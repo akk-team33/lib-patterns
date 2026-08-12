@@ -15,7 +15,6 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>enums-pan</module>
         <module>exceptional-dione</module>
         <module>files-pluto</module>
         <module>files-styx</module>

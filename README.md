@@ -16,7 +16,6 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * enums-pan (Team33 Enums Library - Edition "pan")
   * exceptional-dione (Team33 Exceptional Library - Edition "dione")
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
@@ -38,6 +37,7 @@ Java 17 or later
   * building-elara (Team33 Building Library - Edition "elara") - 2.8.0
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
+  * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
