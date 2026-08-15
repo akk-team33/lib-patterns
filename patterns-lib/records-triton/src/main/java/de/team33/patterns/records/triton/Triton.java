@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -92,6 +93,22 @@ public final class Triton {
      */
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
         return reflector(recordType);
+    }
+
+    /**
+     * Allows to customize the {@link Mapping} of a <em>'stringable'</em> type.
+     * <p>
+     * <b>NOTE</b> that you can customize the mapping of a specific type only once within an application.
+     *
+     * @param type     the {@link Class} representation of the type whose {@link Mapping} is to be customized.
+     * @param operator an {@linkplain UnaryOperator operator} that customizes the {@link Mapping}.
+     * @param <T>      the type whose {@link Mapping} is to be customized.
+     * @throws IllegalStateException if you try to customize the mapping of a specific type multiple times
+     *                               within an application.
+     * @see de.team33.patterns.records.triton package
+     */
+    public static <T> void setup(final Class<T> type, final UnaryOperator<Mapping<T, String>> operator) {
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @SuppressWarnings("unchecked")

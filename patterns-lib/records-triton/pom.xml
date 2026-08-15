@@ -17,6 +17,10 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>exceptional-dione</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>enums-pan</artifactId>
         </dependency>
 
