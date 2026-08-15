@@ -61,7 +61,7 @@ class Source {
     /**
      * Returns <em>this</em> {@link Source}.
      */
-    final Source skip(int offset) {
+    final Source skip(final int offset) {
         index += offset;
         return this;
     }
@@ -102,6 +102,7 @@ class Source {
         return new Source(text, index);
     }
 
+    @FunctionalInterface
     interface CharPredicate {
 
         boolean test(char c);

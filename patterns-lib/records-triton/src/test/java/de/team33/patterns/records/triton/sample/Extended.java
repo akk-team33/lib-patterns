@@ -3,6 +3,7 @@ package de.team33.patterns.records.triton.sample;
 import java.time.Instant;
 import java.util.List;
 
+@SuppressWarnings({"unused", "AssignmentOrReturnOfFieldWithMutableType", "WeakerAccess"})
 public record Extended(String name, String update, Element[] elements) {
 
     public Instant updateTime() {

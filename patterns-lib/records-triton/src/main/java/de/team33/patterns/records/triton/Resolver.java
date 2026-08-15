@@ -12,6 +12,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+@SuppressWarnings("MethodMayBeStatic")
 final class Resolver {
 
     private final Class<?> targetType;
@@ -40,7 +41,7 @@ final class Resolver {
                 "illegal Json type: %s - expected: %s".formatted(value.getClass(), mapping.jsonClass));
     }
 
-    @SuppressWarnings("ReturnOfNull")
+    @SuppressWarnings({"ReturnOfNull", "SameReturnValue"})
     private Object mapNull() {
         if (targetType.isPrimitive()) {
             throw new IllegalArgumentException("not nullable: " + targetType.getCanonicalName());
@@ -188,7 +189,7 @@ final class Resolver {
         }
     }
 
-    private class ArrayMapper {
+    private final class ArrayMapper {
 
         private final Class<?> componentType;
 
@@ -199,14 +200,14 @@ final class Resolver {
         final Object map(final JsonArray source) {
             final Object array = Array.newInstance(componentType, source.size());
             for (int index = 0; index < source.size(); ++index) {
-                final var component = Resolver.resolve(componentType, source.get(index));
+                final var component = resolve(componentType, source.get(index));
                 Array.set(array, index, component);
             }
             return array;
         }
     }
 
-    private class RecordMapper {
+    private final class RecordMapper {
 
         @SuppressWarnings("rawtypes")
         private final Descriptor descriptor;
@@ -225,9 +226,9 @@ final class Resolver {
             return Triton.toRecord(descriptor.recordType(), stage);
         }
 
-        private void put(final Map<String, Object> map, final JsonObject.Entry entry) {
+        private void put(final Map<? super String, Object> map, final JsonObject.Entry entry) {
             final String name = entry.name();
-            map.put(name, Resolver.resolve(descriptor.type(name), entry.value()));
+            map.put(name, resolve(descriptor.type(name), entry.value()));
         }
     }
 }

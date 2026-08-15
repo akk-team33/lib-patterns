@@ -1,6 +1,6 @@
 package de.team33.patterns.records.triton;
 
-import de.team33.testing.Supply;
+import de.team33.patterns.records.triton.testing.Supply;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,6 +35,7 @@ class StringLiteralTest {
 
     @Test
     final void render_null() {
+        //noinspection DataFlowIssue
         assertThrows(NullPointerException.class, () -> StringLiteral.render(null));
     }
 

@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
-class Generalizer {
+@SuppressWarnings("MethodMayBeStatic")
+final class Generalizer {
 
     private final Mapping mapping;
 
@@ -89,7 +90,7 @@ class Generalizer {
         final JsonArray.Builder builder = JsonArray.builder();
         final int length = Array.getLength(array);
         for (int index = 0; index < length; ++index) {
-            final JsonValue jsonValue = Generalizer.map(Array.get(array, index));
+            final JsonValue jsonValue = map(Array.get(array, index));
             builder.add(jsonValue);
         }
         return builder.build();
@@ -99,7 +100,7 @@ class Generalizer {
         final var builder = JsonObject.builder();
         final var stage = Triton.toMap(source);
         for (final Map.Entry<String, Object> entry : stage.entrySet()) {
-            builder.put(entry.getKey(), Generalizer.map(entry.getValue()));
+            builder.put(entry.getKey(), map(entry.getValue()));
         }
         return builder.build();
     }

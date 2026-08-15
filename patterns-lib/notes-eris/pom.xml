@@ -14,9 +14,7 @@
     <packaging>jar</packaging>
 
     <name>Team33 Notifications Library - Edition "eris"</name>
-    <description>Classes and utilities in the context of notifications that can be triggered based on events
-        within an originator and that should be acted upon from outside.
-    </description>
+    <description>Deprecated - In this form, it appears largely useless.</description>
 
     <dependencies>
         <!-- testing -->

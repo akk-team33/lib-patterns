@@ -2,6 +2,7 @@ package de.team33.patterns.records.triton;
 
 import java.util.*;
 
+@SuppressWarnings("StaticInheritance")
 final class JsonObject extends AbstractList<JsonObject.Entry> implements JsonValue {
 
     private final List<Entry> entries;

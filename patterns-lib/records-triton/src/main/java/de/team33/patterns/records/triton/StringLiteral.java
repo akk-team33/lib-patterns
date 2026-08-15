@@ -4,15 +4,17 @@ import de.team33.patterns.enums.pan.Values;
 
 import java.util.Optional;
 
-class StringLiteral {
+final class StringLiteral {
+
+    private StringLiteral() {
+    }
 
     static String render(final String source) {
         final StringBuilder result = new StringBuilder().append('"');
         for (int index = 0; index < source.length(); ++index) {
             final char next = source.charAt(index);
-            final String quoted = EscapeMapping.ofPlain(next)
-                                               .map(EscapeMapping::escaped)
-                                               .orElseGet(() -> Character.toString(next));
+            final String quoted = mappingPlain(next).map(EscapeMapping::escaped)
+                                                    .orElseGet(() -> Character.toString(next));
             result.append(quoted);
         }
         return result.append('"').toString();
@@ -27,9 +29,8 @@ class StringLiteral {
             source.skip();
             if ('\\' == next) {
                 final char symbol = source.failIfEOT().peek();
-                final char plain = EscapeMapping.ofSymbol(symbol)
-                                                .map(EscapeMapping::plain)
-                                                .orElseThrow(() -> parseException(source.index() - 1, symbol));
+                final char plain = mappingSymbol(symbol).map(EscapeMapping::plain)
+                                                        .orElseThrow(() -> parseException(source.index() - 1, symbol));
                 source.skip();
                 body.append(plain);
             } else {
@@ -44,6 +45,14 @@ class StringLiteral {
     private static IllegalArgumentException parseException(final int index, final char symbol) {
         return new IllegalArgumentException(
                 "unexpected escape sequence: '\\%c' at index %d".formatted(symbol, index));
+    }
+
+    private static Optional<EscapeMapping> mappingSymbol(final char symbol) {
+        return EscapeMapping.VALUES.findAny(value -> symbol == value.symbol);
+    }
+
+    private static Optional<EscapeMapping> mappingPlain(final char plain) {
+        return EscapeMapping.VALUES.findAny(value -> plain == value.plain);
     }
 
     private enum EscapeMapping {
@@ -64,14 +73,6 @@ class StringLiteral {
         EscapeMapping(final char plain, final char symbol) {
             this.plain = plain;
             this.symbol = symbol;
-        }
-
-        static Optional<EscapeMapping> ofSymbol(final char symbol) {
-            return VALUES.findAny(value -> symbol == value.symbol);
-        }
-
-        static Optional<EscapeMapping> ofPlain(final char plain) {
-            return VALUES.findAny(value -> plain == value.plain);
         }
 
         final char plain() {

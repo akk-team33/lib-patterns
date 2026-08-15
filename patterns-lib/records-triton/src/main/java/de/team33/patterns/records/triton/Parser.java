@@ -3,7 +3,7 @@ package de.team33.patterns.records.triton;
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
-class Parser {
+final class Parser {
 
     private static final String LIMIT_CHARS = ",}]";
     private static final Pattern NUMBER =
@@ -69,19 +69,8 @@ class Parser {
         }
     }
 
-    private void parseMember(JsonObject.Builder builder) {
-        final JsonValue next = parseValue();
-        if (next instanceof JsonString string) {
-            final String name = string.value();
-            source.expect(COLON)
-                  .skipWhitespace();
-            final JsonValue value = parseValue();
-            builder.put(name, value);
-        } else {
-            throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
-                                                                         next.getClass().getSimpleName()));
-        }
+    private static boolean isLimitChar(final char c) {
+        return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
     private JsonArray parseArray() {
@@ -113,8 +102,24 @@ class Parser {
         return new JsonString(StringLiteral.parse(source));
     }
 
+    private void parseMember(final JsonObject.Builder builder) {
+        final JsonValue next = parseValue();
+        if (next instanceof final JsonString jsonString) {
+            final String name = jsonString.value();
+            source.expect(COLON)
+                  .skipWhitespace();
+            final JsonValue value = parseValue();
+            builder.put(name, value);
+        } else {
+            throw new IllegalArgumentException(
+                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
+                                                                         next.getClass().getSimpleName()));
+        }
+    }
+
+    @SuppressWarnings("SameReturnValue")
     private JsonValue parseNull() {
-        final String candidate = source.peekUntil(this::isLimitChar);
+        final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());
             return JsonValue.NULL;
@@ -124,7 +129,7 @@ class Parser {
     }
 
     private JsonBoolean parseBoolean() {
-        final String candidate = source.peekUntil(this::isLimitChar);
+        final String candidate = source.peekUntil(Parser::isLimitChar);
         if (BOOLEAN.matcher(candidate).matches()) {
             source.skip(candidate.length());
             return new JsonBoolean("true".equals(candidate));
@@ -133,16 +138,12 @@ class Parser {
     }
 
     private JsonNumber parseNumber() {
-        final String candidate = source.peekUntil(this::isLimitChar);
+        final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NUMBER.matcher(candidate).matches()) {
             final BigDecimal number = new BigDecimal(candidate);
             source.skip(candidate.length());
             return new JsonNumber(number);
         }
         throw new IllegalArgumentException("expected Json number - but was %s".formatted(candidate));
-    }
-
-    private boolean isLimitChar(final char c) {
-        return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 }

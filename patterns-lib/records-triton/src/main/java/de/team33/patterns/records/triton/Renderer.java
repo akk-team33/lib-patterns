@@ -158,6 +158,7 @@ final class Renderer {
         }
     }
 
+    @FunctionalInterface
     private interface Rendering<T extends JsonValue> {
 
         Renderer renderT(Renderer renderer, T source, int indentation);

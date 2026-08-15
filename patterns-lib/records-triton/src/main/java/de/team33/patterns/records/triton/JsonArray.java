@@ -10,7 +10,6 @@ final class JsonArray implements JsonValue {
 
     private final List<JsonValue> values;
 
-    @SuppressWarnings("TypeMayBeWeakened")
     private JsonArray(final List<JsonValue> values) {
         this.values = List.copyOf(values);
     }

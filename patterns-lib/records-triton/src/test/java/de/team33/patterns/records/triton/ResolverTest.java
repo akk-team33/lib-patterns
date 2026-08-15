@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ResolverTest {
 
+    private static final char[] EMPTY_CHAR_ARRAY = {};
+    private static final Character[] EMPTY_CHARACTER_ARRAY = {};
+
     static Stream<MapCase> parseCases() {
         return Stream.of(new MapCase(boolean.class, "true", true),
                          new MapCase(Boolean.class, "false", false),
@@ -35,8 +38,8 @@ class ResolverTest {
                          new MapCase(BigInteger.class, "-9753108642", BigInteger.valueOf(-9753108642L)),
                          new MapCase(BigDecimal.class, "3.141592654", new BigDecimal("3.141592654")),
                          new MapCase(String.class, "\"any string\"", "any string"),
-                         new MapCase(char[].class, "[]", new char[]{}),
-                         new MapCase(Character[].class, "[]", new Character[]{}),
+                         new MapCase(char[].class, "[]", EMPTY_CHAR_ARRAY),
+                         new MapCase(Character[].class, "[]", EMPTY_CHARACTER_ARRAY),
                          new MapCase(String[].class, "[\"any string\"]", new String[]{"any string"}),
                          new MapCase(int[].class, "[1,2,3]", new int[]{1, 2, 3}),
                          new MapCase(Integer[].class, "[4,2,9]", new Integer[]{4, 2, 9}),

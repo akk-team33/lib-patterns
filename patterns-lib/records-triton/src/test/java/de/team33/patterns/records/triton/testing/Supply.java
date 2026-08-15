@@ -1,4 +1,4 @@
-package de.team33.testing;
+package de.team33.patterns.records.triton.testing;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 
@@ -10,7 +10,7 @@ public class Supply implements Generator {
     private final SecureRandom random = new SecureRandom();
 
     @Override
-    public BigInteger anyBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         return new BigInteger(numBits, random);
     }
 }

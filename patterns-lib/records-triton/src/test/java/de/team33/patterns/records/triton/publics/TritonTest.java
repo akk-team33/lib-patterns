@@ -3,7 +3,7 @@ package de.team33.patterns.records.triton.publics;
 import de.team33.patterns.records.triton.RenderOption;
 import de.team33.patterns.records.triton.Triton;
 import de.team33.patterns.records.triton.TritonTestBase;
-import de.team33.testing.Supply;
+import de.team33.patterns.records.triton.testing.Supply;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
