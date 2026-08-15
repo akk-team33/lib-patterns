@@ -100,13 +100,14 @@ public final class Triton {
     /**
      * Allows to customize the {@link Mapping} of a <em>'stringable'</em> type.
      * <p>
-     * <b>NOTE</b> that you can customize the mapping of a specific type only once within an application.
+     * <b>NOTE</b> that you can customize the mapping of a specific type only once within an application,
+     * and that this must be done before the mapping is applied for the first time.
      *
      * @param type     the {@link Class} representation of the type whose {@link Mapping} is to be customized.
      * @param operator an {@linkplain UnaryOperator operator} that customizes the {@link Mapping}.
      * @param <T>      the type whose {@link Mapping} is to be customized.
      * @throws IllegalStateException if you try to customize the mapping of a specific type multiple times
-     *                               within an application.
+     *                               within an application, or after it is applied for the first time.
      * @see de.team33.patterns.records.triton package
      */
     public static <T> void setup(final Class<T> type, final UnaryOperator<Mapping<T, String>> operator) {
