@@ -20,6 +20,7 @@ final class Mapper<S, T> implements Mapping<S, T> {
 
     @SuppressWarnings("ReturnOfNull")
     private static String type(final Object source) {
+        // trivial case stays untested ...
         return (null == source) ? null : source.getClass().getCanonicalName();
     }
 

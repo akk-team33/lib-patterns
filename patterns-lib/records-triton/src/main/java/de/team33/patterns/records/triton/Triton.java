@@ -157,6 +157,7 @@ public final class Triton {
                 this.constructor = recordType.getDeclaredConstructor(types);
                 this.constructor.setAccessible(true);
             } catch (final NoSuchMethodException e) {
+                // difficult to test (should not happen at all) ...
                 throw new IllegalArgumentException("Cannot find constructor for %s%n".formatted(recordType), e);
             }
         }

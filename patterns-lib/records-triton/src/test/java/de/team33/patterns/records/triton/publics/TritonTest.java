@@ -2,6 +2,7 @@ package de.team33.patterns.records.triton.publics;
 
 import de.team33.patterns.records.triton.RenderOption;
 import de.team33.patterns.records.triton.Triton;
+import de.team33.patterns.records.triton.TritonTestBase;
 import de.team33.testing.Supply;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,15 +16,11 @@ import java.util.stream.Stream;
 
 import static de.team33.patterns.records.triton.RenderOption.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class TritonTest {
+class TritonTest extends TritonTestBase {
 
     private static final Supply SUPPLY = new Supply();
-
-    static {
-        Triton.setup(Class.class, mapping -> mapping.forward(Class::getName)
-                                                    .backward(Class::forName));
-    }
 
     private static Sample anySample() {
         return new Sample(SUPPLY.anyString(),
@@ -41,6 +38,19 @@ class TritonTest {
                          List.of(FORMAT_ARRAY, SKIP_NULL),
                          List.of(INLINE_OBJECT, SKIP_NULL),
                          List.of(FORMAT_ARRAY, INLINE_OBJECT, SKIP_NULL));
+    }
+
+    @Test
+    final void setup_fail_A() {
+        assertThrows(IllegalStateException.class,
+                     () -> Triton.setup(Class.class, mapping -> mapping)); //.printStackTrace();
+    }
+
+    @Test
+    final void setup_fail_B() {
+        jsonRoundTrip();
+        assertThrows(IllegalStateException.class,
+                     () -> Triton.setup(Instant.class, mapping -> mapping)); //.printStackTrace();
     }
 
     @Test

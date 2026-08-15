@@ -3,8 +3,6 @@ package de.team33.patterns.records.triton;
 import de.team33.patterns.enums.pan.Values;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
@@ -27,16 +25,6 @@ class Generalizer {
             return JsonValue.NULL;
         } else {
             return new Generalizer(source.getClass()).apply(source);
-        }
-    }
-
-    private static Object getRecordValue(final Record source, final Method accessor) {
-        accessor.setAccessible(true);
-        try {
-            return accessor.invoke(source);
-        } catch (final IllegalAccessException | InvocationTargetException e) {
-            // Difficult to test ...
-            throw new IllegalStateException(e.getMessage(), e);
         }
     }
 

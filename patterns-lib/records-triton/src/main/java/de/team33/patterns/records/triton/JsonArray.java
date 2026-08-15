@@ -5,10 +5,12 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
+@SuppressWarnings("StaticInheritance")
 final class JsonArray implements JsonValue {
 
     private final List<JsonValue> values;
 
+    @SuppressWarnings("TypeMayBeWeakened")
     private JsonArray(final List<JsonValue> values) {
         this.values = List.copyOf(values);
     }
@@ -27,7 +29,7 @@ final class JsonArray implements JsonValue {
 
     @Override
     public final boolean equals(final Object obj) {
-        return this == obj || (obj instanceof JsonArray other && values.equals(other.values));
+        return this == obj || (obj instanceof final JsonArray other && values.equals(other.values));
     }
 
     @Override

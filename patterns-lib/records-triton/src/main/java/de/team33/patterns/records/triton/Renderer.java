@@ -149,7 +149,7 @@ final class Renderer {
         static JsonType of(final Class<? extends JsonValue> sourceType) {
             return VALUES.findAny(value -> value.jsonType.isAssignableFrom(sourceType))
                          .orElseThrow(() -> new IllegalStateException(
-                                 // Difficult to test ...
+                                 // Difficult to test (should not happen at all) ...
                                  "unexpected source type: %s".formatted(sourceType.getCanonicalName())));
         }
 
