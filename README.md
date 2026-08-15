@@ -71,7 +71,6 @@ Java 17 or later
 * ☐ Pinned module notes-eris to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Pinned module tuple-janus to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
-  * ☐ Support for 'stringable' types
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
 
@@ -88,6 +87,7 @@ Java 17 or later
 * Unpinned module notes-eris and marked as deprecated
 * Unpinned module tuple-janus and marked as deprecated
 * Module files-styx: refined package-info
+* ☐ Module records-triton: Support for 'stringable' types
 
 ### 2.8.1
 
