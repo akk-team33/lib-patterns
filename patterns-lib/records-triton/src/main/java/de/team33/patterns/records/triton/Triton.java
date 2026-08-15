@@ -39,11 +39,12 @@ public final class Triton {
 
     /**
      * Returns a JSON-formatted {@link String} representation of the given <em>source</em>
-     * with <em>options</em>.
+     * using given rendering <em>options</em>.
      *
      * @see RenderOption
      * @see de.team33.patterns.records.triton package
      */
+    @SuppressWarnings("OverloadedVarargsMethod")
     public static String toJson(final Record source, final RenderOption... options) {
         final JsonValue value = Generalizer.map(source);
         return Renderer.render(value, Set.of(options));
@@ -91,6 +92,7 @@ public final class Triton {
     /**
      * Returns a {@link Descriptor} describing the given <em>recordType</em>.
      */
+    @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
         return reflector(recordType);
     }
@@ -108,7 +110,17 @@ public final class Triton {
      * @see de.team33.patterns.records.triton package
      */
     public static <T> void setup(final Class<T> type, final UnaryOperator<Mapping<T, String>> operator) {
-        throw new UnsupportedOperationException("not yet implemented");
+        Stringable.setup(type, (key, value) -> setup(key, value, operator));
+    }
+
+    private static <T> UnaryOperator<Mapping<T, String>> setup(final Class<T> type,
+                                                               final UnaryOperator<Mapping<T, String>> found,
+                                                               final UnaryOperator<Mapping<T, String>> intended) {
+        if (null == found && Stringable.isUntouched(type)) {
+            return intended;
+        } else {
+            throw new IllegalStateException("A mapping setup already exists for " + type);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -197,7 +209,7 @@ public final class Triton {
                         .collect(LinkedHashMap::new, (map, name) -> put(map, source, name), Map::putAll);
         }
 
-        private void put(final Map<String, Object> map, final T source, final String name) {
+        private void put(final Map<? super String, Object> map, final T source, final String name) {
             map.put(name, get(source, name));
         }
     }

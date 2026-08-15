@@ -40,6 +40,7 @@ final class Resolver {
                 "illegal Json type: %s - expected: %s".formatted(value.getClass(), mapping.jsonClass));
     }
 
+    @SuppressWarnings("ReturnOfNull")
     private Object mapNull() {
         if (targetType.isPrimitive()) {
             throw new IllegalArgumentException("not nullable: " + targetType.getCanonicalName());
@@ -95,6 +96,10 @@ final class Resolver {
         return source.value();
     }
 
+    private Object mapStringable(final JsonString source) {
+        return Stringable.decode(targetType, source.value());
+    }
+
     private Enum<?> mapEnum(final JsonString source) {
         return mapEnum(source.value());
     }
@@ -135,7 +140,8 @@ final class Resolver {
         STRING(String.class::equals, JsonString.class, Resolver::mapString),
         ENUM(Class::isEnum, JsonString.class, Resolver::mapEnum),
         ARRAY(Class::isArray, JsonArray.class, Resolver::mapArray),
-        RECORD(Class::isRecord, JsonObject.class, Resolver::mapRecord);
+        RECORD(Class::isRecord, JsonObject.class, Resolver::mapRecord),
+        STRINGABLE(Stringable::supports, JsonString.class, Resolver::mapStringable);
 
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);
 

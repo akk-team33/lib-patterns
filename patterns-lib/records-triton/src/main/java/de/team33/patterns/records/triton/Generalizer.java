@@ -93,6 +93,10 @@ class Generalizer {
         return new JsonString(source);
     }
 
+    private JsonString mapStringable(final Object source) {
+        return new JsonString(Stringable.encode(source));
+    }
+
     private JsonArray mapArray(final Object array) {
         final JsonArray.Builder builder = JsonArray.builder();
         final int length = Array.getLength(array);
@@ -127,7 +131,8 @@ class Generalizer {
         STRING(String.class, Generalizer::mapString),
         ENUM(Enum.class, Generalizer::mapEnum),
         ARRAY(Class::isArray, Generalizer::mapArray),
-        RECORD(Record.class, Generalizer::mapRecord);
+        RECORD(Record.class, Generalizer::mapRecord),
+        STRINGABLE(Stringable::supports, Generalizer::mapStringable);
 
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);
 
