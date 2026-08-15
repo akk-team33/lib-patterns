@@ -85,6 +85,10 @@ class Generalizer {
         return new JsonString(source.name());
     }
 
+    private JsonString mapChar(final char source) {
+        return new JsonString(Character.toString(source));
+    }
+
     private JsonString mapString(final String source) {
         return new JsonString(source);
     }
@@ -117,10 +121,11 @@ class Generalizer {
         LONG(Long.class, Generalizer::mapLong),
         FLOAT(Float.class, Generalizer::mapFloat),
         DOUBLE(Double.class, Generalizer::mapDouble),
-        BIG_INTEGER(BigInteger.class, Generalizer::mapBigInteger),
-        BIG_DECIMAL(BigDecimal.class, Generalizer::mapBigDecimal),
-        ENUM(Enum.class, Generalizer::mapEnum),
+        BIG_INT(BigInteger.class, Generalizer::mapBigInteger),
+        BIG_DEC(BigDecimal.class, Generalizer::mapBigDecimal),
+        CHAR(Character.class, Generalizer::mapChar),
         STRING(String.class, Generalizer::mapString),
+        ENUM(Enum.class, Generalizer::mapEnum),
         ARRAY(Class::isArray, Generalizer::mapArray),
         RECORD(Record.class, Generalizer::mapRecord);
 

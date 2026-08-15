@@ -29,6 +29,7 @@ class GeneralizerTest {
                          new Case<>(3.141592654, new JsonNumber(new BigDecimal("3.141592654"))),
                          new Case<>(new BigDecimal("3.141592654"), new JsonNumber(new BigDecimal("3.141592654"))),
                          new Case<>(EnumSample.V3, new JsonString("V3")),
+                         new Case<>('c', new JsonString("c")),
                          new Case<>("any string", new JsonString("any string")),
                          new Case<>(new int[]{1, 2, 3}, JsonArray.builder()
                                                                  .add(new JsonNumber(new BigDecimal(1)))
