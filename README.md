@@ -73,9 +73,9 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
-* ☐ Pinned module decision-carpo to 2.8.2 (deprecated)
-* ☐ Pinned module notes-eris to 2.8.2 (deprecated)
-* ☐ Pinned module tuple-janus to 2.8.2 (deprecated)
+* Pinned module decision-carpo to 2.8.2 (deprecated)
+* Pinned module notes-eris to 2.8.2 (deprecated)
+* Pinned module tuple-janus to 2.8.2 (deprecated)
 
 ### 2.8.2
 
