@@ -67,15 +67,20 @@ Java 17 or later
 
 ### ☐ near future
 
-* ☐ Pinned module decision-carpo to 2.8.2 (deprecated)
-* ☐ Pinned module notes-eris to 2.8.2 (deprecated)
-* ☐ Pinned module tuple-janus to 2.8.2 (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
 
-### ☐ 2.8.2
+### ☐ 2.9.0-SNAPSHOT
 
+* ☐ Pinned module decision-carpo to 2.8.2 (deprecated)
+* ☐ Pinned module notes-eris to 2.8.2 (deprecated)
+* ☐ Pinned module tuple-janus to 2.8.2 (deprecated)
+
+### 2.8.2
+
+* Module records-triton: Support for 'stringable' types
+* Module files-styx: refined package-info
 * Pinned module arbitrary-mimas to 2.8.1 (still featured)
 * Pinned module decision-thyone to 2.8.1 (still featured)
 * Pinned module enums-pan to 2.8.1 (still featured)
@@ -86,8 +91,6 @@ Java 17 or later
   * (something seams wrong with 2.6.1)
 * Unpinned module notes-eris and marked as deprecated
 * Unpinned module tuple-janus and marked as deprecated
-* Module files-styx: refined package-info
-* ☐ Module records-triton: Support for 'stringable' types
 
 ### 2.8.1
 
