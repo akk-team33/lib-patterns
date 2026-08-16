@@ -10,6 +10,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.records.triton.Util.typeName;
+
 /**
  * A utility to convert between:
  * <ul>
@@ -100,33 +102,18 @@ public final class Triton {
     /**
      * Allows to customize the {@link Mapping} of a <em>'stringable'</em> type.
      * <p>
-     * <b>NOTE</b> that you can customize the mapping of a specific type only once within an application,
-     * and that this must be done before the mapping is applied for the first time.
+     * <b>NOTE</b> that you can only customize the mapping of a particular type as long as it has not been
+     * previously applied or customized.
      *
      * @param type     the {@link Class} representation of the type whose {@link Mapping} is to be customized.
-     * @param operator an {@linkplain UnaryOperator operator} that customizes the {@link Mapping}.
+     * @param operator an {@linkplain UnaryOperator operator} that customizes a {@link Mapping}.
      * @param <T>      the type whose {@link Mapping} is to be customized.
-     * @throws IllegalStateException if you try to customize the mapping of a specific type multiple times
-     *                               within an application, or after it is applied for the first time.
+     * @throws IllegalStateException if you try to customize the mapping of a particular type
+     *                               after it has already been applied or customized.
      * @see de.team33.patterns.records.triton package
      */
     public static <T> void setup(final Class<T> type, final UnaryOperator<Mapping<T, String>> operator) {
-        Stringable.setup(type, (key, value) -> setup(key, value, operator));
-    }
-
-    private static <T> UnaryOperator<Mapping<T, String>> setup(final Class<T> type,
-                                                               final UnaryOperator<Mapping<T, String>> found,
-                                                               final UnaryOperator<Mapping<T, String>> intended) {
-        if (null == found && Stringable.isUntouched(type)) {
-            return validate(intended);
-        } else {
-            throw new IllegalStateException("A mapping setup already exists for " + type);
-        }
-    }
-
-    private static <T> UnaryOperator<Mapping<T, String>> validate(final UnaryOperator<Mapping<T, String>> intended) {
-        Objects.requireNonNull(intended.apply(new Mapping<>(null, null)));
-        return intended;
+        Stringable.setup(type, operator);
     }
 
     @SuppressWarnings("unchecked")
@@ -187,10 +174,9 @@ public final class Triton {
             try {
                 return methods.get(indexOf(name)).invoke(source);
             } catch (final IllegalAccessException | InvocationTargetException e) {
-                final Class<? extends Record> sourceClass = (null == source) ? null : source.getClass();
                 throw new IllegalStateException(("Cannot access component <%s>%n" +
                                                  "    source : %s%n" +
-                                                 "    type   : %s%n").formatted(name, source, sourceClass), e);
+                                                 "    type   : %s%n").formatted(name, source, typeName(source)), e);
             }
         }
 

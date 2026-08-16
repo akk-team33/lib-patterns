@@ -5,27 +5,25 @@ import de.team33.patterns.exceptional.dione.XFunction;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 final class Stringable {
 
     @SuppressWarnings("rawtypes")
-    private static final Map<Class, UnaryOperator> SETUPS =
-            new ConcurrentHashMap<>();
-
-    @SuppressWarnings("rawtypes")
-    private static final Map<Class, Mapping> MAPPERS =
+    private static final Map<Class, Mapping> MAPPINGS =
             new ConcurrentHashMap<>();
 
     private static final List<Class<?>> STRING_CLASSES =
             List.of(CharSequence.class, String.class);
     private static final Comparator<Class<?>> CLASS_ORDER =
             Comparator.comparing(STRING_CLASSES::indexOf);
-    private static final Comparator<Constructor<?>> CNSTRCTR_ORDER =
+    private static final Comparator<Constructor<?>> CONSTRUCTOR_ORDER =
             Comparator.comparing(Stringable::cntrctrPrmtrClass, CLASS_ORDER);
     private static final Comparator<Method> METHOD_ORDER =
             Comparator.comparing(Stringable::methodPrmtrClass, CLASS_ORDER)
@@ -36,70 +34,48 @@ final class Stringable {
     }
 
     static <T> T decode(final Class<T> type, final String parameter) {
-        return mapper(type).reverse().map(parameter);
+        return mapping(type).reverse().map(parameter);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     static <T> String encode(final T source) {
-        return (String) mapper((Class) source.getClass()).map(source);
-    }
-
-    static boolean isUntouched(final Class<?> type) {
-        return null == MAPPERS.get(type);
-    }
-
-    @SuppressWarnings("BoundedWildcard")
-    static <T> void setup(final Class<T> type,
-                          final BiFunction<
-                                  Class<T>,
-                                  UnaryOperator<Mapping<T, String>>,
-                                  UnaryOperator<Mapping<T, String>>> remapping) {
-        SETUPS.compute(type, remapping::apply);
+        return (String) mapping((Class) source.getClass()).map(source);
     }
 
     static boolean supports(final Class<?> type) {
-        return mapper(type).isFeatured();
+        return mapping(type).isFeatured();
     }
 
-    private static Class<?> cntrctrPrmtrClass(final Constructor<?> constructor) {
-        return constructor.getParameterTypes()[0];
+    @SuppressWarnings("unchecked")
+    static <T> void setup(final Class<T> type, final UnaryOperator<Mapping<T, String>> operator) {
+        MAPPINGS.compute(type, (key, value) -> setup(key, value, operator));
     }
 
-    private static Class<?> methodPrmtrClass(final Method method) {
-        return method.getParameterTypes()[0];
-    }
-
-    @SuppressWarnings("ReturnOfNull")
-    private static <T> Constructor<T> constructor(final Class<T> tClass, final Class<?> pClass) {
-        try {
-            return tClass.getDeclaredConstructor(pClass);
-        } catch (final NoSuchMethodException ignored) {
-            return null;
+    private static <T> Mapping<T, String> setup(final Class<T> type,
+                                                final Mapping<T, String> found,
+                                                final UnaryOperator<Mapping<T, String>> operator) {
+        if (null == found) {
+            return Objects.requireNonNull(operator.apply(newMapping(type)), "operator returns null");
+        } else {
+            throw new IllegalStateException("A mapping already exists for " + type);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> UnaryOperator<Mapping<T, String>> setup(final Class<T> type) {
-        return Optional.ofNullable(SETUPS.get(type))
-                       .orElseGet(UnaryOperator::identity);
+    private static <T> Mapping<T, String> mapping(final Class<T> type) {
+        return MAPPINGS.computeIfAbsent(type, Stringable::newMapping);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> Mapping<T, String> mapper(final Class<T> type) {
-        return MAPPERS.computeIfAbsent(type, Stringable::newMapper);
-    }
-
-    private static <T> Mapping<T, String> newMapper(final Class<T> type) {
-        final UnaryOperator<Mapping<T, String>> setup = setup(type);
-        return setup.apply(new Mapping<>(Object::toString, newMethod(type)));
+    private static <T> Mapping<T, String> newMapping(final Class<T> type) {
+        return new Mapping<>(Object::toString, newMethod(type));
     }
 
     private static <T> XFunction<String, T, Exception> newMethod(final Class<T> type) {
         return STRING_CLASSES.stream()
                              .map(stringClass -> constructor(type, stringClass))
                              .filter(Objects::nonNull)
-                             .filter(cnstrctr -> Modifier.isPublic(cnstrctr.getModifiers()))
-                             .max(CNSTRCTR_ORDER)
+                             .filter(constructor -> Modifier.isPublic(constructor.getModifiers()))
+                             .max(CONSTRUCTOR_ORDER)
                              .map(Stringable::toMethod)
                              .orElseGet(() -> newStaticMethod(type));
     }
@@ -124,5 +100,22 @@ final class Stringable {
     @SuppressWarnings("unchecked")
     private static <T> XFunction<String, T, Exception> toMethod(final Method method) {
         return parameter -> (T) method.invoke(null, parameter);
+    }
+
+    private static Class<?> cntrctrPrmtrClass(final Constructor<?> constructor) {
+        return constructor.getParameterTypes()[0];
+    }
+
+    private static Class<?> methodPrmtrClass(final Method method) {
+        return method.getParameterTypes()[0];
+    }
+
+    @SuppressWarnings("ReturnOfNull")
+    private static <T> Constructor<T> constructor(final Class<T> tClass, final Class<?> pClass) {
+        try {
+            return tClass.getDeclaredConstructor(pClass);
+        } catch (final NoSuchMethodException ignored) {
+            return null;
+        }
     }
 }

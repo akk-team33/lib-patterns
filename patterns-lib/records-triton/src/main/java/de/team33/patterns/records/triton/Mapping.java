@@ -2,6 +2,8 @@ package de.team33.patterns.records.triton;
 
 import de.team33.patterns.exceptional.dione.XFunction;
 
+import static de.team33.patterns.records.triton.Util.typeName;
+
 /**
  * Abstracts a customizable bidirectional mapping between a source type and a target type.
  *
@@ -22,12 +24,6 @@ public final class Mapping<S, T> {
     Mapping(final XFunction<S, T, ?> forward, final XFunction<T, S, ?> backward) {
         this.mapping = forward;
         this.reverse = new Mapping<>(backward, this);
-    }
-
-    @SuppressWarnings("ReturnOfNull")
-    private static String type(final Object source) {
-        // trivial case currently stays untested ...
-        return (null == source) ? null : source.getClass().getCanonicalName();
     }
 
     /**
@@ -64,12 +60,12 @@ public final class Mapping<S, T> {
             } catch (final Exception e) {
                 throw new IllegalStateException(("cannot apply mapping ...%n" +
                                                  "    source: %s%n" +
-                                                 "    type:   %s%n").formatted(source, type(source)), e);
+                                                 "    type:   %s%n").formatted(source, typeName(source)), e);
             }
         }
         throw new IllegalStateException(("mapping not available for ...%n" +
                                          "    source: %s%n" +
-                                         "    type:   %s%n").formatted(source, type(source)));
+                                         "    type:   %s%n").formatted(source, typeName(source)));
     }
 
     final boolean isFeatured() {
