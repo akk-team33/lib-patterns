@@ -13,7 +13,7 @@ class MappingTest {
 
     @Test
     final void map_illegal() {
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalStateException.class,
                      () -> mapping.reverse().map(UUID.randomUUID().toString())); //.printStackTrace();
     }
 
