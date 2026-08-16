@@ -50,31 +50,31 @@ Java 17 or later
 ### Deprecated
 
 * (patterns-lib - previous releases)
-  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.9.0-SNAPSHOT
+  * decision-carpo (Team33 Decision Library - Edition "carpo") - 2.8.2
   * decision-leda (Team33 Decision Library - Edition "leda") - 1.26.0
   * decision-telesto (Team33 Decision Library - Edition "telesto") - 1.26.0
   * hierarchy-mab (Team33 Hierarchy Library - Edition "mab") - 2.8.0
   * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.8.0
   * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 2.8.0
-  * notes-eris (Team33 Notifications Library - Edition "eris") - 2.9.0-SNAPSHOT
+  * notes-eris (Team33 Notifications Library - Edition "eris") - 2.8.2
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
-  * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.9.0-SNAPSHOT
+  * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## Change Log
 
 ### ☐ near future
 
-* ☐ Pinned module decision-carpo to 2.9.0-SNAPSHOT (deprecated)
-* ☐ Pinned module notes-eris to 2.9.0-SNAPSHOT (deprecated)
-* ☐ Pinned module tuple-janus to 2.9.0-SNAPSHOT (deprecated)
+* ☐ Pinned module decision-carpo to 2.8.2 (deprecated)
+* ☐ Pinned module notes-eris to 2.8.2 (deprecated)
+* ☐ Pinned module tuple-janus to 2.8.2 (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
 
-### ☐ 2.9.0-SNAPSHOT
+### ☐ 2.8.2
 
 * Pinned module arbitrary-mimas to 2.8.1 (still featured)
 * Pinned module decision-thyone to 2.8.1 (still featured)
