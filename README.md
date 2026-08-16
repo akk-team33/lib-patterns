@@ -25,6 +25,7 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-00-alpha (Sample Draft Module)
+  * zz-math-phoebe (Team33 Math Library - Edition "phoebe")
 
 ### Still Featured
 
@@ -73,6 +74,7 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
+* Added draft module zz-math-phoebe
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)
 * Pinned module tuple-janus to 2.8.2 (deprecated)

@@ -65,6 +65,7 @@
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-00-alpha</artifact>
+                        <artifact>zz-math-phoebe</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>
