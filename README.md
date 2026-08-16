@@ -74,6 +74,7 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
++ Module concept-alpha: added escaping.namaka
 * Added draft module zz-math-phoebe
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)

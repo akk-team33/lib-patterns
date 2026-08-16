@@ -14,4 +14,14 @@
     <name>Concept Alpha</name>
     <description>A collection of concepts</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>enums-pan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>proving-kerberos</artifactId>
+        </dependency>
+    </dependencies>
 </project>
