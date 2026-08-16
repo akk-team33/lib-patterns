@@ -21,11 +21,12 @@ Java 17 or later
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-triton (Team33 Records Library - Edition "triton")
 
-### Drafts - not deployed, not featured
+### Drafts - not deployed, not featured yet
 
 * (patterns-lib)
   * zz-00-alpha (Sample Draft Module)
   * zz-math-phoebe (Team33 Math Library - Edition "phoebe")
+  * zz-typing-theta (Team33 Typing Library - Edition "theta")
 
 ### Still Featured
 
@@ -74,8 +75,10 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
-+ Module concept-alpha: added escaping.namaka
-* Added draft module zz-math-phoebe
+* Module concept-alpha: added escaping.namaka
+* Added drafts:
+  * Module zz-math-phoebe
+  * Module zz-typing-theta
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)
 * Pinned module tuple-janus to 2.8.2 (deprecated)

@@ -10,10 +10,12 @@
         <version>2.9.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-math-phoebe</artifactId>
+    <artifactId>zz-typing-theta</artifactId>
 
-    <name>Team33 Math Library - Edition "phoebe"</name>
-    <description>Provides math types and operations</description>
+    <name>Team33 Typing Library - Edition "theta"</name>
+    <description>Provides representation and identification of definite types
+        based on generic or non-generic classes.
+    </description>
 
     <properties>
         <skipJavadoc>true</skipJavadoc>
@@ -24,8 +26,7 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-dione</artifactId>
-            <scope>test</scope>
+            <artifactId>lazy-narvi</artifactId>
         </dependency>
     </dependencies>
 </project>

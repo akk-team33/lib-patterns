@@ -66,6 +66,7 @@
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-00-alpha</artifact>
                         <artifact>zz-math-phoebe</artifact>
+                        <artifact>zz-typing-theta</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

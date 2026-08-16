@@ -21,6 +21,7 @@
         <module>records-triton</module>
         <module>zz-00-alpha</module>
         <module>zz-math-phoebe</module>
+        <module>zz-typing-theta</module>
     </modules>
 
     <dependencyManagement>
