@@ -18,7 +18,7 @@ final class Stringable {
             new ConcurrentHashMap<>();
 
     @SuppressWarnings("rawtypes")
-    private static final Map<Class, Mapper> MAPPERS =
+    private static final Map<Class, Mapping> MAPPERS =
             new ConcurrentHashMap<>();
 
     private static final List<Class<?>> STRING_CLASSES =
@@ -58,7 +58,7 @@ final class Stringable {
     }
 
     static boolean supports(final Class<?> type) {
-        return mapper(type).isFullFeatured();
+        return mapper(type).isFeatured();
     }
 
     private static Class<?> cntrctrPrmtrClass(final Constructor<?> constructor) {
@@ -79,19 +79,19 @@ final class Stringable {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> UnaryOperator<Mapper<T, String>> setup(final Class<T> type) {
+    private static <T> UnaryOperator<Mapping<T, String>> setup(final Class<T> type) {
         return Optional.ofNullable(SETUPS.get(type))
                        .orElseGet(UnaryOperator::identity);
     }
 
     @SuppressWarnings("unchecked")
-    private static <T> Mapper<T, String> mapper(final Class<T> type) {
+    private static <T> Mapping<T, String> mapper(final Class<T> type) {
         return MAPPERS.computeIfAbsent(type, Stringable::newMapper);
     }
 
-    private static <T> Mapper<T, String> newMapper(final Class<T> type) {
-        final UnaryOperator<Mapper<T, String>> setup = setup(type);
-        return setup.apply(new Mapper<>(Object::toString, newMethod(type)));
+    private static <T> Mapping<T, String> newMapper(final Class<T> type) {
+        final UnaryOperator<Mapping<T, String>> setup = setup(type);
+        return setup.apply(new Mapping<>(Object::toString, newMethod(type)));
     }
 
     private static <T> XFunction<String, T, Exception> newMethod(final Class<T> type) {

@@ -118,10 +118,15 @@ public final class Triton {
                                                                final UnaryOperator<Mapping<T, String>> found,
                                                                final UnaryOperator<Mapping<T, String>> intended) {
         if (null == found && Stringable.isUntouched(type)) {
-            return intended;
+            return validate(intended);
         } else {
             throw new IllegalStateException("A mapping setup already exists for " + type);
         }
+    }
+
+    private static <T> UnaryOperator<Mapping<T, String>> validate(final UnaryOperator<Mapping<T, String>> intended) {
+        Objects.requireNonNull(intended.apply(new Mapping<>(null, null)));
+        return intended;
     }
 
     @SuppressWarnings("unchecked")

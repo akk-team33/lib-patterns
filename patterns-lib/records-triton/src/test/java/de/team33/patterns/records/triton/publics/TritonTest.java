@@ -41,6 +41,18 @@ class TritonTest extends TritonTestBase {
     }
 
     @Test
+    final void setup_fail_null_A() {
+        assertThrows(NullPointerException.class,
+                     () -> Triton.setup(Integer.class, null)).printStackTrace();
+    }
+
+    @Test
+    final void setup_fail_null_B() {
+        assertThrows(NullPointerException.class,
+                     () -> Triton.setup(Double.class, mapping -> null)).printStackTrace();
+    }
+
+    @Test
     final void setup_fail_A() {
         assertThrows(IllegalStateException.class,
                      () -> Triton.setup(Class.class, mapping -> mapping)); //.printStackTrace();
