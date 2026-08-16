@@ -75,7 +75,9 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
-* Module concept-alpha: added escaping.namaka
+* Module concept-alpha:
+  * Added escaping.namaka
+  * Added tree.styx
 * Added drafts:
   * Module zz-math-phoebe
   * Module zz-typing-theta
