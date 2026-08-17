@@ -1,6 +1,6 @@
 package de.team33.patterns.typing.theta;
 
-import de.team33.patterns.lazy.narvi.Lazy;
+import de.team33.patterns.lazy.lambda.Lazy;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;

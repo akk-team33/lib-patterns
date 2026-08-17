@@ -1,13 +1,12 @@
 package de.team33.patterns.typing.theta;
 
-import de.team33.patterns.lazy.narvi.Lazy;
+import de.team33.patterns.lazy.lambda.Features;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -56,7 +55,7 @@ public abstract class Type<T> {
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
     private final Backing backing;
-    private final transient Lazy<List<Type<?>>> lazyActualParameters = Lazy.init(this::newActualParameters);
+    private final Features features = new Features();
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -107,20 +106,11 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toBacking(simpleClass)) {
-        };
+        return new Type<>(ClassCase.toBacking(simpleClass)) {};
     }
 
     private static Type<?> by(final Backing backing) {
-        return new Type<>(backing) {
-        };
-    }
-
-    private List<Type<?>> newActualParameters() {
-        return backing.actualParameters()
-                      .stream()
-                      .map(Type::by)
-                      .collect(Collectors.toUnmodifiableList());
+        return new Type<>(backing) {};
     }
 
     /**
@@ -151,7 +141,11 @@ public abstract class Type<T> {
      * @see #formalParameters()
      */
     public final List<Type<?>> actualParameters() {
-        return lazyActualParameters.get();
+        return features.get(Key.ACTUAL_PARAMETERS,
+                            () -> backing.actualParameters()
+                                         .stream()
+                                         .map(Type::by)
+                                         .collect(Collectors.toUnmodifiableList()));
     }
 
     private Type<?> memberType(final java.lang.reflect.Type type) {
@@ -165,8 +159,9 @@ public abstract class Type<T> {
      * @see Class#getGenericSuperclass()
      */
     public final Optional<Type<?>> superType() {
-        return Optional.ofNullable(core().getGenericSuperclass())
-                       .map(this::memberType);
+        return features.get(Key.SUPER_TYPE,
+                            () -> Optional.ofNullable(core().getGenericSuperclass())
+                                          .map(this::memberType));
     }
 
     /**
@@ -176,12 +171,10 @@ public abstract class Type<T> {
      * @see Class#getGenericInterfaces()
      */
     public final List<Type<?>> interfaces() {
-        return streamInterfaces().collect(Collectors.toList());
-    }
-
-    private Stream<Type<?>> streamInterfaces() {
-        return Stream.of(core().getGenericInterfaces())
-                     .map(this::memberType);
+        return features.get(Key.INTERFACES,
+                            () -> Stream.of(core().getGenericInterfaces())
+                                        .map(this::memberType)
+                                        .collect(Collectors.toUnmodifiableList()));
     }
 
     /**
@@ -191,96 +184,90 @@ public abstract class Type<T> {
      * @see #interfaces()
      */
     public final List<Type<?>> superTypes() {
-        return streamSuperTypes().collect(Collectors.toList());
-    }
-
-    private Stream<Type<?>> streamSuperTypes() {
-        return Stream.concat(superType().stream(), streamInterfaces());
+        return features.get(Key.SUPER_TYPES,
+                            () -> Stream.concat(superType().stream(), interfaces().stream())
+                                        .toList());
     }
 
     /**
-     * Returns the type of a given {@link Field} if it is defined in the type hierarchy of <em>this</em> Type.
+     * Returns the type of the given {@link Field} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy
+     *                                  of <em>this</em> Type.
      */
     public final Type<?> typeOf(final Field field) {
-        return Optional
-                .ofNullable(nullableTypeOf(field, Field::getGenericType))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, field, this)));
+        return optTypeOf(field, Field::getGenericType)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(field, this)));
     }
 
     /**
-     * Returns the return type of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
+     * Returns the return type of the given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
+     *                                  of <em>this</em> Type.
      */
     public final Type<?> returnTypeOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypeOf(method, Method::getGenericReturnType))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
+        return optTypeOf(method, Method::getGenericReturnType)
+                .orElseThrow(() -> new IllegalArgumentException((NOT_DECLARED_IN_THIS.formatted(method, this))));
     }
 
-    private <M extends Member> Type<?> nullableTypeOf(final M member,
-                                                      final Function<M, java.lang.reflect.Type> toGenericType) {
+    private <M extends Member> Optional<Type<?>> optTypeOf(final M member,
+                                                           final Function<M, java.lang.reflect.Type> toGenericType) {
         if (core().equals(member.getDeclaringClass())) {
-            return memberType(toGenericType.apply(member));
+            return Optional.of(memberType(toGenericType.apply(member)));
         } else {
-            return streamSuperTypes().map(st -> st.nullableTypeOf(member, toGenericType))
-                                     .filter(Objects::nonNull)
-                                     .findAny()
-                                     .orElse(null);
+            return superTypes().stream()
+                               .map(type -> type.optTypeOf(member, toGenericType))
+                               .flatMap(Optional::stream)
+                               .findAny();
         }
     }
 
     /**
      * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
+     *                                  of <em>this</em> Type.
      */
     public final List<Type<?>> parameterTypesOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypesOf(method, Method::getGenericParameterTypes))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
+        return optTypesOf(method, Method::getGenericParameterTypes)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
     }
 
     /**
      * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
+     *                                  of <em>this</em> Type.
      */
     public final List<Type<?>> exceptionTypesOf(final Method method) {
-        return Optional
-                .ofNullable(nullableTypesOf(method, Method::getGenericExceptionTypes))
-                .orElseThrow(() -> new IllegalArgumentException(String.format(NOT_DECLARED_IN_THIS, method, this)));
+        return optTypesOf(method, Method::getGenericExceptionTypes)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
     }
 
-    private List<Type<?>> nullableTypesOf(final Method member,
-                                          final Function<Method, java.lang.reflect.Type[]> toGenericTypes) {
+    @SuppressWarnings("OptionalContainsCollection")
+    private Optional<List<Type<?>>> optTypesOf(final Method member,
+                                               final Function<Method, java.lang.reflect.Type[]> toGenericTypes) {
         if (core().equals(member.getDeclaringClass())) {
-            return Stream.of(toGenericTypes.apply(member))
-                         .map(this::memberType)
-                         .collect(Collectors.toList());
+            final List<Type<?>> list = Stream.of(toGenericTypes.apply(member))
+                                             .map(this::memberType)
+                                             .collect(Collectors.toUnmodifiableList());
+            return Optional.of(list);
         } else {
-            return streamSuperTypes().map(st -> st.nullableTypesOf(member, toGenericTypes))
-                                     .filter(Objects::nonNull)
-                                     .findAny()
-                                     .orElse(null);
+            return superTypes().stream()
+                               .map(type -> type.optTypesOf(member, toGenericTypes))
+                               .flatMap(Optional::stream)
+                               .findAny();
         }
     }
 
     /**
-     * {@inheritDoc}
-     * <p>
-     * Two instances of Type are equal if they are {@linkplain #core() based} on the same class
-     * and defined by the same {@linkplain #actualParameters() actual parameters}.
+     * Two instances of Type are equal if they are based on the same {@linkplain #core() class}
+     * and defined by the same {@linkplain #actualParameters() actual type parameters}.
      */
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Type) && equals((Type<?>) obj));
-    }
-
-    private boolean equals(final Type<?> other) {
-        return backing.equals(other.backing);
+        return (this == obj) || ((obj instanceof final Type<?> other) && backing.equals(other.backing));
     }
 
     @Override
@@ -291,5 +278,22 @@ public abstract class Type<T> {
     @Override
     public final String toString() {
         return backing.toString();
+    }
+
+    private interface Key<T> extends Features.Key<T> {
+
+        Key<Optional<Type<?>>> SUPER_TYPE = named("SUPER_TYPE");
+        Key<List<Type<?>>> ACTUAL_PARAMETERS = named("ACTUAL_PARAMETERS");
+        Key<List<Type<?>>> INTERFACES = named("INTERFACES");
+        Key<List<Type<?>>> SUPER_TYPES = named("SUPER_TYPES");
+
+        static <T> Key<T> named(final String name) {
+            return new Key<>() {
+                @Override
+                public String toString() {
+                    return name;
+                }
+            };
+        }
     }
 }
