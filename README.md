@@ -27,6 +27,7 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-00-alpha (Sample Draft Module)
+  * zz-lazy-lambda (Team33 Lazy Initialization Library - Edition "lambda")
   * zz-math-phoebe (Team33 Math Library - Edition "phoebe")
   * zz-typing-theta (Team33 Typing Library - Edition "theta")
 * (patterns-annex)
@@ -83,6 +84,7 @@ Java 17 or later
   * Added escaping.namaka
   * Added tree.styx
 * Added drafts:
+  * Module zz-lazy-lambda
   * Module zz-math-phoebe
   * Module zz-typing-theta
 * Pinned module decision-carpo to 2.8.2 (deprecated)
