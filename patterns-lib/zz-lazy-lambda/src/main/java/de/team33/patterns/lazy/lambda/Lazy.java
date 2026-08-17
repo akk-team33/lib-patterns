@@ -1,13 +1,9 @@
 package de.team33.patterns.lazy.lambda;
 
-import de.team33.patterns.exceptional.dione.XSupplier;
-
 import java.util.function.Supplier;
 
-import static de.team33.patterns.lazy.lambda.InitException.CNV;
-
 /**
- * Implements a {@link Supplier} that provides a virtually fixed value.
+ * Implements a {@link Supplier} that represents a fixed value.
  * That value is only actually determined when it is accessed for the first time.
  * <p>
  * This implementation ensures that the {@linkplain #init(Supplier) originally defined initialization code}
@@ -17,49 +13,53 @@ import static de.team33.patterns.lazy.lambda.InitException.CNV;
  * Once the value is established, unnecessary effort to synchronize competing* read accesses is avoided.
  * <p>
  * *Pure read accesses are of course not really competing.
- *
- * @see XLazy
- * @see ReLazy
  */
-public final class Lazy<T> extends Mutual<T, RuntimeException> implements Supplier<T> {
+public class Lazy<T> implements Supplier<T> {
+
+    private volatile Supplier<T> backing;
 
     private Lazy(final Supplier<? extends T> initial) {
-        super(initial::get);
+        this.backing = new Initial(initial);
     }
 
     /**
-     * Returns a new instance giving a {@link Supplier} that defines the intended initialization of the
-     * represented value.
+     * Returns a new instance giving a {@link Supplier} that defines the intended initialization
+     * of the represented value.
      *
-     * @param <T> The result type of the initialisation code.
-     * @see #initEx(XSupplier)
+     * @param <T> The result type of the initialization code.
      */
     public static <T> Lazy<T> init(final Supplier<? extends T> initial) {
         return new Lazy<>(initial);
     }
 
     /**
-     * Returns a new instance giving an {@link XSupplier} that defines the intended initialization of the
-     * represented value. The initialization code may throw a checked exception. If so, it is caught, wrapped in an
-     * {@link InitException}, and rethrown.
-     *
-     * @param <T> The result type of the initialisation code.
-     * @see #init(Supplier)
-     */
-    public static <T> Lazy<T> initEx(final XSupplier<? extends T, ?> initial) {
-        return init(CNV.supplier(initial));
-    }
-
-    /**
-     * {@inheritDoc}
+     * Returns the represented value.
      * <p>
      * Executes the {@linkplain #init(Supplier) originally defined initialization code} once on the first call
      * and returns its result on that and every subsequent call without executing the initialization code again.
      * <p>
      * This implementation is thread safe.
      */
-    @Override
     public final T get() {
-        return super.get();
+        return backing.get();
+    }
+
+    private final class Initial implements Supplier<T> {
+
+        private final Supplier<? extends T> original;
+
+        private Initial(final Supplier<? extends T> original) {
+            this.original = original;
+        }
+
+        @SuppressWarnings("SynchronizedMethod")
+        @Override
+        public synchronized T get() {
+            if (backing == this) {
+                final T value = original.get();
+                backing = () -> value;
+            }
+            return backing.get();
+        }
     }
 }

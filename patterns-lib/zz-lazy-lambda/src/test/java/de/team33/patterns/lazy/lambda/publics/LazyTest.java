@@ -1,29 +1,50 @@
 package de.team33.patterns.lazy.lambda.publics;
 
-import de.team33.patterns.exceptional.dione.XSupplier;
-import de.team33.patterns.lazy.lambda.InitException;
 import de.team33.patterns.lazy.lambda.Lazy;
+import de.team33.testing.async.thebe.Parallel;
+import de.team33.testing.bridging.styx.Bridger;
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.IntStream;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class LazyTest extends LazyTestBase<Lazy<Integer>> {
+class LazyTest {
 
-    LazyTest() {
-        super(new Input<>(Lazy::initEx, lazy -> lazy::get));
+    private static final Bridger BRIDGER = new Bridger();
+
+    private final Random random = new SecureRandom();
+    private final List<Integer> values = Collections.synchronizedList(new ArrayList<>());
+
+    private int initial() {
+        final int result = random.nextInt();
+        values.add(result);
+        BRIDGER.bridge(1); // spend some time
+        return result;
     }
 
-    /**
-     * Ensures that {@link Lazy#initEx(XSupplier)} encapsulates code so that any checked exception
-     * that is thrown is wrapped in an (unchecked) {@link InitException}.
-     */
     @Test
-    final void exceptional() {
-        final Lazy<?> lazy = Lazy.initEx(() -> {
-            throw new SQLException("this is a test");
-        });
-        assertThrows(InitException.class, lazy::get);
+    final void get_sequential() throws Exception {
+        final Lazy<Integer> lazy = Lazy.init(this::initial);
+        final List<Integer> results = IntStream.range(0, 100)
+                                               .mapToObj(index -> lazy.get())
+                                               .toList();
+        assertEquals(1, values.size());
+        results.forEach(result -> assertEquals(values.get(0), result));
+    }
+
+    @Test
+    final void get_parallel() throws Exception {
+        final Lazy<Integer> lazy = Lazy.init(this::initial);
+        final List<Integer> results = Parallel.report(100, ctx -> lazy.get())
+                                              .reThrowAny()
+                                              .list();
+        assertEquals(1, values.size());
+        results.forEach(result -> assertEquals(values.get(0), result));
     }
 }
