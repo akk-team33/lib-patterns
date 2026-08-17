@@ -1,11 +1,10 @@
 package de.team33.patterns.typing.theta;
 
-import java.util.Collections;
 import java.util.List;
 
 abstract class ArrayBacking extends Backing {
 
-    private static final List<String> FORMAL_PARAMETERS = Collections.singletonList("E");
+    private static final List<String> FORMAL_PARAMETERS = List.of("E");
 
     @Override
     final List<String> formalParameters() {
@@ -13,7 +12,7 @@ abstract class ArrayBacking extends Backing {
     }
 
     @Override
-    final String toStringValue() {
-        return actualParameters().get(0) + "[]";
+    public final String toString() {
+        return features.get(Key.TO_STRING, () -> actualParameters().get(0) + "[]");
     }
 }

@@ -1,22 +1,17 @@
 package de.team33.patterns.typing.theta;
 
-import de.team33.patterns.lazy.lambda.Lazy;
+import de.team33.patterns.lazy.lambda.Features;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 abstract class Backing {
 
-    private final transient Lazy<List<Object>> listView;
-    private final transient Lazy<Integer> hashValue;
-    private final transient Lazy<String> stringValue;
+    final Features features = new Features();
 
-    Backing() {
-        this.listView = Lazy.init(() -> Arrays.asList(core(), actualParameters()));
-        this.hashValue = Lazy.init(() -> listView.get().hashCode());
-        this.stringValue = Lazy.init(this::toStringValue);
+    private List<Object> listView() {
+        return features.get(Key.LIST_VIEW, () -> List.of(core(), actualParameters()));
     }
 
     abstract Class<?> core();
@@ -36,35 +31,45 @@ abstract class Backing {
 
     private Backing getActualParameterByIndex(final String name, final int index) {
         final List<Backing> actualParameters = actualParameters();
-        if (index < actualParameters.size())
+        if (index < actualParameters.size()) {
             return actualParameters.get(index);
-        else
+        } else {
             throw new IllegalStateException(
                     String.format("actual parameter for <%s> not found in %s", name, actualParameters));
+        }
     }
 
     final Backing memberBacking(final Type type) {
-        return TypeCase.toAssembly(type, this);
-    }
-
-    private boolean equals(final Backing other) {
-        return listView.get().equals(other.listView.get());
+        return TypeCase.toBacking(type, this);
     }
 
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Backing) && equals((Backing) obj));
+        return (this == obj) || ((obj instanceof final Backing other) && listView().equals(other.listView()));
     }
 
     @Override
     public final int hashCode() {
-        return hashValue.get();
+        return features.get(Key.HASH_CODE, () -> listView().hashCode());
     }
 
-    abstract String toStringValue();
-
     @Override
-    public final String toString() {
-        return stringValue.get();
+    public abstract String toString();
+
+    interface Key<T> extends Features.Key<T> {
+
+        Key<List<Object>> LIST_VIEW = named("LIST_VIEW");
+        Key<Integer> HASH_CODE = named("HASH_VALUE");
+        Key<String> TO_STRING = named("TO_STRING");
+        Key<List<String>> FORMAL_PARAMETERS = named("FORMAL_PARAMETERS");
+
+        static <T> Key<T> named(final String name) {
+            return new Key<T>() {
+                @Override
+                public String toString() {
+                    return name;
+                }
+            };
+        }
     }
 }

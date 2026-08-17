@@ -23,7 +23,7 @@ class ParameterizedBacking extends SingleBacking {
     @Override
     final List<Backing> actualParameters() {
         return Stream.of(type.getActualTypeArguments())
-                     .map(type1 -> TypeCase.toAssembly(type1, context))
+                     .map(type1 -> TypeCase.toBacking(type1, context))
                      .collect(Collectors.toList());
     }
 }

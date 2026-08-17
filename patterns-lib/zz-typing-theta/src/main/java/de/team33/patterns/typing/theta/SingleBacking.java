@@ -2,29 +2,28 @@ package de.team33.patterns.typing.theta;
 
 import java.lang.reflect.TypeVariable;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
 abstract class SingleBacking extends Backing {
 
-    @Override
-    final List<String> formalParameters() {
-        return unmodifiableList(
-                Stream.of(core().getTypeParameters())
-                      .map(TypeVariable::getName)
-                      .collect(Collectors.toList())
-                               );
+    private static String toString(final List<? extends Backing> actual) {
+        return actual.isEmpty() ? "" : actual.stream()
+                                             .map(Backing::toString)
+                                             .collect(joining(", ", "<", ">"));
     }
 
     @Override
-    final String toStringValue() {
-        final List<Backing> actual = actualParameters();
-        return core().getCanonicalName() + (
-                actual.isEmpty() ? "" : actual.stream()
-                                              .map(Backing::toString)
-                                              .collect(joining(", ", "<", ">")));
+    final List<String> formalParameters() {
+        return features.get(Key.FORMAL_PARAMETERS,
+                            () -> Stream.of(core().getTypeParameters())
+                                        .map(TypeVariable::getName)
+                                        .toList());
+    }
+
+    @Override
+    public final String toString() {
+        return features.get(Key.TO_STRING, () -> core().getCanonicalName() + toString(actualParameters()));
     }
 }

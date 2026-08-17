@@ -11,7 +11,7 @@ class GenericArrayBacking extends ArrayBacking {
     private final Backing componentType;
 
     GenericArrayBacking(final GenericArrayType type, final Backing context) {
-        this.componentType = (TypeCase.toAssembly(type.getGenericComponentType(), context));
+        this.componentType = (TypeCase.toBacking(type.getGenericComponentType(), context));
     }
 
     private static Class<?> arrayClass(final Class<?> componentClass) {
