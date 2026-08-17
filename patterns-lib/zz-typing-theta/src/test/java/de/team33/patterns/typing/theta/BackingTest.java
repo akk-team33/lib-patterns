@@ -7,12 +7,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-class AssemblyTest {
+class BackingTest {
 
     @Test
     void getActualParameter_unknown() {
         try {
-            final Assembly result = ClassCase.toAssembly(Integer.class).getActualParameter("E");
+            final Backing result = ClassCase.toBacking(Integer.class).getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();
@@ -22,17 +22,17 @@ class AssemblyTest {
 
     @Test
     void getActualParameter_definite() {
-        final Assembly result = ClassCase.toAssembly(StringList.class)
-                                         .getMemberAssembly(StringList.class.getGenericInterfaces()[0])
-                                         .getActualParameter("E");
-        assertEquals(ClassCase.toAssembly(String.class), result);
+        final Backing result = ClassCase.toBacking(StringList.class)
+                                        .memberBacking(StringList.class.getGenericInterfaces()[0])
+                                        .getActualParameter("E");
+        assertEquals(ClassCase.toBacking(String.class), result);
     }
 
     @Test
     void getActualParameter_indefinite() {
         try {
-            final Assembly result = ClassCase.toAssembly(List.class)
-                                             .getActualParameter("E");
+            final Backing result = ClassCase.toBacking(List.class)
+                                            .getActualParameter("E");
             fail("expected to Fail - but was " + result);
         } catch (final IllegalStateException e) {
             // e.printStackTrace();

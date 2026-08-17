@@ -7,26 +7,26 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-abstract class Assembly {
+abstract class Backing {
 
     private final transient Lazy<List<Object>> listView;
     private final transient Lazy<Integer> hashValue;
     private final transient Lazy<String> stringValue;
 
-    Assembly() {
-        this.listView = Lazy.init(() -> Arrays.asList(asClass(), getActualParameters()));
+    Backing() {
+        this.listView = Lazy.init(() -> Arrays.asList(core(), actualParameters()));
         this.hashValue = Lazy.init(() -> listView.get().hashCode());
         this.stringValue = Lazy.init(this::toStringValue);
     }
 
-    abstract Class<?> asClass();
+    abstract Class<?> core();
 
-    abstract List<String> getFormalParameters();
+    abstract List<String> formalParameters();
 
-    abstract List<Assembly> getActualParameters();
+    abstract List<Backing> actualParameters();
 
-    final Assembly getActualParameter(final String name) {
-        final List<String> formalParameters = getFormalParameters();
+    final Backing getActualParameter(final String name) {
+        final List<String> formalParameters = formalParameters();
         return Optional.of(formalParameters.indexOf(name))
                        .filter(index -> 0 <= index)
                        .map(index -> getActualParameterByIndex(name, index))
@@ -34,8 +34,8 @@ abstract class Assembly {
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
     }
 
-    private Assembly getActualParameterByIndex(final String name, final int index) {
-        final List<Assembly> actualParameters = getActualParameters();
+    private Backing getActualParameterByIndex(final String name, final int index) {
+        final List<Backing> actualParameters = actualParameters();
         if (index < actualParameters.size())
             return actualParameters.get(index);
         else
@@ -43,17 +43,17 @@ abstract class Assembly {
                     String.format("actual parameter for <%s> not found in %s", name, actualParameters));
     }
 
-    final Assembly getMemberAssembly(final Type type) {
+    final Backing memberBacking(final Type type) {
         return TypeCase.toAssembly(type, this);
     }
 
-    private boolean equals(final Assembly other) {
+    private boolean equals(final Backing other) {
         return listView.get().equals(other.listView.get());
     }
 
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof Assembly) && equals((Assembly) obj));
+        return (this == obj) || ((obj instanceof Backing) && equals((Backing) obj));
     }
 
     @Override

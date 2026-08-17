@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,11 +52,11 @@ public abstract class Type<T> {
             "  Instead, try one of the following:%n" +
             "  - Instantiate an anonymous derivative, something like ...%n" +
             "    new %1$s(){};%n" +
-            "    (of course, using definite types instead of type parameters).%n" +
+            "    (of course, using definite types instead of formal type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Assembly assembly;
-    private final transient Lazy<List<Type<?>>> actualParameters = Lazy.init(this::newActualParameters);
+    private final Backing backing;
+    private final transient Lazy<List<Type<?>>> lazyActualParameters = Lazy.init(this::newActualParameters);
 
     /**
      * Initializes a {@link Type} based on its definite derivative. Example:
@@ -69,26 +68,24 @@ public abstract class Type<T> {
      * @see Type
      */
     protected Type() {
-        final Class<?> thisClass = getClass();
-        ensureNonGeneric(thisClass);
-        this.assembly = extract(ClassCase.toAssembly(thisClass));
+        this.backing = extract(ClassCase.toBacking(failGeneric(getClass())));
     }
 
-    private Type(final Assembly assembly) {
-        this.assembly = assembly;
+    private Type(final Backing backing) {
+        this.backing = backing;
     }
 
-    private static Assembly extract(final Assembly thisAssembly) {
-        final Class<?> thisClass = thisAssembly.asClass();
-        if (Type.class.equals(thisClass))
-            return thisAssembly.getActualParameters().get(0);
-
-        final Assembly superAssembly = thisAssembly.getMemberAssembly(thisClass.getGenericSuperclass());
-        return extract(superAssembly);
+    private static Backing extract(final Backing thisBacking) {
+        final Class<?> thisClass = thisBacking.core();
+        if (Type.class.equals(thisClass)) {
+            return thisBacking.actualParameters().get(0);
+        }
+        final Backing superBacking = thisBacking.memberBacking(thisClass.getGenericSuperclass());
+        return extract(superBacking);
     }
 
-    private static void ensureNonGeneric(final Class<?> thisClass) {
-        final TypeVariable<? extends Class<?>>[] parameters = thisClass.getTypeParameters();
+    private static Class<?> failGeneric(final Class<?> thisClass) {
+        final var parameters = thisClass.getTypeParameters();
         if (parameters.length > 0) {
             final String signature = //
                     Stream.of(parameters)
@@ -98,6 +95,7 @@ public abstract class Type<T> {
                                                       ">"));
             throw new IllegalStateException(String.format(ILLEGAL_INSTANTIATION, signature));
         }
+        return thisClass;
     }
 
     /**
@@ -109,118 +107,101 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<T>(ClassCase.toAssembly(simpleClass)) {
+        return new Type<T>(ClassCase.toBacking(simpleClass)) {
         };
     }
 
-    private static Type<?> of(final Assembly assembly) {
-        return new Type(assembly) {
+    private static Type<?> by(final Backing backing) {
+        return new Type<>(backing) {
         };
     }
 
     private List<Type<?>> newActualParameters() {
-        return Collections.unmodifiableList(
-                assembly.getActualParameters()
-                        .stream()
-                        .map(Type::of)
-                        .collect(Collectors.toList())
-                                           );
+        return backing.actualParameters()
+                      .stream()
+                      .map(Type::by)
+                      .collect(Collectors.toUnmodifiableList());
     }
 
     /**
-     * Returns the {@link Class} on which this Type is based.
+     * Returns the {@link Class} that represents the core of <em>this</em> Type.
      */
-    public final Class<?> asClass() {
-        return assembly.asClass();
+    public final Class<?> core() {
+        return backing.core();
     }
 
     /**
-     * Returns the formal type parameter of the generic type underlying this Type.
+     * Returns the formal type parameters of the represented Type.
+     * More precisely, the names of the formal type parameters of the {@link #core()} of <em>this</em> Type.
      *
-     * @see #getActualParameters()
+     * @see #actualParameters()
+     * @see Class#getTypeParameters()
      */
-    public final List<String> getFormalParameters() {
-        return assembly.getFormalParameters();
+    public final List<String> formalParameters() {
+        return backing.formalParameters();
     }
 
     /**
-     * <p>Returns the actual type parameters defining this Type.
-     * <p>The result may be empty even if the formal parameter list is not. Otherwise the formal
-     * and actual parameter list are of the same size and order.
+     * Returns the actual type parameters of the represented type.
+     * <p>
+     * The result may be empty even if the formal parameter list is not,
+     * for instance in the case of {@code Type<Map>} - representing a raw generic type.
+     * Otherwise, the formal and actual parameter list have the same size and corresponding order.
      *
-     * @see #getFormalParameters()
+     * @see #formalParameters()
      */
-    public final List<Type<?>> getActualParameters() {
-        return actualParameters.get();
+    public final List<Type<?>> actualParameters() {
+        return lazyActualParameters.get();
+    }
+
+    private Type<?> memberType(final java.lang.reflect.Type type) {
+        return by(backing.memberBacking(type));
     }
 
     /**
-     * Converts a (possibly generic) {@link java.lang.reflect.Type} that somehow resides in the context of the
-     * {@linkplain #asClass() underlying class} of this Type into a definite {@link Type}.
-     *
-     * @see Class#getGenericSuperclass()
-     * @see Class#getGenericInterfaces()
-     * @see Class#getFields()
-     * @see Class#getMethods()
-     * @see Field#getGenericType()
-     * @see Method#getGenericReturnType()
-     * @see Method#getGenericParameterTypes()
-     */
-    public final Type<?> getMemberType(final java.lang.reflect.Type type) {
-        //noinspection rawtypes
-        return new Type(assembly.getMemberAssembly(type)) {
-        };
-    }
-
-    /**
-     * Returns the type from which this type is derived (if so).
+     * Returns the type from which <em>this</em> Type is derived (if so).
      *
      * @see Class#getSuperclass()
      * @see Class#getGenericSuperclass()
      */
-    public final Optional<Type<?>> getSuperType() {
-        return Optional.ofNullable(asClass().getGenericSuperclass())
-                       .map(this::getMemberType);
-    }
-
-    private Stream<Type<?>> streamSuperType() {
-        return getSuperType().map(Stream::<Type<?>>of)
-                             .orElseGet(Stream::empty);
+    public final Optional<Type<?>> superType() {
+        return Optional.ofNullable(core().getGenericSuperclass())
+                       .map(this::memberType);
     }
 
     /**
-     * Returns the interfaces from which this type are derived (if so).
+     * Returns the interfaces from which <em>this</em> Type are derived (if so).
      *
      * @see Class#getInterfaces()
      * @see Class#getGenericInterfaces()
      */
-    public final List<Type<?>> getInterfaces() {
+    public final List<Type<?>> interfaces() {
         return streamInterfaces().collect(Collectors.toList());
     }
 
     private Stream<Type<?>> streamInterfaces() {
-        return Stream.of(asClass().getGenericInterfaces())
-                     .map(this::getMemberType);
+        return Stream.of(core().getGenericInterfaces())
+                     .map(this::memberType);
     }
 
     /**
-     * Returns all the types (class, interfaces) from which this type is derived (if so).
+     * Returns all the types (class, interfaces) from which <em>this</em> Type is derived (if so).
      *
-     * @see #getSuperType()
-     * @see #getInterfaces()
+     * @see #superType()
+     * @see #interfaces()
      */
-    public final List<Type<?>> getSuperTypes() {
+    public final List<Type<?>> superTypes() {
         return streamSuperTypes().collect(Collectors.toList());
     }
 
     private Stream<Type<?>> streamSuperTypes() {
-        return Stream.concat(streamSuperType(), streamInterfaces());
+        return Stream.concat(superType().stream(), streamInterfaces());
     }
 
     /**
-     * Returns the type of a given {@link Field} if it is defined in the type hierarchy of this type.
+     * Returns the type of a given {@link Field} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy of <em>this</em> Type.
      */
     public final Type<?> typeOf(final Field field) {
         return Optional
@@ -229,9 +210,9 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the return type of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the return type of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
      */
     public final Type<?> returnTypeOf(final Method method) {
         return Optional
@@ -241,8 +222,8 @@ public abstract class Type<T> {
 
     private <M extends Member> Type<?> nullableTypeOf(final M member,
                                                       final Function<M, java.lang.reflect.Type> toGenericType) {
-        if (asClass().equals(member.getDeclaringClass())) {
-            return getMemberType(toGenericType.apply(member));
+        if (core().equals(member.getDeclaringClass())) {
+            return memberType(toGenericType.apply(member));
         } else {
             return streamSuperTypes().map(st -> st.nullableTypeOf(member, toGenericType))
                                      .filter(Objects::nonNull)
@@ -252,9 +233,9 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
      */
     public final List<Type<?>> parameterTypesOf(final Method method) {
         return Optional
@@ -263,9 +244,9 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of this type.
+     * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of this type.
+     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy of <em>this</em> Type.
      */
     public final List<Type<?>> exceptionTypesOf(final Method method) {
         return Optional
@@ -275,9 +256,9 @@ public abstract class Type<T> {
 
     private List<Type<?>> nullableTypesOf(final Method member,
                                           final Function<Method, java.lang.reflect.Type[]> toGenericTypes) {
-        if (asClass().equals(member.getDeclaringClass())) {
+        if (core().equals(member.getDeclaringClass())) {
             return Stream.of(toGenericTypes.apply(member))
-                         .map(this::getMemberType)
+                         .map(this::memberType)
                          .collect(Collectors.toList());
         } else {
             return streamSuperTypes().map(st -> st.nullableTypesOf(member, toGenericTypes))
@@ -290,8 +271,8 @@ public abstract class Type<T> {
     /**
      * {@inheritDoc}
      * <p>
-     * Two instances of Type are equal if they are {@linkplain #asClass() based} on the same class
-     * and defined by the same {@linkplain #getActualParameters() actual parameters}.
+     * Two instances of Type are equal if they are {@linkplain #core() based} on the same class
+     * and defined by the same {@linkplain #actualParameters() actual parameters}.
      */
     @Override
     public final boolean equals(final Object obj) {
@@ -299,16 +280,16 @@ public abstract class Type<T> {
     }
 
     private boolean equals(final Type<?> other) {
-        return assembly.equals(other.assembly);
+        return backing.equals(other.backing);
     }
 
     @Override
     public final int hashCode() {
-        return assembly.hashCode();
+        return backing.hashCode();
     }
 
     @Override
     public final String toString() {
-        return assembly.toString();
+        return backing.toString();
     }
 }

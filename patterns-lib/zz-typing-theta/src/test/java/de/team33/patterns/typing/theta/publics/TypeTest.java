@@ -7,13 +7,19 @@ import de.team33.patterns.typing.theta.testing.StringListType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.io.Serializable;
+import java.lang.constant.Constable;
+import java.lang.constant.ConstantDesc;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TypeTest {
@@ -24,13 +30,24 @@ class TypeTest {
     private static final Type<Map<String, List<String>>> MAP_TYPE = new Type<Map<String, List<String>>>() {
     };
 
+    static Stream<Case<?>> cases() {
+        return Stream.of(new Case<>(STRING_TYPE, Set.of(Type.of(Object.class),
+                                                        Type.of(Serializable.class),
+                                                        new Type<Comparable<String>>() {
+                                                        },
+                                                        Type.of(CharSequence.class),
+                                                        Type.of(Constable.class),
+                                                        Type.of(ConstantDesc.class))),
+                         new Case<>(MAP_TYPE, Set.of()));
+    }
+
     @Test
     void genericDerivative() {
         try {
             final Type<Map<String, List<String>>> type = new MapType<>();
             fail("expected to fail - but was " + type);
         } catch (final IllegalStateException e) {
-            // e.printStackTrace();
+            e.printStackTrace();
             assertTrue(e.getMessage().contains(MapType.class.getSimpleName()));
         }
     }
@@ -59,48 +76,38 @@ class TypeTest {
 
     @ParameterizedTest
     @EnumSource
-    final void asClass(final ToStringCase testCase) {
-        assertSame(testCase.asClass, testCase.type.asClass());
+    final void core(final ToStringCase testCase) {
+        assertSame(testCase.asClass, testCase.type.core());
     }
 
     @ParameterizedTest
     @EnumSource
-    final void getFormalParameters(final ToStringCase testCase) {
-        assertEquals(testCase.formalParameters, testCase.type.getFormalParameters());
+    final void formalParameters(final ToStringCase testCase) {
+        assertEquals(testCase.formalParameters, testCase.type.formalParameters());
     }
 
     @Test
-    final void getActualParameters() {
-        assertEquals(emptyList(), STRING_TYPE.getActualParameters());
-        assertEquals(Arrays.asList(STRING_TYPE, LIST_TYPE), MAP_TYPE.getActualParameters());
+    final void actualParameters() {
+        assertEquals(emptyList(), STRING_TYPE.actualParameters());
+        assertEquals(Arrays.asList(STRING_TYPE, LIST_TYPE), MAP_TYPE.actualParameters());
     }
 
     @Test
-    final void getSuperType() {
-        assertEquals(Optional.of(Type.of(Object.class)), STRING_TYPE.getSuperType());
-        assertEquals(Optional.empty(), MAP_TYPE.getSuperType());
+    final void superType() {
+        assertEquals(Optional.of(Type.of(Object.class)), STRING_TYPE.superType());
+        assertEquals(Optional.empty(), MAP_TYPE.superType());
     }
 
-    @Test
-    final void getSuperTypes() {
-        assertEquals(new HashSet<>(Arrays.asList(
-                Type.of(Object.class),
-                Type.of(Serializable.class),
-                new Type<Comparable<String>>() {
-                },
-                Type.of(CharSequence.class))), new HashSet<>(STRING_TYPE.getSuperTypes()));
-        assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
+    @ParameterizedTest
+    @MethodSource("cases")
+    final <T> void superTypes(final Case<T> given) {
+        assertEquals(given.superTypes, Set.copyOf(given.type.superTypes()));
     }
 
-    @Test
-    final void getInterfaces() {
-        assertEquals(new HashSet<>(Arrays.asList(
-                             Type.of(Serializable.class),
-                             new Type<Comparable<String>>() {
-                             },
-                             Type.of(CharSequence.class))),
-                     new HashSet<>(STRING_TYPE.getInterfaces()));
-        assertEquals(emptySet(), new HashSet<>(MAP_TYPE.getSuperTypes()));
+    @ParameterizedTest
+    @MethodSource("cases")
+    final <T> void interfaces(final Case<T> given) {
+        assertEquals(given.interfaces(), Set.copyOf(given.type.interfaces()));
     }
 
     @Test
@@ -201,6 +208,16 @@ class TypeTest {
             this.string = string;
             this.formalParameters = formalParameters;
             this.asClass = asClass;
+        }
+    }
+
+    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
+    record Case<T>(Type<T> type, Set<Type<?>> superTypes) {
+
+        final Set<Type<?>> interfaces() {
+            return superTypes.stream()
+                             .filter(t -> t.core().isInterface())
+                             .collect(Collectors.toSet());
         }
     }
 

@@ -4,21 +4,21 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
-class ClassAssembly extends SingleAssembly {
+class ClassBacking extends SingleBacking {
 
     private final Class<?> underlyingClass;
 
-    ClassAssembly(final Class<?> underlyingClass) {
+    ClassBacking(final Class<?> underlyingClass) {
         this.underlyingClass = underlyingClass;
     }
 
     @Override
-    final Class<?> asClass() {
+    final Class<?> core() {
         return underlyingClass;
     }
 
     @Override
-    final List<Assembly> getActualParameters() {
+    final List<Backing> actualParameters() {
         return emptyList();
     }
 }

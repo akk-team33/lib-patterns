@@ -8,12 +8,12 @@ import java.util.stream.Stream;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.joining;
 
-abstract class SingleAssembly extends Assembly {
+abstract class SingleBacking extends Backing {
 
     @Override
-    final List<String> getFormalParameters() {
+    final List<String> formalParameters() {
         return unmodifiableList(
-                Stream.of(asClass().getTypeParameters())
+                Stream.of(core().getTypeParameters())
                       .map(TypeVariable::getName)
                       .collect(Collectors.toList())
                                );
@@ -21,10 +21,10 @@ abstract class SingleAssembly extends Assembly {
 
     @Override
     final String toStringValue() {
-        final List<Assembly> actual = getActualParameters();
-        return asClass().getCanonicalName() + (
+        final List<Backing> actual = actualParameters();
+        return core().getCanonicalName() + (
                 actual.isEmpty() ? "" : actual.stream()
-                                              .map(Assembly::toString)
+                                              .map(Backing::toString)
                                               .collect(joining(", ", "<", ">")));
     }
 }
