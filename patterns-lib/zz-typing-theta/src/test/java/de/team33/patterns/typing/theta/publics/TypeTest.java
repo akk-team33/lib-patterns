@@ -24,54 +24,48 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class TypeTest {
 
-    private static final Type<String> STRING_TYPE = Type.of(String.class);
-    private static final Type<List<String>> LIST_TYPE = new Type<List<String>>() {
-    };
-    private static final Type<Map<String, List<String>>> MAP_TYPE = new Type<Map<String, List<String>>>() {
-    };
+    private static final Type<String> STRING = Type.of(String.class);
+    private static final Type<List<String>> LIST = new Type<>() {};
+    private static final Type<Map<String, List<String>>> MAP = new Type<>() {};
 
     static Stream<Case<?>> cases() {
-        return Stream.of(new Case<>(STRING_TYPE, Set.of(Type.of(Object.class),
-                                                        Type.of(Serializable.class),
-                                                        new Type<Comparable<String>>() {
-                                                        },
-                                                        Type.of(CharSequence.class),
-                                                        Type.of(Constable.class),
-                                                        Type.of(ConstantDesc.class))),
-                         new Case<>(MAP_TYPE, Set.of()));
+        return Stream.of(new Case<>(STRING, Set.of(Type.of(Object.class),
+                                                   Type.of(Serializable.class),
+                                                   new Type<Comparable<String>>() {},
+                                                   Type.of(CharSequence.class),
+                                                   Type.of(Constable.class),
+                                                   Type.of(ConstantDesc.class))),
+                         new Case<>(MAP, Set.of()));
     }
 
     @Test
-    void genericDerivative() {
+    final void genericDerivative() {
         try {
             final Type<Map<String, List<String>>> type = new MapType<>();
             fail("expected to fail - but was " + type);
         } catch (final IllegalStateException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             assertTrue(e.getMessage().contains(MapType.class.getSimpleName()));
         }
     }
 
     @Test
-    void indirectAnonymousDerivative() {
-        final Type<List<String>> type = new ListType<String>() {
-        };
-        assertEquals(LIST_TYPE, type);
+    final void indirectAnonymousDerivative() {
+        final Type<List<String>> type = new ListType<>() {};
+        assertEquals(LIST, type);
     }
 
     @Test
-    void indirectDerivative() {
-        final Type<List<String>> type = new StringListType() {
-        };
-        assertEquals(LIST_TYPE, type);
+    final void indirectDerivative() {
+        final Type<List<String>> type = new StringListType();
+        assertEquals(LIST, type);
     }
 
     @Test
     final void multipleDerivation() {
         //noinspection EmptyClass
-        final Type<Map<String, List<String>>> mapType = new MapType<String, List<String>>() {
-        };
-        assertEquals(MAP_TYPE, mapType);
+        final Type<Map<String, List<String>>> mapType = new MapType<>() {};
+        assertEquals(MAP, mapType);
     }
 
     @ParameterizedTest
@@ -88,14 +82,14 @@ class TypeTest {
 
     @Test
     final void actualParameters() {
-        assertEquals(emptyList(), STRING_TYPE.actualParameters());
-        assertEquals(Arrays.asList(STRING_TYPE, LIST_TYPE), MAP_TYPE.actualParameters());
+        assertEquals(emptyList(), STRING.actualParameters());
+        assertEquals(Arrays.asList(STRING, LIST), MAP.actualParameters());
     }
 
     @Test
     final void superType() {
-        assertEquals(Optional.of(Type.of(Object.class)), STRING_TYPE.superType());
-        assertEquals(Optional.empty(), MAP_TYPE.superType());
+        assertEquals(Optional.of(Type.of(Object.class)), STRING.superType());
+        assertEquals(Optional.empty(), MAP.superType());
     }
 
     @ParameterizedTest
@@ -114,60 +108,50 @@ class TypeTest {
     final void typeOf() throws NoSuchFieldException {
         final Field field = SuperTypeOf.class.getDeclaredField("field");
 
-        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {
-        };
-        assertEquals(STRING_TYPE, typeOfStringType.typeOf(field));
+        final Type<TypeOf<String>> typeOfStringType = new Type<>() {};
+        assertEquals(STRING, typeOfStringType.typeOf(field));
 
-        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {
-        };
-        assertEquals(LIST_TYPE, typeOfListType.typeOf(field));
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<>() {};
+        assertEquals(LIST, typeOfListType.typeOf(field));
     }
 
     @Test
     final void returnTypeOf() throws NoSuchMethodException {
         final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
 
-        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {
-        };
-        assertEquals(STRING_TYPE, typeOfStringType.returnTypeOf(method));
+        final Type<TypeOf<String>> typeOfStringType = new Type<>() {};
+        assertEquals(STRING, typeOfStringType.returnTypeOf(method));
 
-        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {
-        };
-        assertEquals(LIST_TYPE, typeOfListType.returnTypeOf(method));
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<>() {};
+        assertEquals(LIST, typeOfListType.returnTypeOf(method));
     }
 
     @Test
     final void parameterTypesOf() throws NoSuchMethodException {
         final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
-        final Type<TypeOf<String>> typeOfStringType = new Type<TypeOf<String>>() {
-        };
+        final Type<TypeOf<String>> typeOfStringType = new Type<>() {};
         assertEquals(emptyList(), typeOfStringType.parameterTypesOf(method));
     }
 
     @Test
     final void exceptionTypesOf() throws NoSuchMethodException {
         final Method method = SuperTypeOf.class.getDeclaredMethod("getField");
-        final Type<TypeOf<List<String>>> typeOfListType = new Type<TypeOf<List<String>>>() {
-        };
+        final Type<TypeOf<List<String>>> typeOfListType = new Type<>() {};
         assertEquals(emptyList(), typeOfListType.exceptionTypesOf(method));
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")
     @Test
     final void testEquals() {
-        assertEquals(STRING_TYPE, new Type<String>() {
-        });
-        assertEquals(MAP_TYPE, new Type<Map<String, List<String>>>() {
-        });
+        assertEquals(STRING, new Type<String>() {});
+        assertEquals(MAP, new Type<Map<String, List<String>>>() {});
     }
 
     @SuppressWarnings("AnonymousInnerClassMayBeStatic")
     @Test
     final void testHashCode() {
-        assertEquals(STRING_TYPE.hashCode(), new Type<String>() {
-        }.hashCode());
-        assertEquals(MAP_TYPE.hashCode(), new Type<Map<String, List<String>>>() {
-        }.hashCode());
+        assertEquals(STRING.hashCode(), new Type<String>() {}.hashCode());
+        assertEquals(MAP.hashCode(), new Type<Map<String, List<String>>>() {}.hashCode());
     }
 
     @ParameterizedTest
@@ -176,11 +160,12 @@ class TypeTest {
         assertEquals(testCase.string, testCase.type.toString());
     }
 
+    @SuppressWarnings("InnerClassFieldHidesOuterClassField")
     enum ToStringCase {
         INTEGER(Type.of(Integer.class), "java.lang.Integer", emptyList(), Integer.class),
-        STRING(STRING_TYPE, "java.lang.String", emptyList(), String.class),
-        LIST(LIST_TYPE, "java.util.List<java.lang.String>", singletonList("E"), List.class),
-        MAP(MAP_TYPE,
+        STRING(TypeTest.STRING, "java.lang.String", emptyList(), String.class),
+        LIST(TypeTest.LIST, "java.util.List<java.lang.String>", singletonList("E"), List.class),
+        MAP(TypeTest.MAP,
             "java.util.Map<java.lang.String, java.util.List<java.lang.String>>",
             Arrays.asList("K", "V"),
             Map.class),
@@ -189,8 +174,7 @@ class TypeTest {
 
         INTEGER_ARRAY(Type.of(Integer[].class), "java.lang.Integer[]", singletonList("E"), Integer[].class),
 
-        LIST_ARRAY(new Type<List<String>[]>() {
-        },
+        LIST_ARRAY(new Type<List<String>[]>() {},
                    "java.util.List<java.lang.String>[]",
                    singletonList("E"),
                    List[].class);
@@ -225,7 +209,7 @@ class TypeTest {
 
         private final T field;
 
-        SuperTypeOf(T field) {
+        SuperTypeOf(final T field) {
             this.field = field;
         }
 
@@ -236,7 +220,7 @@ class TypeTest {
 
     static class TypeOf<T> extends SuperTypeOf<T> {
 
-        TypeOf(T field) {
+        TypeOf(final T field) {
             super(field);
         }
     }

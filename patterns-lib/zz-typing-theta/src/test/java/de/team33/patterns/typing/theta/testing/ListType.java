@@ -4,5 +4,8 @@ import de.team33.patterns.typing.theta.Type;
 
 import java.util.List;
 
-public class ListType<E> extends Type<List<E>> {
+public abstract class ListType<E> extends Type<List<E>> {
+
+    protected ListType() {
+    }
 }
