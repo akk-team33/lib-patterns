@@ -31,5 +31,9 @@
             <groupId>de.team33.testing</groupId>
             <artifactId>async-thebe</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.testing</groupId>
+            <artifactId>bridging-styx</artifactId>
+        </dependency>
     </dependencies>
 </project>
