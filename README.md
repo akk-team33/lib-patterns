@@ -20,6 +20,8 @@ Java 17 or later
   * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-triton (Team33 Records Library - Edition "triton")
+* patterns-annex (Team33 Patterns Annex)
+  * pinned-testing (Tests for pinned modules)
 
 ### Drafts - not deployed, not featured yet
 
@@ -27,6 +29,8 @@ Java 17 or later
   * zz-00-alpha (Sample Draft Module)
   * zz-math-phoebe (Team33 Math Library - Edition "phoebe")
   * zz-typing-theta (Team33 Typing Library - Edition "theta")
+* (patterns-annex)
+  * concept-alpha (Ideas, concepts and drafts)
 
 ### Still Featured
 
