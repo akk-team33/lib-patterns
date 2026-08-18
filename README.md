@@ -26,7 +26,6 @@ Java 17 or later
 ### Drafts - not deployed, not featured yet
 
 * (patterns-lib)
-  * zz-00-alpha (Sample Draft Module)
   * zz-lazy-lambda (Team33 Lazy Initialization Library - Edition "lambda")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-typing-theta (Team33 Typing Library - Edition "theta")

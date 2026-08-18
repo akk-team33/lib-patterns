@@ -19,7 +19,6 @@
         <module>files-styx</module>
         <module>io-thalassa</module>
         <module>records-triton</module>
-        <module>zz-00-alpha</module>
         <module>zz-lazy-lambda</module>
         <module>zz-math-my</module>
         <module>zz-typing-theta</module>
