@@ -10,9 +10,9 @@
         <version>2.9.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-math-phoebe</artifactId>
+    <artifactId>zz-math-my</artifactId>
 
-    <name>Team33 Math Library - Edition "phoebe"</name>
+    <name>Team33 Math Library - Edition "my"</name>
     <description>Provides math types and operations</description>
 
     <properties>

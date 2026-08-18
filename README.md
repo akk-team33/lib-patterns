@@ -28,7 +28,7 @@ Java 17 or later
 * (patterns-lib)
   * zz-00-alpha (Sample Draft Module)
   * zz-lazy-lambda (Team33 Lazy Initialization Library - Edition "lambda")
-  * zz-math-phoebe (Team33 Math Library - Edition "phoebe")
+  * zz-math-my (Team33 Math Library - Edition "my")
   * zz-typing-theta (Team33 Typing Library - Edition "theta")
 * (patterns-annex)
   * concept-alpha (Ideas, concepts and drafts)
@@ -85,7 +85,7 @@ Java 17 or later
   * Added tree.styx
 * Added drafts:
   * Module zz-lazy-lambda
-  * Module zz-math-phoebe
+  * Module zz-math-my
   * Module zz-typing-theta
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)

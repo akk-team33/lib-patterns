@@ -1,4 +1,4 @@
-package de.team33.patterns.math.phoebe;
+package de.team33.patterns.math.my;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

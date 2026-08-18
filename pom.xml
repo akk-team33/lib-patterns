@@ -65,7 +65,8 @@
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-00-alpha</artifact>
-                        <artifact>zz-math-phoebe</artifact>
+                        <artifact>zz-lazy-lambda</artifact>
+                        <artifact>zz-math-my</artifact>
                         <artifact>zz-typing-theta</artifact>
                     </excludeArtifacts>
                 </configuration>

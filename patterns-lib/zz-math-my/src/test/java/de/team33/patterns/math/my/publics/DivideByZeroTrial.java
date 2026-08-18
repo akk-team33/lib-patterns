@@ -1,4 +1,4 @@
-package de.team33.test.patterns.math.phoebe;
+package de.team33.patterns.math.my.publics;
 
 import org.junit.jupiter.api.Test;
 

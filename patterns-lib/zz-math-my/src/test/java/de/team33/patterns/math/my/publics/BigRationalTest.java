@@ -1,7 +1,7 @@
-package de.team33.test.patterns.math.phoebe;
+package de.team33.patterns.math.my.publics;
 
 import de.team33.patterns.exceptional.dione.Ignoring;
-import de.team33.patterns.math.phoebe.BigRational;
+import de.team33.patterns.math.my.BigRational;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
