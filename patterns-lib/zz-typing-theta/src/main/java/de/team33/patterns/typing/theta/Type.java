@@ -2,10 +2,7 @@ package de.team33.patterns.typing.theta;
 
 import de.team33.patterns.lazy.lambda.Features;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -198,6 +195,19 @@ public abstract class Type<T> {
     public final Type<?> typeOf(final Field field) {
         return optTypeOf(field, Field::getGenericType)
                 .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(field, this)));
+    }
+
+    /**
+     * Returns the type of the given {@link RecordComponent} if it is defined in <em>this</em> Type.
+     *
+     * @throws IllegalArgumentException if the given {@link RecordComponent} is not defined in <em>this</em> Type.
+     */
+    public final Type<?> typeOf(final RecordComponent component) {
+        if (core().equals(component.getDeclaringRecord())) {
+            return memberType(component.getGenericType());
+        } else {
+            throw new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(component, this));
+        }
     }
 
     /**

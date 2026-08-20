@@ -14,6 +14,8 @@ import java.lang.constant.Constable;
 import java.lang.constant.ConstantDesc;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,6 +24,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 class TypeTest {
 
     private static final Type<String> STRING = Type.of(String.class);
@@ -36,6 +39,13 @@ class TypeTest {
                                                    Type.of(Constable.class),
                                                    Type.of(ConstantDesc.class))),
                          new Case<>(MAP, Set.of()));
+    }
+
+    static Stream<TORC_Case> torc_Cases() {
+        return Stream.of(new TORC_Case(0, "java.lang.String"),
+                         new TORC_Case(1, "java.lang.String"),
+                         new TORC_Case(2, "java.util.List<java.lang.Double>"),
+                         new TORC_Case(3, "java.util.Map<java.lang.String, java.util.List<java.time.Instant>>"));
     }
 
     @Test
@@ -105,7 +115,7 @@ class TypeTest {
     }
 
     @Test
-    final void typeOf() throws NoSuchFieldException {
+    final void typeOf_Field() throws NoSuchFieldException {
         final Field field = SuperTypeOf.class.getDeclaredField("field");
 
         final Type<TypeOf<String>> typeOfStringType = new Type<>() {};
@@ -113,6 +123,21 @@ class TypeTest {
 
         final Type<TypeOf<List<String>>> typeOfListType = new Type<>() {};
         assertEquals(LIST, typeOfListType.typeOf(field));
+    }
+
+    @ParameterizedTest
+    @MethodSource("torc_Cases")
+    final void typeOf_RecordComponent(final TORC_Case given) {
+        final var result = given.type().typeOf(given.component());
+        assertEquals(given.expected, result.toString());
+    }
+
+    @Test
+    final void typeOf_foreign_RecordComponent() {
+        final var type = new Type<TORC_Case>() {};
+        final RecordComponent component = new TORC_Case(2, null).component();
+        assertThrows(IllegalArgumentException.class,
+                     () -> type.typeOf(component)); //.printStackTrace();
     }
 
     @Test
@@ -192,6 +217,21 @@ class TypeTest {
             this.string = string;
             this.formalParameters = formalParameters;
             this.asClass = asClass;
+        }
+    }
+
+    @SuppressWarnings({"AssignmentOrReturnOfFieldWithMutableType", "WeakerAccess"})
+    record SampleRecord<E, F, G>(String name, E element, List<F> list, Map<E, List<G>> map) {}
+
+    @SuppressWarnings("MethodMayBeStatic")
+    record TORC_Case(int index, String expected) {
+
+        final Type<?> type() {
+            return new Type<SampleRecord<String, Double, Instant>>() {};
+        }
+
+        final RecordComponent component() {
+            return SampleRecord.class.getRecordComponents()[index];
         }
     }
 
