@@ -4,32 +4,39 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 enum TypeCase {
 
-    CLASS(Class.class, (type, context) -> ClassCase.toBacking(type)),
-
-    GENERIC_ARRAY(GenericArrayType.class, GenericArrayBacking::new),
-
-    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedBacking::new),
-
-    TYPE_VARIABLE(TypeVariable.class, TypeVariableBacking::new);
+    CLASS(Class.class, (type, context) -> ClassCase.support(type)),
+    GENERIC_ARRAY(GenericArrayType.class, GenericArraySupport::new),
+    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSupport::new),
+    TYPE_VARIABLE(TypeVariable.class, TypeVariableSupport::new);
 
     private final Predicate<Type> matching;
-    private final BiFunction<Type, Backing, Backing> mapping;
+    private final Mapping<Type> mapping;
 
-    <T extends Type> TypeCase(final Class<T> typeClass, final BiFunction<T, Backing, Backing> mapping) {
+    <T extends Type> TypeCase(final Class<T> typeClass, final Mapping<T> mapping) {
         this.matching = typeClass::isInstance;
-        this.mapping = (t, u) -> mapping.apply(typeClass.cast(t), u);
+        this.mapping = mapping::apply;
     }
 
-    static Backing toBacking(final Type type, final Backing context) {
+    static TypeSupport support(final Type type, final TypeSupport context) {
         return Stream.of(values())
                      .filter(typeType -> typeType.matching.test(type)).findAny()
                      .map(typeType -> typeType.mapping.apply(type, context))
                      .orElseThrow(() -> new IllegalArgumentException("Unknown type of Type: " + type.getClass()));
+    }
+
+    @FunctionalInterface
+    private interface Mapping<T extends Type> {
+
+        TypeSupport applyT(T type, TypeSupport context);
+
+        @SuppressWarnings("unchecked")
+        default TypeSupport apply(final Type type, final TypeSupport context) {
+            return applyT((T) type, context);
+        }
     }
 }

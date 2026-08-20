@@ -54,7 +54,7 @@ public abstract class Type<T> {
             "    (of course, using definite types instead of formal type parameters).%n" +
             "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
-    private final Backing backing;
+    private final TypeSupport support;
     private final Features features = new Features();
 
     /**
@@ -67,20 +67,20 @@ public abstract class Type<T> {
      * @see Type
      */
     protected Type() {
-        this.backing = extract(ClassCase.toBacking(failGeneric(getClass())));
+        this.support = extract(ClassCase.support(failGeneric(getClass())));
     }
 
-    private Type(final Backing backing) {
-        this.backing = backing;
+    private Type(final TypeSupport support) {
+        this.support = support;
     }
 
-    private static Backing extract(final Backing thisBacking) {
-        final Class<?> thisClass = thisBacking.core();
+    private static TypeSupport extract(final TypeSupport thisSupport) {
+        final Class<?> thisClass = thisSupport.core();
         if (Type.class.equals(thisClass)) {
-            return thisBacking.actualParameters().get(0);
+            return thisSupport.actualParameters().get(0);
         }
-        final Backing superBacking = thisBacking.memberBacking(thisClass.getGenericSuperclass());
-        return extract(superBacking);
+        final TypeSupport superSupport = thisSupport.memberBacking(thisClass.getGenericSuperclass());
+        return extract(superSupport);
     }
 
     private static Class<?> failGeneric(final Class<?> thisClass) {
@@ -106,18 +106,18 @@ public abstract class Type<T> {
      * @see Type
      */
     public static <T> Type<T> of(final Class<T> simpleClass) {
-        return new Type<>(ClassCase.toBacking(simpleClass)) {};
+        return new Type<>(ClassCase.support(simpleClass)) {};
     }
 
-    private static Type<?> by(final Backing backing) {
-        return new Type<>(backing) {};
+    private static Type<?> by(final TypeSupport support) {
+        return new Type<>(support) {};
     }
 
     /**
      * Returns the {@link Class} that represents the core of <em>this</em> Type.
      */
     public final Class<?> core() {
-        return backing.core();
+        return support.core();
     }
 
     /**
@@ -128,7 +128,7 @@ public abstract class Type<T> {
      * @see Class#getTypeParameters()
      */
     public final List<String> formalParameters() {
-        return backing.formalParameters();
+        return support.formalParameters();
     }
 
     /**
@@ -142,14 +142,14 @@ public abstract class Type<T> {
      */
     public final List<Type<?>> actualParameters() {
         return features.get(Key.ACTUAL_PARAMETERS,
-                            () -> backing.actualParameters()
+                            () -> support.actualParameters()
                                          .stream()
                                          .map(Type::by)
                                          .collect(Collectors.toUnmodifiableList()));
     }
 
     private Type<?> memberType(final java.lang.reflect.Type type) {
-        return by(backing.memberBacking(type));
+        return by(support.memberBacking(type));
     }
 
     /**
@@ -267,17 +267,17 @@ public abstract class Type<T> {
      */
     @Override
     public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof final Type<?> other) && backing.equals(other.backing));
+        return (this == obj) || ((obj instanceof final Type<?> other) && support.equals(other.support));
     }
 
     @Override
     public final int hashCode() {
-        return backing.hashCode();
+        return support.hashCode();
     }
 
     @Override
     public final String toString() {
-        return backing.toString();
+        return support.toString();
     }
 
     private interface Key<T> extends Features.Key<T> {

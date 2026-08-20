@@ -4,14 +4,12 @@ import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
+class GenericArraySupport extends ArraySupport {
 
-class GenericArrayBacking extends ArrayBacking {
+    private final TypeSupport componentType;
 
-    private final Backing componentType;
-
-    GenericArrayBacking(final GenericArrayType type, final Backing context) {
-        this.componentType = (TypeCase.toBacking(type.getGenericComponentType(), context));
+    GenericArraySupport(final GenericArrayType type, final TypeSupport context) {
+        this.componentType = TypeCase.support(type.getGenericComponentType(), context);
     }
 
     private static Class<?> arrayClass(final Class<?> componentClass) {
@@ -24,7 +22,8 @@ class GenericArrayBacking extends ArrayBacking {
     }
 
     @Override
-    final List<Backing> actualParameters() {
-        return singletonList(componentType);
+    final List<TypeSupport> actualParameters() {
+        return features().get(Key.ACTUAL_PARAMETERS, () -> List.of(componentType));
+
     }
 }

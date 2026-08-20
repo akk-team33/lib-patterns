@@ -6,31 +6,52 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
-abstract class Backing {
+abstract class TypeSupport {
 
-    final Features features = new Features();
+    private final Features features = new Features();
 
-    private List<Object> listView() {
-        return features.get(Key.LIST_VIEW, () -> List.of(core(), actualParameters()));
+    @Override
+    public final boolean equals(final Object obj) {
+        return (this == obj) || ((obj instanceof final TypeSupport other) && toList().equals(other.toList()));
     }
+
+    @Override
+    public final int hashCode() {
+        return features.get(Key.HASH_CODE, () -> toList().hashCode());
+    }
+
+    @Override
+    public abstract String toString();
 
     abstract Class<?> core();
 
     abstract List<String> formalParameters();
 
-    abstract List<Backing> actualParameters();
+    abstract List<TypeSupport> actualParameters();
 
-    final Backing getActualParameter(final String name) {
+    final Features features() {
+        return features;
+    }
+
+    final TypeSupport actualParameter(final String name) {
         final List<String> formalParameters = formalParameters();
         return Optional.of(formalParameters.indexOf(name))
                        .filter(index -> 0 <= index)
-                       .map(index -> getActualParameterByIndex(name, index))
+                       .map(index -> actualParameterByIndex(name, index))
                        .orElseThrow(() -> new IllegalArgumentException(
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
     }
 
-    private Backing getActualParameterByIndex(final String name, final int index) {
-        final List<Backing> actualParameters = actualParameters();
+    final TypeSupport memberBacking(final Type type) {
+        return TypeCase.support(type, this);
+    }
+
+    private List<Object> toList() {
+        return features().get(Key.TO_LIST, () -> List.of(core(), actualParameters()));
+    }
+
+    private TypeSupport actualParameterByIndex(final String name, final int index) {
+        final List<TypeSupport> actualParameters = actualParameters();
         if (index < actualParameters.size()) {
             return actualParameters.get(index);
         } else {
@@ -39,29 +60,13 @@ abstract class Backing {
         }
     }
 
-    final Backing memberBacking(final Type type) {
-        return TypeCase.toBacking(type, this);
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof final Backing other) && listView().equals(other.listView()));
-    }
-
-    @Override
-    public final int hashCode() {
-        return features.get(Key.HASH_CODE, () -> listView().hashCode());
-    }
-
-    @Override
-    public abstract String toString();
-
     interface Key<T> extends Features.Key<T> {
 
-        Key<List<Object>> LIST_VIEW = named("LIST_VIEW");
-        Key<Integer> HASH_CODE = named("HASH_VALUE");
+        Key<List<Object>> TO_LIST = named("TO_LIST");
+        Key<Integer> HASH_CODE = named("HASH_CODE");
         Key<String> TO_STRING = named("TO_STRING");
         Key<List<String>> FORMAL_PARAMETERS = named("FORMAL_PARAMETERS");
+        Key<List<TypeSupport>> ACTUAL_PARAMETERS = named("ACTUAL_PARAMETERS");
 
         static <T> Key<T> named(final String name) {
             return new Key<T>() {
