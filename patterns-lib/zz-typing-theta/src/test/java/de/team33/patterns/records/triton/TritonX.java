@@ -6,11 +6,12 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.RecordComponent;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.UnaryOperator;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import static de.team33.patterns.records.triton.Util.typeName;
 
@@ -25,8 +26,7 @@ import static de.team33.patterns.records.triton.Util.typeName;
  */
 public final class TritonX {
 
-    @SuppressWarnings("rawtypes")
-    private static final Map<Class, Reflector> CACHE = new ConcurrentHashMap<>();
+    private static final Map<Class<?>, ReflectorCore> CACHE = new ConcurrentHashMap<>();
     private static final RenderOption[] EMPTY_OPTIONS = {};
 
     private TritonX() {
@@ -61,9 +61,14 @@ public final class TritonX {
      * @see de.team33.patterns.records.triton package
      */
     public static <T extends Record> T toRecord(final Class<T> recordType, final String json) {
+        return toRecord(Type.of(recordType), json);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Record> T toRecord(final Type<T> recordType, final String json) {
         final JsonValue value = Parser.parse(json);
-        final Object result = Resolver.resolve(recordType, value);
-        return recordType.cast(result);
+        final Object result = ResolverX.resolve(recordType, value);
+        return (T) result;
     }
 
     /**
@@ -90,11 +95,11 @@ public final class TritonX {
      * @see de.team33.patterns.records.triton package
      */
     public static <T extends Record> T toRecord(final Class<T> recordType, final Map<String, Object> map) {
-        return reflector(recordType).toRecord(map);
+        return toRecord(Type.of(recordType), map);
     }
 
     public static <T extends Record> T toRecord(final Type<T> recordType, final Map<String, Object> map) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ReflectorX<>(recordType).toRecord(map);
     }
 
     /**
@@ -102,12 +107,12 @@ public final class TritonX {
      */
     @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
-        return reflector(recordType);
+        return new Reflector<>(recordType);
     }
 
     @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Description<T> description(final Type<T> recordType) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return new ReflectorX<>(recordType);
     }
 
     /**
@@ -127,94 +132,141 @@ public final class TritonX {
         Stringable.setup(type, operator);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends Record> Reflector<T> reflector(final Class<T> recordClass) {
-        return CACHE.computeIfAbsent(recordClass, Reflector::new);
+    private static ReflectorCore reflector(final Class<?> recordClass) {
+        return CACHE.computeIfAbsent(recordClass, ReflectorCore::new);
     }
 
-    private static final class Reflector<T extends Record> implements Descriptor<T> {
+    private static final class ReflectorCore {
 
-        private final Map<String, Integer> indices;
+        private final List<RecordComponent> components;
         private final List<String> names;
         private final List<Method> methods;
-        private final Class<?>[] types;
-        private final Constructor<T> constructor;
+        private final Constructor<?> constructor;
 
-        private Reflector(final Class<T> recordType) {
-            final RecordComponent[] components = recordType.getRecordComponents();
-            this.names = Stream.of(components)
-                               .map(RecordComponent::getName)
-                               .toList();
-            this.methods = Stream.of(components)
-                                 .map(RecordComponent::getAccessor)
-                                 .peek(accessor -> accessor.setAccessible(true))
-                                 .toList();
-            this.types = Stream.of(components)
-                               .map(RecordComponent::getType)
-                               .toArray(Class<?>[]::new);
-            this.indices = IntStream.range(0, names.size())
-                                    .boxed()
-                                    .collect(HashMap::new,
-                                             (map, index) -> map.put(names.get(index), index),
-                                             HashMap::putAll);
+        private ReflectorCore(final Class<?> type) {
+            this.components = List.of(type.getRecordComponents());
+            this.names = components.stream()
+                                   .map(RecordComponent::getName)
+                                   .toList();
+            this.methods = components.stream()
+                                     .map(RecordComponent::getAccessor)
+                                     .peek(method -> method.setAccessible(true))
+                                     .toList();
+            final Class<?>[] types = components.stream()
+                                               .map(RecordComponent::getType)
+                                               .toArray(Class<?>[]::new);
             try {
-                this.constructor = recordType.getDeclaredConstructor(types);
+                this.constructor = type.getDeclaredConstructor(types);
                 this.constructor.setAccessible(true);
             } catch (final NoSuchMethodException e) {
                 // difficult to test (should not happen at all) ...
-                throw new IllegalArgumentException("Cannot find constructor for %s%n".formatted(recordType), e);
+                throw new IllegalArgumentException(("Cannot find constructor ..." +
+                                                    "    type: %s%n" +
+                                                    "    args: %s%n").formatted(type, List.of(types)), e);
             }
         }
 
-        @Override
-        public final Class<T> recordType() {
-            return constructor.getDeclaringClass();
+        final Constructor<?> constructor() {
+            return constructor;
         }
 
-        @Override
-        public final List<String> names() {
+        final List<String> names() {
             return names;
         }
 
-        @Override
-        public final Class<?> type(final String name) {
-            return types[indexOf(name)];
+        final int indexOf(final String name) {
+            return names().indexOf(name);
+        }
+
+        final RecordComponent component(final String name) {
+            return components.get(indexOf(name));
+        }
+
+        final Map<String, Object> toMap(final Record source) {
+            return names.stream()
+                        .collect(LinkedHashMap::new, (map, name) -> put(map, source, name), Map::putAll);
+        }
+
+        private void put(final Map<? super String, Object> map, final Record source, final String name) {
+            map.put(name, get(source, name));
         }
 
         private Object get(final Record source, final String name) {
             try {
-                return methods.get(indexOf(name)).invoke(source);
+                return methods.get(indexOf(name))
+                              .invoke(source);
             } catch (final IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalStateException(("Cannot access component <%s>%n" +
                                                  "    source : %s%n" +
                                                  "    type   : %s%n").formatted(name, source, typeName(source)), e);
             }
         }
+    }
 
-        private int indexOf(final String name) {
-            return Optional.ofNullable(indices.get(name))
-                           .orElseThrow(() -> new NoSuchElementException("Cannot find component <%s>%n".formatted(name)));
+    private static final class ReflectorX<T extends Record> implements Description<T> {
+
+        private final Type<T> type;
+        private final ReflectorCore core;
+
+        private ReflectorX(final Type<T> recordType) {
+            this.type = recordType;
+            this.core = reflector(recordType.core());
         }
 
-        private T toRecord(final Map<String, Object> source) {
-            final Object[] args = names.stream()
-                                       .map(source::get)
-                                       .toArray(Object[]::new);
+        @Override
+        public final Type<T> type() {
+            return type;
+        }
+
+        @Override
+        public final List<String> names() {
+            return core.names();
+        }
+
+        @Override
+        public final Type<?> componentType(final String name) {
+            return type.typeOf(core.component(name));
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        final T toRecord(final Map<String, Object> source) {
+            final Object[] args = core.names().stream()
+                                      .map(source::get)
+                                      .toArray(Object[]::new);
+            final Constructor constructor = core.constructor();
             try {
-                return constructor.newInstance(args);
+                return (T) constructor.newInstance(args);
             } catch (final InstantiationException | IllegalAccessException | InvocationTargetException e) {
                 throw new IllegalStateException(("Cannot apply constructor:%n" +
-                                                 "     %s%n").formatted(constructor), e);
+                                                 "     %s%n" +
+                                                 "     %s%n").formatted(constructor, List.of(args)), e);
             }
         }
+    }
 
-        private Map<String, Object> toMap(final T source) {
-            return names.stream()
-                        .collect(LinkedHashMap::new, (map, name) -> put(map, source, name), Map::putAll);
+    private static final class Reflector<T extends Record> implements Descriptor<T> {
+
+        private final Class<T> recordType;
+        private final ReflectorCore core;
+
+        private Reflector(final Class<T> recordType) {
+            this.recordType = recordType;
+            this.core = reflector(recordType);
         }
 
-        private void put(final Map<? super String, Object> map, final T source, final String name) {
-            map.put(name, get(source, name));
+        @Override
+        public final Class<T> recordType() {
+            return recordType;
+        }
+
+        @Override
+        public final List<String> names() {
+            return core.names();
+        }
+
+        @Override
+        public final Class<?> type(final String name) {
+            return core.component(name).getType();
         }
     }
 }
