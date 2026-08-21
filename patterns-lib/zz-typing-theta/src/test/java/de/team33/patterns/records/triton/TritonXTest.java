@@ -6,10 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.channels.AlreadyBoundException;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static de.team33.patterns.records.triton.RenderOption.*;
@@ -20,7 +19,7 @@ class TritonXTest extends TritonTestBase {
 
     private static final Supply SUPPLY = new Supply();
 
-    private static Sample<Sample<Class<?>>> anySample() {
+    private static Sample<Sample<Class>> anySample() {
         return anySample(anySample(Sample.class));
     }
 
@@ -70,26 +69,56 @@ class TritonXTest extends TritonTestBase {
 
     @Test
     final void jsonRoundTrip() {
-        final Sample<Sample<Class<?>>> origin = anySample();
+        final Sample<Sample<Class>> origin = anySample();
         final String stage = TritonX.toJson(origin);
-        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
+        final Sample<Sample<Class>> result = TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
     @ParameterizedTest
     @MethodSource("options")
     final void jsonRoundTrip_withOptions(final List<RenderOption> options) {
-        final Sample<Sample<Class<?>>> origin = anySample();
+        final Sample<Sample<Class>> origin = anySample();
         final String stage = TritonX.toJson(origin, options.toArray(RenderOption[]::new));
-        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
+        final Sample<Sample<Class>> result = TritonX.toRecord(new Type<>() {}, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void jsonRoundTrip_Wildcards_A() {
+        final WildcardSampleA<ArrayList, AbstractMap, AlreadyBoundException> origin =
+                new WildcardSampleA<>(ArrayList.class, HashMap.class, IllegalStateException.class);
+        final String stage = TritonX.toJson(origin);
+        final WildcardSampleA<ArrayList, AbstractMap, AlreadyBoundException> result =
+                TritonX.toRecord(new Type<>() {}, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void jsonRoundTrip_Wildcards_B() {
+        final WildcardSampleB<ArrayList, ? extends AbstractMap, ? super AlreadyBoundException> origin =
+                new WildcardSampleB<>(ArrayList.class, HashMap.class, IllegalStateException.class);
+        final String stage = TritonX.toJson(origin);
+        final WildcardSampleB<ArrayList, ? extends AbstractMap, ? super AlreadyBoundException> result =
+                TritonX.toRecord(new Type<>() {}, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void jsonRoundTrip_Wildcards_C() {
+        final WildcardSampleC<Class<?>, Class<? extends AbstractMap>, Class<? super AlreadyBoundException>> origin =
+                new WildcardSampleC<>(ArrayList.class, HashMap.class, IllegalStateException.class);
+        final String stage = TritonX.toJson(origin);
+        final WildcardSampleC<Class<?>, Class<? extends AbstractMap>, Class<? super AlreadyBoundException>> result =
+                TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
     @Test
     final void mapRoundTrip() {
-        final Sample<Sample<Class<?>>> origin = anySample();
+        final Sample<Sample<Class>> origin = anySample();
         final Map<String, Object> stage = TritonX.toMap(origin);
-        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
+        final Sample<Sample<Class>> result = TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
@@ -106,5 +135,14 @@ class TritonXTest extends TritonTestBase {
     }
 
     private record Sample<X>(String name, Instant create, UUID uuid, X extra) {
+    }
+
+    private record WildcardSampleA<X, Y, Z>(Class<X> xClass, Class<? extends Y> yClass, Class<? super Z> zClass) {
+    }
+
+    private record WildcardSampleB<X, Y, Z>(Class<X> xClass, Class<Y> yClass, Class<Z> zClass) {
+    }
+
+    private record WildcardSampleC<X, Y, Z>(X x, Y y, Z z) {
     }
 }
