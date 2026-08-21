@@ -1,6 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.records.triton.testing.Supply;
+import de.team33.patterns.typing.theta.Type;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,11 +20,15 @@ class TritonXTest extends TritonTestBase {
 
     private static final Supply SUPPLY = new Supply();
 
-    private static Sample anySample() {
-        return new Sample(SUPPLY.anyString(),
-                          Instant.now().plusMillis(SUPPLY.anyShort()),
-                          UUID.randomUUID(),
-                          Sample.class);
+    private static Sample<Sample<Class<?>>> anySample() {
+        return anySample(anySample(Sample.class));
+    }
+
+    private static <X> Sample<X> anySample(final X extra) {
+        return new Sample<>(SUPPLY.anyString(),
+                            Instant.now().plusMillis(SUPPLY.anyShort()),
+                            UUID.randomUUID(),
+                            extra);
     }
 
     static Stream<List<RenderOption>> options() {
@@ -65,26 +70,26 @@ class TritonXTest extends TritonTestBase {
 
     @Test
     final void jsonRoundTrip() {
-        final Sample origin = anySample();
+        final Sample<Sample<Class<?>>> origin = anySample();
         final String stage = TritonX.toJson(origin);
-        final Sample result = TritonX.toRecord(Sample.class, stage);
+        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
     @ParameterizedTest
     @MethodSource("options")
     final void jsonRoundTrip_withOptions(final List<RenderOption> options) {
-        final Sample origin = anySample();
+        final Sample<Sample<Class<?>>> origin = anySample();
         final String stage = TritonX.toJson(origin, options.toArray(RenderOption[]::new));
-        final Sample result = TritonX.toRecord(Sample.class, stage);
+        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
     @Test
     final void mapRoundTrip() {
-        final Sample origin = anySample();
+        final Sample<Sample<Class<?>>> origin = anySample();
         final Map<String, Object> stage = TritonX.toMap(origin);
-        final Sample result = TritonX.toRecord(Sample.class, stage);
+        final Sample<Sample<Class<?>>> result = TritonX.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
@@ -100,6 +105,6 @@ class TritonXTest extends TritonTestBase {
     static class FailingC {
     }
 
-    private record Sample(String name, Instant create, UUID uuid, Class<?> refClass) {
+    private record Sample<X>(String name, Instant create, UUID uuid, X extra) {
     }
 }
