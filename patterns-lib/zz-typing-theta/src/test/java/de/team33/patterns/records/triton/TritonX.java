@@ -1,5 +1,7 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.typing.theta.Type;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -91,12 +93,21 @@ public final class TritonX {
         return reflector(recordType).toRecord(map);
     }
 
+    public static <T extends Record> T toRecord(final Type<T> recordType, final Map<String, Object> map) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
     /**
      * Returns a {@link Descriptor} describing the given <em>recordType</em>.
      */
     @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
         return reflector(recordType);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public static <T extends Record> Description<T> description(final Type<T> recordType) {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     /**

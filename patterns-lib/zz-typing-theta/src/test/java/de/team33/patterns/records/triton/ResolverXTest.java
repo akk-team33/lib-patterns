@@ -1,5 +1,6 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.typing.theta.Type;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -19,41 +20,41 @@ class ResolverXTest {
     private static final Character[] EMPTY_CHARACTER_ARRAY = {};
 
     static Stream<MapCase> parseCases() {
-        return Stream.of(new MapCase(boolean.class, "true", true),
-                         new MapCase(Boolean.class, "false", false),
-                         new MapCase(byte.class, "12", (byte) 12),
-                         new MapCase(Byte.class, "-3", (byte) -3),
-                         new MapCase(short.class, "-357", (short) -357),
-                         new MapCase(Short.class, "5791", (short) 5791),
-                         new MapCase(int.class, "-1357924", -1357924),
-                         new MapCase(Integer.class, "246801", 246801),
-                         new MapCase(long.class, "1357924680", 1357924680L),
-                         new MapCase(Long.class, "-9753108642", -9753108642L),
-                         new MapCase(float.class, "-1.414", -1.414f),
-                         new MapCase(Float.class, "1.414", 1.414f),
-                         new MapCase(double.class, "3.141592654", 3.141592654),
-                         new MapCase(Double.class, "-3.141592654", -3.141592654),
-                         new MapCase(char.class, "\"a\"", 'a'),
-                         new MapCase(Character.class, "\"b\"", 'b'),
-                         new MapCase(BigInteger.class, "-9753108642", BigInteger.valueOf(-9753108642L)),
-                         new MapCase(BigDecimal.class, "3.141592654", new BigDecimal("3.141592654")),
-                         new MapCase(String.class, "\"any string\"", "any string"),
-                         new MapCase(char[].class, "[]", EMPTY_CHAR_ARRAY),
-                         new MapCase(Character[].class, "[]", EMPTY_CHARACTER_ARRAY),
-                         new MapCase(String[].class, "[\"any string\"]", new String[]{"any string"}),
-                         new MapCase(int[].class, "[1,2,3]", new int[]{1, 2, 3}),
-                         new MapCase(Integer[].class, "[4,2,9]", new Integer[]{4, 2, 9}),
-                         new MapCase(SampleRecord.class, "{}", new SampleRecord(null, null, null)),
-                         new MapCase(SampleRecord.class,
+        return Stream.of(mapCase(boolean.class, "true", true),
+                         mapCase(Boolean.class, "false", false),
+                         mapCase(byte.class, "12", (byte) 12),
+                         mapCase(Byte.class, "-3", (byte) -3),
+                         mapCase(short.class, "-357", (short) -357),
+                         mapCase(Short.class, "5791", (short) 5791),
+                         mapCase(int.class, "-1357924", -1357924),
+                         mapCase(Integer.class, "246801", 246801),
+                         mapCase(long.class, "1357924680", 1357924680L),
+                         mapCase(Long.class, "-9753108642", -9753108642L),
+                         mapCase(float.class, "-1.414", -1.414f),
+                         mapCase(Float.class, "1.414", 1.414f),
+                         mapCase(double.class, "3.141592654", 3.141592654),
+                         mapCase(Double.class, "-3.141592654", -3.141592654),
+                         mapCase(char.class, "\"a\"", 'a'),
+                         mapCase(Character.class, "\"b\"", 'b'),
+                         mapCase(BigInteger.class, "-9753108642", BigInteger.valueOf(-9753108642L)),
+                         mapCase(BigDecimal.class, "3.141592654", new BigDecimal("3.141592654")),
+                         mapCase(String.class, "\"any string\"", "any string"),
+                         mapCase(char[].class, "[]", EMPTY_CHAR_ARRAY),
+                         mapCase(Character[].class, "[]", EMPTY_CHARACTER_ARRAY),
+                         mapCase(String[].class, "[\"any string\"]", new String[]{"any string"}),
+                         mapCase(int[].class, "[1,2,3]", new int[]{1, 2, 3}),
+                         mapCase(Integer[].class, "[4,2,9]", new Integer[]{4, 2, 9}),
+                         mapCase(SampleRecord.class, "{}", new SampleRecord(null, null, null)),
+                         mapCase(SampleRecord.class,
                                      "{\"lValue\" :null,\"name\": null, \"eValue\" : null}",
                                      new SampleRecord(null, null, null)),
-                         new MapCase(SampleRecord.class,
+                         mapCase(SampleRecord.class,
                                      "{\"name\":\"my name\"}",
                                      new SampleRecord("my name", null, null)),
-                         new MapCase(PrimeSample.class,
+                         mapCase(PrimeSample.class,
                                      "{\"unknown\" : 17, \"lValue\" : 9753108642, \"sValue\" : 278}",
                                      new PrimeSample(null, 9753108642L, (short) 278)),
-                         new MapCase(NestedSample.class, """
+                         mapCase(NestedSample.class, """
                                  {
                                      "plain" : {
                                          "lValue" : 9753108642,
@@ -65,24 +66,32 @@ class ResolverXTest {
                                      new NestedSample(new SampleRecord("name", 9753108642L, EnumSample.V3), 278L)));
     }
 
+    private static MapCase mapCase(final Class<?> type, final String source, final Object expectd) {
+        return new MapCase(Type.of(type), source, expectd);
+    }
+
     static Stream<FailCase> failCases() {
-        return Stream.of(new FailCase(boolean.class, "tru", IllegalArgumentException.class),
-                         new FailCase(byte.class, "250", ArithmeticException.class), // TODO: IllegalArgumentException
-                         new FailCase(short.class, "65000", ArithmeticException.class), // TODO: IllegalArgumentException
-                         new FailCase(PrimeSample.class, "{}", IllegalArgumentException.class),
-                         new FailCase(List.class, "{}", IllegalArgumentException.class),
-                         new FailCase(char.class, "\"\"", IllegalArgumentException.class),
-                         new FailCase(char.class, "\"ab\"", IllegalArgumentException.class),
-                         new FailCase(EnumSample.class, "\"V0\"", IllegalStateException.class), // TODO: IllegalArgumentException
-                         new FailCase(PrimeSample.class,
+        return Stream.of(failCase(boolean.class, "tru", IllegalArgumentException.class),
+                         failCase(byte.class, "250", ArithmeticException.class), // TODO: IllegalArgumentException
+                         failCase(short.class, "65000", ArithmeticException.class), // TODO: IllegalArgumentException
+                         failCase(PrimeSample.class, "{}", IllegalArgumentException.class),
+                         failCase(List.class, "{}", IllegalArgumentException.class),
+                         failCase(char.class, "\"\"", IllegalArgumentException.class),
+                         failCase(char.class, "\"ab\"", IllegalArgumentException.class),
+                         failCase(EnumSample.class, "\"V0\"", IllegalStateException.class), // TODO: IllegalArgumentException
+                         failCase(PrimeSample.class,
                                       "{\"lValue\" :null,\"name\": null, \"sValue\" : null}",
                                       IllegalArgumentException.class),
-                         new FailCase(SampleRecord.class,
+                         failCase(SampleRecord.class,
                                       "{\"name\":25}",
                                       IllegalArgumentException.class),
-                         new FailCase(SampleRecord.class,
+                         failCase(SampleRecord.class,
                                       "{\"lValue\" : \"9753108642\", \"sValue\" : \"V2\"}",
                                       IllegalArgumentException.class));
+    }
+
+    private static FailCase failCase(final Class<?> type, final String source, final Class<? extends Exception> expected) {
+        return new FailCase(Type.of(type), source, expected);
     }
 
     private static List<Object> toList(final Object array) {
@@ -97,8 +106,8 @@ class ResolverXTest {
     @ParameterizedTest
     @MethodSource("parseCases")
     final void parse(final MapCase given) {
-        final Object result = ResolverX.resolve(given.targetClass, given.value());
-        if (given.targetClass.isArray()) {
+        final Object result = ResolverX.resolve(given.targetType, given.value());
+        if (given.targetType.core().isArray()) {
             assertEquals(toList(given.expected), toList(result));
         } else {
             assertEquals(given.expected, result);
@@ -109,18 +118,18 @@ class ResolverXTest {
     @MethodSource("failCases")
     final void parse_fail(final FailCase given) {
         // final Exception e =
-        assertThrows(given.expected, () -> ResolverX.resolve(given.rClass, given.value()));
+        assertThrows(given.expected, () -> ResolverX.resolve(given.type, given.value()));
         // e.printStackTrace();
     }
 
-    record MapCase(Class<?> targetClass, String source, Object expected) {
+    record MapCase(Type<?> targetType, String source, Object expected) {
 
         final JsonValue value() {
             return Parser.parse(source);
         }
     }
 
-    record FailCase(Class<?> rClass, String source, Class<? extends Exception> expected) {
+    record FailCase(Type<?> type, String source, Class<? extends Exception> expected) {
 
         final JsonValue value() {
             return Parser.parse(source);
