@@ -202,7 +202,23 @@ class TypeTest {
         LIST_ARRAY(new Type<List<String>[]>() {},
                    "java.util.List<java.lang.String>[]",
                    singletonList("E"),
-                   List[].class);
+                   List[].class),
+
+        LIST_OF_CLASS_BYTE(new Type<List<Class<Byte>>>() {},
+                           "java.util.List<java.lang.Class<java.lang.Byte>>",
+                           List.of("E"), List.class),
+        LIST_OF_CLASS_RAW_(new Type<List<Class>>() {},
+                           "java.util.List<java.lang.Class>",
+                           List.of("E"), List.class),
+        LIST_OF_CLASS_ANY_(new Type<List<Class<?>>>() {},
+                           "java.util.List<java.lang.Class<?>>",
+                           List.of("E"), List.class),
+        LIST_OF_CLASS_EXT_(new Type<List<Class<? extends IllegalStateException>>>() {},
+                           "java.util.List<java.lang.Class<?>>",
+                           List.of("E"), List.class),
+        LIST_OF_CLASS_SUP_(new Type<List<Class<? super IllegalStateException>>>() {},
+                           "java.util.List<java.lang.Class<?>>",
+                           List.of("E"), List.class);
 
         private final Type<?> type;
         private final String string;
