@@ -42,7 +42,7 @@ abstract class TypeSupport {
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
     }
 
-    final TypeSupport memberBacking(final Type type) {
+    final TypeSupport memberSupport(final Type type) {
         return TypeCase.support(type, this);
     }
 

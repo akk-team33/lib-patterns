@@ -25,10 +25,10 @@ class TypeSupportTest {
             ClassCase.support(List.class);
     private static final TypeSupport LIST_OF_STRING =
             ClassCase.support(StringList.class)
-                     .memberBacking(StringList.class.getGenericInterfaces()[0]);
+                     .memberSupport(StringList.class.getGenericInterfaces()[0]);
     private static final TypeSupport MAP_OF_STRING_TO_LIST_OF_STRING =
             ClassCase.support(StringListMap.class)
-                     .memberBacking(StringListMap.class.getGenericInterfaces()[0]);
+                     .memberSupport(StringListMap.class.getGenericInterfaces()[0]);
 
     static Stream<ActualParameterCase> actualParameterCases() {
         return Stream.of(new ActualParameterCase(INT, "E", null),
