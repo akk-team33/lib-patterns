@@ -44,6 +44,11 @@ final class JsonObject extends AbstractList<JsonObject.Entry> implements JsonVal
             return this;
         }
 
+        @SuppressWarnings({"MethodMayBeStatic", "UnusedReturnValue", "unused"})
+        final Builder putAll(final Builder other) {
+            throw new UnsupportedOperationException("should never be called");
+        }
+
         final JsonObject build() {
             return new JsonObject(entries);
         }

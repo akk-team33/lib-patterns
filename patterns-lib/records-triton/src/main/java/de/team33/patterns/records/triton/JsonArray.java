@@ -50,6 +50,11 @@ final class JsonArray implements JsonValue {
             return this;
         }
 
+        @SuppressWarnings({"MethodMayBeStatic", "UnusedReturnValue", "unused"})
+        final Builder addAll(final Builder other) {
+            throw new UnsupportedOperationException("should never be called");
+        }
+
         final JsonArray build() {
             return new JsonArray(values);
         }
