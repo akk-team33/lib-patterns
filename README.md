@@ -16,7 +16,6 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-triton (Team33 Records Library - Edition "triton")
@@ -44,6 +43,7 @@ Java 17 or later
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
+  * files-pluto (Team33 Files Library - Edition "pluto") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.8.1
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
@@ -89,7 +89,7 @@ Java 17 or later
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)
 * Pinned module tuple-janus to 2.8.2 (deprecated)
-* ☐ Pinned module files-pluto to 2.8.2 (still featured)
+* Pinned module files-pluto to 2.8.2 (still featured)
 * ☐ Pinned module files-styx to 2.8.2 (still featured)
 * ☐ Pinned module io-thalassa to 2.8.2 (still featured)
 
