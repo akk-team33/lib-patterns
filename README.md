@@ -77,7 +77,7 @@ Java 17 or later
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
 
-### ☐ 2.9.0-SNAPSHOT
+### 2.8.3
 
 * Module concept-alpha:
   * Added escaping.namaka
