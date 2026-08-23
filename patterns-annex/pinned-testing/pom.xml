@@ -67,6 +67,16 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>files-pluto</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>files-styx</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>hashing-pandia</artifactId>
             <scope>test</scope>
         </dependency>
@@ -88,6 +98,11 @@
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>io-phobos</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>io-thalassa</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>

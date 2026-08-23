@@ -92,8 +92,8 @@ Java 17 or later
 * Pinned module files-pluto to 2.8.2 (still featured)
 * Pinned module files-styx to 2.8.2 (still featured)
 * Pinned module io-thalassa to 2.8.2 (still featured)
-* ☐ Module pinned-testing
-  * ☐ Added tests for pinned modules
+* Module pinned-testing:
+  * Added tests for pinned modules
 
 ### 2.8.2
 
