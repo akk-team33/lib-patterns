@@ -15,7 +15,6 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>files-styx</module>
         <module>io-thalassa</module>
         <module>records-triton</module>
         <module>zz-lazy-lambda</module>
