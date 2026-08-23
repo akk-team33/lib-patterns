@@ -89,6 +89,9 @@ Java 17 or later
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)
 * Pinned module tuple-janus to 2.8.2 (deprecated)
+* ☐ Pinned module files-pluto to 2.8.2 (still featured)
+* ☐ Pinned module files-styx to 2.8.2 (still featured)
+* ☐ Pinned module io-thalassa to 2.8.2 (still featured)
 
 ### 2.8.2
 
