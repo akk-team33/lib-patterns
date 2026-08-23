@@ -64,20 +64,20 @@ public abstract class Type<T> {
      * @see Type
      */
     protected Type() {
-        this.support = extract(ClassCase.support(failGeneric(getClass())));
+        this.support = mainSupport(ClassCase.support(failGeneric(getClass())));
     }
 
     private Type(final TypeSupport support) {
         this.support = support;
     }
 
-    private static TypeSupport extract(final TypeSupport thisSupport) {
-        final Class<?> thisClass = thisSupport.core();
-        if (Type.class.equals(thisClass)) {
-            return thisSupport.actualParameters().get(0);
+    private static TypeSupport mainSupport(final TypeSupport support) {
+        final Class<?> core = support.core();
+        if (Type.class.equals(support.core())) {
+            return support.actualParameters().get(0);
         }
-        final TypeSupport superSupport = thisSupport.memberBacking(thisClass.getGenericSuperclass());
-        return extract(superSupport);
+        final TypeSupport superSupport = support.memberSupport(core.getGenericSuperclass());
+        return mainSupport(superSupport);
     }
 
     private static Class<?> failGeneric(final Class<?> thisClass) {
@@ -146,7 +146,7 @@ public abstract class Type<T> {
     }
 
     private Type<?> memberType(final java.lang.reflect.Type type) {
-        return by(support.memberBacking(type));
+        return by(support.memberSupport(type));
     }
 
     /**

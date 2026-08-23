@@ -10,25 +10,6 @@ abstract class TypeSupport {
 
     private final Features features = new Features();
 
-    @Override
-    public final boolean equals(final Object obj) {
-        return (this == obj) || ((obj instanceof final TypeSupport other) && toList().equals(other.toList()));
-    }
-
-    @Override
-    public final int hashCode() {
-        return features.get(Key.HASH_CODE, () -> toList().hashCode());
-    }
-
-    @Override
-    public abstract String toString();
-
-    abstract Class<?> core();
-
-    abstract List<String> formalParameters();
-
-    abstract List<TypeSupport> actualParameters();
-
     final Features features() {
         return features;
     }
@@ -42,12 +23,8 @@ abstract class TypeSupport {
                                String.format("formal parameter <%s> not found in %s", name, formalParameters)));
     }
 
-    final TypeSupport memberBacking(final Type type) {
+    final TypeSupport memberSupport(final Type type) {
         return TypeCase.support(type, this);
-    }
-
-    private List<Object> toList() {
-        return features().get(Key.TO_LIST, () -> List.of(core(), actualParameters()));
     }
 
     private TypeSupport actualParameterByIndex(final String name, final int index) {
@@ -59,6 +36,21 @@ abstract class TypeSupport {
                     String.format("actual parameter for <%s> not found in %s", name, actualParameters));
         }
     }
+
+    abstract Class<?> core();
+
+    abstract List<String> formalParameters();
+
+    abstract List<TypeSupport> actualParameters();
+
+    @Override
+    public abstract boolean equals(final Object obj);
+
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public abstract String toString();
 
     interface Key<T> extends Features.Key<T> {
 

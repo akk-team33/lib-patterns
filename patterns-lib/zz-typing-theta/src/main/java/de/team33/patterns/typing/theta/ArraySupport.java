@@ -2,7 +2,7 @@ package de.team33.patterns.typing.theta;
 
 import java.util.List;
 
-abstract class ArraySupport extends TypeSupport {
+abstract class ArraySupport extends CoreSupport {
 
     private static final List<String> FORMAL_PARAMETERS = List.of("E");
 

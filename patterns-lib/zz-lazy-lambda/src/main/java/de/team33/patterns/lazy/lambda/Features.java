@@ -1,6 +1,7 @@
 package de.team33.patterns.lazy.lambda;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -130,6 +131,12 @@ public class Features {
     public final <T> T get(final Key<T> key, final Supplier<? extends T> supplier) {
         return (T) backing.computeIfAbsent(key, any -> Lazy.init(supplier))
                           .get();
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <T> Optional<T> peek(final Key<T> key) {
+        return Optional.ofNullable(backing.get(key))
+                       .map(lazy -> (T) lazy.get());
     }
 
     /**

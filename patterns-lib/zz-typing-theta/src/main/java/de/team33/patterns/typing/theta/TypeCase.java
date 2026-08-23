@@ -1,9 +1,7 @@
 package de.team33.patterns.typing.theta;
 
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -12,7 +10,8 @@ enum TypeCase {
     CLASS(Class.class, (type, context) -> ClassCase.support(type)),
     GENERIC_ARRAY(GenericArrayType.class, GenericArraySupport::new),
     PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSupport::new),
-    TYPE_VARIABLE(TypeVariable.class, TypeVariableSupport::new);
+    TYPE_VARIABLE(TypeVariable.class, TypeVariableSupport::new),
+    WILDCARD_TYPE(WildcardType.class, WildcardSupport::new);
 
     private final Predicate<Type> matching;
     private final Mapping<Type> mapping;

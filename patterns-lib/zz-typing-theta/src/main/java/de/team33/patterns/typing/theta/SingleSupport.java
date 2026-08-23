@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
 
-abstract class SingleSupport extends TypeSupport {
+abstract class SingleSupport extends CoreSupport {
 
     private static String join(final List<? extends TypeSupport> actual) {
         return actual.isEmpty() ? "" : actual.stream()
