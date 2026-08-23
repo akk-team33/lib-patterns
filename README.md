@@ -73,19 +73,34 @@ Java 17 or later
 
 ### ☐ near future
 
+* ☐ Pinned module lazy-narvi to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mapable' types
+
+### ☐ 2.9.0-SNAPSHOT
+
+* ☐ Added module lazy-janus
+* ☐ Added module typing-proteus
+* ☐ Unpinned module lazy-narvi:
+  * ☐ marked as deprecated
+* ☐ Module records-triton:
+  * ☐ Support for generic record types
+* ☐ Drafts:
+  * ☐ Removed module zz-lazy-lambda
+  * ☐ Removed module zz-typing-theta
+  * ☐ Added module zz-records-rho
+    * ☐ Support for 'listable' types for records-triton
 
 ### 2.8.3
 
 * Module concept-alpha:
   * Added escaping.namaka
   * Added tree.styx
-* Added drafts:
-  * Module zz-lazy-lambda
-  * Module zz-math-my
-  * Module zz-typing-theta
+* Drafts:
+  * Added module zz-lazy-lambda
+  * Added module zz-math-my
+  * Added module zz-typing-theta
 * Pinned module decision-carpo to 2.8.2 (deprecated)
 * Pinned module notes-eris to 2.8.2 (deprecated)
 * Pinned module tuple-janus to 2.8.2 (deprecated)
