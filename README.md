@@ -27,7 +27,6 @@ Java 17 or later
 * (patterns-lib)
   * zz-lazy-lambda (Team33 Lazy Initialization Library - Edition "lambda")
   * zz-math-my (Team33 Math Library - Edition "my")
-  * zz-typing-theta (Team33 Typing Library - Edition "theta")
 * (patterns-annex)
   * concept-alpha (Ideas, concepts and drafts)
 
@@ -78,7 +77,7 @@ Java 17 or later
 * ☐ Pinned module lazy-narvi to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
-  * ☐ Support for 'mapable' types
+  * ☐ Support for 'mappable' types
 
 ### ☐ 2.9.0-SNAPSHOT
 
@@ -91,7 +90,7 @@ Java 17 or later
   * ☐ Enhanced tests
 * ☐ Drafts:
   * ☐ Removed module zz-lazy-lambda
-  * ☐ Removed module zz-typing-theta
+  * Removed module zz-typing-theta
   * ☐ Added module zz-records-rho
     * ☐ Support for 'listable' types for records-triton
 
