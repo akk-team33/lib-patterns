@@ -64,7 +64,6 @@
                         <artifact>pinned-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
-                        <artifact>zz-lazy-lambda</artifact>
                         <artifact>zz-math-my</artifact>
                     </excludeArtifacts>
                 </configuration>

@@ -12,7 +12,7 @@ Java 17 or later
 
 ## Artifacts
 
-### In Progress
+### Featured, work in progress
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
@@ -22,10 +22,9 @@ Java 17 or later
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
-### Drafts - not deployed, not featured yet
+### Drafts - not deployed, not featured
 
 * (patterns-lib)
-  * zz-lazy-lambda (Team33 Lazy Initialization Library - Edition "lambda")
   * zz-math-my (Team33 Math Library - Edition "my")
 * (patterns-annex)
   * concept-alpha (Ideas, concepts and drafts)
@@ -89,7 +88,7 @@ Java 17 or later
   * Support for generic record types
   * ☐ Enhanced tests
 * ☐ Drafts:
-  * ☐ Removed module zz-lazy-lambda
+  * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
   * ☐ Added module zz-records-rho
     * ☐ Support for 'listable' types for records-triton
