@@ -17,6 +17,7 @@
     <modules>
         <module>lazy-janus</module>
         <module>records-triton</module>
+        <module>typing-proteus</module>
         <module>zz-lazy-lambda</module>
         <module>zz-math-my</module>
         <module>zz-typing-theta</module>

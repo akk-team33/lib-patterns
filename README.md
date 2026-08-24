@@ -18,6 +18,7 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus")
   * records-triton (Team33 Records Library - Edition "triton")
+  * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -82,7 +83,7 @@ Java 17 or later
 ### ☐ 2.9.0-SNAPSHOT
 
 * Added module lazy-janus
-* ☐ Added module typing-proteus
+* Added module typing-proteus
 * ☐ Unpinned module lazy-narvi:
   * ☐ marked as deprecated
 * ☐ Module records-triton:
