@@ -133,21 +133,6 @@ public class Features {
     }
 
     /**
-     * Returns the value of the feature identified by the given <em>key</em>.
-     * <p>
-     * Returns the given <em>fallback</em> if the feature has not been initialized yet.
-     *
-     * @param <T> the type of the feature.
-     * @see #get(Key, Supplier)
-     * @see #reset()
-     */
-    @SuppressWarnings("unchecked")
-    public final <T> T peek(final Key<T> key, final T fallback) {
-        final Lazy<T> lazy = backing.get(key);
-        return (null == lazy) ? fallback : lazy.get();
-    }
-
-    /**
      * Discards all values currently retained for the managed features.
      * <p>
      * This implementation is thread safe.
