@@ -1,6 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.enums.pan.Values;
+import de.team33.patterns.typing.proteus.Type;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -15,19 +16,19 @@ import java.util.stream.Stream;
 @SuppressWarnings("MethodMayBeStatic")
 final class Resolver {
 
-    private final Class<?> targetType;
+    private final Type<?> targetType;
     private final Mapping mapping;
 
-    private Resolver(final Class<?> targetType) {
+    private Resolver(final Type<?> targetType) {
         this.targetType = targetType;
         this.mapping = Mapping.of(targetType);
         if (null == mapping) {
-            throw new IllegalArgumentException("cannot resolve " + targetType.getCanonicalName());
+            throw new IllegalArgumentException("cannot resolve " + targetType);
         }
     }
 
-    static Object resolve(final Class<?> targetClass, final JsonValue value) {
-        return new Resolver(targetClass).apply(value);
+    static Object resolve(final Type<?> targetType, final JsonValue value) {
+        return new Resolver(targetType).apply(value);
     }
 
     private Object apply(final JsonValue value) {
@@ -43,8 +44,8 @@ final class Resolver {
 
     @SuppressWarnings({"ReturnOfNull", "SameReturnValue"})
     private Object mapNull() {
-        if (targetType.isPrimitive()) {
-            throw new IllegalArgumentException("not nullable: " + targetType.getCanonicalName());
+        if (targetType.core().isPrimitive()) {
+            throw new IllegalArgumentException("not nullable: " + targetType);
         }
         return null;
     }
@@ -98,7 +99,7 @@ final class Resolver {
     }
 
     private Object mapStringable(final JsonString source) {
-        return Stringable.decode(targetType, source.value());
+        return Stringable.decode(targetType.core(), source.value());
     }
 
     private Enum<?> mapEnum(final JsonString source) {
@@ -106,7 +107,7 @@ final class Resolver {
     }
 
     private Enum<?> mapEnum(final String name) {
-        return Stream.of(targetType.getEnumConstants())
+        return Stream.of(targetType.core().getEnumConstants())
                      .map(Enum.class::cast)
                      .filter(e -> e.name().equals(name))
                      .findAny()
@@ -115,7 +116,7 @@ final class Resolver {
 
     private IllegalStateException enumNotFound(final String name) {
         return new IllegalStateException(
-                "Cannot find enum value %s of type %s".formatted(name, targetType.getCanonicalName()));
+                "Cannot find enum value %s of type %s".formatted(name, targetType));
     }
 
     private Object mapArray(final JsonArray source) {
@@ -146,7 +147,7 @@ final class Resolver {
 
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);
 
-        private final Predicate<Class<?>> responsibility;
+        private final Predicate<Type<?>> responsibility;
         private final Class<? extends JsonValue> jsonClass;
         @SuppressWarnings("rawtypes")
         private final Method method;
@@ -154,7 +155,7 @@ final class Resolver {
         <T extends JsonValue> Mapping(final Predicate<Class<?>> responsibility,
                                       final Class<T> jsonClass,
                                       final Method<T> method) {
-            this.responsibility = responsibility;
+            this.responsibility = type -> responsibility.test(type.core());
             this.jsonClass = jsonClass;
             this.method = method;
         }
@@ -164,7 +165,7 @@ final class Resolver {
             return expected::contains;
         }
 
-        static Mapping of(final Class<?> targetClass) {
+        static Mapping of(final Type<?> targetClass) {
             return VALUES.findAny(mapping -> mapping.responsibility.test(targetClass))
                          .orElse(null);
         }
@@ -191,14 +192,14 @@ final class Resolver {
 
     private final class ArrayMapper {
 
-        private final Class<?> componentType;
+        private final Type<?> componentType;
 
         private ArrayMapper() {
-            componentType = targetType.componentType();
+            componentType = targetType.actualParameters().get(0);
         }
 
         final Object map(final JsonArray source) {
-            final Object array = Array.newInstance(componentType, source.size());
+            final Object array = Array.newInstance(componentType.core(), source.size());
             for (int index = 0; index < source.size(); ++index) {
                 final var component = resolve(componentType, source.get(index));
                 Array.set(array, index, component);
@@ -210,25 +211,26 @@ final class Resolver {
     private final class RecordMapper {
 
         @SuppressWarnings("rawtypes")
-        private final Descriptor descriptor;
+        private final Description description;
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         private RecordMapper() {
-            this.descriptor = Triton.descriptor((Class) targetType);
+            this.description = Triton.description((Type) targetType);
         }
 
         @SuppressWarnings("unchecked")
         final Object map(final JsonObject source) {
             final Map<String, Object> stage =
                     source.stream()
-                          .filter(entry -> descriptor.names().contains(entry.name()))
+                          .filter(entry -> description.names().contains(entry.name()))
                           .collect(HashMap::new, this::put, Map::putAll);
-            return Triton.toRecord(descriptor.recordType(), stage);
+            return Triton.toRecord(description.type(), stage);
         }
 
-        private void put(final Map<? super String, Object> map, final JsonObject.Entry entry) {
+        @SuppressWarnings("BoundedWildcard")
+        private void put(final Map<String, Object> map, final JsonObject.Entry entry) {
             final String name = entry.name();
-            map.put(name, resolve(descriptor.type(name), entry.value()));
+            map.put(name, resolve(description.componentType(name), entry.value()));
         }
     }
 }

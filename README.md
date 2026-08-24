@@ -86,8 +86,9 @@ Java 17 or later
 * Added module typing-proteus
 * Unpinned module lazy-narvi:
   * marked as deprecated
-* ☐ Module records-triton:
-  * ☐ Support for generic record types
+* Module records-triton:
+  * Support for generic record types
+  * ☐ Enhanced tests
 * ☐ Drafts:
   * ☐ Removed module zz-lazy-lambda
   * ☐ Removed module zz-typing-theta
