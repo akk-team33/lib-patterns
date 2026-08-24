@@ -65,6 +65,7 @@
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-math-my</artifact>
+                        <artifact>zz-records-rho</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

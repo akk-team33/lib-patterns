@@ -90,7 +90,7 @@ Java 17 or later
 * ☐ Drafts:
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
-  * ☐ Added module zz-records-rho
+  * Added module zz-records-rho
     * ☐ Support for 'listable' types for records-triton
 
 ### 2.8.3

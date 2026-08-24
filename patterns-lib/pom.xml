@@ -20,6 +20,7 @@
         <module>records-triton</module>
         <module>typing-proteus</module>
         <module>zz-math-my</module>
+        <module>zz-records-rho</module>
     </modules>
 
     <dependencyManagement>

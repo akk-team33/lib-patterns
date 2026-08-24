@@ -1,0 +1,38 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-lib</artifactId>
+        <version>2.9.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>zz-records-rho</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Team33 Records Library - Edition "triton"</name>
+    <description>Provides tools for working with records.</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>exceptional-dione</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>enums-pan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>typing-proteus</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
