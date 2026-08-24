@@ -47,7 +47,6 @@ Java 17 or later
   * files-styx (Team33 Files Library - Edition "styx") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * io-thalassa (Team33 IO Library - Edition "thalassa") - 2.8.2
-  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.8.1
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
@@ -65,6 +64,7 @@ Java 17 or later
   * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.8.0
   * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 2.8.0
+  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.9.0-SNAPSHOT
   * notes-eris (Team33 Notifications Library - Edition "eris") - 2.8.2
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
@@ -84,8 +84,8 @@ Java 17 or later
 
 * Added module lazy-janus
 * Added module typing-proteus
-* ☐ Unpinned module lazy-narvi:
-  * ☐ marked as deprecated
+* Unpinned module lazy-narvi:
+  * marked as deprecated
 * ☐ Module records-triton:
   * ☐ Support for generic record types
 * ☐ Drafts:
