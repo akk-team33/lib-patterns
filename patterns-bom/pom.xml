@@ -23,6 +23,11 @@
             <!-- in progress -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>lazy-janus</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>records-triton</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -15,6 +15,7 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>lazy-janus</module>
         <module>records-triton</module>
         <module>zz-lazy-lambda</module>
         <module>zz-math-my</module>
