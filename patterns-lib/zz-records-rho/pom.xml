@@ -14,6 +14,12 @@
     <name>Team33 Records Library - Edition "triton"</name>
     <description>Provides tools for working with records.</description>
 
+    <properties>
+        <skipJavadoc>true</skipJavadoc>
+        <skipHome>true</skipHome>
+        <skipGPG>true</skipGPG>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
