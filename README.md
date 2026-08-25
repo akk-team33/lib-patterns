@@ -19,6 +19,7 @@ Java 17 or later
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus")
   * records-triton (Team33 Records Library - Edition "triton")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
+  * value-sinope (Team33 Value Library - Edition "sinope")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 

@@ -1,6 +1,7 @@
 package de.team33.patterns.typing.proteus;
 
 import de.team33.patterns.lazy.janus.Features;
+import de.team33.patterns.value.sinope.Equation;
 
 import java.lang.reflect.*;
 import java.util.List;

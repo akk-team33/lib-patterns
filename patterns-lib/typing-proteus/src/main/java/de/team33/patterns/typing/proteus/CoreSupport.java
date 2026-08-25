@@ -1,5 +1,7 @@
 package de.team33.patterns.typing.proteus;
 
+import de.team33.patterns.value.sinope.Equation;
+
 import java.util.List;
 
 @SuppressWarnings("EqualsDoesntCheckParameterClass")
