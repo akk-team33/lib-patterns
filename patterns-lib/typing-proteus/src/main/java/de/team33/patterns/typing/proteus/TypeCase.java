@@ -10,15 +10,18 @@ enum TypeCase {
     CLASS(Class.class, (type, context) -> ClassCase.support(type)),
     GENERIC_ARRAY(GenericArrayType.class, GenericArraySupport::new),
     PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSupport::new),
-    TYPE_VARIABLE(TypeVariable.class, TypeVariableSupport::new),
+    TYPE_VARIABLE(TypeVariable.class, TypeCase::variable),
     WILDCARD_TYPE(WildcardType.class, WildcardSupport::new);
 
     private final Predicate<Type> matching;
     private final Mapping<Type> mapping;
-
     <T extends Type> TypeCase(final Class<T> typeClass, final Mapping<T> mapping) {
         this.matching = typeClass::isInstance;
         this.mapping = mapping::apply;
+    }
+
+    private static TypeSupport variable(final TypeVariable<?> type, final TypeSupport context) {
+        return context.actualParameter(type.getName());
     }
 
     static TypeSupport support(final Type type, final TypeSupport context) {
