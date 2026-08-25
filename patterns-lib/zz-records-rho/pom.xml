@@ -11,7 +11,7 @@
     <artifactId>zz-records-rho</artifactId>
     <packaging>jar</packaging>
 
-    <name>Team33 Records Library - Edition "triton"</name>
+    <name>Team33 Records Library - Edition "rho"</name>
     <description>Provides tools for working with records.</description>
 
     <properties>

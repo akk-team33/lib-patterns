@@ -7,19 +7,23 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class ResolverTest {
+class ResolverTest extends TritonTestBase {
 
     private static final char[] EMPTY_CHAR_ARRAY = {};
     private static final Character[] EMPTY_CHARACTER_ARRAY = {};
+    private static final String A_STRING = UUID.randomUUID().toString();
+    private static final Instant AN_INSTANT = Instant.now();
 
-    static Stream<MapCase> parseCases() {
+    static Stream<MapCase<?>> parseCases() {
         return Stream.of(mapCase(boolean.class, "true", true),
                          mapCase(Boolean.class, "false", false),
                          mapCase(byte.class, "12", (byte) 12),
@@ -46,28 +50,37 @@ class ResolverTest {
                          mapCase(Integer[].class, "[4,2,9]", new Integer[]{4, 2, 9}),
                          mapCase(SampleRecord.class, "{}", new SampleRecord(null, null, null)),
                          mapCase(SampleRecord.class,
-                                     "{\"lValue\" :null,\"name\": null, \"eValue\" : null}",
-                                     new SampleRecord(null, null, null)),
+                                 "{\"lValue\" :null,\"name\": null, \"eValue\" : null}",
+                                 new SampleRecord(null, null, null)),
                          mapCase(SampleRecord.class,
-                                     "{\"name\":\"my name\"}",
-                                     new SampleRecord("my name", null, null)),
+                                 "{\"name\":\"my name\"}",
+                                 new SampleRecord("my name", null, null)),
                          mapCase(PrimeSample.class,
-                                     "{\"unknown\" : 17, \"lValue\" : 9753108642, \"sValue\" : 278}",
-                                     new PrimeSample(null, 9753108642L, (short) 278)),
+                                 "{\"unknown\" : 17, \"lValue\" : 9753108642, \"sValue\" : 278}",
+                                 new PrimeSample(null, 9753108642L, (short) 278)),
                          mapCase(NestedSample.class, """
-                                 {
-                                     "plain" : {
-                                         "lValue" : 9753108642,
-                                         "name"   : "name",
-                                         "eValue" : "V3"
-                                     },
-                                     "lValue" : 278
-                                 }""",
-                                     new NestedSample(new SampleRecord("name", 9753108642L, EnumSample.V3), 278L)));
+                                         {
+                                             "plain" : {
+                                                 "lValue" : 9753108642,
+                                                 "name"   : "name",
+                                                 "eValue" : "V3"
+                                             },
+                                             "lValue" : 278
+                                         }""",
+                                 new NestedSample(new SampleRecord("name", 9753108642L, EnumSample.V3), 278L)),
+                         new MapCase<>(new Type<GenericSample<String, Instant, Class<? extends Exception>>>() {},
+                                       ("{" +
+                                        "    \"tValue\" : \"%s\"," +
+                                        "    \"uValue\" : \"%s\"," +
+                                        "    \"vValue\" : \"%s\"" +
+                                        "}").formatted(A_STRING,
+                                                       AN_INSTANT,
+                                                       IllegalArgumentException.class.getName()),
+                                       new GenericSample<>(A_STRING, AN_INSTANT, IllegalArgumentException.class)));
     }
 
-    private static MapCase mapCase(final Class<?> type, final String source, final Object expectd) {
-        return new MapCase(Type.of(type), source, expectd);
+    private static <T> MapCase<T> mapCase(final Class<T> type, final String source, final T expected) {
+        return new MapCase<>(Type.of(type), source, expected);
     }
 
     static Stream<FailCase> failCases() {
@@ -80,14 +93,14 @@ class ResolverTest {
                          failCase(char.class, "\"ab\"", IllegalArgumentException.class),
                          failCase(EnumSample.class, "\"V0\"", IllegalStateException.class), // TODO: IllegalArgumentException
                          failCase(PrimeSample.class,
-                                      "{\"lValue\" :null,\"name\": null, \"sValue\" : null}",
-                                      IllegalArgumentException.class),
+                                  "{\"lValue\" :null,\"name\": null, \"sValue\" : null}",
+                                  IllegalArgumentException.class),
                          failCase(SampleRecord.class,
-                                      "{\"name\":25}",
-                                      IllegalArgumentException.class),
+                                  "{\"name\":25}",
+                                  IllegalArgumentException.class),
                          failCase(SampleRecord.class,
-                                      "{\"lValue\" : \"9753108642\", \"sValue\" : \"V2\"}",
-                                      IllegalArgumentException.class));
+                                  "{\"lValue\" : \"9753108642\", \"sValue\" : \"V2\"}",
+                                  IllegalArgumentException.class));
     }
 
     private static FailCase failCase(final Class<?> type, final String source, final Class<? extends Exception> expected) {
@@ -105,7 +118,7 @@ class ResolverTest {
 
     @ParameterizedTest
     @MethodSource("parseCases")
-    final void parse(final MapCase given) {
+    final <T> void parse(final MapCase<T> given) {
         final Object result = Resolver.resolve(given.targetType, given.value());
         if (given.targetType.core().isArray()) {
             assertEquals(toList(given.expected), toList(result));
@@ -122,7 +135,7 @@ class ResolverTest {
         // e.printStackTrace();
     }
 
-    record MapCase(Type<?> targetType, String source, Object expected) {
+    record MapCase<T>(Type<T> targetType, String source, T expected) {
 
         final JsonValue value() {
             return Parser.parse(source);
@@ -140,5 +153,8 @@ class ResolverTest {
     }
 
     private record NestedSample(SampleRecord plain, Long lValue) {
+    }
+
+    private record GenericSample<T, U, V>(T tValue, U uValue, V vValue) {
     }
 }
