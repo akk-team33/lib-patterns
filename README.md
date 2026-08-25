@@ -80,6 +80,7 @@ Java 17 or later
 
 ### ☐ 2.9.0-SNAPSHOT
 
+* Added module value-sinope
 * Added module lazy-janus
 * Added module typing-proteus
 * Unpinned module lazy-narvi:
