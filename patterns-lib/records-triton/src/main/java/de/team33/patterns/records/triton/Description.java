@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Provides structural information about a {@code record} type.
  * <p>
- * Use {@link Triton#descriptor(Class)} to get an instance.
+ * Use {@link Triton#description(Class)} or {@link Triton#description(Type)} to get an instance.
  */
 public interface Description<T extends Record> {
 

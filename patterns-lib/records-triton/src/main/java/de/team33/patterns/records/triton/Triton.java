@@ -119,12 +119,26 @@ public final class Triton {
 
     /**
      * Returns a {@link Descriptor} describing the given <em>recordType</em>.
+     *
+     * @deprecated consider {@link #description(Class)} or {@link #description(Type)} as a replacement.
      */
+    @Deprecated
     @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
         return new DescriptorImpl<>(recordType);
     }
 
+    /**
+     * Returns a {@link Description} describing the given <em>recordType</em>.
+     */
+    @SuppressWarnings("WeakerAccess")
+    public static <T extends Record> Description<T> description(final Class<T> recordType) {
+        return description(Type.of(recordType));
+    }
+
+    /**
+     * Returns a {@link Description} describing the given <em>recordType</em>.
+     */
     @SuppressWarnings("WeakerAccess")
     public static <T extends Record> Description<T> description(final Type<T> recordType) {
         return new Reflector<>(recordType);
@@ -259,6 +273,7 @@ public final class Triton {
         }
     }
 
+    @Deprecated
     private static final class DescriptorImpl<T extends Record> implements Descriptor<T> {
 
         private final Class<T> recordType;
