@@ -64,7 +64,7 @@ Java 17 or later
   * io-adrastea (Team33 IO Library - Edition "adrastea") - 2.8.0
   * io-deimos (Team33 IO Library - Edition "deimos") - 2.8.0
   * io-phobos (Team33 IO Library - Edition "phobos") - 2.8.0
-  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.9.0-SNAPSHOT
+  * lazy-narvi (Team33 Lazy Initialization Library - Edition "narvi") - 2.9.0
   * notes-eris (Team33 Notifications Library - Edition "eris") - 2.8.2
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
@@ -75,12 +75,15 @@ Java 17 or later
 
 ### ☐ near future
 
-* ☐ Pinned module lazy-narvi to 2.9.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
-### ☐ 2.9.0-SNAPSHOT
+### ☐ 2.10.0-SNAPSHOT
+
+* ☐ Pinned module lazy-narvi to 2.9.0 (deprecated)
+
+### 2.9.0
 
 * Added module value-sinope
 * Added module lazy-janus
@@ -88,7 +91,7 @@ Java 17 or later
   * marked as deprecated
 * Module records-triton:
   * Updated dependencies
-* ☐ Drafts:
+* Drafts:
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
   * Moved module concept-alpha -> zz-conzept-alpha
