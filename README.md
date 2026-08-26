@@ -88,7 +88,7 @@ Java 17 or later
 * Unpinned module lazy-narvi:
   * marked as deprecated
 * Module records-triton:
-  * ☐ Updated dependencies
+  * Updated dependencies
 * ☐ Drafts:
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
