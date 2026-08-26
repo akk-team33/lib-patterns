@@ -83,17 +83,21 @@ Java 17 or later
 
 * Added module value-sinope
 * Added module lazy-janus
-* Added module typing-proteus
+* ☐ ~~Added module typing-proteus~~
 * Unpinned module lazy-narvi:
   * marked as deprecated
 * Module records-triton:
-  * Support for generic record types
-  * ☐ Enhanced tests
+  * ☐ Updated dependencies
 * ☐ Drafts:
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
+  * ☐ Moved module concept-alpha -> zz-conzept-alpha
+  * ☐ Added module zz-typing-proteus
+  * ☐ Added module zz-records-triton
+    * Some refinements vs. records-triton
+    * Enhanced tests
   * Added module zz-records-rho
-    * ☐ Support for 'listable' types for records-triton
+    * Basic support for 'listable' types
 
 ### 2.8.3
 
