@@ -7,6 +7,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -102,6 +103,14 @@ final class Resolver<T> {
         return Stringable.decode(targetType.core(), source.value());
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private Object mapListable(final JsonArray source) {
+        final Type elementType = targetType.actualParameters().get(0);
+        return source.stream()
+                     .map(jsonValue -> resolve(elementType, jsonValue))
+                     .toList();
+    }
+
     private Enum<?> mapEnum(final JsonString source) {
         return mapEnum(source.value());
     }
@@ -143,6 +152,7 @@ final class Resolver<T> {
         ENUM(Class::isEnum, JsonString.class, Resolver::mapEnum),
         ARRAY(Class::isArray, JsonArray.class, Resolver::mapArray),
         RECORD(Class::isRecord, JsonObject.class, Resolver::mapRecord),
+        LISTABLE(List.class::equals, JsonArray.class, Resolver::mapListable),
         STRINGABLE(Stringable::supports, JsonString.class, Resolver::mapStringable);
 
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);

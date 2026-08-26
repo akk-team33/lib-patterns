@@ -4,6 +4,7 @@ import de.team33.patterns.value.sinope.Equation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,6 +29,10 @@ final class JsonArray implements JsonValue {
 
     final int size() {
         return values.size();
+    }
+
+    final Stream<JsonValue> stream() {
+        return values.stream();
     }
 
     @Override
