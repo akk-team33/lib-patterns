@@ -1,8 +1,6 @@
 package de.team33.patterns.records.rho.publics;
 
-import de.team33.patterns.records.rho.RenderOption;
-import de.team33.patterns.records.rho.Triton;
-import de.team33.patterns.records.rho.TritonTestBase;
+import de.team33.patterns.records.rho.*;
 import de.team33.patterns.records.rho.testing.Supply;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
@@ -23,15 +21,21 @@ class TritonTest extends TritonTestBase {
 
     private static final Supply SUPPLY = new Supply();
 
-    private static Sample<Sample<Class<?>>> anySample() {
-        return anySample(anySample(Sample.class));
+    private static Sample anySample() {
+        return new Sample(SUPPLY.anyString(),
+                          Instant.now().plusMillis(SUPPLY.anyShort()),
+                          UUID.randomUUID());
     }
 
-    private static <X> Sample<X> anySample(final X extra) {
-        return new Sample<>(SUPPLY.anyString(),
-                            Instant.now().plusMillis(SUPPLY.anyShort()),
-                            UUID.randomUUID(),
-                            extra);
+    private static GenericSample<GenericSample<Class<?>>> anyGenericSample() {
+        return anyGenericSample(anyGenericSample(GenericSample.class));
+    }
+
+    private static <X> GenericSample<X> anyGenericSample(final X extra) {
+        return new GenericSample<>(SUPPLY.anyString(),
+                                   Instant.now().plusMillis(SUPPLY.anyShort()),
+                                   UUID.randomUUID(),
+                                   extra);
     }
 
     static Stream<List<RenderOption>> options() {
@@ -66,34 +70,84 @@ class TritonTest extends TritonTestBase {
 
     @Test
     final void setup_fail_D() {
-        Triton.toJson(anySample());
+        Triton.toJson(anyGenericSample());
         assertThrows(IllegalStateException.class,
                      () -> Triton.setup(Instant.class, mapping -> mapping)); //.printStackTrace();
     }
 
     @Test
     final void jsonRoundTrip() {
-        final Sample<Sample<Class<?>>> origin = anySample();
+        final Sample origin = anySample();
         final String stage = Triton.toJson(origin);
-        final Sample<Sample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
+        final Sample result = Triton.toRecord(Sample.class, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void jsonRoundTrip_Generic() {
+        final GenericSample<GenericSample<Class<?>>> origin = anyGenericSample();
+        final String stage = Triton.toJson(origin);
+        final GenericSample<GenericSample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void mapRoundTrip() {
+        final Sample origin = anySample();
+        final Map<String, Object> stage = Triton.toMap(origin);
+        final Sample result = Triton.toRecord(Sample.class, stage);
+        assertEquals(origin, result);
+    }
+
+    @Test
+    final void mapRoundTrip_Generic() {
+        final GenericSample<GenericSample<Class<?>>> origin = anyGenericSample();
+        final Map<String, Object> stage = Triton.toMap(origin);
+        final GenericSample<GenericSample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
     @ParameterizedTest
     @MethodSource("options")
     final void jsonRoundTrip_withOptions(final List<RenderOption> options) {
-        final Sample<Sample<Class<?>>> origin = anySample();
+        final GenericSample<GenericSample<Class<?>>> origin = anyGenericSample();
         final String stage = Triton.toJson(origin, options.toArray(RenderOption[]::new));
-        final Sample<Sample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
+        final GenericSample<GenericSample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
+
+    @Deprecated
     @Test
-    final void mapRoundTrip() {
-        final Sample<Sample<Class<?>>> origin = anySample();
-        final Map<String, Object> stage = Triton.toMap(origin);
-        final Sample<Sample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
-        assertEquals(origin, result);
+    final void descriptor() {
+        final Descriptor<Sample> result = Triton.descriptor(Sample.class);
+        assertEquals(Sample.class, result.recordType());
+        assertEquals(List.of("name", "create", "uuid"), result.names());
+        assertEquals(String.class, result.type("name"));
+        assertEquals(Instant.class, result.type("create"));
+        assertEquals(UUID.class, result.type("uuid"));
+    }
+
+    @Test
+    final void description() {
+        final Description<Sample> result = Triton.description(Sample.class);
+        assertEquals(Type.of(Sample.class), result.type());
+        assertEquals(List.of("name", "create", "uuid"), result.names());
+        assertEquals(Type.of(String.class), result.componentType("name"));
+        assertEquals(Type.of(Instant.class), result.componentType("create"));
+        assertEquals(Type.of(UUID.class), result.componentType("uuid"));
+    }
+
+    @Test
+    final void description_Generic() {
+        final Type<GenericSample<?>> sampleType = new Type<>() {};
+        final Description<GenericSample<?>> result = Triton.description(sampleType);
+        assertEquals(sampleType, result.type());
+        assertEquals(List.of("name", "create", "uuid", "extra"), result.names());
+        assertEquals(Type.of(String.class), result.componentType("name"));
+        assertEquals(Type.of(Instant.class), result.componentType("create"));
+        assertEquals(Type.of(UUID.class), result.componentType("uuid"));
+        assertEquals(sampleType.actualParameters().get(0), result.componentType("extra"));
     }
 
     @SuppressWarnings({"EmptyClass", "WeakerAccess"})
@@ -108,6 +162,9 @@ class TritonTest extends TritonTestBase {
     static class FailingC {
     }
 
-    private record Sample<X>(String name, Instant create, UUID uuid, X extra) {
+    private record Sample(String name, Instant create, UUID uuid) {
+    }
+
+    private record GenericSample<X>(String name, Instant create, UUID uuid, X extra) {
     }
 }
