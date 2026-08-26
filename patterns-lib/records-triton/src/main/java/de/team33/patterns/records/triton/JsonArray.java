@@ -1,7 +1,5 @@
 package de.team33.patterns.records.triton;
 
-import de.team33.patterns.value.sinope.Equation;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +7,6 @@ import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings("StaticInheritance")
 final class JsonArray implements JsonValue {
-
-    private static final Equation<JsonArray> EQUATION = Equation.of(JsonArray.class, jsonArray -> jsonArray.values);
 
     private final List<JsonValue> values;
 
@@ -32,17 +28,17 @@ final class JsonArray implements JsonValue {
 
     @Override
     public final boolean equals(final Object obj) {
-        return EQUATION.equals(this, obj);
+        return this == obj || (obj instanceof final JsonArray other && values.equals(other.values));
     }
 
     @Override
     public final int hashCode() {
-        return EQUATION.hashCode(this);
+        return values.hashCode();
     }
 
     @Override
     public final String toString() {
-        return EQUATION.toString(this);
+        return values.toString();
     }
 
     static final class Builder {

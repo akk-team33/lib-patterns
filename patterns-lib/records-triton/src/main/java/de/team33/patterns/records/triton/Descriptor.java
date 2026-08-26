@@ -6,11 +6,7 @@ import java.util.List;
  * Provides structural information about a {@code record} type.
  * <p>
  * Use {@link Triton#descriptor(Class)} to get an instance.
- *
- * @deprecated consider {@link Description} as a replacement.
  */
-@SuppressWarnings("unused")
-@Deprecated
 public interface Descriptor<T extends Record> {
 
     /**
