@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>de.team33.patterns</groupId>
+        <artifactId>patterns-lib</artifactId>
+        <version>2.10.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>zz-json-jota</artifactId>
+
+    <name>DRAFT: Team33 Json Library - Edition "jota"</name>
+    <description>Provides JSON mapping.</description>
+
+    <properties>
+        <skipJavadoc>true</skipJavadoc>
+        <skipHome>true</skipHome>
+        <skipGPG>true</skipGPG>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>exceptional-dione</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>enums-pan</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>building-elara</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>zz-typing-proteus</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>value-sinope</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
