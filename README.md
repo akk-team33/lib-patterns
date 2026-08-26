@@ -26,9 +26,8 @@ Java 17 or later
 ### Drafts - not deployed, not featured
 
 * (patterns-lib)
+  * zz-concept-alpha (Ideas, concepts and drafts)
   * zz-math-my (Team33 Math Library - Edition "my")
-* (patterns-annex)
-  * concept-alpha (Ideas, concepts and drafts)
 
 ### Still Featured
 
@@ -91,7 +90,7 @@ Java 17 or later
 * ☐ Drafts:
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
-  * ☐ Moved module concept-alpha -> zz-conzept-alpha
+  * Moved module concept-alpha -> zz-conzept-alpha
   * ☐ Added module zz-typing-proteus
   * ☐ Added module zz-records-triton
     * Some refinements vs. records-triton

@@ -24,7 +24,6 @@
     </properties>
 
     <modules>
-        <module>concept-alpha</module>
         <module>pinned-testing</module>
         <module>pwgen-main</module>
         <module>pwgen-fat</module>

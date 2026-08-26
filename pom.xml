@@ -60,10 +60,10 @@
                     <excludeArtifacts>
                         <artifact>patterns-home</artifact>
                         <artifact>patterns-annex</artifact>
-                        <artifact>concept-alpha</artifact>
                         <artifact>pinned-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
+                        <artifact>zz-concept-alpha</artifact>
                         <artifact>zz-math-my</artifact>
                         <artifact>zz-records-rho</artifact>
                     </excludeArtifacts>
