@@ -67,6 +67,7 @@
                         <artifact>zz-math-my</artifact>
                         <artifact>zz-records-rho</artifact>
                         <artifact>zz-records-triton</artifact>
+                        <artifact>zz-typing-proteus</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

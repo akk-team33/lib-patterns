@@ -32,7 +32,8 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>typing-proteus</artifactId>
+            <artifactId>zz-typing-proteus</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>

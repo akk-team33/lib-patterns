@@ -18,12 +18,12 @@
         <module>lazy-janus</module>
         <module>lazy-narvi</module>
         <module>records-triton</module>
-        <module>typing-proteus</module>
         <module>value-sinope</module>
         <module>zz-concept-alpha</module>
         <module>zz-math-my</module>
         <module>zz-records-rho</module>
         <module>zz-records-triton</module>
+        <module>zz-typing-proteus</module>
     </modules>
 
     <dependencyManagement>

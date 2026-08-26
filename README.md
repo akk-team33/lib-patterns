@@ -18,7 +18,6 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus")
   * records-triton (Team33 Records Library - Edition "triton")
-  * typing-proteus (Team33 Typing Library - Edition "proteus")
   * value-sinope (Team33 Value Library - Edition "sinope")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
@@ -30,6 +29,7 @@ Java 17 or later
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-rho
   * zz-records-triton
+  * zz-typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Still Featured
 
@@ -84,7 +84,6 @@ Java 17 or later
 
 * Added module value-sinope
 * Added module lazy-janus
-* ☐ ~~Added module typing-proteus~~
 * Unpinned module lazy-narvi:
   * marked as deprecated
 * Module records-triton:
@@ -93,10 +92,10 @@ Java 17 or later
   * Removed module zz-lazy-lambda
   * Removed module zz-typing-theta
   * Moved module concept-alpha -> zz-conzept-alpha
-  * ☐ Added module zz-typing-proteus
+  * Added module zz-typing-proteus
   * Added module zz-records-triton
     * Some refinements vs. records-triton
-    * Applies typing-proteus
+    * Applies zz-typing-proteus
     * Enhanced tests
   * Added module zz-records-rho
     * Basic support for 'listable' types

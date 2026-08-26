@@ -10,18 +10,23 @@
         <version>2.9.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>typing-proteus</artifactId>
+    <artifactId>zz-typing-proteus</artifactId>
 
-    <name>Team33 Typing Library - Edition "proteus"</name>
+    <name>DRAFT: Team33 Typing Library - Edition "proteus"</name>
     <description>Provides representation and identification of definite types
         based on generic or non-generic classes.
     </description>
+
+    <properties>
+        <skipJavadoc>true</skipJavadoc>
+        <skipHome>true</skipHome>
+        <skipGPG>true</skipGPG>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>lazy-janus</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
