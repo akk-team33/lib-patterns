@@ -14,12 +14,12 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 @SuppressWarnings("MethodMayBeStatic")
-final class Resolver {
+final class Resolver<T> {
 
-    private final Type<?> targetType;
+    private final Type<T> targetType;
     private final Mapping mapping;
 
-    private Resolver(final Type<?> targetType) {
+    private Resolver(final Type<T> targetType) {
         this.targetType = targetType;
         this.mapping = Mapping.of(targetType);
         if (null == mapping) {
@@ -27,11 +27,11 @@ final class Resolver {
         }
     }
 
-    static Object resolve(final Type<?> targetType, final JsonValue value) {
-        return new Resolver(targetType).apply(value);
+    static <T> T resolve(final Type<T> targetType, final JsonValue value) {
+        return new Resolver<>(targetType).apply(value);
     }
 
-    private Object apply(final JsonValue value) {
+    private T apply(final JsonValue value) {
         if (JsonValue.NULL == value) {
             return mapNull();
         } else if (mapping.isApplicable(value)) {
@@ -43,7 +43,7 @@ final class Resolver {
     }
 
     @SuppressWarnings({"ReturnOfNull", "SameReturnValue"})
-    private Object mapNull() {
+    private T mapNull() {
         if (targetType.core().isPrimitive()) {
             throw new IllegalArgumentException("not nullable: " + targetType);
         }
@@ -152,9 +152,10 @@ final class Resolver {
         @SuppressWarnings("rawtypes")
         private final Method method;
 
-        <T extends JsonValue> Mapping(final Predicate<Class<?>> responsibility,
-                                      final Class<T> jsonClass,
-                                      final Method<T> method) {
+        <T extends JsonValue, R>
+        Mapping(final Predicate<Class<?>> responsibility,
+                final Class<T> jsonClass,
+                final Method<T, R> method) {
             this.responsibility = type -> responsibility.test(type.core());
             this.jsonClass = jsonClass;
             this.method = method;
@@ -170,8 +171,9 @@ final class Resolver {
                          .orElse(null);
         }
 
-        final Function<JsonValue, Object> method(final Resolver resolver) {
-            return value -> method.map(resolver, value);
+        @SuppressWarnings("unchecked")
+        final <R> Function<JsonValue, R> method(final Resolver<R> resolver) {
+            return value -> (R) method.map(resolver, value);
         }
 
         final boolean isApplicable(final JsonValue value) {
@@ -179,12 +181,12 @@ final class Resolver {
         }
 
         @FunctionalInterface
-        interface Method<T extends JsonValue> {
+        interface Method<T extends JsonValue, R> {
 
-            Object mapT(Resolver resolver, T value);
+            R mapT(Resolver<R> resolver, T value);
 
             @SuppressWarnings("unchecked")
-            default Object map(final Resolver resolver, final JsonValue value) {
+            default R map(final Resolver<R> resolver, final JsonValue value) {
                 return mapT(resolver, (T) value);
             }
         }
@@ -208,17 +210,15 @@ final class Resolver {
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private final class RecordMapper {
 
-        @SuppressWarnings("rawtypes")
         private final Description description;
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
         private RecordMapper() {
             this.description = Triton.description((Type) targetType);
         }
 
-        @SuppressWarnings("unchecked")
         final Object map(final JsonObject source) {
             final Map<String, Object> stage =
                     source.stream()

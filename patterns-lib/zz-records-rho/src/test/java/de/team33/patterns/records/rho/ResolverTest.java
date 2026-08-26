@@ -48,6 +48,7 @@ class ResolverTest extends TritonTestBase {
                          mapCase(String[].class, "[\"any string\"]", new String[]{"any string"}),
                          mapCase(int[].class, "[1,2,3]", new int[]{1, 2, 3}),
                          mapCase(Integer[].class, "[4,2,9]", new Integer[]{4, 2, 9}),
+                //new MapCase<>(new Type<>() {}, "[4,2,9]", List.of(4, 2, 9)),
                          mapCase(SampleRecord.class, "{}", new SampleRecord(null, null, null)),
                          mapCase(SampleRecord.class,
                                  "{\"lValue\" :null,\"name\": null, \"eValue\" : null}",
@@ -139,6 +140,11 @@ class ResolverTest extends TritonTestBase {
 
         final JsonValue value() {
             return Parser.parse(source);
+        }
+
+        @Override
+        public String toString() {
+            return "%s: %s".formatted(targetType.toString(), expected);
         }
     }
 
