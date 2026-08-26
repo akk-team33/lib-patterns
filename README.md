@@ -81,7 +81,9 @@ Java 17 or later
 
 ### ☐ 2.10.0-SNAPSHOT
 
-* ☐ Pinned module lazy-narvi to 2.9.0 (deprecated)
+* Pinned module lazy-narvi to 2.9.0 (deprecated)
+* ☐ Drafts:
+  * ☐ Added module zz-json-jota
 
 ### 2.9.0
 

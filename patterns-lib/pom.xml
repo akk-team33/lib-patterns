@@ -16,7 +16,6 @@
 
     <modules>
         <module>lazy-janus</module>
-        <module>lazy-narvi</module>
         <module>records-triton</module>
         <module>value-sinope</module>
         <module>zz-concept-alpha</module>
