@@ -28,6 +28,8 @@ Java 17 or later
 * (patterns-lib)
   * zz-concept-alpha (Ideas, concepts and drafts)
   * zz-math-my (Team33 Math Library - Edition "my")
+  * zz-records-rho
+  * zz-records-triton
 
 ### Still Featured
 
@@ -92,8 +94,9 @@ Java 17 or later
   * Removed module zz-typing-theta
   * Moved module concept-alpha -> zz-conzept-alpha
   * ☐ Added module zz-typing-proteus
-  * ☐ Added module zz-records-triton
+  * Added module zz-records-triton
     * Some refinements vs. records-triton
+    * Applies typing-proteus
     * Enhanced tests
   * Added module zz-records-rho
     * Basic support for 'listable' types

@@ -10,9 +10,9 @@
         <version>2.9.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-records-rho</artifactId>
+    <artifactId>zz-records-triton</artifactId>
 
-    <name>DRAFT: Team33 Records Library - Edition "rho"</name>
+    <name>DRAFT: Team33 Records Library - Edition "triton"</name>
     <description>Provides tools for working with records.</description>
 
     <properties>

@@ -23,6 +23,7 @@
         <module>zz-concept-alpha</module>
         <module>zz-math-my</module>
         <module>zz-records-rho</module>
+        <module>zz-records-triton</module>
     </modules>
 
     <dependencyManagement>

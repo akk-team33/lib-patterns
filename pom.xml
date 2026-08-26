@@ -66,6 +66,7 @@
                         <artifact>zz-concept-alpha</artifact>
                         <artifact>zz-math-my</artifact>
                         <artifact>zz-records-rho</artifact>
+                        <artifact>zz-records-triton</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>
