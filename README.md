@@ -84,6 +84,8 @@ Java 17 or later
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * ☐ Drafts:
   * ☐ Added module zz-json-jota
+  * ☐ Module zz-records-rho
+    * ☐ reduced to a common records utility
 
 ### 2.9.0
 
