@@ -23,13 +23,14 @@ final class Reflector<T extends Record> {
     private final Constructor<T> constructor;
 
     private Reflector(final Class<T> recordClass) {
-        final Class<T> verified = recordClass.isRecord() ? recordClass : Util.fail(
-                new IllegalArgumentException(("no record class ...%n" +
-                                              "    given class: %s%n").formatted(recordClass)));
-        this.components = List.of(verified.getRecordComponents());
+        if (!recordClass.isRecord()) {
+            throw new IllegalArgumentException(("no record class:%n" +
+                                                "    %s%n").formatted(recordClass));
+        }
+        this.components = List.of(recordClass.getRecordComponents());
         this.description = unmodifiableMap(newDescription(components));
         this.methods = unmodifiableMap(newMethods(components));
-        this.constructor = constructor(verified, components);
+        this.constructor = constructor(recordClass, components);
     }
 
     @SuppressWarnings("unchecked")

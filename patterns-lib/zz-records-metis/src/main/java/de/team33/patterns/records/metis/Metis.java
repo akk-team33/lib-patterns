@@ -4,9 +4,13 @@ import de.team33.patterns.typing.proteus.Type;
 
 import java.util.Map;
 
-public final class Records {
+/**
+ * A utility that provides conversions between {@linkplain java.lang.Record Records}
+ * and {@linkplain java.util.Map Map} representations.
+ */
+public final class Metis {
 
-    private Records() {}
+    private Metis() {}
 
     public static <T extends Record> Map<String, Class<?>> description(final Class<T> recordClass) {
         return Reflector.of(recordClass).description();

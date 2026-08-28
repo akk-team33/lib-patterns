@@ -12,8 +12,8 @@
 
     <artifactId>zz-records-metis</artifactId>
 
-    <name>DRAFT: Team33 Records Library - Edition "rho"</name>
-    <description>Provides tools for working with records.</description>
+    <name>DRAFT: Team33 Records Library - Edition "metis"</name>
+    <description>Provides conversions between Records and Map representations.</description>
 
     <properties>
         <skipJavadoc>true</skipJavadoc>
@@ -38,5 +38,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
 </project>

@@ -1,7 +1,7 @@
 package de.team33.patterns.records.metis.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
-import de.team33.patterns.records.metis.Records;
+import de.team33.patterns.records.metis.Metis;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class RecordsTest {
+class MetisTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
 
@@ -30,7 +30,7 @@ class RecordsTest {
             put("name", String.class);
             put("timestamp", Instant.class);
         }};
-        final Map<String, Class<?>> description = Records.description(Sample.class);
+        final Map<String, Class<?>> description = Metis.description(Sample.class);
         assertEquals(expected, description);
     }
 
@@ -41,7 +41,7 @@ class RecordsTest {
             put("name", Type.of(String.class));
             put("timestamp", Type.of(Instant.class));
         }};
-        final Map<String, Type<?>> description = Records.description(Type.of(Sample.class));
+        final Map<String, Type<?>> description = Metis.description(Type.of(Sample.class));
         assertEquals(expected, description);
     }
 
@@ -53,7 +53,7 @@ class RecordsTest {
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Map<String, Object> result = Records.toMap(sample);
+        final Map<String, Object> result = Metis.toMap(sample);
         assertEquals(expected, result);
     }
 
@@ -65,7 +65,7 @@ class RecordsTest {
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Sample result = Records.toRecord(Sample.class, map);
+        final Sample result = Metis.toRecord(Sample.class, map);
         assertEquals(sample, result);
     }
 
@@ -77,7 +77,7 @@ class RecordsTest {
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Sample result = Records.toRecord(Type.of(Sample.class), map);
+        final Sample result = Metis.toRecord(Type.of(Sample.class), map);
         assertEquals(sample, result);
     }
 
@@ -89,7 +89,7 @@ class RecordsTest {
             put("name", sample.timestamp);
             put("timestamp", sample.name);
         }};
-        assertThrows(IllegalArgumentException.class, () -> Records.toRecord(Sample.class, source));
+        assertThrows(IllegalArgumentException.class, () -> Metis.toRecord(Sample.class, source));
     }
 
     private record Sample(int index, String name, Instant timestamp) {}
