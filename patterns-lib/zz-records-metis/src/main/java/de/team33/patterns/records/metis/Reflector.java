@@ -1,4 +1,4 @@
-package de.team33.patterns.records.rho;
+package de.team33.patterns.records.metis;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

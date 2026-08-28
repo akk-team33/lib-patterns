@@ -1,4 +1,4 @@
-package de.team33.patterns.records.rho;
+package de.team33.patterns.records.metis;
 
 import org.junit.jupiter.api.Test;
 

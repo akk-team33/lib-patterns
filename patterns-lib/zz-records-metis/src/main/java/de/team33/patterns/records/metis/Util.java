@@ -1,4 +1,4 @@
-package de.team33.patterns.records.rho;
+package de.team33.patterns.records.metis;
 
 final class Util {
 

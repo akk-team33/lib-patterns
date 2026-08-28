@@ -1,4 +1,4 @@
-package de.team33.patterns.records.rho;
+package de.team33.patterns.records.metis;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.typing.proteus.Type;

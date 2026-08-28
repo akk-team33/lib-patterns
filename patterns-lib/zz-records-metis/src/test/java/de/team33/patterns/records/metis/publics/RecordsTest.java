@@ -1,7 +1,7 @@
-package de.team33.patterns.records.rho.publics;
+package de.team33.patterns.records.metis.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
-import de.team33.patterns.records.rho.Records;
+import de.team33.patterns.records.metis.Records;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
 

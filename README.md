@@ -27,7 +27,7 @@ Java 17 or later
 * (patterns-lib)
   * zz-concept-alpha (Ideas, concepts and drafts)
   * zz-math-my (Team33 Math Library - Edition "my")
-  * zz-records-rho
+  * zz-records-metis
   * zz-records-triton
   * zz-typing-proteus (Team33 Typing Library - Edition "proteus")
 
@@ -83,9 +83,9 @@ Java 17 or later
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * ☐ Drafts:
+  * ☐ Removed module zz-records-rho
+  * ☐ Added module zz-records-metis
   * ☐ Added module zz-json-jota
-  * ☐ Module zz-records-rho
-    * ☐ reduced to a common records utility
 
 ### 2.9.0
 
