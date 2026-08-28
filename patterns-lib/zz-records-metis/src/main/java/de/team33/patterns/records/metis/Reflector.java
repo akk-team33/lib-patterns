@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 import static java.util.Collections.unmodifiableMap;
 
@@ -19,17 +18,21 @@ final class Reflector<T extends Record> {
 
     private final List<RecordComponent> components;
     private final Map<String, Class<?>> description;
-    private final Map<String, Function<T, Object>> methods;
+    private final Map<String, Method> access;
     private final Constructor<T> constructor;
 
     private Reflector(final Class<T> recordClass) {
         if (!recordClass.isRecord()) {
-            throw new IllegalArgumentException(("no record class:%n" +
+            throw new IllegalArgumentException(("no record type:%n" +
                                                 "    %s%n").formatted(recordClass));
         }
         this.components = List.of(recordClass.getRecordComponents());
-        this.description = unmodifiableMap(newDescription(components));
-        this.methods = unmodifiableMap(newMethods(components));
+        this.description = components.stream()
+                                     .collect(Descriptor::new, Descriptor::put, Descriptor::putAll)
+                                     .toMap();
+        this.access = components.stream()
+                                .collect(Accessor::new, Accessor::put, Accessor::putAll)
+                                .toMap();
         this.constructor = constructor(recordClass, components);
     }
 
@@ -55,38 +58,6 @@ final class Reflector<T extends Record> {
         }
     }
 
-    private static Map<String, Class<?>> newDescription(final List<RecordComponent> components) {
-        return components.stream()
-                         .collect(LinkedHashMap::new, Reflector::putType, Map::putAll);
-    }
-
-    private static void putType(final Map<? super String, ? super Class<?>> map, final RecordComponent component) {
-        map.put(component.getName(), component.getType());
-    }
-
-    private static <T> Map<String, Function<T, Object>> newMethods(final List<RecordComponent> components) {
-        return components.stream()
-                         .collect(LinkedHashMap::new, Reflector::putMethod, Map::putAll);
-    }
-
-    private static <T> void putMethod(final Map<? super String, ? super Function<T, Object>> map,
-                                      final RecordComponent component) {
-        map.put(component.getName(), method(component.getAccessor()));
-    }
-
-    private static <T> Function<T, Object> method(final Method accessor) {
-        accessor.setAccessible(true);
-        return record -> {
-            try {
-                return accessor.invoke(record);
-            } catch (final IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalStateException(("cannot apply accessor ...%n" +
-                                                 "    record:   %s%n" +
-                                                 "    accessor: %s%n").formatted(record, accessor), e);
-            }
-        };
-    }
-
     final List<RecordComponent> components() {
         return components;
     }
@@ -95,11 +66,21 @@ final class Reflector<T extends Record> {
         return description;
     }
 
-    final Map<String, Object> toMap(final T sample) {
-        return methods.entrySet().stream()
-                      .collect(LinkedHashMap::new,
-                               (map, entry) -> map.put(entry.getKey(), entry.getValue().apply(sample)),
+    final Map<String, Object> toMap(final T source) {
+        return access.entrySet().stream()
+                     .collect(LinkedHashMap::new,
+                              (map, entry) -> map.put(entry.getKey(), apply(source, entry.getValue())),
                                Map::putAll);
+    }
+
+    private Object apply(final T source, final Method method) {
+        try {
+            return method.invoke(source);
+        } catch (final IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException(("cannot apply accessor ...%n" +
+                                             "    record:   %s%n" +
+                                             "    accessor: %s%n").formatted(source, method), e);
+        }
     }
 
     final T toRecord(final Map<String, Object> map) {
@@ -113,6 +94,42 @@ final class Reflector<T extends Record> {
                     ("cannot apply constructor ...%n" +
                      "    constructor: %s%n" +
                      "    arguments:   %s%n").formatted(constructor, List.of(arguments)), e);
+        }
+    }
+
+    private static final class Accessor {
+
+        private final Map<String, Method> map = new LinkedHashMap<>();
+
+        private void put(final RecordComponent component) {
+            final Method method = component.getAccessor();
+            method.setAccessible(true);
+            map.put(component.getName(), method);
+        }
+
+        private void putAll(final Accessor other) {
+            map.putAll(other.map);
+        }
+
+        private Map<String, Method> toMap() {
+            return unmodifiableMap(map);
+        }
+    }
+
+    private static final class Descriptor {
+
+        private final Map<String, Class<?>> map = new LinkedHashMap<>();
+
+        private void put(final RecordComponent component) {
+            map.put(component.getName(), component.getType());
+        }
+
+        private void putAll(final Descriptor other) {
+            map.putAll(other.map);
+        }
+
+        private Map<String, Class<?>> toMap() {
+            return unmodifiableMap(map);
         }
     }
 }
