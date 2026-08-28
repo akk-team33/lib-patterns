@@ -1,6 +1,7 @@
 package de.team33.patterns.json.jota.publics;
 
 import de.team33.patterns.json.jota.Json;
+import de.team33.patterns.json.jota.JsonType;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class JsonTest {
 
-    public static final Type<?> NULL_TYPE = null;
+    private static final Type<?> NULL_TYPE = null;
 
     @Test
     final void setup_null() {
@@ -28,13 +29,6 @@ class JsonTest {
         assertThrows(IllegalStateException.class,
                      () -> Json.setup(Type.of(Sample03.class), JsonType.STRING, mapping -> mapping));
         // .printStackTrace();
-    }
-
-    @Test
-    final void roundTrip() {
-        final var origin = 278;
-        final var stage = Json.map(origin);
-        final var result = Json.parse(Integer.class);
     }
 
     @SuppressWarnings("EmptyClass")
