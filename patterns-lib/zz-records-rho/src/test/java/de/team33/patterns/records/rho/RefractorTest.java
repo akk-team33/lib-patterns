@@ -3,21 +3,23 @@ package de.team33.patterns.records.rho;
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RefractorTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
 
-    private final Refractor<Sample<Instant>> refractor = Refractor.of(new Type<>() {});
+    private final Refractor<Sample<String, Instant>> refractor = Refractor.of(new Type<>() {});
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Test
@@ -37,46 +39,64 @@ class RefractorTest {
         assertEquals(expected, description);
     }
 
-    @Test
-    final void toMap() {
-        final Sample<Instant> sample = new Sample<>(GENERATOR.anyInt(),
-                                                    GENERATOR.anyString(),
-                                                    Instant.now().plusMillis(GENERATOR.anyShort()));
-        final Map<String, Object> expected = new LinkedHashMap<>() {{
+    static Stream<Case<?, ?>> cases() {
+        return Stream.of(newCase(new Type<>() {}, new Sample<>(GENERATOR.anyInt(),
+                                                               GENERATOR.anyString(),
+                                                               anyInstant())),
+                         newCase(new Type<>() {}, new Sample<>(GENERATOR.anyInt(),
+                                                               anyInstant(),
+                                                               GENERATOR.anyBigInteger())),
+                         newCase(new Type<>() {}, new Sample<>(GENERATOR.anyInt(),
+                                                               GENERATOR.anyBigInteger(),
+                                                               GENERATOR.anyString())));
+    }
+
+    private static Instant anyInstant() {
+        return Instant.now()
+                      .plusMillis(GENERATOR.anyShort());
+    }
+
+    private static <T, U> Case<T, U> newCase(final Type<Sample<T, U>> type, final Sample<T, U> sample) {
+        return new Case<>(type, sample, new LinkedHashMap<>() {{
             put("index", sample.index);
             put("name", sample.name);
             put("timestamp", sample.timestamp);
-        }};
-        final Map<String, Object> result = refractor.toMap(sample);
-        assertEquals(expected, result);
+        }}, Refractor.of(type));
     }
 
-    @Test
-    final void toRecord() {
-        final Sample<Instant> sample = new Sample<>(GENERATOR.anyInt(),
-                                                    GENERATOR.anyString(),
-                                                    Instant.now().plusMillis(GENERATOR.anyShort()));
+    @ParameterizedTest
+    @MethodSource("cases")
+    final <T, U> void toMap(final Case<T, U> given) {
+        final Map<String, Object> result = given.refractor().toMap(given.sample);
+        assertEquals(given.map, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("cases")
+    final <T, U> void toRecord(final Case<T, U> given) {
+        final Sample<T, U> result = given.refractor().toRecord(given.map);
+        assertEquals(given.sample, result);
+    }
+
+    @ParameterizedTest
+    @MethodSource("cases")
+    final <T, U> void toRecord_mismatch(final Case<T, U> given) {
         final Map<String, Object> map = new LinkedHashMap<>() {{
-            put("index", sample.index);
-            put("name", sample.name);
-            put("timestamp", sample.timestamp);
+            put("index", given.sample.index);
+            put("name", given.sample.timestamp);
+            put("timestamp", given.sample.name);
         }};
-        final Sample<Instant> result = refractor.toRecord(map);
-        assertEquals(sample, result);
+        try {
+            final Sample<T, U> result = given.refractor().toRecord(map);
+            fail("expected to fail - but was " + result);
+        } catch (final IllegalArgumentException e) {
+            // e.printStackTrace();
+            // as expected
+        }
     }
 
-    @Test
-    final void toRecord_fail() {
-        final Sample<Instant> sample = new Sample<>(GENERATOR.anyInt(),
-                                                    GENERATOR.anyString(),
-                                                    Instant.now().plusMillis(GENERATOR.anyShort()));
-        final Map<String, Object> map = new LinkedHashMap<>() {{
-            put("index", sample.index);
-            put("name", sample.timestamp);
-            put("timestamp", sample.name);
-        }};
-        assertThrows(IllegalArgumentException.class, () -> refractor.toRecord(map));
-    }
+    private record Case<T, U>(Type<Sample<T, U>> type, Sample<T, U> sample,
+                              Map<String, Object> map, Refractor<Sample<T, U>> refractor) {}
 
-    private record Sample<T>(int index, String name, T timestamp) {}
+    private record Sample<T, U>(int index, T name, U timestamp) {}
 }

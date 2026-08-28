@@ -42,6 +42,28 @@ final class Refractor<T extends Record> {
     }
 
     final T toRecord(final Map<String, Object> map) {
-        return reflector.toRecord(map);
+        final Map<String, Object> verified =
+                map.entrySet().stream()
+                   .filter(e -> description.containsKey(e.getKey()))
+                   .map(this::verified)
+                   .collect(LinkedHashMap::new,
+                            (result, entry) -> result.put(entry.getKey(), entry.getValue()),
+                            Map::putAll);
+        return reflector.toRecord(verified);
+    }
+
+    private <V> Map.Entry<String, V> verified(final Map.Entry<String, V> entry) {
+        final Class<?> target = description().get(entry.getKey()).core();
+        final V value = entry.getValue();
+        final Class<?> source = (null == value) ? null : value.getClass();
+        if (target.isPrimitive() || null == source || target.isAssignableFrom(source)) {
+            return entry;
+        } else {
+            throw new IllegalArgumentException(
+                    ("cannot assign value ...%n" +
+                     "    source value: %s%n" +
+                     "    source type:  %s%n" +
+                     "    target type:  %s%n").formatted(value, source, target));
+        }
     }
 }
