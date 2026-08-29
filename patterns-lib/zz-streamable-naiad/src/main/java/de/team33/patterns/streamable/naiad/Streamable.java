@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -159,6 +160,10 @@ public interface Streamable<E> {
      * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
      * followed by the given <em>element</em>.
      * The result has a streaming order if <em>this</em> has a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
+     * That may lead to problems on extensive use of this method.
+     * An implementation may return <em>this</em> to avoid those problems.
      */
     default Streamable<E> add(final E element) {
         return addAll(of(element));
@@ -168,6 +173,10 @@ public interface Streamable<E> {
      * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em> instance
      * followed by all the elements of the <em>other</em> {@link Streamable}.
      * The result has a streaming order if both, <em>this</em> and <em>other</em>, have a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
+     * That may lead to problems on extensive use of this method.
+     * An implementation may return <em>this</em> to avoid those problems.
      *
      * @param <X> The element type of the <em>other</em> {@link Streamable}.
      * @throws NullPointerException if <em>other</em> is {@code null}.
@@ -179,6 +188,10 @@ public interface Streamable<E> {
     /**
      * Returns a {@link Streamable} consisting of the elements of <em>this</em>
      * but not the given <em>candidate</em>.
+     * <p>
+     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
+     * That may lead to problems on extensive use of this method.
+     * An implementation may return <em>this</em> to avoid those problems.
      */
     default Streamable<E> remove(final Object candidate) {
         return removeAll(of(candidate));
@@ -242,5 +255,9 @@ public interface Streamable<E> {
      */
     default Set<E> toSet() {
         return stream().collect(Collectors.toUnmodifiableSet());
+    }
+
+    default <T> T map(final Function<? super Streamable<E>, T> method) {
+        return method.apply(this);
     }
 }
