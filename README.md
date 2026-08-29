@@ -30,6 +30,7 @@ Java 17 or later
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-metis
   * zz-records-triton
+  * zz-streamable-naiad
   * zz-typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Still Featured
@@ -84,10 +85,11 @@ Java 17 or later
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * ☐ Drafts:
-  * ☐ Removed module zz-records-rho
+  * Removed module zz-records-rho
   * ☐ Added module zz-records-metis
   * ☐ Added module zz-json-jota
   * ☐ Added module zz-collection-mneme
+  * ☐ Added module zz-streamable-naiad
 
 ### 2.9.0
 
