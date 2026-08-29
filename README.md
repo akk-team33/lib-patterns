@@ -25,7 +25,8 @@ Java 17 or later
 ### Drafts - not deployed, not featured
 
 * (patterns-lib)
-  * zz-concept-alpha (Ideas, concepts and drafts)
+  * zz-concept-alpha (Misc ideas, concepts and drafts)
+  * zz-collection-mneme (Team33 Collection Library - Edition "mneme")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-metis
   * zz-records-triton
@@ -86,6 +87,7 @@ Java 17 or later
   * ☐ Removed module zz-records-rho
   * ☐ Added module zz-records-metis
   * ☐ Added module zz-json-jota
+  * ☐ Added module zz-collection-mneme
 
 ### 2.9.0
 
