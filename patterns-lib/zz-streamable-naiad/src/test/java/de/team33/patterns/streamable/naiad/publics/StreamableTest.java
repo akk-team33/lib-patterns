@@ -222,6 +222,14 @@ class StreamableTest {
     }
 
     @Test
+    final void map() {
+        final Streamable<String> streamable = Streamable.of(origin);
+        final var expected = streamable.toList();
+        final var result = streamable.map(Streamable::toList);
+        assertEquals(expected, result);
+    }
+
+    @Test
     final void toSet() {
         final var expectedList = Stream.concat(origin.stream(), combined.stream()).toList();
         final var expectedSet = new HashSet<>(expectedList);

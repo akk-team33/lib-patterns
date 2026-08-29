@@ -32,8 +32,13 @@ class StreamerTest {
                                                 .toList();
 
     @Test
+    final void of_single() {
+        assertEquals(origin, Streamer.of(origin.get(0))
+                                     .addAll(() -> origin.stream().skip(1)).toList());
+    }
+
+    @Test
     final void of_Iterable() {
-        //noinspection FunctionalExpressionCanBeFolded
         assertEquals(origin, Streamer.of(origin::iterator).toList());
         assertEquals(origin, Streamer.of(origin).toList());
     }
