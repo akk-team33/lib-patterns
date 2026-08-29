@@ -2,6 +2,7 @@ package de.team33.patterns.streamable.naiad;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -10,7 +11,9 @@ import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 
 /**
- * A mutable {@link Streamable} implementation that provides a robust builder pattern.
+ * A mutable {@link Streamable} implementation that provides a builder pattern.
+ * <p>
+ * Builder methods modify this instance and return <em>this</em> to allow chaining.
  *
  * @param <E> The type of contained elements.
  */
@@ -70,9 +73,13 @@ public final class Streamer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamer} backed by a given {@link Streamable}.
+     * Returns a {@link Streamer} initially containing all elements of the given <em>streamable</em>.
+     * <p>
+     * The elements are copied from <em>streamable</em>;
+     * subsequent modifications of the returned {@link Streamer} do not affect <em>streamable</em>.
      *
      * @param <E> The type of the contained elements.
+     * @throws NullPointerException if the specified <em>streamable</em> is {@code null}.
      */
     public static <E> Streamer<E> by(final Streamable<E> streamable) {
         return new Streamer<>(streamable);
@@ -83,6 +90,9 @@ public final class Streamer<E> implements Streamable<E> {
         return this;
     }
 
+    /**
+     * Returns a sequential {@code Stream} over the elements currently containedin <em>this</em> {@link Streamer}.
+     */
     @Override
     public final Stream<E> stream() {
         return backing.stream();
@@ -108,7 +118,7 @@ public final class Streamer<E> implements Streamable<E> {
      */
     @Override
     public final <X extends E> Streamer<E> addAll(final Streamable<X> other) {
-        return setup(list -> other.forEach(list::add));
+        return setup(list -> list.addAll(other.toList()));
     }
 
     /**
@@ -118,7 +128,7 @@ public final class Streamer<E> implements Streamable<E> {
      */
     @Override
     public final Streamer<E> remove(final Object candidate) {
-        return removeAll(Streamable.of(candidate));
+        return removeIf(element -> Objects.equals(element, candidate));
     }
 
     /**

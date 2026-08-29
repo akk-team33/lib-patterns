@@ -162,6 +162,14 @@ class StreamerTest {
     }
 
     @Test
+    final void addAll_self() {
+        final List<String> expected = Streamable.of(origin).addAll(origin::stream).toList();
+        final Streamer<String> streamer = Streamer.of(origin);
+        final Streamable<String> other = streamer::stream;
+        assertEquals(expected, streamer.addAll(other).toList());
+    }
+
+    @Test
     final void additional() {
         assertEquals(origin, Streamer.empty().addAll(origin::stream).toList());
     }

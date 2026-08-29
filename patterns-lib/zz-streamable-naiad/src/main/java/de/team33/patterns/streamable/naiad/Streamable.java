@@ -15,8 +15,14 @@ import java.util.stream.StreamSupport;
 import static java.util.function.Predicate.not;
 
 /**
- * Represents instances that (virtually or really) contain elements of a specific type
- * and can provide a {@link Stream} over those elements when needed.
+ * Represents a reusable source of elements of a specific type that provides
+ * a sequential {@link Stream} over those elements.
+ * <p>
+ * Each invocation of {@link #stream()} provides a new stream over the elements
+ * represented by this instance. If the elements have a defined streaming order,
+ * that order is preserved.
+ * <p>
+ * NOTE that some methods may not terminate if an involved stream is infinite.
  *
  * @param <E> The type of contained elements.
  * @see #stream()
@@ -76,9 +82,10 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a sequential {@code Stream} with <em>this</em> {@link Streamable} as its source.
+     * Returns a sequential {@link Stream} with <em>this</em> {@link Streamable} as its source.
      * <p>
-     * An implementation may or may not specify a streaming order.
+     * Each invocation returns a new stream over the elements represented by <em>this</em> instance.
+     * If <em>this</em> {@link Streamable} has a streaming order, the returned stream preserves that order.
      */
     Stream<E> stream();
 
@@ -107,8 +114,8 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns {@code true} if <em>this</em> {@link Streamable} contains elements such that
-     * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code true} for each element.
+     * Returns {@code true} if <em>this</em> {@link Streamable} contains no element
+     * for which <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code false}.
      *
      * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
      */
@@ -157,13 +164,13 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em>
+     * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em> instance
      * followed by the given <em>element</em>.
      * The result has a streaming order if <em>this</em> has a streaming order.
      * <p>
-     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
-     * That may lead to problems on extensive use of this method.
-     * An implementation may return <em>this</em> to avoid those problems.
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Repeated application of this method may result in deeply nested stream compositions
+     * and may therefore be unsuitable for extensive use. Implementations may return <em>this</em> instead.
      */
     default Streamable<E> add(final E element) {
         return addAll(of(element));
@@ -171,12 +178,12 @@ public interface Streamable<E> {
 
     /**
      * Returns a concatenated {@link Streamable} whose elements are all the elements of <em>this</em> instance
-     * followed by all the elements of the <em>other</em> {@link Streamable}.
-     * The result has a streaming order if both, <em>this</em> and <em>other</em>, have a streaming order.
+     * followed by all the elements of the <em>other</em> one.
+     * The result has a streaming order if both <em>this</em> and <em>other</em> have a streaming order.
      * <p>
-     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
-     * That may lead to problems on extensive use of this method.
-     * An implementation may return <em>this</em> to avoid those problems.
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Repeated application of this method may result in deeply nested stream compositions
+     * and may therefore be unsuitable for extensive use. Implementations may return <em>this</em> instead.
      *
      * @param <X> The element type of the <em>other</em> {@link Streamable}.
      * @throws NullPointerException if <em>other</em> is {@code null}.
@@ -186,20 +193,24 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> instance
      * but not the given <em>candidate</em>.
+     * The result has a streaming order if <em>this</em> has a streaming order.
      * <p>
-     * The default implementation returns a new {@link Streamable} instance - <em>this</em> remains unaffected.
-     * That may lead to problems on extensive use of this method.
-     * An implementation may return <em>this</em> to avoid those problems.
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Implementations may return <em>this</em> instead.
      */
     default Streamable<E> remove(final Object candidate) {
         return removeAll(of(candidate));
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are not contained in the <em>other</em> {@link Streamable}.
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> instance
+     * that are not contained in the <em>other</em> one.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Implementations may return <em>this</em> instead.
      *
      * @throws NullPointerException if the specified <em>other</em> {@link Streamable} is {@code null}.
      */
@@ -208,8 +219,12 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> instance for which
      * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code false}.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Implementations may return <em>this</em> instead.
      *
      * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
      */
@@ -218,8 +233,12 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em>
-     * that are contained in the <em>other</em> {@link Streamable}.
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> instance
+     * that are contained in the <em>other</em> one.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Implementations may return <em>this</em> instead.
      *
      * @throws NullPointerException if the specified <em>other</em> {@link Streamable} is {@code null}.
      */
@@ -228,8 +247,12 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamable} consisting of the elements of <em>this</em> for which
+     * Returns a {@link Streamable} consisting of the elements of <em>this</em> instance for which
      * <em>condition</em>{@link Predicate#test(Object) .test(element)} is {@code true}.
+     * The result has a streaming order if <em>this</em> has a streaming order.
+     * <p>
+     * The default implementation returns a new {@link Streamable} and leaves <em>this</em> unaffected.
+     * Implementations may return <em>this</em> instead.
      *
      * @throws NullPointerException if the specified <em>condition</em> is {@code null}.
      */
@@ -238,8 +261,10 @@ public interface Streamable<E> {
     }
 
     /**
-     * Returns an unmodifiable {@link List} containing all the elements of <em>this</em> instance
+     * Returns an unmodifiable {@link List} containing all the elements of <em>this</em> instance,
      * preserving its streaming order, if one exists.
+     * <p>
+     * The returned list contains all elements represented by <em>this</em> at the time of invocation.
      *
      * @see Stream#toList()
      */
@@ -250,6 +275,7 @@ public interface Streamable<E> {
     /**
      * Returns an unmodifiable {@link Set} containing all distinct elements of <em>this</em> instance.
      *
+     * @throws NullPointerException if <em>this</em> contains {@code null}.
      * @see Stream#collect(Collector)
      * @see Collectors#toUnmodifiableSet()
      */
@@ -257,6 +283,14 @@ public interface Streamable<E> {
         return stream().collect(Collectors.toUnmodifiableSet());
     }
 
+    /**
+     * Applies the given <em>method</em> to <em>this</em> {@link Streamable} and returns the result.
+     * <p>
+     * This method is useful for applying a function to a {@link Streamable} within a fluent expression.
+     *
+     * @param <T> The result type.
+     * @throws NullPointerException if the specified <em>method</em> is {@code null}.
+     */
     default <T> T map(final Function<? super Streamable<E>, T> method) {
         return method.apply(this);
     }
