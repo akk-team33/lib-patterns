@@ -10,18 +10,21 @@ public class StatedSet<E> extends AbstractSet<E> {
 
     private final List<E> core;
 
-    private StatedSet(final List<E> core) {
-        this.core = core;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private StatedSet(final List<? extends E> core) {
+        this.core = (List) core;
     }
 
-    public static <E> StatedSet<E> empty() {
-        return new StatedSet<>(List.of());
+    public StatedSet() {
+        this(List.of());
     }
 
-    public static <E> StatedSet<E> of(final Streamable<E> source) {
-        return new StatedSet<>(source.stream()
-                                     .distinct()
-                                     .toList());
+    public StatedSet(final Iterable<? extends E> source) {
+        this(Streamable.of(source));
+    }
+
+    public StatedSet(final Streamable<? extends E> source) {
+        this(source.stream().distinct().toList());
     }
 
     @Override
