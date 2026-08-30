@@ -33,14 +33,14 @@ public final class FinalSet<E> extends AbstractSet<E> {
     }
 
     /**
-     * Returns a {@link FinalSet} created from the given <em>source</em> {@link Collection}.
+     * Returns a {@link FinalSet} created from the given <em>source</em>.
      */
     public static <E> FinalSet<E> of(final Collection<? extends E> source) {
         return new FinalSet<>(Streamable.cast(source::stream));
     }
 
     /**
-     * Returns a {@link FinalSet} created from the given <em>source</em> {@link Streamable}.
+     * Returns a {@link FinalSet} created from the given <em>source</em>.
      */
     public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
         return new FinalSet<>(Streamable.cast(source));
