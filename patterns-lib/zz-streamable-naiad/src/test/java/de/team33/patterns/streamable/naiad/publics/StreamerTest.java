@@ -32,6 +32,12 @@ class StreamerTest {
                                                 .toList();
 
     @Test
+    final void by() {
+        final Streamer<CharSequence> result = Streamer.by(Streamable.cast(origin::stream));
+        assertEquals(origin, result.toList());
+    }
+
+    @Test
     final void of_single() {
         assertEquals(origin, Streamer.of(origin.get(0))
                                      .addAll(() -> origin.stream().skip(1)).toList());

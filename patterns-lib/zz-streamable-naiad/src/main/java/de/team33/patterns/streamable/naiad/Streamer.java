@@ -55,7 +55,7 @@ public final class Streamer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamer} backed by an array of <em>elements</em>.
+     * Returns a {@link Streamer} initially containing the elements of the given <em>array</em>.
      *
      * @param <E> The type of the contained elements.
      */
@@ -64,7 +64,7 @@ public final class Streamer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Streamer} backed by a given {@link Iterable}.
+     * Returns a {@link Streamer} initially containing the elements of the given <em>iterable</em>.
      *
      * @param <E> The type of the contained elements.
      */
@@ -85,7 +85,7 @@ public final class Streamer<E> implements Streamable<E> {
         return new Streamer<>(streamable);
     }
 
-    private Streamer<E> setup(final Consumer<List<E>> consumer) {
+    private Streamer<E> setup(final Consumer<? super List<E>> consumer) {
         consumer.accept(backing);
         return this;
     }

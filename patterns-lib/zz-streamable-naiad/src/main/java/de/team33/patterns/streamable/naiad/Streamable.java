@@ -82,6 +82,23 @@ public interface Streamable<E> {
     }
 
     /**
+     * Returns a {@link Streamable} proxy providing the elements of the given <em>streamable</em>
+     * with an adapted element type.
+     * <p>
+     * No elements are copied. The returned proxy cannot modify the given <em>streamable</em> but
+     * if <em>streamable</em> is mutable, subsequent modifications of <em>streamable</em> will be reflected
+     * by the resulting proxy.
+     *
+     * @param <E> the adapted element type.
+     * @param <X> the original element type.
+     * @throws NullPointerException if the specified <em>streamable</em> is {@code null}.
+     */
+    @SuppressWarnings({"unchecked", "FunctionalExpressionCanBeFolded"})
+    static <E, X extends E> Streamable<E> cast(final Streamable<X> streamable) {
+        return ((Streamable<E>) streamable)::stream;
+    }
+
+    /**
      * Returns a sequential {@link Stream} with <em>this</em> {@link Streamable} as its source.
      * <p>
      * Each invocation returns a new stream over the elements represented by <em>this</em> instance.
