@@ -1,7 +1,7 @@
 package de.team33.patterns.collection.mneme.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
-import de.team33.patterns.collection.mneme.StatedSet;
+import de.team33.patterns.collection.mneme.FinalSet;
 import de.team33.patterns.streamable.naiad.Streamer;
 import org.junit.jupiter.api.Test;
 
@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class StatedSetTest {
+class FinalSetTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
 
     @Test
     final void empty() {
-        assertTrue(new StatedSet().isEmpty());
+        assertTrue(new FinalSet().isEmpty());
     }
 
     @Test
@@ -30,10 +30,10 @@ class StatedSetTest {
                                            .limit(200000)
                                            .toList();
         final Set<Integer> expected = new LinkedHashSet<>(source);
-        final StatedSet<Integer> result = source.stream()
-                                                .map(Streamer::of)
-                                                .reduce(Streamer.empty(), Streamer::addAll)
-                                                .map(StatedSet::new);
+        final FinalSet<Integer> result = source.stream()
+                                               .map(Streamer::of)
+                                               .reduce(Streamer.empty(), Streamer::addAll)
+                                               .map(FinalSet::new);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 
@@ -43,16 +43,16 @@ class StatedSetTest {
                                            .limit(200000)
                                            .toList();
         final Set<Integer> expected = new LinkedHashSet<>(source);
-        final StatedSet<Integer> result = source.stream()
-                                                .collect(Streamer::<Integer>empty, Streamer::add, Streamer::addAll)
-                                                .map(StatedSet::new);
+        final FinalSet<Integer> result = source.stream()
+                                               .collect(Streamer::<Integer>empty, Streamer::add, Streamer::addAll)
+                                               .map(FinalSet::new);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 
     @Test
     final void of_null() {
         final List<Integer> source = Arrays.asList(1, 2, 3, null, 2, 3, 4, null, 3, 4, 5);
-        final StatedSet<Integer> result = new StatedSet<>(source::stream);
+        final FinalSet<Integer> result = new FinalSet<>(source::stream);
         assertTrue(result.contains(null));
     }
 
@@ -64,7 +64,7 @@ class StatedSetTest {
         final Set<Integer> expected = new LinkedHashSet<>(source);
         assert expected.size() <= 10 : "Expected max. 10 elements - but was %d".formatted(expected.size());
 
-        final StatedSet<Integer> result = new StatedSet<>(source::stream);
+        final FinalSet<Integer> result = new FinalSet<>(source::stream);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 }

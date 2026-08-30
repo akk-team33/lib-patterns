@@ -6,24 +6,24 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.List;
 
-public class StatedSet<E> extends AbstractSet<E> {
+public class FinalSet<E> extends AbstractSet<E> {
 
     private final List<E> core;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private StatedSet(final List<? extends E> core) {
+    private FinalSet(final List<? extends E> core) {
         this.core = (List) core;
     }
 
-    public StatedSet() {
+    public FinalSet() {
         this(List.of());
     }
 
-    public StatedSet(final Iterable<? extends E> source) {
+    public FinalSet(final Iterable<? extends E> source) {
         this(Streamable.of(source));
     }
 
-    public StatedSet(final Streamable<? extends E> source) {
+    public FinalSet(final Streamable<? extends E> source) {
         this(source.stream().distinct().toList());
     }
 
