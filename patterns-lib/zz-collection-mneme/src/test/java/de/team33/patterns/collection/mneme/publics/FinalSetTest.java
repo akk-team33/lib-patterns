@@ -21,7 +21,7 @@ class FinalSetTest {
 
     @Test
     final void empty() {
-        assertTrue(new FinalSet().isEmpty());
+        assertTrue(FinalSet.empty().isEmpty());
     }
 
     @Test
@@ -33,7 +33,7 @@ class FinalSetTest {
         final FinalSet<Integer> result = source.stream()
                                                .map(Streamer::of)
                                                .reduce(Streamer.empty(), Streamer::addAll)
-                                               .map(FinalSet::new);
+                                               .map(FinalSet::of);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 
@@ -45,14 +45,14 @@ class FinalSetTest {
         final Set<Integer> expected = new LinkedHashSet<>(source);
         final FinalSet<Integer> result = source.stream()
                                                .collect(Streamer::<Integer>empty, Streamer::add, Streamer::addAll)
-                                               .map(FinalSet::new);
+                                               .map(FinalSet::of);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 
     @Test
-    final void of_null() {
+    final void of_nullable() {
         final List<Integer> source = Arrays.asList(1, 2, 3, null, 2, 3, 4, null, 3, 4, 5);
-        final FinalSet<Integer> result = new FinalSet<>(source::stream);
+        final FinalSet<Comparable<?>> result = FinalSet.of(source);
         assertTrue(result.contains(null));
     }
 
@@ -64,7 +64,7 @@ class FinalSetTest {
         final Set<Integer> expected = new LinkedHashSet<>(source);
         assert expected.size() <= 10 : "Expected max. 10 elements - but was %d".formatted(expected.size());
 
-        final FinalSet<Integer> result = new FinalSet<>(source::stream);
+        final FinalSet<Number> result = FinalSet.of(source);
         assertEquals(List.copyOf(expected), List.copyOf(result));
     }
 }
