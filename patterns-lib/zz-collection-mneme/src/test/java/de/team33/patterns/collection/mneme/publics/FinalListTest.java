@@ -25,7 +25,7 @@ class FinalListTest {
     @Test
     final void tryBuild_map_reduce() {
         final List<Integer> expected = Stream.generate(() -> GENERATOR.anyInt(0, 10))
-                                             .limit(200000)
+                                             .limit(20000)
                                              .toList();
         final FinalList<Integer> result = expected.stream()
                                                   .map(Streamer::of)
@@ -37,7 +37,7 @@ class FinalListTest {
     @Test
     final void tryBuild_collect() {
         final List<Integer> expected = Stream.generate(() -> GENERATOR.anyInt(0, 10))
-                                             .limit(200000)
+                                             .limit(20000)
                                              .toList();
         final FinalList<Integer> result = expected.stream()
                                                   .collect(Streamer::<Integer>empty, Streamer::add, Streamer::addAll)

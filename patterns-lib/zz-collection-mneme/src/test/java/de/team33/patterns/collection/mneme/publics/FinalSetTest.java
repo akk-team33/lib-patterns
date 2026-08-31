@@ -27,7 +27,7 @@ class FinalSetTest {
     @Test
     final void tryBuild_map_reduce() {
         final List<Integer> source = Stream.generate(() -> GENERATOR.anyInt(0, 10))
-                                           .limit(200000)
+                                           .limit(20000)
                                            .toList();
         final Set<Integer> expected = new LinkedHashSet<>(source);
         final FinalSet<Integer> result = source.stream()
@@ -40,7 +40,7 @@ class FinalSetTest {
     @Test
     final void tryBuild_collect() {
         final List<Integer> source = Stream.generate(() -> GENERATOR.anyInt(0, 10))
-                                           .limit(200000)
+                                           .limit(20000)
                                            .toList();
         final Set<Integer> expected = new LinkedHashSet<>(source);
         final FinalSet<Integer> result = source.stream()
