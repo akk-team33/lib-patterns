@@ -1,13 +1,13 @@
 package de.team33.patterns.collection.mneme;
 
 import de.team33.patterns.streamable.naiad.Streamable;
-import de.team33.patterns.streamable.naiad.Streamer;
 
 import java.util.AbstractMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * An immutable {@link Map} that preserves the key/value/entry encounter order of its source.
@@ -25,11 +25,9 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
     private final FinalSet<Map.Entry<K, V>> entries;
 
     private FinalMap(final Map<? extends K, ? extends V> source) {
-        this.entries = source.entrySet().stream()
-                             .map(this::immutable)
-                             .map(Streamer::of)
-                             .reduce(Streamer.empty(), Streamer::addAll)
-                             .map(FinalSet::of);
+        this.entries = FinalSet.of(() -> source.entrySet()
+                                               .stream()
+                                               .map(FinalEntry::of));
     }
 
     /**
@@ -43,6 +41,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
     /**
      * Returns a {@link FinalMap} containing a single mapping.
      */
+    @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
     public static <K, V> FinalMap<K, V> of(final K key, final V value) {
         return new FinalMap<>(Map.of(key, value));
     }
@@ -52,7 +51,24 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
      */
     public static <K, V> FinalMap<K, V> of(final Streamable<? extends Map.Entry<? extends K, ? extends V>> source) {
         return new FinalMap<>(source.stream()
-                                    .collect(LinkedHashMap::new, FinalMap::put, Map::putAll));
+                                    .collect(LinkedHashMap::new, FinalMap::putEntry, Map::putAll));
+    }
+
+    /**
+     * Returns a {@link FinalMap} created from the given <em>source</em>.
+     */
+    public static <T, K, V> FinalMap<K, V> of(final Streamable<T> source,
+                                              final Function<? super T, ? extends K> toKey,
+                                              final Function<? super T, ? extends V> toValue) {
+        return of(source, FinalEntry.mapping(toKey, toValue));
+    }
+
+    /**
+     * Returns a {@link FinalMap} created from the given <em>source</em>.
+     */
+    public static <T, K, V> FinalMap<K, V>
+    of(final Streamable<T> source, final Function<? super T, ? extends Entry<? extends K, ? extends V>> toEntry) {
+        return of(() -> source.stream().map(toEntry));
     }
 
     /**
@@ -83,17 +99,14 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
         return new Builder<>(source);
     }
 
-    private static <K, V> void put(final Map<K, V> map, final Map.Entry<? extends K, ? extends V> entry) {
+    private static <K, V> void putEntry(final Map<K, V> map, final Map.Entry<? extends K, ? extends V> entry) {
         map.put(entry.getKey(), entry.getValue());
     }
 
-    private Map.Entry<K, V> immutable(final Map.Entry<? extends K, ? extends V> entry) {
-        return new SimpleImmutableEntry<>(entry.getKey(), entry.getValue());
-    }
-
-    @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
     @Override
     public final Set<Map.Entry<K, V>> entrySet() {
+        // Already is immutable ...
+        // noinspection AssignmentOrReturnOfFieldWithMutableType
         return entries;
     }
 
@@ -119,6 +132,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
          * @return <em>this</em> builder.
          * @throws NullPointerException if <em>consumer</em> is {@code null}.
          */
+        @SuppressWarnings("WeakerAccess")
         public final Builder<K, V> setup(final Consumer<? super Map<K, V>> consumer) {
             consumer.accept(backing);
             return this;
@@ -169,6 +183,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
          * @return <em>this</em> builder.
          */
         public final Builder<K, V> remove(final Object key) {
+            // noinspection SuspiciousMethodCalls
             return setup(map -> map.remove(key));
         }
 

@@ -88,7 +88,7 @@ Java 17 or later
   * Removed module zz-records-rho
   * ☐ Added module zz-records-metis
   * ☐ Added module zz-json-jota
-  * ☐ Added module zz-collection-mneme
+  * Added module zz-collection-mneme
   * Added module zz-streamable-naiad
 
 ### 2.9.0
