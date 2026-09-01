@@ -31,6 +31,16 @@
             <artifactId>zz-typing-proteus</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>zz-streamable-naiad</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>zz-collection-mneme</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>de.team33.patterns</groupId>
