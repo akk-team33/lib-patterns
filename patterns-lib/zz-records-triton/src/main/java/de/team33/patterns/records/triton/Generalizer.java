@@ -1,6 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.enums.pan.Values;
+import de.team33.patterns.records.metis.Metis;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -114,13 +115,13 @@ enum Generalizer {
     }
 
     private static JsonObject mapRecord(final Record source) {
-        return Triton.toMap(source)
-                     .entrySet()
-                     .stream()
-                     .collect(JsonObject::builder,
+        return Metis.toMap(source)
+                    .entrySet()
+                    .stream()
+                    .collect(JsonObject::builder,
                               (builder, entry) -> builder.put(entry.getKey(), map(entry.getValue())),
                               JsonObject.Builder::putAll)
-                     .build();
+                    .build();
     }
 
     @FunctionalInterface
