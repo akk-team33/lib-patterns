@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -94,6 +95,11 @@ class FinalList2Test {
         assertThrows(UnsupportedOperationException.class, () -> sample.add("4"));
         assertThrows(UnsupportedOperationException.class, () -> sample.remove(1));
         assertThrows(UnsupportedOperationException.class, () -> sample.remove("2"));
+        assertThrows(UnsupportedOperationException.class, () -> {
+            final Iterator<String> iterator = sample.iterator();
+            iterator.next();
+            iterator.remove();
+        });
         assertThrows(UnsupportedOperationException.class, () -> sample.sort(String::compareTo));
         assertThrows(UnsupportedOperationException.class, sample::clear);
     }

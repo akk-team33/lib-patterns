@@ -5,14 +5,12 @@ import de.team33.patterns.streamable.naiad.Streamable;
 import java.util.*;
 
 /**
- * An immutable {@link Set} that preserves the encounter order of its source.
- * <p>
- * Use {@link #of(Streamable)}, {@link #of(Collection)} or {@link #empty()} to create an instance.
- * <p>
- * The iteration order of a {@code FinalSet} is the order in which the distinct elements are encountered in the source.
+ * An immutable {@link Set} implementation
+ * that preserves the encounter order of its source and may contain {@code null} elements.
  *
  * @param <E> the type of elements in this set.
  */
+@SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalSet<E> extends AbstractSet<E> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -27,9 +25,33 @@ public final class FinalSet<E> extends AbstractSet<E> {
     /**
      * Returns an empty {@link FinalSet}.
      */
-    @SuppressWarnings({"unchecked", "AssignmentOrReturnOfFieldWithMutableType"})
+    @SuppressWarnings("unchecked")
     public static <E> FinalSet<E> empty() {
+        // Already is immutable ...
+        // noinspection AssignmentOrReturnOfFieldWithMutableType
         return EMPTY;
+    }
+
+    /**
+     * Returns a {@link FinalSet} that contains a single given <em>element</em>.
+     */
+    public static <E> FinalSet<E> of(final E element) {
+        return new FinalSet<>(Streamable.of(element));
+    }
+
+    /**
+     * Returns a {@link FinalSet} that contains two or more given <em>elements</em>.
+     */
+    @SafeVarargs
+    public static <E> FinalSet<E> of(final E first, final E next, final E... more) {
+        return new FinalSet<>(Streamable.of(first, next, more));
+    }
+
+    /**
+     * Returns a {@link FinalSet} created from the given <em>source</em>.
+     */
+    public static <E> FinalSet<E> of(final E[] source) {
+        return new FinalSet<>(Streamable.of(source));
     }
 
     /**

@@ -26,8 +26,10 @@ public final class FinalList<E> extends AbstractList<E> {
     /**
      * Returns an empty {@link FinalList}.
      */
-    @SuppressWarnings({"unchecked", "AssignmentOrReturnOfFieldWithMutableType"})
+    @SuppressWarnings("unchecked")
     public static <E> FinalList<E> empty() {
+        // Already is immutable ...
+        // noinspection AssignmentOrReturnOfFieldWithMutableType
         return EMPTY;
     }
 
