@@ -1,6 +1,9 @@
 package de.team33.patterns.records.triton.publics;
 
-import de.team33.patterns.records.triton.*;
+import de.team33.patterns.records.triton.Descriptor;
+import de.team33.patterns.records.triton.RenderOption;
+import de.team33.patterns.records.triton.Triton;
+import de.team33.patterns.records.triton.TritonTestBase;
 import de.team33.patterns.records.triton.testing.Supply;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
@@ -91,19 +94,12 @@ class TritonTest extends TritonTestBase {
         assertEquals(origin, result);
     }
 
+    @Deprecated
     @Test
     final void mapRoundTrip() {
         final Sample origin = anySample();
         final Map<String, Object> stage = Triton.toMap(origin);
         final Sample result = Triton.toRecord(Sample.class, stage);
-        assertEquals(origin, result);
-    }
-
-    @Test
-    final void mapRoundTrip_Generic() {
-        final GenericSample<GenericSample<Class<?>>> origin = anyGenericSample();
-        final Map<String, Object> stage = Triton.toMap(origin);
-        final GenericSample<GenericSample<Class<?>>> result = Triton.toRecord(new Type<>() {}, stage);
         assertEquals(origin, result);
     }
 
@@ -126,28 +122,6 @@ class TritonTest extends TritonTestBase {
         assertEquals(String.class, result.type("name"));
         assertEquals(Instant.class, result.type("create"));
         assertEquals(UUID.class, result.type("uuid"));
-    }
-
-    @Test
-    final void description() {
-        final Description<Sample> result = Triton.description(Sample.class);
-        assertEquals(Type.of(Sample.class), result.type());
-        assertEquals(List.of("name", "create", "uuid"), result.names());
-        assertEquals(Type.of(String.class), result.componentType("name"));
-        assertEquals(Type.of(Instant.class), result.componentType("create"));
-        assertEquals(Type.of(UUID.class), result.componentType("uuid"));
-    }
-
-    @Test
-    final void description_Generic() {
-        final Type<GenericSample<?>> sampleType = new Type<>() {};
-        final Description<GenericSample<?>> result = Triton.description(sampleType);
-        assertEquals(sampleType, result.type());
-        assertEquals(List.of("name", "create", "uuid", "extra"), result.names());
-        assertEquals(Type.of(String.class), result.componentType("name"));
-        assertEquals(Type.of(Instant.class), result.componentType("create"));
-        assertEquals(Type.of(UUID.class), result.componentType("uuid"));
-        assertEquals(sampleType.actualParameters().get(0), result.componentType("extra"));
     }
 
     @SuppressWarnings({"EmptyClass", "WeakerAccess"})

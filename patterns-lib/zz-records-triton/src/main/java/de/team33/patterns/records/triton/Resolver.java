@@ -1,6 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.enums.pan.Values;
+import de.team33.patterns.records.metis.Metis;
 import de.team33.patterns.typing.proteus.Type;
 
 import java.lang.reflect.Array;
@@ -210,27 +211,25 @@ final class Resolver {
 
     private final class RecordMapper {
 
-        @SuppressWarnings("rawtypes")
-        private final Description description;
+        private final Map<String, Type<?>> description;
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         private RecordMapper() {
-            this.description = Triton.description((Type) targetType);
+            this.description = Metis.description((Type) targetType);
         }
 
-        @SuppressWarnings("unchecked")
         final Object map(final JsonObject source) {
             final Map<String, Object> stage =
                     source.stream()
-                          .filter(entry -> description.names().contains(entry.name()))
-                          .collect(HashMap::new, this::put, Map::putAll);
-            return Triton.toRecord(description.type(), stage);
+                          .filter(entry -> description.containsKey(entry.name()))
+                          .collect(HashMap::new, this::putNext, Map::putAll);
+            //noinspection rawtypes,unchecked
+            return Metis.toRecord((Type) targetType, stage);
         }
 
-        @SuppressWarnings("BoundedWildcard")
-        private void put(final Map<String, Object> map, final JsonObject.Entry entry) {
+        private void putNext(final Map<? super String, Object> map, final JsonObject.Entry entry) {
             final String name = entry.name();
-            map.put(name, resolve(description.componentType(name), entry.value()));
+            map.put(name, resolve(description.get(name), entry.value()));
         }
     }
 }

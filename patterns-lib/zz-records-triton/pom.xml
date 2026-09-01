@@ -32,12 +32,22 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>value-sinope</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>zz-typing-proteus</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>value-sinope</artifactId>
+            <artifactId>zz-records-metis</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>zz-collection-mneme</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

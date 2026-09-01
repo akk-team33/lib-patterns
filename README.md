@@ -86,10 +86,13 @@ Java 17 or later
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * ☐ Drafts:
   * Removed module zz-records-rho
-  * ☐ Added module zz-records-metis
-  * ☐ Added module zz-json-jota
+  * Added module zz-records-metis
+  * Added module zz-json-jota
   * Added module zz-collection-mneme
   * Added module zz-streamable-naiad
+  * ☐ Module zz-records-triton
+    * ☐ Use zz-records-metis for Record ↔ Map conversion
+    * ☐ Deprecated local Record ↔ Map conversion
 
 ### 2.9.0
 
