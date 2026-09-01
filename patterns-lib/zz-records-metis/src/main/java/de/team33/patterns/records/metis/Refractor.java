@@ -1,12 +1,12 @@
 package de.team33.patterns.records.metis;
 
+import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.typing.proteus.Type;
 
+import java.lang.reflect.RecordComponent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import static java.util.Collections.unmodifiableMap;
 
 final class Refractor<T extends Record> {
 
@@ -14,18 +14,12 @@ final class Refractor<T extends Record> {
     private static final Map<Type, Refractor> CACHE = new ConcurrentHashMap<>();
 
     private final Reflector<T> reflector;
-    private final Map<String, Type<?>> description;
+    private final FinalMap<String, Type<?>> description;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Refractor(final Type<T> recordType) {
         this.reflector = Reflector.of((Class) recordType.core());
-        this.description = unmodifiableMap(
-                reflector.components()
-                         .stream()
-                         .collect(LinkedHashMap::new,
-                                  (map, component) -> map.put(component.getName(),
-                                                              recordType.typeOf(component)),
-                                  Map::putAll));
+        this.description = FinalMap.of(reflector.components(), RecordComponent::getName, recordType::typeOf);
     }
 
     @SuppressWarnings("unchecked")
@@ -34,6 +28,8 @@ final class Refractor<T extends Record> {
     }
 
     final Map<String, Type<?>> description() {
+        // Already is immutable ...
+        // noinspection AssignmentOrReturnOfFieldWithMutableType
         return description;
     }
 
