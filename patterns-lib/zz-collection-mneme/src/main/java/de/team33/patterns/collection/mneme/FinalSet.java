@@ -1,14 +1,28 @@
 package de.team33.patterns.collection.mneme;
 
 import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.naiad.Streamer;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * An immutable {@link Set} implementation
  * that preserves the encounter order of its source and may contain {@code null} elements.
+ * <p>
+ * To build an instance you may use a {@link Streamer}, example:
+ * <pre>
+ * final FinalSet&lt;String&gt; map = Streamer.of("zero")
+ *                                      .add("one")
+ *                                      .add("two")
+ *                                      .map(FinalSet::of);
+ * </pre>
  *
  * @param <E> the type of elements in this set.
+ * @see Streamer#of(Object)
+ * @see Streamer#add(Object)
+ * @see Streamer#map(Function)
+ * @see #of(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalSet<E> extends AbstractSet<E> {

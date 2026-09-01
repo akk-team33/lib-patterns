@@ -11,7 +11,12 @@ public final class FinalEntry<K, V> extends AbstractMap.SimpleImmutableEntry<K, 
     }
 
     public static <K, V> FinalEntry<K, V> of(final Map.Entry<? extends K, ? extends V> entry) {
-        return new FinalEntry<>(entry.getKey(), entry.getValue());
+        if (entry instanceof final FinalEntry<? extends K, ? extends V> finalEntry) {
+            //noinspection unchecked
+            return (FinalEntry<K, V>) finalEntry;
+        } else {
+            return new FinalEntry<>(entry.getKey(), entry.getValue());
+        }
     }
 
     public static <K, V> FinalEntry<K, V> of(final K key, final V value) {

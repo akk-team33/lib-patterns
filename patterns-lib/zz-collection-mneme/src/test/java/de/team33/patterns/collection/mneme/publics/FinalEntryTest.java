@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.*;
 
 class FinalEntryTest {
 
@@ -18,10 +18,14 @@ class FinalEntryTest {
 
     @Test
     final void of() {
-        final FinalEntry<Integer, String> expected = FinalEntry.of(GENERATOR.anyInt(), GENERATOR.anyString());
-        final FinalEntry<Integer, String> result = FinalEntry.of(expected);
-        assertNotSame(expected, result);
+        final Map.Entry<Integer, String> expected = new AbstractMap.SimpleEntry<>(GENERATOR.anyInt(),
+                                                                                  GENERATOR.anyString());
+        final FinalEntry<Number, CharSequence> result = FinalEntry.of(expected);
         assertEquals(expected, result);
+        assertNotSame(expected, result);
+
+        final FinalEntry<Object, Object> second = FinalEntry.of(result);
+        assertSame(result, second);
     }
 
     @Test

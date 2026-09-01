@@ -1,15 +1,29 @@
 package de.team33.patterns.collection.mneme;
 
 import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.naiad.Streamer;
 
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * An immutable {@link List} implementation that may contain {@code null} elements.
+ * <p>
+ * To build an instance you may use a {@link Streamer}, example:
+ * <pre>
+ * final FinalList&lt;String&gt; map = Streamer.of("zero")
+ *                                       .add("one")
+ *                                       .add("two")
+ *                                       .map(FinalList::of);
+ * </pre>
  *
  * @param <E> the type of elements in this list.
+ * @see Streamer#of(Object)
+ * @see Streamer#add(Object)
+ * @see Streamer#map(Function)
+ * @see #of(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalList<E> extends AbstractList<E> {
