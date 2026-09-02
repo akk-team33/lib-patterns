@@ -18,6 +18,7 @@
 
     <modules>
         <module>records-triton</module>
+        <module>streamable-galatea</module>
         <module>streamable-naiad</module>
         <module>zz-concept-alpha</module>
         <module>zz-collection-mneme</module>

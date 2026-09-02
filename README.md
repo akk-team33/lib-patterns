@@ -53,7 +53,6 @@ Java 17 or later
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
-  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.8.1
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -71,12 +70,14 @@ Java 17 or later
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
+  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.0-SNAPSHOT
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## Change Log
 
 ### ☐ near future
 
+* Pinned module streamable-galatea to 2.10.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
@@ -87,6 +88,8 @@ Java 17 or later
 * Pinned module lazy-janus to 2.9.0 (still featured)
 * Pinned module value-sinope to 2.9.0 (still featured)
 * Added module streamable-naiad
+* Unpinned module streamable-galatea:
+  * marked as deprecated
 
 * ☐ Drafts:
   * Removed module zz-records-rho
