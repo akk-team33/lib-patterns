@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * The complete content of the underlying file is held in memory when reading.
  * Writing replaces the current file content with the supplied byte array.
  */
-public class BytesIO extends FileIO<byte[]> {
+public final class BytesIO extends FileIO<byte[]> {
 
     /**
      * Creates a new {@code BytesIO} for the given file.

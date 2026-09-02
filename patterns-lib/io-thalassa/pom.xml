@@ -23,20 +23,21 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>streamable-galatea</artifactId>
+            <artifactId>typing-proteus</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>records-triton</artifactId>
         </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>collection-ceres</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-ceres</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

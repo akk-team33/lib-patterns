@@ -1,4 +1,4 @@
-package de.team33.testing;
+package de.team33.patterns.io.thalassa;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 

@@ -72,17 +72,11 @@ public class FileIO<T> implements IO<T> {
         this.output = Writing.by(path).output(charset, writeMethod);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final T read() throws IOException {
         return input.read();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public final void write(final T value) throws IOException {
         output.write(value);

@@ -1,8 +1,8 @@
 package de.team33.patterns.io.thalassa.publics;
 
 import de.team33.patterns.io.thalassa.Input;
+import de.team33.patterns.io.thalassa.Supply;
 import de.team33.patterns.io.thalassa.TextIO;
-import de.team33.testing.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

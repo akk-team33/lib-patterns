@@ -2,7 +2,7 @@ package de.team33.patterns.io.thalassa.publics;
 
 import de.team33.patterns.io.thalassa.BytesIO;
 import de.team33.patterns.io.thalassa.Input;
-import de.team33.testing.Supply;
+import de.team33.patterns.io.thalassa.Supply;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
