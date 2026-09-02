@@ -10,18 +10,12 @@
         <version>2.10.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-typing-proteus</artifactId>
+    <artifactId>typing-proteus</artifactId>
 
-    <name>DRAFT: Team33 Typing Library - Edition "proteus"</name>
+    <name>Team33 Typing Library - Edition "proteus"</name>
     <description>Provides representation and identification of definite types
         based on generic or non-generic classes.
     </description>
-
-    <properties>
-        <skipJavadoc>true</skipJavadoc>
-        <skipHome>true</skipHome>
-        <skipGPG>true</skipGPG>
-    </properties>
 
     <dependencies>
         <dependency>

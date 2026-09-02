@@ -40,8 +40,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>zz-typing-proteus</artifactId>
-            <version>${project.version}</version>
+            <artifactId>typing-proteus</artifactId>
         </dependency>
 
         <dependency>

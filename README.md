@@ -19,6 +19,7 @@ Java 17 or later
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-naiad (Team33 Streamable Library - Edition "naiad")
+  * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -29,7 +30,6 @@ Java 17 or later
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-metis
   * zz-records-triton
-  * zz-typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Still Featured
 
@@ -77,7 +77,7 @@ Java 17 or later
 
 ### ☐ near future
 
-* Pinned module streamable-galatea to 2.10.0-SNAPSHOT (deprecated)
+* ☐ Pinned module streamable-galatea to 2.10.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
@@ -91,9 +91,11 @@ Java 17 or later
 * Unpinned module streamable-galatea:
   * marked as deprecated
 * Added module collection-mneme
+* Added module typing-proteus
 
 * ☐ Drafts:
   * Removed module zz-records-rho
+  * Removed module zz-typing-proteus
   * Added module zz-records-metis
   * Added module zz-json-jota
   * ☐ Module zz-records-triton
