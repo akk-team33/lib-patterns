@@ -17,7 +17,6 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * records-triton (Team33 Records Library - Edition "triton")
-  * value-sinope (Team33 Value Library - Edition "sinope")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -55,6 +54,7 @@ Java 17 or later
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.8.1
+  * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
 
@@ -85,6 +85,7 @@ Java 17 or later
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * Pinned module lazy-janus to 2.9.0 (still featured)
+* Pinned module value-sinope to 2.9.0 (still featured)
 
 * ☐ Drafts:
   * Removed module zz-records-rho
