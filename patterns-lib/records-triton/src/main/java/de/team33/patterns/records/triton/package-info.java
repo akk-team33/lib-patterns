@@ -41,7 +41,7 @@
  * initialization method.
  * <p>
  * But there's a solution for these cases too: you can set up support for virtually any type using
- * {@link de.team33.patterns.records.triton.Triton#setup(java.lang.Class, java.util.function.UnaryOperator)}.
+ * {@link de.team33.patterns.records.triton.Triton#setup(Class, java.util.function.UnaryOperator)}.
  *
  * @see de.team33.patterns.records.triton.Triton
  * @see <a href="https://de.wikipedia.org/wiki/Triton_(Mond)" target="_blank">Triton (Mond)</a>

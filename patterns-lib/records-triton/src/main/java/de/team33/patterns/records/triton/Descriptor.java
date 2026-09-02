@@ -1,12 +1,14 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.records.metis.Metis;
+import de.team33.patterns.typing.proteus.Type;
+
 import java.util.List;
 
 /**
- * Provides structural information about a {@code record} type.
- * <p>
- * Use {@link Triton#descriptor(Class)} to get an instance.
+ * @deprecated obsolete when using {@link Metis#description(Class)} or {@link Metis#description(Type)}.
  */
+@Deprecated
 public interface Descriptor<T extends Record> {
 
     /**

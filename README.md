@@ -93,14 +93,21 @@ Java 17 or later
 * Added module collection-mneme
 * Added module typing-proteus
 * Added module records-metis
+* Module records-triton:
+  * Added support for generic record types
+  * Applied module records-metis
+  * Refined tests
+  * Marked as deprecated:
+    * Descriptor
+    * Triton.descriptor(Class)
+    * Triton.toMap(Record)
+    * Triton.toRecord(Class,Map)
 
 * ☐ Drafts:
   * Removed module zz-records-rho
   * Removed module zz-typing-proteus
+  * Removed module zz-records-triton
   * Added module zz-json-jota
-  * ☐ Module zz-records-triton
-    * ☐ Use zz-records-metis for Record ↔ Map conversion
-    * ☐ Deprecated local Record ↔ Map conversion
 
 ### 2.9.0
 

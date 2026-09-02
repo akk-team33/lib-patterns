@@ -1,16 +1,13 @@
 package de.team33.patterns.records.triton;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.RecordComponent;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.UnaryOperator;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import de.team33.patterns.collection.mneme.FinalList;
+import de.team33.patterns.records.metis.Metis;
+import de.team33.patterns.typing.proteus.Type;
 
-import static de.team33.patterns.records.triton.Util.typeName;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.UnaryOperator;
 
 /**
  * A utility to convert between:
@@ -23,8 +20,6 @@ import static de.team33.patterns.records.triton.Util.typeName;
  */
 public final class Triton {
 
-    @SuppressWarnings("rawtypes")
-    private static final Map<Class, Reflector> CACHE = new ConcurrentHashMap<>();
     private static final RenderOption[] EMPTY_OPTIONS = {};
 
     private Triton() {
@@ -59,44 +54,44 @@ public final class Triton {
      * @see de.team33.patterns.records.triton package
      */
     public static <T extends Record> T toRecord(final Class<T> recordType, final String json) {
-        final JsonValue value = Parser.parse(json);
-        final Object result = Resolver.resolve(recordType, value);
-        return recordType.cast(result);
+        return toRecord(Type.of(recordType), json);
     }
 
     /**
-     * Returns a {@link Map} containing the component values of the given <em>source</em>.
-     * <p>
-     * The returned {@link Map} is independent of the supplied record instance,
-     * preserves the declaration order of the record components and is mutable.
-     *
-     * @see de.team33.patterns.records.triton package
-     */
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Map<String, Object> toMap(final Record source) {
-        final Class recordType = source.getClass();
-        return reflector(recordType).toMap(source);
-    }
-
-    /**
-     * Returns a new instance of the given <em>recordType</em>, mapped from the given <em>map</em>.
-     * <p>
-     * Missing component values are treated as {@code null}. This may fail for primitive record components.
-     * Component values for unknown record components are ignored.
+     * Returns a new instance of the given <em>recordType</em>, parsed from the given <em>json</em> {@link String}.
      *
      * @param <T> The record type.
      * @see de.team33.patterns.records.triton package
      */
-    public static <T extends Record> T toRecord(final Class<T> recordType, final Map<String, Object> map) {
-        return reflector(recordType).toRecord(map);
+    @SuppressWarnings("unchecked")
+    public static <T extends Record> T toRecord(final Type<T> recordType, final String json) {
+        final JsonValue value = Parser.parse(json);
+        final Object result = Resolver.resolve(recordType, value);
+        return (T) result;
     }
 
     /**
-     * Returns a {@link Descriptor} describing the given <em>recordType</em>.
+     * @deprecated use {@link Metis#toMap(Record)} instead.
      */
-    @SuppressWarnings("WeakerAccess")
+    @Deprecated
+    public static Map<String, Object> toMap(final Record source) {
+        return Metis.toMap(source);
+    }
+
+    /**
+     * @deprecated use {@link Metis#toRecord(Class, Map)} or {@link Metis#toRecord(Type, Map)} instead.
+     */
+    @Deprecated
+    public static <T extends Record> T toRecord(final Class<T> recordType, final Map<String, Object> map) {
+        return Metis.toRecord(recordType, map);
+    }
+
+    /**
+     * @deprecated use {@link Metis#description(Class)} or {@link Metis#description(Type)} instead.
+     */
+    @Deprecated
     public static <T extends Record> Descriptor<T> descriptor(final Class<T> recordType) {
-        return reflector(recordType);
+        return new DescriptorImpl<>(recordType, Metis.description(recordType));
     }
 
     /**
@@ -116,94 +111,34 @@ public final class Triton {
         Stringable.setup(type, operator);
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends Record> Reflector<T> reflector(final Class<T> recordClass) {
-        return CACHE.computeIfAbsent(recordClass, Reflector::new);
-    }
+    @Deprecated
+    private static final class DescriptorImpl<T extends Record> implements Descriptor<T> {
 
-    private static final class Reflector<T extends Record> implements Descriptor<T> {
+        private final Class<T> recordType;
+        private final Map<String, Class<?>> description;
+        private final FinalList<String> names;
 
-        private final Map<String, Integer> indices;
-        private final List<String> names;
-        private final List<Method> methods;
-        private final Class<?>[] types;
-        private final Constructor<T> constructor;
-
-        private Reflector(final Class<T> recordType) {
-            final RecordComponent[] components = recordType.getRecordComponents();
-            this.names = Stream.of(components)
-                               .map(RecordComponent::getName)
-                               .toList();
-            this.methods = Stream.of(components)
-                                 .map(RecordComponent::getAccessor)
-                                 .peek(accessor -> accessor.setAccessible(true))
-                                 .toList();
-            this.types = Stream.of(components)
-                               .map(RecordComponent::getType)
-                               .toArray(Class<?>[]::new);
-            this.indices = IntStream.range(0, names.size())
-                                    .boxed()
-                                    .collect(HashMap::new,
-                                             (map, index) -> map.put(names.get(index), index),
-                                             HashMap::putAll);
-            try {
-                this.constructor = recordType.getDeclaredConstructor(types);
-                this.constructor.setAccessible(true);
-            } catch (final NoSuchMethodException e) {
-                // difficult to test (should not happen at all) ...
-                throw new IllegalArgumentException("Cannot find constructor for %s%n".formatted(recordType), e);
-            }
+        private DescriptorImpl(final Class<T> recordType, final Map<String, Class<?>> description) {
+            this.recordType = recordType;
+            this.description = description;
+            this.names = FinalList.of(description.keySet());
         }
 
         @Override
         public final Class<T> recordType() {
-            return constructor.getDeclaringClass();
+            return recordType;
         }
 
         @Override
         public final List<String> names() {
+            // Already is immutable ...
+            // noinspection AssignmentOrReturnOfFieldWithMutableType
             return names;
         }
 
         @Override
         public final Class<?> type(final String name) {
-            return types[indexOf(name)];
-        }
-
-        private Object get(final Record source, final String name) {
-            try {
-                return methods.get(indexOf(name)).invoke(source);
-            } catch (final IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalStateException(("Cannot access component <%s>%n" +
-                                                 "    source : %s%n" +
-                                                 "    type   : %s%n").formatted(name, source, typeName(source)), e);
-            }
-        }
-
-        private int indexOf(final String name) {
-            return Optional.ofNullable(indices.get(name))
-                           .orElseThrow(() -> new NoSuchElementException("Cannot find component <%s>%n".formatted(name)));
-        }
-
-        private T toRecord(final Map<String, Object> source) {
-            final Object[] args = names.stream()
-                                       .map(source::get)
-                                       .toArray(Object[]::new);
-            try {
-                return constructor.newInstance(args);
-            } catch (final InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                throw new IllegalStateException(("Cannot apply constructor:%n" +
-                                                 "     %s%n").formatted(constructor), e);
-            }
-        }
-
-        private Map<String, Object> toMap(final T source) {
-            return names.stream()
-                        .collect(LinkedHashMap::new, (map, name) -> put(map, source, name), Map::putAll);
-        }
-
-        private void put(final Map<? super String, Object> map, final T source, final String name) {
-            map.put(name, get(source, name));
+            return description.get(name);
         }
     }
 }

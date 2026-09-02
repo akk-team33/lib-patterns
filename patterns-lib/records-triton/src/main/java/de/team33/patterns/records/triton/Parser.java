@@ -23,6 +23,10 @@ final class Parser {
         return new Parser(source).parseRoot();
     }
 
+    private static boolean isLimitChar(final char c) {
+        return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
+    }
+
     private JsonValue parseRoot() {
         source.skipWhitespace();
         final JsonValue result = parseValue();
@@ -67,10 +71,6 @@ final class Parser {
                       .skipWhitespace();
             }
         }
-    }
-
-    private static boolean isLimitChar(final char c) {
-        return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
     private JsonArray parseArray() {
