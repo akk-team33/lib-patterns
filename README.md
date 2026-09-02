@@ -77,10 +77,13 @@ Java 17 or later
 
 ### ☐ near future
 
-* ☐ Pinned module streamable-galatea to 2.10.0 (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
+
+### ☐ 2.11.0-SNAPSHOT
+
+* ☐ Pinned module streamable-galatea to 2.10.0 (deprecated)
 
 ### 2.10.0
 
