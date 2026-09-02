@@ -16,7 +16,6 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * lazy-janus (Team33 Lazy Initialization Library - Edition "janus")
   * records-triton (Team33 Records Library - Edition "triton")
   * value-sinope (Team33 Value Library - Edition "sinope")
 * patterns-annex (Team33 Patterns Annex)
@@ -49,6 +48,7 @@ Java 17 or later
   * files-styx (Team33 Files Library - Edition "styx") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * io-thalassa (Team33 IO Library - Edition "thalassa") - 2.8.2
+  * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
@@ -84,6 +84,8 @@ Java 17 or later
 ### ☐ 2.10.0-SNAPSHOT
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
+* Pinned module lazy-janus to 2.9.0 (still featured)
+
 * ☐ Drafts:
   * Removed module zz-records-rho
   * Added module zz-records-metis
