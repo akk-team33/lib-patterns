@@ -66,7 +66,6 @@
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
                         <artifact>zz-concept-alpha</artifact>
-                        <artifact>zz-collection-mneme</artifact>
                         <artifact>zz-json-jota</artifact>
                         <artifact>zz-math-my</artifact>
                         <artifact>zz-records-metis</artifact>

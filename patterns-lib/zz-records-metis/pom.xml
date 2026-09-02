@@ -37,8 +37,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>zz-collection-mneme</artifactId>
-            <version>${project.version}</version>
+            <artifactId>collection-mneme</artifactId>
         </dependency>
 
         <dependency>

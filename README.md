@@ -16,6 +16,7 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
+  * collection-mneme (Team33 Collection Library - Edition "mneme")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-naiad (Team33 Streamable Library - Edition "naiad")
 * patterns-annex (Team33 Patterns Annex)
@@ -25,7 +26,6 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
-  * zz-collection-mneme (Team33 Collection Library - Edition "mneme")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-metis
   * zz-records-triton
@@ -90,12 +90,12 @@ Java 17 or later
 * Added module streamable-naiad
 * Unpinned module streamable-galatea:
   * marked as deprecated
+* Added module collection-mneme
 
 * ☐ Drafts:
   * Removed module zz-records-rho
   * Added module zz-records-metis
   * Added module zz-json-jota
-  * Added module zz-collection-mneme
   * ☐ Module zz-records-triton
     * ☐ Use zz-records-metis for Record ↔ Map conversion
     * ☐ Deprecated local Record ↔ Map conversion

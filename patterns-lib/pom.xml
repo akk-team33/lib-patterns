@@ -17,11 +17,11 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>collection-mneme</module>
         <module>records-triton</module>
         <module>streamable-galatea</module>
         <module>streamable-naiad</module>
         <module>zz-concept-alpha</module>
-        <module>zz-collection-mneme</module>
         <module>zz-json-jota</module>
         <module>zz-math-my</module>
         <module>zz-records-metis</module>
