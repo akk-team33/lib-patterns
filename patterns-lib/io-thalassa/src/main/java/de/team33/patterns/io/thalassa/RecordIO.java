@@ -19,7 +19,7 @@ import java.nio.file.Path;
  *
  * @param <T> the record type to be read and written.
  */
-public class RecordIO<T extends Record> extends FileIO<T> {
+public final class RecordIO<T extends Record> extends FileIO<T> {
 
     private RecordIO(final Class<T> recordClass, final Path path, final Charset charset) {
         super(path, charset, reader -> readRecord(recordClass, reader), RecordIO::writeString);

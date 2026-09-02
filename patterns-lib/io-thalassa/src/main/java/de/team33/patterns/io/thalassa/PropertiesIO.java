@@ -17,7 +17,7 @@ import java.util.Properties;
  * Writing replaces the current file content with the supplied properties.
  * The written file contains a generated comment identifying the creation time and this class as the source.
  */
-public class PropertiesIO extends FileIO<Properties> {
+public final class PropertiesIO extends FileIO<Properties> {
 
     private PropertiesIO(final Path path, final Charset charset) {
         super(path, charset, PropertiesIO::readProps, PropertiesIO::writeProps);

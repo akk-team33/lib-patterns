@@ -29,7 +29,7 @@ public interface Output<T> {
      *
      * @throws UncheckedIOException if an I/O error occurs while writing
      */
-    default void writeUnchecked(T value) {
+    default void writeUnchecked(final T value) {
         try {
             write(value);
         } catch (final IOException e) {

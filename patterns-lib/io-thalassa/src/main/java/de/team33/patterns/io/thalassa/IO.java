@@ -5,5 +5,6 @@ package de.team33.patterns.io.thalassa;
  *
  * @param <T> the type of values read and written
  */
+@SuppressWarnings("WeakerAccess")
 public interface IO<T> extends Input<T>, Output<T> {
 }

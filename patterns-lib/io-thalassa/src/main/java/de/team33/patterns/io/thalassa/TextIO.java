@@ -12,7 +12,7 @@ import java.nio.file.Path;
  * Writing replaces the current file content with the supplied text.
  * The configured {@link Charset} is used to convert between characters and bytes.
  */
-public class TextIO extends FileIO<String> {
+public final class TextIO extends FileIO<String> {
 
     private TextIO(final Path path, final Charset charset) {
         super(path, charset, TextIO::readString, TextIO::writeString);

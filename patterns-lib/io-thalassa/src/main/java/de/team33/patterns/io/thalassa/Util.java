@@ -8,6 +8,8 @@ import java.nio.charset.Charset;
 
 final class Util {
 
+    private Util() {}
+
     static <T> XFunction<InputStream, T, IOException>
     readMethod(final XFunction<? super BufferedReader, ? extends T, ? extends IOException> method,
                final Charset charset) {
