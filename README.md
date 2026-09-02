@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
+  * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-naiad (Team33 Streamable Library - Edition "naiad")
@@ -46,7 +47,6 @@ Java 17 or later
   * files-pluto (Team33 Files Library - Edition "pluto") - 2.8.2
   * files-styx (Team33 Files Library - Edition "styx") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
-  * io-thalassa (Team33 IO Library - Edition "thalassa") - 2.8.2
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
@@ -83,7 +83,16 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
+* Unpinned module io-thalassa:
+  * ☐ Updated dependencies
+  * ☐ RecordIO: Added support for generic record types
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
+
+* ☐ Pinned module collection-mneme to 2.10.0 (still featured)
+* ☐ Pinned module records-metis to 2.10.0 (still featured)
+* ☐ Pinned module records-triton to 2.10.0 (still featured)
+* ☐ Pinned module streamable-naiad to 2.10.0 (still featured)
+* ☐ Pinned module typing-proteus to 2.10.0 (still featured)
 
 ### 2.10.0
 

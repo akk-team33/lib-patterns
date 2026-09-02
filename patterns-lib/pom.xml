@@ -18,6 +18,7 @@
 
     <modules>
         <module>collection-mneme</module>
+        <module>io-thalassa</module>
         <module>records-metis</module>
         <module>records-triton</module>
         <module>streamable-naiad</module>
