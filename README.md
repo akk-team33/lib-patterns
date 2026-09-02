@@ -29,7 +29,7 @@ Java 17 or later
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
   * zz-math-my (Team33 Math Library - Edition "my")
-  * zz-records-triton
+  * zz-json-jota (Team33 JSON Library - Edition "jota")
 
 ### Still Featured
 
@@ -82,7 +82,7 @@ Java 17 or later
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
-### ☐ 2.10.0-SNAPSHOT
+### 2.10.0-SNAPSHOT
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * Pinned module lazy-janus to 2.9.0 (still featured)
@@ -102,8 +102,7 @@ Java 17 or later
     * Triton.descriptor(Class)
     * Triton.toMap(Record)
     * Triton.toRecord(Class,Map)
-
-* ☐ Drafts:
+* Drafts:
   * Removed module zz-records-rho
   * Removed module zz-typing-proteus
   * Removed module zz-records-triton
