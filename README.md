@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
+  * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-naiad (Team33 Streamable Library - Edition "naiad")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
@@ -28,7 +29,6 @@ Java 17 or later
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
   * zz-math-my (Team33 Math Library - Edition "my")
-  * zz-records-metis
   * zz-records-triton
 
 ### Still Featured
@@ -89,14 +89,14 @@ Java 17 or later
 * Pinned module value-sinope to 2.9.0 (still featured)
 * Added module streamable-naiad
 * Unpinned module streamable-galatea:
-  * marked as deprecated
+  * Marked as deprecated
 * Added module collection-mneme
 * Added module typing-proteus
+* Added module records-metis
 
 * ☐ Drafts:
   * Removed module zz-records-rho
   * Removed module zz-typing-proteus
-  * Added module zz-records-metis
   * Added module zz-json-jota
   * ☐ Module zz-records-triton
     * ☐ Use zz-records-metis for Record ↔ Map conversion
@@ -107,7 +107,7 @@ Java 17 or later
 * Added module value-sinope
 * Added module lazy-janus
 * Unpinned module lazy-narvi:
-  * marked as deprecated
+  * Marked as deprecated
 * Module records-triton:
   * Updated dependencies
 * Drafts:

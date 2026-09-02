@@ -68,7 +68,6 @@
                         <artifact>zz-concept-alpha</artifact>
                         <artifact>zz-json-jota</artifact>
                         <artifact>zz-math-my</artifact>
-                        <artifact>zz-records-metis</artifact>
                         <artifact>zz-records-triton</artifact>
                     </excludeArtifacts>
                 </configuration>

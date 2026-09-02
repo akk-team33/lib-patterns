@@ -40,8 +40,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>zz-records-metis</artifactId>
-            <version>${project.version}</version>
+            <artifactId>records-metis</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
