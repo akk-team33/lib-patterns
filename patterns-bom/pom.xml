@@ -26,6 +26,11 @@
                 <artifactId>records-triton</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>streamable-naiad</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <!-- newly deprecated -->
 

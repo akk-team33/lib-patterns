@@ -10,16 +10,10 @@
         <version>2.10.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-streamable-naiad</artifactId>
+    <artifactId>streamable-naiad</artifactId>
 
     <name>Team33 Streamable Library - Edition "naiad"</name>
     <description>Provides a common abstraction for streamable types.</description>
-
-    <properties>
-        <skipJavadoc>true</skipJavadoc>
-        <skipHome>true</skipHome>
-        <skipGPG>true</skipGPG>
-    </properties>
 
     <dependencies>
         <dependency>

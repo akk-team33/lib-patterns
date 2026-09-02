@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * records-triton (Team33 Records Library - Edition "triton")
+  * streamable-naiad (Team33 Streamable Library - Edition "naiad")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -28,7 +29,6 @@ Java 17 or later
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-records-metis
   * zz-records-triton
-  * zz-streamable-naiad
   * zz-typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Still Featured
@@ -86,13 +86,13 @@ Java 17 or later
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * Pinned module lazy-janus to 2.9.0 (still featured)
 * Pinned module value-sinope to 2.9.0 (still featured)
+* Added module streamable-naiad
 
 * ☐ Drafts:
   * Removed module zz-records-rho
   * Added module zz-records-metis
   * Added module zz-json-jota
   * Added module zz-collection-mneme
-  * Added module zz-streamable-naiad
   * ☐ Module zz-records-triton
     * ☐ Use zz-records-metis for Record ↔ Map conversion
     * ☐ Deprecated local Record ↔ Map conversion

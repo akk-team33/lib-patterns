@@ -18,13 +18,13 @@
 
     <modules>
         <module>records-triton</module>
+        <module>streamable-naiad</module>
         <module>zz-concept-alpha</module>
         <module>zz-collection-mneme</module>
         <module>zz-json-jota</module>
         <module>zz-math-my</module>
         <module>zz-records-metis</module>
         <module>zz-records-triton</module>
-        <module>zz-streamable-naiad</module>
         <module>zz-typing-proteus</module>
     </modules>
 
