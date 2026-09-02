@@ -83,7 +83,7 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
-* ☐ Pinned module streamable-galatea to 2.10.0 (deprecated)
+* Pinned module streamable-galatea to 2.10.0 (deprecated)
 
 ### 2.10.0
 
