@@ -14,9 +14,8 @@ public final class Metis {
 
     /**
      * Returns an immutable {@link Map} describing the given <em>recordClass</em>.
-     * <p>
-     * Each entry of the {@link Map} describes a single record component as follows:
      * <table>
+     *     <caption>Each entry of the {@link Map} describes a single record component as follows:</caption>
      *     <tr>
      *         <th>key</th>
      *         <th>value</th>
@@ -37,9 +36,8 @@ public final class Metis {
 
     /**
      * Returns an immutable {@link Map} describing the given <em>recordType</em>.
-     * <p>
-     * Each entry of the {@link Map} describes a single record component as follows:
      * <table>
+     *     <caption>Each entry of the {@link Map} describes a single record component as follows:</caption>
      *     <tr>
      *         <th>key</th>
      *         <th>value</th>

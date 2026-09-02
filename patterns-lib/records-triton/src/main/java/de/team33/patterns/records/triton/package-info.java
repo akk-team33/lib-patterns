@@ -1,11 +1,6 @@
 /**
- * Provides tools for working with {@linkplain java.lang.Record records}.
- * <p>
- * In particular, the package supports conversions between:
- * <ul>
- *     <li>{@linkplain java.lang.Record Records} and JSON-formatted {@linkplain java.lang.String Strings}</li>
- *     <li>{@linkplain java.lang.Record Records} and {@linkplain java.util.Map Map} representations</li>
- * </ul>
+ * Provides conversions between {@linkplain java.lang.Record Records} and
+ * JSON-formatted {@linkplain java.lang.String Strings}.
  * <p>
  * For the sake of simplicity, JSON conversion supports only records whose native component types are:
  * <ul>

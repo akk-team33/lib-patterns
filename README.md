@@ -70,19 +70,19 @@ Java 17 or later
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
-  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.0-SNAPSHOT
+  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## Change Log
 
 ### ☐ near future
 
-* ☐ Pinned module streamable-galatea to 2.10.0-SNAPSHOT (deprecated)
+* ☐ Pinned module streamable-galatea to 2.10.0 (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
-### 2.10.0-SNAPSHOT
+### 2.10.0
 
 * Pinned module lazy-narvi to 2.9.0 (deprecated)
 * Pinned module lazy-janus to 2.9.0 (still featured)
