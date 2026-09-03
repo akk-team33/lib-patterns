@@ -85,17 +85,17 @@ Java 17 or later
 
 * Unpinned module io-thalassa, split into:
   * Module io-thalassa-base:
-    * ☐ Provides everything except RecordIO
-    * ☐ Minimmised dependencies
+    * Provides everything except RecordIO
+    * Minimized dependencies
   * Module io-thalassa-records:
-    * ☐ Depends on io-thalassa-base
-    * ☐ Depends on records-triton
-    * ☐ Provides RecordIO
+    * Depends on io-thalassa-base
+    * Depends on records-triton
+    * Provides RecordIO
       * ☐ Added support for generic record types
-  * ☐ Module io-thalassa:
-    * ☐ POM module
-    * ☐ Depends on io-thalassa-base
-    * ☐ Depends on io-thalassa-records
+  * Module io-thalassa:
+    * POM module
+    * Depends on io-thalassa-base
+    * Depends on io-thalassa-records
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
 
 * ☐ Pinned module collection-mneme to 2.10.0 (still featured)

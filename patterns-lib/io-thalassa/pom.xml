@@ -13,8 +13,9 @@
     <artifactId>io-thalassa</artifactId>
     <packaging>pom</packaging>
 
-    <name>Team33 IO Library - Edition "thalassa"</name>
-    <description>Provides a lightweight abstraction for typed input and output operations based on I/O streams.
+    <name>Team33 IO Library Aggregate - Edition "thalassa"</name>
+    <description>Provides a lightweight abstraction for typed input and output operations based on I/O streams
+        including RecordIO.
     </description>
 
     <dependencies>

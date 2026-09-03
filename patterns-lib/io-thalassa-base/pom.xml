@@ -12,7 +12,7 @@
 
     <artifactId>io-thalassa-base</artifactId>
 
-    <name>Team33 IO Library - Edition "thalassa" - basics</name>
+    <name>Team33 IO Library - Edition "thalassa"</name>
     <description>Provides a lightweight abstraction for typed input and output operations based on I/O streams.
     </description>
 
