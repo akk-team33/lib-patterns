@@ -19,6 +19,8 @@
     <modules>
         <module>collection-mneme</module>
         <module>io-thalassa</module>
+        <module>io-thalassa-base</module>
+        <module>io-thalassa-records</module>
         <module>records-metis</module>
         <module>records-triton</module>
         <module>streamable-naiad</module>

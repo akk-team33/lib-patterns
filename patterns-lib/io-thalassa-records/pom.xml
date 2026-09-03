@@ -10,12 +10,10 @@
         <version>2.11.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>io-thalassa</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>io-thalassa-records</artifactId>
 
-    <name>Team33 IO Library - Edition "thalassa"</name>
-    <description>Provides a lightweight abstraction for typed input and output operations based on I/O streams.
-    </description>
+    <name>Team33 RecordIO Library - Edition "thalassa"</name>
+    <description>Provides RecordIO based on io-thalassa-base.</description>
 
     <dependencies>
         <dependency>
@@ -24,7 +22,22 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>io-thalassa-records</artifactId>
+            <artifactId>typing-proteus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>records-triton</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>arbitrary-mimas</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-ceres</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
