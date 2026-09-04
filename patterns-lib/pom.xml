@@ -18,6 +18,7 @@
 
     <modules>
         <module>collection-mneme</module>
+        <module>files-pluto</module>
         <module>io-thalassa</module>
         <module>io-thalassa-base</module>
         <module>io-thalassa-records</module>

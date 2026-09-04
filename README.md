@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
+  * files-pluto (Team33 Files Library - Edition "pluto")
   * io-thalassa (Team33 IO Library - Edition "thalassa")
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
@@ -44,7 +45,6 @@ Java 17 or later
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
-  * files-pluto (Team33 Files Library - Edition "pluto") - 2.8.2
   * files-styx (Team33 Files Library - Edition "styx") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
@@ -83,6 +83,8 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
+* Unpinned module files-pluto:
+  * ☐ Updated dependencies
 * Unpinned module io-thalassa, split into:
   * Module io-thalassa-base:
     * Provides everything except RecordIO
