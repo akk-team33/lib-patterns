@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>lazy-narvi</artifactId>
+            <artifactId>lazy-janus</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>

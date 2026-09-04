@@ -1,6 +1,6 @@
 package de.team33.patterns.files.pluto;
 
-import de.team33.patterns.lazy.narvi.Lazy;
+import de.team33.patterns.lazy.janus.Lazy;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +24,8 @@ import static de.team33.patterns.files.pluto.LinkAttributes.effective;
  * <p>
  * Use {@link #original(Path)} or {@link #resolved(Path)} to create a new instance.
  */
-public class FileEntry {
+@SuppressWarnings({"ClassWithTooManyMethods", "ArrayEquality"})
+public final class FileEntry {
 
     private static final LinkOption[] RESOLVE_LINKS = {};
     private static final LinkOption[] ORIGINAL_LINKS = {LinkOption.NOFOLLOW_LINKS};
@@ -87,7 +88,7 @@ public class FileEntry {
      * @see #isResolved()
      */
     public final boolean isOriginal() {
-        if (attributes() instanceof LinkAttributes linkAttributes) {
+        if (attributes() instanceof final LinkAttributes linkAttributes) {
             return ORIGINAL_LINKS == linkAttributes.options();
         } else {
             return true;
@@ -101,7 +102,7 @@ public class FileEntry {
      * @see #isOriginal()
      */
     public final boolean isResolved() {
-        if (attributes() instanceof LinkAttributes linkAttributes) {
+        if (attributes() instanceof final LinkAttributes linkAttributes) {
             return RESOLVE_LINKS == linkAttributes.options();
         } else {
             return true;
