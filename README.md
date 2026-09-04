@@ -18,6 +18,7 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * files-pluto (Team33 Files Library - Edition "pluto")
+  * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library Aggregate - Edition "thalassa")
   * io-thalassa-base (Team33 IO Library - Edition "thalassa")
   * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa")
@@ -47,7 +48,6 @@ Java 17 or later
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
-  * files-styx (Team33 Files Library - Edition "styx") - 2.8.2
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
@@ -85,8 +85,10 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
+* Unpinned module files-styx:
+  * Updated dependencies
 * Unpinned module files-pluto:
-  * ☐ Updated dependencies
+  * Updated dependencies
 * Unpinned module io-thalassa, split into:
   * Module io-thalassa-base:
     * Provides everything except RecordIO
@@ -97,7 +99,6 @@ Java 17 or later
     * Provides RecordIO
       * ☐ Added support for generic record types
   * Module io-thalassa:
-    * POM module
     * Depends on io-thalassa-base
     * Depends on io-thalassa-records
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
