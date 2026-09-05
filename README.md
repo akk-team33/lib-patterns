@@ -87,14 +87,14 @@ Java 17 or later
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
-### ☐ 2.11.0-SNAPSHOT
+### 2.10.1
 
 * Module records-metis:
   * Refined dependencies
 * Module records-triton:
   * Refined dependencies
-* ☐ Module typing-proteus:
-  * ☐ Refined javadoc
+* Module typing-proteus:
+  * Refined javadoc
 * Unpinned module building-elara:
   * Added method Setup.forEach(Stream)
   * Marked as deprecated:
