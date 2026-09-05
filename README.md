@@ -85,6 +85,8 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
+* Module records-metis:
+  * Updated dependencies
 * Unpinned module building-elara:
   * Added method Setup.forEach(Stream)
   * Marked as deprecated:
@@ -109,7 +111,6 @@ Java 17 or later
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
 * Pinned module collection-mneme to 2.10.0 (still featured)
 
-* ☐ Pinned module records-metis to 2.10.0 (still featured)
 * ☐ Pinned module records-triton to 2.10.0 (still featured)
 * ☐ Pinned module streamable-naiad to 2.10.0 (still featured)
 * ☐ Pinned module typing-proteus to 2.10.0 (still featured)
