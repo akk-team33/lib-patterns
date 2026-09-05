@@ -16,6 +16,7 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
+  * building-elara (Team33 Building Library - Edition "elara")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
@@ -41,7 +42,6 @@ Java 17 or later
 * (patterns-lib - previous releases)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.8.1
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
-  * building-elara (Team33 Building Library - Edition "elara") - 2.8.0
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
   * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
@@ -85,6 +85,8 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
+* ☐ Unpinned module building-elara:
+  * ☐ Updated dependencies
 * Unpinned module files-styx:
   * Updated dependencies
 * Unpinned module files-pluto:
