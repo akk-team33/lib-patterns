@@ -162,6 +162,16 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>streamable-galatea</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>streamable-naiad</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>tuple-janus</artifactId>
             <scope>test</scope>
         </dependency>

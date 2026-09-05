@@ -24,7 +24,6 @@ Java 17 or later
   * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa")
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
-  * streamable-naiad (Team33 Streamable Library - Edition "naiad")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
@@ -55,6 +54,7 @@ Java 17 or later
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
+  * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.10.0
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -112,8 +112,8 @@ Java 17 or later
     * Depends on io-thalassa-records
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
 * Pinned module collection-mneme to 2.10.0 (still featured)
+* Pinned module streamable-naiad to 2.10.0 (still featured)
 
-* ☐ Pinned module streamable-naiad to 2.10.0 (still featured)
 * ☐ Pinned module typing-proteus to 2.10.0 (still featured)
 
 ### 2.10.0

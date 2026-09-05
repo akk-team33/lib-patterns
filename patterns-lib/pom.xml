@@ -25,7 +25,6 @@
         <module>io-thalassa-records</module>
         <module>records-metis</module>
         <module>records-triton</module>
-        <module>streamable-naiad</module>
         <module>typing-proteus</module>
         <module>zz-concept-alpha</module>
         <module>zz-json-jota</module>
