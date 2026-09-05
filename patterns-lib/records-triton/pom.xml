@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-dione</artifactId>
+            <artifactId>collection-mneme</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
@@ -26,11 +26,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>value-sinope</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>typing-proteus</artifactId>
+            <artifactId>exceptional-dione</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
@@ -38,7 +34,15 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>collection-mneme</artifactId>
+            <artifactId>streamable-naiad</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>typing-proteus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>value-sinope</artifactId>
         </dependency>
 
         <dependency>

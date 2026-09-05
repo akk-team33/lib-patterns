@@ -86,7 +86,9 @@ Java 17 or later
 ### ☐ 2.11.0-SNAPSHOT
 
 * Module records-metis:
-  * Updated dependencies
+  * Refined dependencies
+* Module records-triton:
+  * Refined dependencies
 * Unpinned module building-elara:
   * Added method Setup.forEach(Stream)
   * Marked as deprecated:
@@ -99,7 +101,7 @@ Java 17 or later
 * Unpinned module io-thalassa, split into:
   * Module io-thalassa-base:
     * Provides everything except RecordIO
-    * Minimized dependencies
+    * Refined dependencies
   * Module io-thalassa-records:
     * Depends on io-thalassa-base
     * Depends on records-triton
@@ -111,7 +113,6 @@ Java 17 or later
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
 * Pinned module collection-mneme to 2.10.0 (still featured)
 
-* ☐ Pinned module records-triton to 2.10.0 (still featured)
 * ☐ Pinned module streamable-naiad to 2.10.0 (still featured)
 * ☐ Pinned module typing-proteus to 2.10.0 (still featured)
 
