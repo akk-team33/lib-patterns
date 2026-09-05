@@ -17,7 +17,6 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * building-elara (Team33 Building Library - Edition "elara")
-  * collection-mneme (Team33 Collection Library - Edition "mneme")
   * files-pluto (Team33 Files Library - Edition "pluto")
   * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library Aggregate - Edition "thalassa")
@@ -43,6 +42,7 @@ Java 17 or later
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.8.1
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
+  * collection-mneme (Team33 Collection Library - Edition "mneme") - 2.10.0
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
   * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
@@ -107,8 +107,8 @@ Java 17 or later
     * Depends on io-thalassa-base
     * Depends on io-thalassa-records
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
+* Pinned module collection-mneme to 2.10.0 (still featured)
 
-* ☐ Pinned module collection-mneme to 2.10.0 (still featured)
 * ☐ Pinned module records-metis to 2.10.0 (still featured)
 * ☐ Pinned module records-triton to 2.10.0 (still featured)
 * ☐ Pinned module streamable-naiad to 2.10.0 (still featured)

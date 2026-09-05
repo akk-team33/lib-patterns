@@ -18,7 +18,6 @@
 
     <modules>
         <module>building-elara</module>
-        <module>collection-mneme</module>
         <module>files-pluto</module>
         <module>files-styx</module>
         <module>io-thalassa</module>

@@ -42,6 +42,11 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-mneme</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>decision-telesto</artifactId>
             <scope>test</scope>
         </dependency>
