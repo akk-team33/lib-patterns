@@ -85,8 +85,11 @@ Java 17 or later
 
 ### ☐ 2.11.0-SNAPSHOT
 
-* ☐ Unpinned module building-elara:
-  * ☐ Updated dependencies
+* Unpinned module building-elara:
+  * Added method Setup.forEach(Stream)
+  * Marked as deprecated:
+    * Dependency: streamable-galatea
+    * Method Setup.forEach(Streamable, BiFunction)
 * Unpinned module files-styx:
   * Updated dependencies
 * Unpinned module files-pluto:

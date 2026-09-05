@@ -21,6 +21,7 @@
             <artifactId>building-anthe</artifactId>
         </dependency>
         <dependency>
+            <!-- Deprecated -->
             <groupId>de.team33.patterns</groupId>
             <artifactId>streamable-galatea</artifactId>
         </dependency>

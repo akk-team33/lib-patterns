@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,12 +52,23 @@ class CollectingTest {
         assertEquals(expected, result);
     }
 
+    @Deprecated
     @Test
-    final void add_Charger_forEach() {
+    final void add_Charger_forEach_streamable() {
         final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.charger(new ArrayList<String>(3))
                                               .forEach(expected::stream, Collecting.Charger::add)
                                               .forEach(Streamable.<String>empty(), Collecting.Setup::add)
+                                              .charged();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void add_Charger_forEach() {
+        final List<String> expected = SUPPLY.anyStringList(3);
+        final List<String> result = Collecting.charger(new ArrayList<String>(3))
+                                              .forEach(expected.stream()).apply(Collecting.Charger::add)
+                                              .forEach(Stream.<String>empty()).apply(Collecting.Setup::add)
                                               .charged();
         assertEquals(expected, result);
     }
@@ -72,12 +84,23 @@ class CollectingTest {
         assertEquals(expected, result);
     }
 
+    @Deprecated
     @Test
-    final void add_Builder_forEach() {
+    final void add_Builder_forEach_streamable() {
         final List<String> expected = SUPPLY.anyStringList(3);
         final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
                                               .forEach(expected::stream, Collecting.Builder::add)
                                               .forEach(Streamable.<String>empty(), Collecting.Setup::add)
+                                              .build();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    final void add_Builder_forEach() {
+        final List<String> expected = SUPPLY.anyStringList(3);
+        final List<String> result = Collecting.builder(() -> new ArrayList<String>(3))
+                                              .forEach(expected.stream()).apply(Collecting.Builder::add)
+                                              .forEach(Stream.<String>empty()).apply(Collecting.Setup::add)
                                               .build();
         assertEquals(expected, result);
     }

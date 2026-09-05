@@ -5,6 +5,7 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  * Defines a generic interface for a uniform, basic implementation of a typical builder pattern.
@@ -24,16 +25,23 @@ public interface Setup<C, S> {
     S setup(Consumer<? super C> consumer);
 
     /**
-     * Performs a given <em>setupMethod</em> for each <em>argument</em> provided by the given {@link Streamable}
-     * and return the setup instance itself.
+     * @deprecated use {@link #forEach(Stream)} instead.
+     */
+    @Deprecated
+    default <A> S forEach(final Streamable<A> arguments, final BiFunction<? super S, ? super A, S> setupMethod) {
+        return forEach(arguments.stream()).apply(setupMethod);
+    }
+
+    /**
+     * Returns a {@link Function} that performs a given <em>method</em> for each <em>argument</em>
+     * provided by the given {@link Stream} on <em>this</em> and that finally returns <em>this</em>.
      *
      * @param <A> The <em>argument</em> type.
      */
-    default <A> S forEach(final Streamable<A> arguments, final BiFunction<? super S, ? super A, S> setupMethod) {
-        return arguments.stream()
-                        .map(arg -> Util.function(setupMethod, arg))
-                        .reduce(Function::andThen)
-                        .orElse(Function.identity())
-                        .apply(setup(Util.NOP));
+    default <A> Function<BiFunction<? super S, ? super A, S>, S> forEach(final Stream<? extends A> arguments) {
+        return method -> arguments.map(arg -> Util.function(method, arg))
+                                  .reduce(Function::andThen)
+                                  .orElse(Function.identity())
+                                  .apply(setup(Util.NOP));
     }
 }
