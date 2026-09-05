@@ -11,34 +11,50 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * {@code Type<T>} represents a specific <em>type</em>, just as {@link Class}{@code <T>} represents a specific
- * <em>class</em>.
+ * Represents a Java type, including its actual type arguments.
  * <p>
- * For example, an instance of {@code Class<String>} uniquely represents the <em>class</em> {@link String}
- * and an instance of {@code Type<String>} uniquely represents the <em>type</em> {@link String}.
+ * While a {@link Class}{@code <T>} represents a Java class or interface without preserving the actual type arguments
+ * with which a generic type is used, a {@code Type<T>} can represent a concrete parameterized type as well.
+ * For example, {@code Class<List>} can represent the class {@code List}, whereas a {@code Type<List<String>>}
+ * can represent the parameterized type {@code List<String>}.
+ * In contrast, you cannot have a (valid) {@code Class<List<String>>}.
  * <p>
- * However, while there cannot be an instance of e.g. {@code Class<List<String>>}, an instance of
- * {@code Type<List<String>>} is absolutely possible. It then represents the <em>type</em> {@code List<String>}.
+ * A {@code Type} is therefore particularly useful when the distinction between different parameterizations
+ * of the same generic class or interface is relevant.
  * <p>
- * To get an instance of Type, you need to create a definite derivative of Type.
- * The easiest way to achieve this is to directly instantiate an anonymous derivation. Examples:
- * <pre>
- * final Type&lt;List&lt;String&gt;&gt; listOfStringType =
- *         new Type&lt;List&lt;String&gt;&gt;() { };
- * </pre><pre>
- * final Type&lt;String&gt; stringType =
- *         new Type&lt;String&gt;() { };
- * </pre><p>
- * If, as in the last case, a simple class already fully defines the type concerned, there is a convenience method to
- * get a corresponding Type instance. Example:
- * <pre>
- * final Type&lt;String&gt; stringType = Type.of(String.class);
- * </pre>
+ * A {@code Type} can be created directly by instantiating an anonymous derivative whose type argument is
+ * specified explicitly:
+ * <pre>{@code final Type<List<String>> listOfString = new Type<List<String>>() {};}</pre>
+ * <p>
+ * The actual type argument is obtained from the generic type information of the derivative at runtime.
+ * Consequently, a generic derivative must not be instantiated directly:
+ * <pre>{@code
+ * class MyType<T> extends Type<T> {}
+ * // throws IllegalStateException:
+ * new MyType<String>();
+ * }</pre>
+ * Instead, a derivative with a definite type argument can be used:
+ * <pre>{@code
+ * class StringType extends Type<String> {}
+ * final Type<String> stringType = new StringType();
+ * }</pre>
+ * <p>
+ * If a {@link Class}{@code <T>} already completely describes a type,
+ * {@link #of(Class)} provides a simpler alternative:
+ * <pre>{@code
+ * final Type<String> stringType = Type.of(String.class);
+ * }</pre>
+ * <p>
+ * In addition to representing a type, {@code Type} provides access to its generic type parameters and to
+ * the types occurring in its class and interface hierarchy. It can also resolve the types of fields,
+ * record components, and methods in the context of the represented type.
  *
+ * @param <T> the represented Java type
  * @see #Type()
  * @see #of(Class)
  */
-@SuppressWarnings({"AbstractClassWithoutAbstractMethods", "unused", "ClassWithTooManyMethods", "EqualsDoesntCheckParameterClass"})
+@SuppressWarnings({
+        "AbstractClassWithoutAbstractMethods", "unused", "ClassWithTooManyMethods", "EqualsDoesntCheckParameterClass"})
 public abstract class Type<T> {
 
     @SuppressWarnings("rawtypes")
@@ -49,21 +65,29 @@ public abstract class Type<T> {
             "Do not directly instantiate %1$s%n" +
             "  In fact, it just doesn't work.%n" +
             "  Instead, try one of the following:%n" +
-            "  - Instantiate an anonymous derivative, something like ...%n" +
-            "    new %1$s(){};%n" +
-            "    (of course, using definite types instead of formal type parameters).%n" +
-            "  - Create a non-generic derivative of %1$s and use that for instantiation.%n";
+            "  a) Instantiate an anonymous derivative, something like ...%n" +
+            "     new %1$s(){};%n" +
+            "     (of course, using definite type arguments instead of formal type parameters).%n" +
+            "  b) Create a non-generic derivative of %1$s and use that for instantiation.%n";
 
     private final TypeSupport support;
     private final Features features = new Features();
 
     /**
-     * Initializes a {@link Type} based on its definite derivative. Example:
-     * <pre>
-     * final Type&lt;List&lt;String&gt;&gt; listOfStringType =
-     *         new Type&lt;List&lt;String&gt;&gt;() { };
-     * </pre>
+     * Creates a {@code Type} from the definite generic type information of its derivative.
+     * <p>
+     * The usual way to invoke this constructor is by creating an anonymous derivative:
+     * <pre>{@code
+     * final Type<List<String>> type = new Type<List<String>>() {};
+     * }</pre>
+     * The constructor inspects the generic type hierarchy of the derivative to determine the represented
+     * type and its actual type arguments.
+     * <p>
+     * A derivative that still declares formal type parameters cannot be instantiated as a {@code Type}:
+     * such an instantiation does not provide sufficient information to determine a definite represented type.
      *
+     * @throws IllegalStateException if the derivative does not provide sufficient information
+     *                               to determine a definite represented type
      * @see Type
      */
     protected Type() {
@@ -98,10 +122,12 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns a {@link Type} based on a simple {@link Class}. Example:
-     * <pre>
-     * final Type&lt;String&gt; stringType = Type.of(String.class);
-     * </pre>
+     * Returns a {@link Type} representing the given {@link Class}.
+     * <p>
+     * Example:
+     * <pre>{@code
+     * final Type<String> stringType = Type.of(String.class);
+     * }</pre>
      *
      * @see Type
      */
@@ -114,15 +140,21 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the {@link Class} that represents the core of <em>this</em> Type.
+     * Returns the {@link Class} associated with the represented type.
+     * <p>
+     * Returns {@code null} if and only if the represented type is a wildcard type.
      */
     public final Class<?> core() {
         return support.core();
     }
 
     /**
-     * Returns the formal type parameters of the represented Type.
-     * More precisely, the names of the formal type parameters of the {@link #core()} of <em>this</em> Type.
+     * Returns the formal type parameters of the represented type.
+     * More precisely, the names of the formal type parameters of the {@link #core()} of <em>this</em> type.
+     * <p>
+     * For an array type, the result contains exactly one element: {@code "E"}.
+     * <p>
+     * Returns an empty list if {@link #core()} returns {@code null}.
      *
      * @see #actualParameters()
      * @see Class#getTypeParameters()
@@ -132,13 +164,18 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the actual type parameters of the represented type.
+     * Returns the actual type arguments of the represented type.
      * <p>
-     * The result may be empty even if the formal parameter list is not,
-     * for instance in the case of {@code Type<Map>} - representing a raw generic type.
-     * Otherwise, the formal and actual parameter list have the same size and corresponding order.
+     * The result may be empty even if the list of formal type parameters is not,
+     * for instance in the case of {@code Type<Map>} representing a raw generic type.
+     * Otherwise, the lists of formal type parameters and actual type arguments have the same size
+     * and corresponding order.
+     * <p>
+     * For an array type, the result contains exactly one element: the component {@link Type}.
      *
      * @see #formalParameters()
+     * @see Class#getComponentType()
+     * @see GenericArrayType#getGenericComponentType()
      */
     public final List<Type<?>> actualParameters() {
         return features.get(Key.ACTUAL_PARAMETERS,
@@ -153,7 +190,7 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the type from which <em>this</em> Type is derived (if so).
+     * Returns the direct supertype of the represented type, if any.
      *
      * @see Class#getSuperclass()
      * @see Class#getGenericSuperclass()
@@ -165,7 +202,7 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the interfaces from which <em>this</em> Type are derived (if so).
+     * Returns the direct superinterfaces of the represented type, if any.
      *
      * @see Class#getInterfaces()
      * @see Class#getGenericInterfaces()
@@ -178,10 +215,8 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns all the types (class, interfaces) from which <em>this</em> Type is derived (if so).
-     *
-     * @see #superType()
-     * @see #interfaces()
+     * Returns all direct supertypes of the represented type,
+     * including its {@link #superType()} and {@link #interfaces()}.
      */
     public final List<Type<?>> superTypes() {
         return features.get(Key.SUPER_TYPES,
@@ -190,10 +225,10 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the type of the given {@link Field} if it is defined in the type hierarchy of <em>this</em> Type.
+     * Returns the type of the given {@link Field} if it is declared in the type hierarchy of <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Field} is not defined in the type hierarchy
-     *                                  of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Field} is not declared in the type hierarchy
+     *                                  of <em>this</em> Type
      */
     public final Type<?> typeOf(final Field field) {
         return optTypeOf(field, Field::getGenericType)
@@ -201,9 +236,9 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the type of the given {@link RecordComponent} if it is defined in <em>this</em> Type.
+     * Returns the type of the given {@link RecordComponent} if it is declared in <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link RecordComponent} is not defined in <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link RecordComponent} is not declared in <em>this</em> Type
      */
     public final Type<?> typeOf(final RecordComponent component) {
         if (core().equals(component.getDeclaringRecord())) {
@@ -214,14 +249,39 @@ public abstract class Type<T> {
     }
 
     /**
-     * Returns the return type of the given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
+     * Returns the return type of the given {@link Method} if it is declared in the type hierarchy of
+     * <em>this</em> Type.
      *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
-     *                                  of <em>this</em> Type.
+     * @throws IllegalArgumentException if the given {@link Method} is not declared in the type hierarchy
+     *                                  of <em>this</em> Type
      */
     public final Type<?> returnTypeOf(final Method method) {
         return optTypeOf(method, Method::getGenericReturnType)
-                .orElseThrow(() -> new IllegalArgumentException((NOT_DECLARED_IN_THIS.formatted(method, this))));
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
+    }
+
+    /**
+     * Returns the parameter types of the given {@link Method} if it is declared in the type hierarchy of
+     * <em>this</em> Type.
+     *
+     * @throws IllegalArgumentException if the given {@link Method} is not declared in the type hierarchy
+     *                                  of <em>this</em> Type
+     */
+    public final List<Type<?>> parameterTypesOf(final Method method) {
+        return optTypesOf(method, Method::getGenericParameterTypes)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
+    }
+
+    /**
+     * Returns the exception types of the given {@link Method} if it is declared in the type hierarchy of
+     * <em>this</em> Type.
+     *
+     * @throws IllegalArgumentException if the given {@link Method} is not declared in the type hierarchy
+     *                                  of <em>this</em> Type
+     */
+    public final List<Type<?>> exceptionTypesOf(final Method method) {
+        return optTypesOf(method, Method::getGenericExceptionTypes)
+                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
     }
 
     private <M extends Member> Optional<Type<?>> optTypeOf(final M member,
@@ -234,28 +294,6 @@ public abstract class Type<T> {
                                .flatMap(Optional::stream)
                                .findAny();
         }
-    }
-
-    /**
-     * Returns the parameter types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
-     *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
-     *                                  of <em>this</em> Type.
-     */
-    public final List<Type<?>> parameterTypesOf(final Method method) {
-        return optTypesOf(method, Method::getGenericParameterTypes)
-                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
-    }
-
-    /**
-     * Returns the exception types of a given {@link Method} if it is defined in the type hierarchy of <em>this</em> Type.
-     *
-     * @throws IllegalArgumentException if the given {@link Method} is not defined in the type hierarchy
-     *                                  of <em>this</em> Type.
-     */
-    public final List<Type<?>> exceptionTypesOf(final Method method) {
-        return optTypesOf(method, Method::getGenericExceptionTypes)
-                .orElseThrow(() -> new IllegalArgumentException(NOT_DECLARED_IN_THIS.formatted(method, this)));
     }
 
     @SuppressWarnings("OptionalContainsCollection")
@@ -275,8 +313,8 @@ public abstract class Type<T> {
     }
 
     /**
-     * Two instances of Type are equal if they are based on the same {@linkplain #core() class}
-     * and defined by the same {@linkplain #actualParameters() actual type parameters}.
+     * Indicates whether another object is a {@link Type} and represents the same type as
+     * <em>this</em> {@code Type}.
      */
     @Override
     public final boolean equals(final Object obj) {

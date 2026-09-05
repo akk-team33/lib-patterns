@@ -79,6 +79,10 @@ Java 17 or later
 
 ### ☐ near future
 
+* Module building-elara:
+  * Remove deprecated:
+    * Dependency: streamable-galatea
+    * Method Setup.forEach(Streamable, BiFunction)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
@@ -89,6 +93,8 @@ Java 17 or later
   * Refined dependencies
 * Module records-triton:
   * Refined dependencies
+* ☐ Module typing-proteus:
+  * ☐ Refined javadoc
 * Unpinned module building-elara:
   * Added method Setup.forEach(Stream)
   * Marked as deprecated:
@@ -113,8 +119,6 @@ Java 17 or later
 * Pinned module streamable-galatea to 2.10.0 (deprecated)
 * Pinned module collection-mneme to 2.10.0 (still featured)
 * Pinned module streamable-naiad to 2.10.0 (still featured)
-
-* ☐ Pinned module typing-proteus to 2.10.0 (still featured)
 
 ### 2.10.0
 
