@@ -32,6 +32,7 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
+  * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
 
@@ -78,6 +79,9 @@ Java 17 or later
 ## Change Log
 
 ### 2.11.0-SNAPSHOT
+
+* Drafts:
+  * Added module zz-config-eunomia
 
 ### 2.10.1
 
