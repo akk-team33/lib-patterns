@@ -32,6 +32,7 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
+  * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
 
@@ -79,13 +80,28 @@ Java 17 or later
 
 ### ☐ near future
 
-* Module building-elara:
-  * Remove deprecated:
-    * Dependency: streamable-galatea
-    * Method Setup.forEach(Streamable, BiFunction)
+* ☐ Module building-elara:
+  * ☐ Remove deprecated:
+    * ☐ Dependency: streamable-galatea
+    * ☐ Method Setup.forEach(Streamable, BiFunction)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
+
+### ☐ 2.11.0-SNAPSHOT
+
+* Drafts:
+  * Added module zz-config-eunomia
+
+* ☐ Pinned module building-elara to 2.10.1 (still featured)
+* ☐ Pinned module files-pluto to 2.10.1 (still featured)
+* ☐ Pinned module files-styx to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa-base to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa-records to 2.10.1 (still featured)
+* ☐ Pinned module records-metis to 2.10.1 (still featured)
+* ☐ Pinned module records-triton to 2.10.1 (still featured)
+* ☐ Pinned module typing-proteus to 2.10.1 (still featured)
 
 ### 2.10.1
 
