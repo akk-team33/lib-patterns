@@ -92,6 +92,7 @@ Java 17 or later
 
 * Unpinned module collection-mneme:
   * ☐ Thoroughly revised.
+  * Added abstract class ImmutableList
 * Drafts:
   * Added module zz-config-eunomia
 
