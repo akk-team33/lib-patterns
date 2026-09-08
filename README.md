@@ -91,8 +91,10 @@ Java 17 or later
 ### ☐ 2.11.0-SNAPSHOT
 
 * Unpinned module collection-mneme:
-  * ☐ Thoroughly revised.
+  * ☐ Thoroughly revised ...
   * Added abstract class ImmutableList
+  * Added FinalList.collect(Stream)
+  * Marked FinalList.of(Streamable) as deprecated
 * Drafts:
   * Added module zz-config-eunomia
 

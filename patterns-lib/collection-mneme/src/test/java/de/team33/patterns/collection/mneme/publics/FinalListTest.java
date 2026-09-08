@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,10 +18,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class FinalListTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Object[] NULL_ARRAY = null;
+    private static final Collection<?> NULL_COLLECTION = null;
+    private static final Streamable<?> NULL_STREAMABLE = null;
 
     @Test
     final void empty() {
         assertEquals(List.of(), FinalList.empty());
+    }
+
+    @Test
+    final void collect() {
+        final List<Object> origin = Arrays.asList(this, null, 1, "2");
+        final Stream<Object> source = origin.stream();
+        final FinalList<Object> result = FinalList.collect(source);
+        assertEquals(origin, result);
+        assertThrows(IllegalStateException.class, () -> FinalList.collect(source));
+        assertThrows(NullPointerException.class, () -> FinalList.collect(null));
     }
 
     @Test
@@ -61,6 +75,7 @@ class FinalListTest {
         final List<String> expected = List.of(elements);
         final FinalList<String> result = FinalList.of(elements);
         assertEquals(expected, result);
+        assertThrows(NullPointerException.class, () -> FinalList.of(NULL_ARRAY));
     }
 
     @Test
@@ -70,8 +85,11 @@ class FinalListTest {
                                             .toList();
         final FinalList<CharSequence> result = FinalList.of(expected);
         assertEquals(expected, result);
+        assertThrows(NullPointerException.class, () -> FinalList.of(NULL_COLLECTION));
     }
 
+    @SuppressWarnings("removal")
+    @Deprecated
     @Test
     final void of_streamable() {
         final List<String> expected = Stream.generate(GENERATOR::anyString)
@@ -80,6 +98,7 @@ class FinalListTest {
         final Streamable<String> stage = expected::stream;
         final FinalList<CharSequence> result = FinalList.of(stage);
         assertEquals(expected, result);
+        assertThrows(NullPointerException.class, () -> FinalList.of(NULL_STREAMABLE));
     }
 
     @Test
