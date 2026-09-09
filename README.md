@@ -77,15 +77,7 @@ Java 17 or later
 
 ## Change Log
 
-### ☐ near future
-
-* Module building-elara:
-  * Remove deprecated:
-    * Dependency: streamable-galatea
-    * Method Setup.forEach(Streamable, BiFunction)
-* ☐ Module records-triton:
-  * ☐ Support for 'listable' types
-  * ☐ Support for 'mappable' types
+### 2.11.0-SNAPSHOT
 
 ### 2.10.1
 
