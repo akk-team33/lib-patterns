@@ -1,38 +1,36 @@
 package de.team33.patterns.collection.mneme;
 
 import de.team33.patterns.streamable.naiad.Streamable;
-import de.team33.patterns.streamable.naiad.Streamer;
 
 import java.util.*;
-import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 /**
  * An immutable {@link Set} implementation
  * that preserves the encounter order of its source and may contain {@code null} elements.
  * <p>
- * To build an instance you may use a {@link Streamer}, example:
- * <pre>
- * final FinalSet&lt;String&gt; map = Streamer.of("zero")
- *                                      .add("one")
- *                                      .add("two")
- *                                      .map(FinalSet::of);
- * </pre>
+ * To build an instance you may use a {@link Stream} and {@link #collector()}, example:
+ * <pre>{@code
+ * final FinalSet<String> set = Stream.of("zero", "one", "two")
+ *                                    .collect(FinalSet.collector());
+ * }</pre>
  *
  * @param <E> the type of elements in this set.
- * @see Streamer#of(Object)
- * @see Streamer#add(Object)
- * @see Streamer#map(Function)
- * @see #of(Streamable)
+ * @see #empty()
+ * @see #of(Object)
+ * @see #of(Object, Object, Object[])
+ * @see #of(Collection)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalSet<E> extends AbstractSet<E> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final FinalSet EMPTY = new FinalSet(Streamable.empty());
+    private static final FinalSet EMPTY = new FinalSet(Source.empty());
 
     private final List<E> core;
 
-    private FinalSet(final Streamable<E> source) {
+    private FinalSet(final Source<E> source) {
         this.core = source.stream().distinct().toList();
     }
 
@@ -50,7 +48,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * Returns a {@link FinalSet} that contains a single given <em>element</em>.
      */
     public static <E> FinalSet<E> of(final E element) {
-        return new FinalSet<>(Streamable.of(element));
+        return new FinalSet<>(Source.of(element));
     }
 
     /**
@@ -58,28 +56,32 @@ public final class FinalSet<E> extends AbstractSet<E> {
      */
     @SafeVarargs
     public static <E> FinalSet<E> of(final E first, final E next, final E... more) {
-        return new FinalSet<>(Streamable.of(first, next, more));
+        return new FinalSet<>(Source.of(first, next, more));
     }
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
      */
     public static <E> FinalSet<E> of(final E[] source) {
-        return new FinalSet<>(Streamable.of(source));
+        return new FinalSet<>(Source.of(source));
     }
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
      */
     public static <E> FinalSet<E> of(final Collection<? extends E> source) {
-        return new FinalSet<>(Streamable.cast(source::stream));
+        return new FinalSet<>(Source.cast(source::stream));
     }
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
      */
     public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
-        return new FinalSet<>(Streamable.cast(source));
+        return new FinalSet<>(Source.cast(source::stream));
+    }
+
+    public static <E> Collector<E, ?, FinalSet<E>> collector() {
+        return Stage.collector(FinalSet::new);
     }
 
     @Override

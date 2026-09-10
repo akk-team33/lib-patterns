@@ -5,15 +5,27 @@ import de.team33.patterns.streamable.naiad.Streamable;
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
+import java.util.RandomAccess;
 import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 /**
- * An immutable {@link List} implementation that may contain {@code null} elements.
+ * An immutable {@link RandomAccess} {@link List} implementation that may contain {@code null} elements.
+ * <p>
+ * To build an instance you may use a {@link Stream} and {@link #collector()}, example:
+ * <pre>{@code
+ * final FinalList<String> list = Stream.of("zero", "one", "two")
+ *                                      .collect(FinalList.collector());
+ * }</pre>
  *
  * @param <E> the type of elements in this list.
+ * @see #empty()
+ * @see #of(Object)
+ * @see #of(Object, Object, Object[])
+ * @see #of(Collection)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-public final class FinalList<E> extends AbstractList<E> {
+public final class FinalList<E> extends AbstractList<E> implements RandomAccess {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final FinalList EMPTY = new FinalList(Source.empty());
@@ -71,7 +83,7 @@ public final class FinalList<E> extends AbstractList<E> {
     }
 
     public static <E> Collector<E, ?, FinalList<E>> collector() {
-        return Batch.collector(FinalList::new);
+        return Stage.collector(FinalList::new);
     }
 
     @Override

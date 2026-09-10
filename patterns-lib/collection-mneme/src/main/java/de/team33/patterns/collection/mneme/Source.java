@@ -1,5 +1,6 @@
 package de.team33.patterns.collection.mneme;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 @FunctionalInterface
@@ -20,6 +21,10 @@ interface Source<E> {
 
     static <E> Source<E> of(final E[] elements) {
         return () -> Stream.of(elements);
+    }
+
+    static <K, V> Source<Map.Entry<K, V>> of(final Map<K, V> map) {
+        return () -> map.entrySet().stream();
     }
 
     @SuppressWarnings("unchecked")
