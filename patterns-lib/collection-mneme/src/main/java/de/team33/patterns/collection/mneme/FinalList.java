@@ -1,39 +1,26 @@
 package de.team33.patterns.collection.mneme;
 
 import de.team33.patterns.streamable.naiad.Streamable;
-import de.team33.patterns.streamable.naiad.Streamer;
 
 import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Collector;
 
 /**
  * An immutable {@link List} implementation that may contain {@code null} elements.
- * <p>
- * To build an instance you may use a {@link Streamer}, example:
- * <pre>
- * final FinalList&lt;String&gt; map = Streamer.of("zero")
- *                                       .add("one")
- *                                       .add("two")
- *                                       .map(FinalList::of);
- * </pre>
  *
  * @param <E> the type of elements in this list.
- * @see Streamer#of(Object)
- * @see Streamer#add(Object)
- * @see Streamer#map(Function)
- * @see #of(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalList<E> extends AbstractList<E> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final FinalList EMPTY = new FinalList(Streamable.empty());
+    private static final FinalList EMPTY = new FinalList(Source.empty());
 
     private final List<E> core;
 
-    private FinalList(final Streamable<E> source) {
+    private FinalList(final Source<E> source) {
         this.core = source.stream().toList();
     }
 
@@ -51,7 +38,7 @@ public final class FinalList<E> extends AbstractList<E> {
      * Returns a {@link FinalList} that contains a single given <em>element</em>.
      */
     public static <E> FinalList<E> of(final E element) {
-        return new FinalList<>(Streamable.of(element));
+        return new FinalList<>(Source.of(element));
     }
 
     /**
@@ -59,28 +46,32 @@ public final class FinalList<E> extends AbstractList<E> {
      */
     @SafeVarargs
     public static <E> FinalList<E> of(final E first, final E next, final E... more) {
-        return new FinalList<>(Streamable.of(first, next, more));
+        return new FinalList<>(Source.of(first, next, more));
     }
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
      */
     public static <E> FinalList<E> of(final E[] source) {
-        return new FinalList<>(Streamable.of(source));
+        return new FinalList<>(Source.of(source));
     }
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
      */
     public static <E> FinalList<E> of(final Collection<? extends E> source) {
-        return new FinalList<>(Streamable.cast(source::stream));
+        return new FinalList<>(Source.cast(source::stream));
     }
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
      */
     public static <E> FinalList<E> of(final Streamable<? extends E> source) {
-        return new FinalList<>(Streamable.cast(source));
+        return new FinalList<>(Source.cast(source::stream));
+    }
+
+    public static <E> Collector<E, ?, FinalList<E>> collector() {
+        return Batch.collector(FinalList::new);
     }
 
     @Override

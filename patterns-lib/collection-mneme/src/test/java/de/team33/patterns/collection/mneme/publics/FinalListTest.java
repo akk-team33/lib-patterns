@@ -103,4 +103,14 @@ class FinalListTest {
         assertThrows(UnsupportedOperationException.class, () -> sample.sort(String::compareTo));
         assertThrows(UnsupportedOperationException.class, sample::clear);
     }
+
+    @Test
+    final void collector() {
+        final List<String> expected = Stream.generate(GENERATOR::anyString)
+                                            .limit(5 + GENERATOR.anyInt(10))
+                                            .toList();
+        final FinalList<CharSequence> result = expected.stream()
+                                                       .collect(FinalList.collector());
+        assertEquals(expected, result);
+    }
 }
