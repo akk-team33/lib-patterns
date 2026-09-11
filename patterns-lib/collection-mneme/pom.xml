@@ -13,8 +13,8 @@
     <artifactId>collection-mneme</artifactId>
 
     <name>Team33 Collection Library - Edition "mneme"</name>
-    <description>Provides buildable, immutable collection types
-        that preserve the element order from the build process.
+    <description>Provides immutable collection types that preserve the encounter order of their source
+        and may contain null elements.
     </description>
 
     <dependencies>
