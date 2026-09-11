@@ -1,5 +1,6 @@
 package de.team33.patterns.records.metis;
 
+import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.streamable.naiad.Streamable;
 
@@ -28,8 +29,12 @@ final class Reflector<T extends Record> {
                                                 "    %s%n").formatted(recordClass));
         }
         this.components = Streamable.of(recordClass.getRecordComponents());
-        this.description = FinalMap.of(components, RecordComponent::getName, RecordComponent::getType);
-        this.accessors = FinalMap.of(components, RecordComponent::getName, Reflector::accessor);
+        this.description = components.stream()
+                                     .map(FinalEntry.mapping(RecordComponent::getName, RecordComponent::getType))
+                                     .collect(FinalMap.collector());
+        this.accessors = components.stream()
+                                   .map(FinalEntry.mapping(RecordComponent::getName, Reflector::accessor))
+                                   .collect(FinalMap.collector());
         this.constructor = constructor(recordClass, components);
     }
 
@@ -74,7 +79,7 @@ final class Reflector<T extends Record> {
     final Map<String, Object> toMap(final T source) {
         return accessors.entrySet().stream()
                         .collect(LinkedHashMap::new,
-                              (map, entry) -> map.put(entry.getKey(), apply(source, entry.getValue())),
+                                 (map, entry) -> map.put(entry.getKey(), apply(source, entry.getValue())),
                                  Map::putAll);
     }
 

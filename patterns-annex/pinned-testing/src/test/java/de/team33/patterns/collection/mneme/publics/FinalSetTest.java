@@ -105,4 +105,15 @@ class FinalSetTest {
         });
         assertThrows(UnsupportedOperationException.class, sample::clear);
     }
+
+    @Test
+    final void collector() {
+        final List<String> origin = Stream.generate(GENERATOR::anyString)
+                                          .limit(5 + GENERATOR.anyInt(10))
+                                          .toList();
+        final Set<Comparable<?>> expected = new LinkedHashSet<>(origin);
+        final FinalSet<CharSequence> result = origin.stream()
+                                                    .collect(FinalSet.collector());
+        assertEquals(expected, result);
+    }
 }

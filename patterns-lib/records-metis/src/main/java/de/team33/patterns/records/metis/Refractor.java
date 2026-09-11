@@ -1,5 +1,6 @@
 package de.team33.patterns.records.metis;
 
+import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.typing.proteus.Type;
 
@@ -19,7 +20,9 @@ final class Refractor<T extends Record> {
     @SuppressWarnings({"rawtypes", "unchecked"})
     private Refractor(final Type<T> recordType) {
         this.reflector = Reflector.of((Class) recordType.core());
-        this.description = FinalMap.of(reflector.components(), RecordComponent::getName, recordType::typeOf);
+        this.description = reflector.components().stream()
+                                    .map(FinalEntry.mapping(RecordComponent::getName, recordType::typeOf))
+                                    .collect(FinalMap.collector());
     }
 
     @SuppressWarnings("unchecked")

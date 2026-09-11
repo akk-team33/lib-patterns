@@ -81,6 +81,12 @@ Java 17 or later
 ### 2.11.0-SNAPSHOT
 
 * Unpinned module collection-mneme
+  * Added method FinalList.collector()
+  * Added method FinalSet.collector()
+  * Added method FinalMap.collector()
+  * Some further refinements
+* Module records-metis
+  * Updated usage of FinalMap
 * Drafts:
   * Added module zz-config-eunomia
 

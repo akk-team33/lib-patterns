@@ -158,4 +158,29 @@ class FinalMapTest {
         assertThrows(UnsupportedOperationException.class,
                      () -> map.entrySet().iterator().next().setValue("ONE"));
     }
+
+    @Test
+    final void collector_straight() {
+        final FinalMap<Long, String> map = Stream.of(FinalEntry.of(0L, "zero"),
+                                                     FinalEntry.of(1L, "one"),
+                                                     FinalEntry.of(2L, "two"))
+                                                 .collect(FinalMap.collector());
+        assertEquals(List.of(0L, 1L, 2L), map.keySet().stream().toList());
+        assertEquals(List.of("zero", "one", "two"), map.values().stream().toList());
+    }
+
+    @Test
+    final void collector() {
+        final Map<Long, String> expected = new LinkedHashMap<>() {{
+            Stream.generate(GENERATOR::anyLong)
+                  .limit(5 + GENERATOR.anyInt(10))
+                  .forEach(index -> put(index, GENERATOR.anyString()));
+        }};
+        final FinalMap<Number, CharSequence> result =
+                expected.entrySet()
+                        .stream()
+                        .collect(FinalMap.collector());
+        assertEquals(expected, result);
+        assertEquals(expected.entrySet().stream().toList(), result.entrySet().stream().toList());
+    }
 }
