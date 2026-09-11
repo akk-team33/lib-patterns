@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  *                                      .collect(FinalList.collector());
  * }</pre>
  *
- * @param <E> the type of elements in this list.
+ * @param <E> the type of elements in that list.
  * @see #empty()
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
@@ -38,6 +38,8 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns an empty {@link FinalList}.
+     *
+     * @param <E> the formal type of elements in the resulting list.
      */
     @SuppressWarnings("unchecked")
     public static <E> FinalList<E> empty() {
@@ -48,6 +50,8 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns a {@link FinalList} that contains a single given <em>element</em>.
+     *
+     * @param <E> the type of elements in the resulting list.
      */
     public static <E> FinalList<E> of(final E element) {
         return new FinalList<>(Source.of(element));
@@ -55,6 +59,8 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns a {@link FinalList} that contains two or more given <em>elements</em>.
+     *
+     * @param <E> the type of elements in the resulting list.
      */
     @SafeVarargs
     public static <E> FinalList<E> of(final E first, final E next, final E... more) {
@@ -63,6 +69,8 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting list.
      */
     public static <E> FinalList<E> of(final E[] source) {
         return new FinalList<>(Source.of(source));
@@ -70,6 +78,8 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting list.
      */
     public static <E> FinalList<E> of(final Collection<? extends E> source) {
         return new FinalList<>(Source.cast(source::stream));
@@ -77,11 +87,19 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting list.
      */
     public static <E> FinalList<E> of(final Streamable<? extends E> source) {
         return new FinalList<>(Source.cast(source::stream));
     }
 
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} elements of type {@code <E>}
+     * into a new {@link FinalList}.
+     *
+     * @param <E> the type of elements in the resulting list.
+     */
     public static <E> Collector<E, ?, FinalList<E>> collector() {
         return Stage.collector(FinalList::new);
     }

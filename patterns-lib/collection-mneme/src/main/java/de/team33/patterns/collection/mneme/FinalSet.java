@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  *                                    .collect(FinalSet.collector());
  * }</pre>
  *
- * @param <E> the type of elements in this set.
+ * @param <E> the type of elements in that set.
  * @see #empty()
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
@@ -36,6 +36,8 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns an empty {@link FinalSet}.
+     *
+     * @param <E> the formal type of elements in the resulting set.
      */
     @SuppressWarnings("unchecked")
     public static <E> FinalSet<E> empty() {
@@ -46,6 +48,8 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns a {@link FinalSet} that contains a single given <em>element</em>.
+     *
+     * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final E element) {
         return new FinalSet<>(Source.of(element));
@@ -53,6 +57,8 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns a {@link FinalSet} that contains two or more given <em>elements</em>.
+     *
+     * @param <E> the type of elements in the resulting set.
      */
     @SafeVarargs
     public static <E> FinalSet<E> of(final E first, final E next, final E... more) {
@@ -61,6 +67,8 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final E[] source) {
         return new FinalSet<>(Source.of(source));
@@ -68,6 +76,8 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final Collection<? extends E> source) {
         return new FinalSet<>(Source.cast(source::stream));
@@ -75,11 +85,19 @@ public final class FinalSet<E> extends AbstractSet<E> {
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
+     *
+     * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
         return new FinalSet<>(Source.cast(source::stream));
     }
 
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} elements of type {@code <E>}
+     * into a new {@link FinalSet}.
+     *
+     * @param <E> the type of elements in the resulting set.
+     */
     public static <E> Collector<E, ?, FinalSet<E>> collector() {
         return Stage.collector(FinalSet::new);
     }
