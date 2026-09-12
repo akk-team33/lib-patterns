@@ -2,7 +2,7 @@ package de.team33.patterns.records.metis;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

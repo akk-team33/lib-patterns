@@ -56,7 +56,6 @@ Java 17 or later
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
-  * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.10.0
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -74,6 +73,7 @@ Java 17 or later
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
+  * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.11.0-SNAPSHOT
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## Change Log
@@ -86,8 +86,8 @@ Java 17 or later
   * Added class Buffer
   * Marked interface Streamer as deprecated
   * Some further refinements
-* ☐ Unpinned module streamable-naiad
-  * ☐ Marked as deprecated
+* Unpinned module streamable-naiad
+  * Marked as deprecated
 * Unpinned module collection-mneme
   * Added method FinalList.collector()
   * Added method FinalSet.collector()

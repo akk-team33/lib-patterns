@@ -13,7 +13,7 @@ import static java.util.function.Predicate.not;
 public interface Streamer<E> extends Streamable<E> {
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#empty()} instead.
      */
     @Deprecated
     static <E> Streamer<E> empty() {
@@ -21,7 +21,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#of(Object)} instead.
      */
     @Deprecated
     static <E> Streamer<E> of(final E element) {
@@ -29,7 +29,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#of(Object, Object, Object[])} instead.
      */
     @Deprecated
     @SafeVarargs
@@ -38,7 +38,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#of(Object[])} instead.
      */
     @Deprecated
     static <E> Streamer<E> of(final E[] elements) {
@@ -46,7 +46,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#of(Iterable)} instead.
      */
     @Deprecated
     static <E> Streamer<E> of(final Iterable<E> iterable) {
@@ -54,7 +54,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#by(Streamable)} instead.
      */
     @Deprecated
     static <E> Streamer<E> by(final Streamable<E> streamable) {
@@ -74,7 +74,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#add(Object)} instead.
      */
     @Deprecated
     default Streamer<E> add(final E element) {
@@ -82,7 +82,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#addAll(Streamable)} instead.
      */
     @Deprecated
     default <X extends E> Streamer<E> addAll(final Streamable<X> other) {
@@ -90,7 +90,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#remove(Object)} instead.
      */
     @Deprecated
     default Streamer<E> remove(final Object candidate) {
@@ -98,7 +98,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#removeAll(Streamable)} instead.
      */
     @Deprecated
     default <X> Streamer<E> removeAll(final Streamable<X> other) {
@@ -106,7 +106,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#removeIf(Predicate)} instead.
      */
     @Deprecated
     default Streamer<E> removeIf(final Predicate<? super E> condition) {
@@ -114,7 +114,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#retainAll(Streamable)} instead.
      */
     @Deprecated
     default <X> Streamer<E> retainAll(final Streamable<X> other) {
@@ -122,7 +122,7 @@ public interface Streamer<E> extends Streamable<E> {
     }
 
     /**
-     * @deprecated see {@link Streamer}
+     * @deprecated use {@link Buffer#retainIf(Predicate)} instead.
      */
     @Deprecated
     default Streamer<E> retainIf(final Predicate<? super E> condition) {

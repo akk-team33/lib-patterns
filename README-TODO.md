@@ -18,6 +18,7 @@ Team33 Patterns Library Collection
 
 ### further
 
+* ☐ Pinned module streamable-naiad to 2.11.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
     * ☐ Support for 'listable' types
     * ☐ Support for 'mappable' types
