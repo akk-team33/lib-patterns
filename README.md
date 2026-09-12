@@ -76,6 +76,26 @@ Java 17 or later
   * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.11.0-SNAPSHOT
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
+## TODO
+
+### next
+
+* ☐ Pinned module files-pluto to 2.10.1 (still featured)
+* ☐ Pinned module files-styx to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa-base to 2.10.1 (still featured)
+* ☐ Pinned module io-thalassa-records to 2.10.1 (still featured)
+* ☐ Pinned module records-metis to 2.10.1 (still featured)
+* ☐ Pinned module records-triton to 2.10.1 (still featured)
+* ☐ Pinned module typing-proteus to 2.10.1 (still featured)
+
+### further
+
+* ☐ Pinned module streamable-naiad to 2.11.0-SNAPSHOT (deprecated)
+* ☐ Module records-triton:
+  * ☐ Support for 'listable' types
+  * ☐ Support for 'mappable' types
+
 ## Change Log
 
 ### 2.11.0-SNAPSHOT
@@ -93,6 +113,8 @@ Java 17 or later
   * Added method FinalSet.collector()
   * Added method FinalMap.collector()
   * Some further refinements
+* Module building-elara
+  * Refined dependencies
 * Module records-metis
   * Updated usage of FinalMap
 * Drafts:

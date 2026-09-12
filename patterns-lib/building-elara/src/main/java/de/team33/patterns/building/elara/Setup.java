@@ -25,9 +25,11 @@ public interface Setup<C, S> {
     S setup(Consumer<? super C> consumer);
 
     /**
-     * @deprecated use {@link #forEach(Stream)} instead.
+     * Performs a given <em>setupMethod</em> for each <em>argument</em> provided by the given {@link Streamable}
+     * and return the setup instance itself.
+     *
+     * @param <A> The <em>argument</em> type.
      */
-    @Deprecated
     default <A> S forEach(final Streamable<A> arguments, final BiFunction<? super S, ? super A, S> setupMethod) {
         return forEach(arguments.stream()).apply(setupMethod);
     }

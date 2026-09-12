@@ -13,7 +13,7 @@
     <artifactId>streamable-naiad</artifactId>
 
     <name>Team33 Streamable Library - Edition "naiad"</name>
-    <description>Provides a common abstraction for streamable types.</description>
+    <description>Deprecated - consider module streamable-galatea as a replacement.</description>
 
     <dependencies>
         <dependency>
