@@ -13,7 +13,7 @@
     <artifactId>streamable-galatea</artifactId>
 
     <name>Team33 Streamable Library - Edition "galatea"</name>
-    <description>Provides streamable classes.</description>
+    <description>Provides a common abstraction for streamable types.</description>
 
     <dependencies>
         <!-- testing -->
