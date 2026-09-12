@@ -33,16 +33,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>files-pluto</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>files-styx</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>io-thalassa</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -124,6 +114,16 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>expiry-tethys</artifactId>
                 <version>2.7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>files-pluto</artifactId>
+                <version>2.10.1</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>files-styx</artifactId>
+                <version>2.10.1</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

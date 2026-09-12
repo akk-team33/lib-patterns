@@ -18,8 +18,6 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
-  * files-pluto (Team33 Files Library - Edition "pluto")
-  * files-styx (Team33 Files Library - Edition "styx")
   * io-thalassa (Team33 IO Library Aggregate - Edition "thalassa")
   * io-thalassa-base (Team33 IO Library - Edition "thalassa")
   * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa")
@@ -49,6 +47,8 @@ Java 17 or later
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
   * execution-metis (Team33 Execution Library - Edition "metis") - 2.7.0
   * expiry-tethys (Team33 Expiration Library - Edition "tethys") - 2.7.2
+  * files-pluto (Team33 Files Library - Edition "pluto") - 2.10.1
+  * files-styx (Team33 Files Library - Edition "styx") - 2.10.1
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
@@ -80,8 +80,6 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module files-pluto to 2.10.1 (still featured)
-* ☐ Pinned module files-styx to 2.10.1 (still featured)
 * ☐ Pinned module io-thalassa to 2.10.1 (still featured)
 * ☐ Pinned module io-thalassa-base to 2.10.1 (still featured)
 * ☐ Pinned module io-thalassa-records to 2.10.1 (still featured)
@@ -100,6 +98,8 @@ Java 17 or later
 
 ### 2.11.0-SNAPSHOT
 
+* Pinned module files-pluto to 2.10.1 (still featured)
+* Pinned module files-styx to 2.10.1 (still featured)
 * Unpinned module streamable-galatea
   * Rehabilitated module from 2.8.1
   * Refined interface Streamable
