@@ -1,6 +1,7 @@
 package de.team33.patterns.streamable.galatea;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -86,6 +87,33 @@ public final class Buffer<E> implements Streamable<E> {
     @Override
     public final Stream<E> stream() {
         return core.stream();
+    }
+
+    @Override
+    public final boolean isEmpty() {
+        return core.isEmpty();
+    }
+
+    @Override
+    public final boolean containsAny() {
+        return 0 < core.size();
+    }
+
+    @Override
+    public final boolean contains(final Object candidate) {
+        //noinspection SuspiciousMethodCalls
+        return core.contains(candidate);
+    }
+
+    @Override
+    public final <X> boolean containsAll(final Streamable<X> other) {
+        //noinspection SuspiciousMethodCalls
+        return new HashSet<>(core).containsAll(other.toSet());
+    }
+
+    @Override
+    public final void forEach(final Consumer<? super E> action) {
+        core.forEach(action);
     }
 
     /**
