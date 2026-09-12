@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Deprecated
 class StreamerTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
@@ -117,7 +118,6 @@ class StreamerTest {
 
     @Test
     final void of_Iterable() {
-        //noinspection FunctionalExpressionCanBeFolded
         assertEquals(origin, Streamer.of(origin::iterator).stream().toList());
         assertEquals(origin, Streamer.of(origin).stream().toList());
     }

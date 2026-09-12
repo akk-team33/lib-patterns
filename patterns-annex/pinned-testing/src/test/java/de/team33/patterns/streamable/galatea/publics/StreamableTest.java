@@ -5,16 +5,13 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
-@Deprecated
 class StreamableTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());
@@ -32,8 +29,8 @@ class StreamableTest {
 
     @Test
     final void of_Iterable() {
-        assertEquals(origin, Streamable.of(origin::iterator).stream().toList());
-        assertEquals(origin, Streamable.of(origin).stream().toList());
+        assertEquals(origin, Streamable.of(origin::iterator).toList());
+        assertEquals(origin, Streamable.of(origin).toList());
     }
 
     @Test
@@ -138,5 +135,20 @@ class StreamableTest {
         assertThrows(NullPointerException.class, () -> Streamable.empty().forEach(null));
         assertThrows(NullPointerException.class, () -> Streamable.of(EMPTY_LIST).forEach(null));
         assertThrows(NullPointerException.class, () -> Streamable.of(EMPTY_LIST).forEach(null));
+    }
+
+    @Test
+    final void cast() {
+        final Streamable<CharSequence> streamable = Streamable.cast(origin::stream);
+        assertEquals(origin, streamable.stream().toList());
+    }
+
+    @Test
+    final void toSet() {
+        final List<String> expectedList = Stream.concat(origin.stream(), combined.stream()).toList();
+        final Set<String> expectedSet = new HashSet<>(expectedList);
+        final Streamable<String> streamable = () -> Stream.concat(origin.stream(), combined.stream());
+        assertEquals(expectedList, streamable.toList());
+        assertEquals(expectedSet, streamable.toSet());
     }
 }
