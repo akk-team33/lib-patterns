@@ -73,23 +73,24 @@ Java 17 or later
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
-  * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.11.0-SNAPSHOT
+  * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.10.2
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## TODO
 
 ### next
 
+* ☐ Pinned module streamable-naiad to 2.10.2 (deprecated)
+
 ### further
 
-* ☐ Pinned module streamable-naiad to 2.11.0-SNAPSHOT (deprecated)
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
 ## Change Log
 
-### 2.11.0-SNAPSHOT
+### 2.10.2
 
 * Pinned module files-pluto to 2.10.1 (still featured)
 * Pinned module files-styx to 2.10.1 (still featured)
