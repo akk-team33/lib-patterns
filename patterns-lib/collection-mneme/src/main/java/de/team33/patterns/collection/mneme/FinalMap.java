@@ -1,6 +1,7 @@
 package de.team33.patterns.collection.mneme;
 
-import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.galatea.Buffer;
+import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.util.AbstractMap;
 import java.util.LinkedHashMap;
@@ -44,11 +45,11 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
                              .collect(FinalSet.collector());
     }
 
-    private FinalMap(final Source<? extends Entry<? extends K, ? extends V>> source) {
+    private FinalMap(final Streamable<? extends Entry<? extends K, ? extends V>> source) {
         this(stage(source));
     }
 
-    private static <K, V> Map<K, V> stage(final Source<? extends Entry<? extends K, ? extends V>> source) {
+    private static <K, V> Map<K, V> stage(final Streamable<? extends Entry<? extends K, ? extends V>> source) {
         return source.stream().collect(LinkedHashMap::new, FinalMap::putEntry, Map::putAll);
     }
 
@@ -85,7 +86,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
      * @param <V> the type of values in the resulting map.
      */
     public static <K, V> FinalMap<K, V> of(final Streamable<? extends Map.Entry<? extends K, ? extends V>> source) {
-        return new FinalMap<>(Source.cast(source::stream));
+        return new FinalMap<>(Streamable.cast(source));
     }
 
     /**
@@ -129,7 +130,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
      * @param <V> the type of values in the resulting map.
      */
     public static <K, V> Collector<Entry<? extends K, ? extends V>, ?, FinalMap<K, V>> collector() {
-        return Stage.collector(FinalMap::new);
+        return Buffer.collector(FinalMap::new);
     }
 
     @Override

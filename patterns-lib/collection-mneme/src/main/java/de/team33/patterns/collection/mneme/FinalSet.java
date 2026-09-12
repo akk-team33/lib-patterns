@@ -1,6 +1,7 @@
 package de.team33.patterns.collection.mneme;
 
-import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.galatea.Buffer;
+import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.util.*;
 import java.util.stream.Collector;
@@ -26,11 +27,11 @@ import java.util.stream.Stream;
 public final class FinalSet<E> extends AbstractSet<E> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final FinalSet EMPTY = new FinalSet(Source.empty());
+    private static final FinalSet EMPTY = new FinalSet(Streamable.empty());
 
     private final List<E> core;
 
-    private FinalSet(final Source<E> source) {
+    private FinalSet(final Streamable<E> source) {
         this.core = source.stream().distinct().toList();
     }
 
@@ -52,7 +53,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final E element) {
-        return new FinalSet<>(Source.of(element));
+        return new FinalSet<>(Streamable.of(element));
     }
 
     /**
@@ -62,7 +63,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      */
     @SafeVarargs
     public static <E> FinalSet<E> of(final E first, final E next, final E... more) {
-        return new FinalSet<>(Source.of(first, next, more));
+        return new FinalSet<>(Streamable.of(first, next, more));
     }
 
     /**
@@ -71,7 +72,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final E[] source) {
-        return new FinalSet<>(Source.of(source));
+        return new FinalSet<>(Streamable.of(source));
     }
 
     /**
@@ -80,7 +81,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final Collection<? extends E> source) {
-        return new FinalSet<>(Source.cast(source::stream));
+        return new FinalSet<>(Streamable.cast(source::stream));
     }
 
     /**
@@ -89,7 +90,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
-        return new FinalSet<>(Source.cast(source::stream));
+        return new FinalSet<>(Streamable.cast(source));
     }
 
     /**
@@ -99,7 +100,7 @@ public final class FinalSet<E> extends AbstractSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     public static <E> Collector<E, ?, FinalSet<E>> collector() {
-        return Stage.collector(FinalSet::new);
+        return Buffer.collector(FinalSet::new);
     }
 
     @Override

@@ -3,8 +3,8 @@ package de.team33.patterns.collection.mneme.publics;
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.streamable.naiad.Streamable;
-import de.team33.patterns.streamable.naiad.Streamer;
+import de.team33.patterns.streamable.galatea.Buffer;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -37,8 +37,8 @@ class FinalMapTest {
     final void of_streamable_single() {
         final Map<Integer, String> origin = Map.of(GENERATOR.anyInt(), GENERATOR.anyString());
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
-        final FinalMap<Integer, String> result = Streamer.of(expected.get(0))
-                                                         .map(FinalMap::of);
+        final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
+                                                       .map(FinalMap::of);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -51,7 +51,7 @@ class FinalMapTest {
                   .forEach(i -> put(i, GENERATOR.anyString()));
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
-        final FinalMap<Integer, String> result = Streamer.of(expected.get(0))
+        final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
                                                          .add(expected.get(1))
                                                          .map(FinalMap::of);
         assertEquals(expected, result.entrySet().stream().toList());
@@ -66,7 +66,7 @@ class FinalMapTest {
                   .forEach(i -> put(i, GENERATOR.anyString()));
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
-        final FinalMap<Integer, String> result = Streamer.of(expected.get(0))
+        final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
                                                          .add(expected.get(1))
                                                          .add(expected.get(2))
                                                          .map(FinalMap::of);
@@ -82,7 +82,7 @@ class FinalMapTest {
                   .forEach(i -> put(i, GENERATOR.anyString()));
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
-        final FinalMap<Integer, String> result = Streamer.of(expected.get(0))
+        final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
                                                          .add(expected.get(1))
                                                          .add(expected.get(2))
                                                          .add(expected.get(3))

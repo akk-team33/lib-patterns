@@ -196,4 +196,16 @@ public final class Buffer<E> implements Streamable<E> {
     public final Buffer<E> retainIf(final Predicate<? super E> condition) {
         return removeIf(condition.negate());
     }
+
+    /**
+     * Applies the given <em>mapper</em> to <em>this</em> {@link Buffer} and returns the result.
+     * <p>
+     * This method is useful for applying a function to a {@link Buffer} within a fluent expression.
+     *
+     * @param <R> The result type.
+     * @throws NullPointerException if the specified <em>method</em> is {@code null}.
+     */
+    public final <R> R map(final Function<? super Buffer<E>, ? extends R> mapper) {
+        return mapper.apply(this);
+    }
 }

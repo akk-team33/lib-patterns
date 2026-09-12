@@ -2,7 +2,7 @@ package de.team33.patterns.collection.mneme.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.collection.mneme.FinalList;
-import de.team33.patterns.streamable.naiad.Streamable;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
