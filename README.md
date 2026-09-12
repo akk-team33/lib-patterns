@@ -82,6 +82,7 @@ Java 17 or later
 
 * Unpinned module streamable-galatea
   * Rehabilitated module from 2.8.1
+  * Refined interface Streamable
   * ☐ Marked interface Streamer as deprecated
   * ☐ Added class Buffer
 * Unpinned module collection-mneme

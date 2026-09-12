@@ -1,15 +1,15 @@
 package de.team33.patterns.streamable.galatea;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
- * Represents instances that (virtually or really) contain elements of a specific type
- * and can provide a {@link Stream} over those elements when needed.
+ * Represents instances that (really or virtually) contain elements of a specific type
+ * and can provide a {@link Stream} over these elements.
  *
  * @param <E> The type of contained elements.
  * @see #stream()
@@ -20,7 +20,7 @@ public interface Streamable<E> {
     /**
      * Returns a {@link Streamable} that {@linkplain #isEmpty() is empty}.
      *
-     * @param <E> The type of virtually contained elements.
+     * @param <E> The formal type of contained elements.
      */
     static <E> Streamable<E> empty() {
         return Stream::empty;
@@ -65,6 +65,22 @@ public interface Streamable<E> {
         } else {
             return () -> StreamSupport.stream(iterable.spliterator(), false);
         }
+    }
+
+    /**
+     * Returns a {@link Streamable} proxy providing the elements of the given <em>original</em>
+     * with an adapted element type.
+     * <p>
+     * No elements are copied. The returned proxy cannot modify the given <em>original</em> but
+     * if <em>original</em> is mutable, subsequent modifications of <em>original</em> will be reflected
+     * by the resulting proxy.
+     *
+     * @param <E> the adapted element type.
+     * @throws NullPointerException if the specified <em>streamable</em> is {@code null}.
+     */
+    @SuppressWarnings({"unchecked", "FunctionalExpressionCanBeFolded"})
+    static <E, T extends E> Streamable<E> cast(final Streamable<T> original) {
+        return ((Streamable<E>) original)::stream;
     }
 
     /**
@@ -146,5 +162,23 @@ public interface Streamable<E> {
      */
     default void forEach(final Consumer<? super E> action) {
         stream().forEach(action);
+    }
+
+    /**
+     * Returns an unmodifiable {@link List} containing all the elements of <em>this</em> instance
+     * at the time of invocation, preserving its streaming order, if one exists.
+     */
+    default List<E> toList() {
+        return stream().toList();
+    }
+
+    /**
+     * Returns an unmodifiable {@link Set} containing all distinct elements of <em>this</em> instance
+     * at the time of invocation.
+     */
+    default Set<E> toSet() {
+        @SuppressWarnings("FuseStreamOperations")
+        final Set<E> collected = stream().collect(Collectors.toCollection(HashSet::new));
+        return Collections.unmodifiableSet(collected);
     }
 }
