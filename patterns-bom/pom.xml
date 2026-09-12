@@ -46,11 +46,6 @@
                 <artifactId>streamable-galatea</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>typing-proteus</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- newly deprecated -->
             <dependency>
@@ -159,6 +154,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-pandora</artifactId>
                 <version>2.7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>typing-proteus</artifactId>
+                <version>2.10.1</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

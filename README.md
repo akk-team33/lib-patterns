@@ -21,7 +21,6 @@ Java 17 or later
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
-  * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -56,6 +55,7 @@ Java 17 or later
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
+  * typing-proteus (Team33 Typing Library - Edition "proteus") - 2.10.1
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -80,10 +80,6 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module records-metis to 2.10.1 (still featured)
-* ☐ Pinned module records-triton to 2.10.1 (still featured)
-* ☐ Pinned module typing-proteus to 2.10.1 (still featured)
-
 ### further
 
 * ☐ Pinned module streamable-naiad to 2.11.0-SNAPSHOT (deprecated)
@@ -100,6 +96,7 @@ Java 17 or later
 * Pinned module io-thalassa to 2.10.1 (still featured)
 * Pinned module io-thalassa-base to 2.10.1 (still featured)
 * Pinned module io-thalassa-records to 2.10.1 (still featured)
+* Pinned module typing-proteus to 2.10.1 (still featured)
 * Unpinned module streamable-galatea
   * Rehabilitated module from 2.8.1
   * Refined interface Streamable
@@ -117,6 +114,8 @@ Java 17 or later
   * Refined dependencies
 * Module records-metis
   * Updated usage of FinalMap
+* Module records-triton
+  * Refined dependencies
 * Drafts:
   * Added module zz-config-eunomia
 

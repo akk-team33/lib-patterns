@@ -177,6 +177,11 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
+            <artifactId>typing-proteus</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
             <artifactId>value-sinope</artifactId>
             <scope>test</scope>
         </dependency>
