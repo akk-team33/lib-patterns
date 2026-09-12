@@ -18,9 +18,6 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * building-elara (Team33 Building Library - Edition "elara")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
-  * io-thalassa (Team33 IO Library Aggregate - Edition "thalassa")
-  * io-thalassa-base (Team33 IO Library - Edition "thalassa")
-  * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa")
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
   * streamable-galatea (Team33 Streamable Library - Edition "galatea")
@@ -50,6 +47,9 @@ Java 17 or later
   * files-pluto (Team33 Files Library - Edition "pluto") - 2.10.1
   * files-styx (Team33 Files Library - Edition "styx") - 2.10.1
   * hashing-pandia (Team33 Hashing Library - Edition "pandia") - 2.7.2
+  * io-thalassa (Team33 IO Library Aggregate - Edition "thalassa") - 2.10.1
+  * io-thalassa-base (Team33 IO Library - Edition "thalassa") - 2.10.1
+  * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa") - 2.10.1
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
@@ -80,9 +80,6 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module io-thalassa to 2.10.1 (still featured)
-* ☐ Pinned module io-thalassa-base to 2.10.1 (still featured)
-* ☐ Pinned module io-thalassa-records to 2.10.1 (still featured)
 * ☐ Pinned module records-metis to 2.10.1 (still featured)
 * ☐ Pinned module records-triton to 2.10.1 (still featured)
 * ☐ Pinned module typing-proteus to 2.10.1 (still featured)
@@ -100,6 +97,9 @@ Java 17 or later
 
 * Pinned module files-pluto to 2.10.1 (still featured)
 * Pinned module files-styx to 2.10.1 (still featured)
+* Pinned module io-thalassa to 2.10.1 (still featured)
+* Pinned module io-thalassa-base to 2.10.1 (still featured)
+* Pinned module io-thalassa-records to 2.10.1 (still featured)
 * Unpinned module streamable-galatea
   * Rehabilitated module from 2.8.1
   * Refined interface Streamable

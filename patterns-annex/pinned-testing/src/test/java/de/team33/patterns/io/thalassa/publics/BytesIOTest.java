@@ -21,7 +21,7 @@ class BytesIOTest extends Supply {
     private final BytesIO bytesIO;
     private final Path path;
 
-    BytesIOTest() throws IOException {
+    BytesIOTest() {
         this.path = PATH.resolve("%s.txt".formatted(anyString(8, CHARACTERS)));
         this.bytesIO = BytesIO.by(path);
     }

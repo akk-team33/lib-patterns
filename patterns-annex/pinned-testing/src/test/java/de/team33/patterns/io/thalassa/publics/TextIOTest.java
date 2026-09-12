@@ -20,7 +20,7 @@ class TextIOTest extends Supply {
     private final TextIO textIO;
     private final Path path;
 
-    TextIOTest() throws IOException {
+    TextIOTest() {
         this.path = PATH.resolve("%s.txt".formatted(anyString(8, CHARACTERS)));
         this.textIO = TextIO.by(path);
     }

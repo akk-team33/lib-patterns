@@ -25,7 +25,7 @@ class PropertiesIOTest extends Supply {
     private final PropertiesIO io;
     private final Path path;
 
-    PropertiesIOTest() throws IOException {
+    PropertiesIOTest() {
         this.path = PATH.resolve("%s.txt".formatted(anyString(8, CHARACTERS)));
         this.io = PropertiesIO.by(path);
     }

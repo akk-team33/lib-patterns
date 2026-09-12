@@ -35,7 +35,7 @@ class WritingTest extends Supply {
         }
     }
 
-    private static void writeString(final BufferedWriter out, String string) throws IOException {
+    private static void writeString(final BufferedWriter out, final String string) throws IOException {
         out.write(string);
     }
 
@@ -43,7 +43,7 @@ class WritingTest extends Supply {
         return new String(in.readAllBytes(), StandardCharsets.UTF_8);
     }
 
-    private static void outputString(final OutputStream out, String text) throws IOException {
+    private static void outputString(final OutputStream out, final String text) throws IOException {
         out.write(text.getBytes(StandardCharsets.UTF_8));
     }
 
