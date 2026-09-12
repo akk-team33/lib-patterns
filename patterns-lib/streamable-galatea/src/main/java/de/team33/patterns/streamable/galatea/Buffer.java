@@ -24,7 +24,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} that {@linkplain #isEmpty() is empty}.
+     * Returns a {@link Buffer} that initially {@linkplain #isEmpty() is empty}.
      *
      * @param <E> The type of virtually contained elements.
      */
@@ -33,7 +33,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} that contains a single given <em>element</em>.
+     * Returns a {@link Buffer} that initially contains a single given <em>element</em>.
      *
      * @param <E> The type of the contained element.
      */
@@ -42,7 +42,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} that contains two or more given <em>elements</em>.
+     * Returns a {@link Buffer} that initially contains two or more given <em>elements</em>.
      *
      * @param <E> The type of the contained elements.
      */
@@ -52,7 +52,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} from an array of <em>elements</em>.
+     * Returns a {@link Buffer} initialized from an array of <em>elements</em>.
      *
      * @param <E> The type of the contained elements.
      */
@@ -61,7 +61,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} from a given {@link Iterable}.
+     * Returns a {@link Buffer} initialized from a given {@link Iterable}.
      *
      * @param <E> The type of the contained elements.
      */
@@ -70,7 +70,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} backed by a given {@link Streamable}.
+     * Returns a {@link Buffer} initialized from a given {@link Streamable}.
      *
      * @param <E> The type of the contained elements.
      */
@@ -78,10 +78,22 @@ public final class Buffer<E> implements Streamable<E> {
         return new Buffer<>(Streamable.cast(streamable));
     }
 
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} elements of type {@code <E>}
+     * into a new {@link Buffer}.
+     *
+     * @param <E> the type of elements in the resulting buffer.
+     */
     public static <E> Collector<E, ?, Buffer<E>> collector() {
         return collector(Function.identity());
     }
 
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} elements of type {@code <E>}
+     * into a {@link Buffer} and transforms them into a result of type {@code <R>} using <em>finisher</em>.
+     *
+     * @param <E> the type of elements in the resulting buffer.
+     */
     public static <E, R> Collector<E, ?, R> collector(final Function<? super Buffer<E>, ? extends R> finisher) {
         return Collector.of(Buffer::empty, Buffer::add, Buffer::addAll, finisher::apply);
     }
