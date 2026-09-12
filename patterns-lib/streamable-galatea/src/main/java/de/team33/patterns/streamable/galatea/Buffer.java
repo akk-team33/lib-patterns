@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,7 +52,7 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} backed by an array of <em>elements</em>.
+     * Returns a {@link Buffer} from an array of <em>elements</em>.
      *
      * @param <E> The type of the contained elements.
      */
@@ -59,11 +61,11 @@ public final class Buffer<E> implements Streamable<E> {
     }
 
     /**
-     * Returns a {@link Buffer} backed by a given {@link Iterable}.
+     * Returns a {@link Buffer} from a given {@link Iterable}.
      *
      * @param <E> The type of the contained elements.
      */
-    public static <E> Buffer<E> of(final Iterable<E> iterable) {
+    public static <E> Buffer<E> of(final Iterable<? extends E> iterable) {
         return by(Streamable.of(iterable));
     }
 
@@ -72,8 +74,16 @@ public final class Buffer<E> implements Streamable<E> {
      *
      * @param <E> The type of the contained elements.
      */
-    public static <E> Buffer<E> by(final Streamable<E> streamable) {
-        return new Buffer<>(streamable);
+    public static <E> Buffer<E> by(final Streamable<? extends E> streamable) {
+        return new Buffer<>(Streamable.cast(streamable));
+    }
+
+    public static <E> Collector<E, ?, Buffer<E>> collector() {
+        return collector(Function.identity());
+    }
+
+    public static <E, R> Collector<E, ?, R> collector(final Function<? super Buffer<E>, ? extends R> finisher) {
+        return Collector.of(Buffer::empty, Buffer::add, Buffer::addAll, finisher::apply);
     }
 
     private Buffer<E> setup(final Consumer<? super List<E>> consumer) {
