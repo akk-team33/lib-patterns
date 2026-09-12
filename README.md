@@ -84,7 +84,7 @@ Java 17 or later
   * Rehabilitated module from 2.8.1
   * Refined interface Streamable
   * ☐ Marked interface Streamer as deprecated
-  * ☐ Added class Buffer
+  * Added class Buffer
 * Unpinned module collection-mneme
   * Added method FinalList.collector()
   * Added method FinalSet.collector()
