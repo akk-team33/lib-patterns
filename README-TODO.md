@@ -18,10 +18,6 @@ Team33 Patterns Library Collection
 
 ### further
 
-* ☐ Module building-elara:
-    * ☐ Remove deprecated:
-        * ☐ Dependency: streamable-galatea
-        * ☐ Method Setup.forEach(Streamable, BiFunction)
 * ☐ Module records-triton:
     * ☐ Support for 'listable' types
     * ☐ Support for 'mappable' types

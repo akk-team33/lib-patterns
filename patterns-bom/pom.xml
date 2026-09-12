@@ -68,6 +68,11 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>streamable-galatea</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>typing-proteus</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -221,11 +226,6 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>serial-charon</artifactId>
                 <version>1.27.0</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>streamable-galatea</artifactId>
-                <version>2.10.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

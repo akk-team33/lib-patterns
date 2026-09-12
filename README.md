@@ -25,6 +25,7 @@ Java 17 or later
   * io-thalassa-records (Team33 RecordIO Library - Edition "thalassa")
   * records-metis (Team33 Records Library - Edition "metis")
   * records-triton (Team33 Records Library - Edition "triton")
+  * streamable-galatea (Team33 Streamable Library - Edition "galatea")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
@@ -73,13 +74,16 @@ Java 17 or later
   * random-mimas (Team33 Randomization Library - Edition "mimas") - 1.13.0
   * random-tarvos (Team33 Randomization Library - Edition "tarvos") - 1.19.0
   * serial-charon (Team33 Serial Collection Library - Edition "charon") - 1.27.0
-  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.0
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
 ## Change Log
 
 ### 2.11.0-SNAPSHOT
 
+* Unpinned module streamable-galatea
+  * Rehabilitated module from 2.8.1
+  * ☐ Marked interface Streamer as deprecated
+  * ☐ Added class Buffer
 * Unpinned module collection-mneme
   * Added method FinalList.collector()
   * Added method FinalSet.collector()
