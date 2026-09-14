@@ -88,7 +88,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.11.0-SNAPSHOT
+### 2.10.3
 
 * Pinned module building-elara to 2.10.2 (still featured)
 * Pinned module records-metis to 2.10.2 (still featured)
