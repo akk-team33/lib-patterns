@@ -1,6 +1,5 @@
 package de.team33.patterns.collection.mneme;
 
-import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -10,10 +9,14 @@ import java.util.function.Function;
  * @param <K> the type of the <em>key</em>
  * @param <V> the type of the <em>value</em>
  */
-public final class FinalEntry<K, V> extends AbstractMap.SimpleImmutableEntry<K, V> {
+public final class FinalEntry<K, V> extends ImmutableEntry<K, V> {
+
+    private final K key;
+    private final V value;
 
     private FinalEntry(final K key, final V value) {
-        super(key, value);
+        this.key = key;
+        this.value = value;
     }
 
     /**
@@ -82,5 +85,21 @@ public final class FinalEntry<K, V> extends AbstractMap.SimpleImmutableEntry<K, 
      */
     public static <K, V> Function<V, Map.Entry<K, V>> mapping(final Function<? super V, ? extends K> toKey) {
         return value -> of(toKey.apply(value), value);
+    }
+
+    /**
+     * Returns the key of <em>this</em> entry.
+     */
+    @Override
+    public final K getKey() {
+        return key;
+    }
+
+    /**
+     * Returns the value of <em>this</em> entry.
+     */
+    @Override
+    public final V getValue() {
+        return value;
     }
 }

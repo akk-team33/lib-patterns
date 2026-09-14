@@ -3,13 +3,16 @@ package de.team33.patterns.collection.mneme;
 import de.team33.patterns.streamable.galatea.Buffer;
 import de.team33.patterns.streamable.galatea.Streamable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 /**
- * An immutable {@link Set} implementation
- * that preserves the encounter order of its source and may contain {@code null} elements.
+ * An {@link ImmutableSet} implementation
+ * that preserves the encounter order of its source (if any) and may contain {@code null} elements.
+ * <p>
+ * The encounter order (if any) is reflected by {@link #iterator()} and {@link #stream()}.
  * <p>
  * To build an instance you may use a {@link Stream} and {@link #collector()}, example:
  * <pre>{@code
@@ -22,9 +25,10 @@ import java.util.stream.Stream;
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
  * @see #of(Collection)
+ * @see #of(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-public final class FinalSet<E> extends AbstractSet<E> {
+public final class FinalSet<E> extends ImmutableSet<E> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final FinalSet EMPTY = new FinalSet(Streamable.empty());
@@ -103,11 +107,17 @@ public final class FinalSet<E> extends AbstractSet<E> {
         return Buffer.collector(FinalSet::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public final Iterator<E> iterator() {
-        return core.iterator();
+    public final ImmutableIterator<E> iterator() {
+        return ImmutableIterator.proxy(core.iterator());
     }
 
+    /**
+     * Returns the number of distinct elements in <em>this</em> set.
+     */
     @Override
     public final int size() {
         return core.size();

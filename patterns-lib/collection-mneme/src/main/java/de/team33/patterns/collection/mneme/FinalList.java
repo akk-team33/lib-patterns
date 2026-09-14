@@ -3,7 +3,6 @@ package de.team33.patterns.collection.mneme;
 import de.team33.patterns.streamable.galatea.Buffer;
 import de.team33.patterns.streamable.galatea.Streamable;
 
-import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 import java.util.RandomAccess;
@@ -11,7 +10,7 @@ import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 /**
- * An immutable {@link RandomAccess} {@link List} implementation that may contain {@code null} elements.
+ * A {@link RandomAccess} {@link ImmutableList} implementation that may contain {@code null} elements.
  * <p>
  * To build an instance you may use a {@link Stream} and {@link #collector()}, example:
  * <pre>{@code
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
  * @see #of(Collection)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
-public final class FinalList<E> extends AbstractList<E> implements RandomAccess {
+public final class FinalList<E> extends ImmutableList<E> implements RandomAccess {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final FinalList EMPTY = new FinalList(Streamable.empty());
@@ -105,11 +104,19 @@ public final class FinalList<E> extends AbstractList<E> implements RandomAccess 
         return Buffer.collector(FinalList::new);
     }
 
+    /**
+     * Returns the element at the given <em>index</em> position in <em>this</em> list.
+     *
+     * @throws IndexOutOfBoundsException if the <em>index</em> is out of [0 ... ({@link #size()} - 1)]
+     */
     @Override
     public final E get(final int index) {
         return core.get(index);
     }
 
+    /**
+     * Returns the number of elements in <em>this</em> list.
+     */
     @Override
     public final int size() {
         return core.size();

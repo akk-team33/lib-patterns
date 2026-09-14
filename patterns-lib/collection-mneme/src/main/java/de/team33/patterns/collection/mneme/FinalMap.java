@@ -3,18 +3,17 @@ package de.team33.patterns.collection.mneme;
 import de.team33.patterns.streamable.galatea.Buffer;
 import de.team33.patterns.streamable.galatea.Streamable;
 
-import java.util.AbstractMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 /**
  * An immutable {@link Map} implementation
- * that preserves the encounter order of its source and may contain {@code null} as key or value.
+ * that preserves the encounter order of its source (if any) and may contain {@code null} as key or value.
  * <p>
+ * The encounter order (if any) is reflected by {@link #entrySet()}, {@link #keySet()} and {@link #values()}.
  * <p>
  * To build an instance you may use a {@link Stream} and {@link #collector()}, example:
  * <pre>{@code
@@ -30,7 +29,7 @@ import java.util.stream.Stream;
  * @see #of(Object, Object)
  * @see #of(Map)
  */
-public final class FinalMap<K, V> extends AbstractMap<K, V> {
+public final class FinalMap<K, V> extends ImmutableMap<K, V> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final FinalMap EMPTY = new FinalMap(Map.of());
@@ -134,7 +133,7 @@ public final class FinalMap<K, V> extends AbstractMap<K, V> {
     }
 
     @Override
-    public final Set<Map.Entry<K, V>> entrySet() {
+    public final ImmutableSet<Map.Entry<K, V>> entrySet() {
         // Already is immutable ...
         // noinspection AssignmentOrReturnOfFieldWithMutableType
         return entries;
