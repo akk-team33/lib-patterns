@@ -23,36 +23,11 @@
             <!-- in progress -->
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>building-elara</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>collection-mneme</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>records-metis</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>records-triton</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>streamable-galatea</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <!-- newly deprecated -->
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
-                <artifactId>streamable-naiad</artifactId>
-                <version>${project.version}</version>
-            </dependency>
 
             <!-- pinned (still featured) ... -->
             <dependency>
@@ -64,6 +39,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>building-anthe</artifactId>
                 <version>2.8.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>building-elara</artifactId>
+                <version>2.10.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
@@ -147,6 +127,16 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
+                <artifactId>records-metis</artifactId>
+                <version>2.10.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>records-triton</artifactId>
+                <version>2.10.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-luna</artifactId>
                 <version>2.7.2</version>
             </dependency>
@@ -154,6 +144,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>reflect-pandora</artifactId>
                 <version>2.7.2</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>streamable-galatea</artifactId>
+                <version>2.10.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
@@ -226,6 +221,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>serial-charon</artifactId>
                 <version>1.27.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>streamable-naiad</artifactId>
+                <version>2.10.2</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

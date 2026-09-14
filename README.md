@@ -16,11 +16,7 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * building-elara (Team33 Building Library - Edition "elara")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
-  * records-metis (Team33 Records Library - Edition "metis")
-  * records-triton (Team33 Records Library - Edition "triton")
-  * streamable-galatea (Team33 Streamable Library - Edition "galatea")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -37,6 +33,7 @@ Java 17 or later
 * (patterns-lib - previous releases)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.8.1
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
+  * building-elara (Team33 Building Library - Edition "elara") - 2.10.2
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
   * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
@@ -53,8 +50,11 @@ Java 17 or later
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
+  * records-metis (Team33 Records Library - Edition "metis") - 2.10.2
+  * records-triton (Team33 Records Library - Edition "triton") - 2.10.2
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
+  * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.2
   * typing-proteus (Team33 Typing Library - Edition "proteus") - 2.10.1
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
@@ -80,12 +80,6 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module building-elara to 2.10.2 (still featured)
-* ☐ Pinned module records-metis to 2.10.2 (still featured)
-* ☐ Pinned module records-triton to 2.10.2 (still featured)
-* ☐ Pinned module streamable-galatea to 2.10.2 (still featured)
-* ☐ Pinned module streamable-naiad to 2.10.2 (deprecated)
-
 ### further
 
 * ☐ Module records-triton:
@@ -96,6 +90,11 @@ Java 17 or later
 
 ### 2.11.0-SNAPSHOT
 
+* Pinned module building-elara to 2.10.2 (still featured)
+* Pinned module records-metis to 2.10.2 (still featured)
+* Pinned module records-triton to 2.10.2 (still featured)
+* Pinned module streamable-galatea to 2.10.2 (still featured)
+* Pinned module streamable-naiad to 2.10.2 (deprecated)
 * Module collection-mneme
   * Added class ImmutableIterator
   * Added class ImmutableListIterator

@@ -2,6 +2,7 @@ package de.team33.patterns.streamable.galatea.publics;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.streamable.galatea.Buffer;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -110,5 +111,25 @@ class BufferTest {
     final void of_Iterable() {
         assertEquals(origin, Buffer.of(origin::iterator).toList());
         assertEquals(origin, Buffer.of(origin).toList());
+    }
+
+    @Test
+    final void collector() {
+        final List<String> expected = Stream.generate(GENERATOR::anyString)
+                                            .limit(5 + GENERATOR.anyInt(10))
+                                            .toList();
+        final Buffer<CharSequence> result = expected.stream()
+                                                    .collect(Buffer.collector());
+        assertEquals(expected, result.toList());
+    }
+
+    @Test
+    final void collector_finisher() {
+        final List<String> expected = Stream.generate(GENERATOR::anyString)
+                                            .limit(5 + GENERATOR.anyInt(10))
+                                            .toList();
+        final List<String> result = expected.stream()
+                                            .collect(Buffer.collector(Streamable::toList));
+        assertEquals(expected, result);
     }
 }
