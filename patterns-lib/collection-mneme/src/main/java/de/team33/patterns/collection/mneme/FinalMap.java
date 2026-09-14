@@ -5,12 +5,13 @@ import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
 /**
- * An immutable {@link Map} implementation
+ * An {@link ImmutableMap} implementation
  * that preserves the encounter order of its source (if any) and may contain {@code null} as key or value.
  * <p>
  * The encounter order (if any) is reflected by {@link #entrySet()}, {@link #keySet()} and {@link #values()}.
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
  * @see #empty()
  * @see #of(Object, Object)
  * @see #of(Map)
+ * @see #of(Streamable)
  */
 public final class FinalMap<K, V> extends ImmutableMap<K, V> {
 
@@ -132,6 +134,13 @@ public final class FinalMap<K, V> extends ImmutableMap<K, V> {
         return Buffer.collector(FinalMap::new);
     }
 
+    /**
+     * Returns a {@link Set} view of the mappings contained in <em>this</em> map.
+     * <p>
+     * An {@link ImmutableMap} returns an {@link ImmutableSet}.
+     * <p>
+     * This implementation ensures that each element of the resulting set is a {@link FinalEntry}.
+     */
     @Override
     public final ImmutableSet<Map.Entry<K, V>> entrySet() {
         // Already is immutable ...

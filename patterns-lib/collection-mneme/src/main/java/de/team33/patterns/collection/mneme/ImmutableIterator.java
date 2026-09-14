@@ -3,7 +3,7 @@ package de.team33.patterns.collection.mneme;
 import java.util.Iterator;
 
 /**
- * An immutable, abstract {@link Iterator} implementation that definitely does not support {@link #remove()}.
+ * An immutable, abstract {@link Iterator} implementation that definitely does not support {@link Iterator#remove()}.
  *
  * @param <E> the type of elements to be handled.
  */

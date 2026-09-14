@@ -4,7 +4,7 @@ import java.util.ListIterator;
 
 /**
  * An immutable, abstract {@link ListIterator} implementation that definitely does not support
- * {@link #remove()}, {@link #set(Object)} and {@link #add(Object)}.
+ * {@link ListIterator#remove()}, {@link ListIterator#set(Object)} and {@link ListIterator#add(Object)}.
  *
  * @param <E> the type of elements to be handled.
  */

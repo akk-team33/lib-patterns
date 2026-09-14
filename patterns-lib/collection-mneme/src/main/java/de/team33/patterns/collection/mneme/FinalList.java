@@ -23,6 +23,7 @@ import java.util.stream.Stream;
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
  * @see #of(Collection)
+ * @see #of(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalList<E> extends ImmutableList<E> implements RandomAccess {

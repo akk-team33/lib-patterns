@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * An immutable {@link Map.Entry} implementation that may contain {@code null} as key or value.
+ * An {@link ImmutableEntry} implementation that may contain {@code null} as key or value.
  *
  * @param <K> the type of the <em>key</em>
  * @param <V> the type of the <em>value</em>

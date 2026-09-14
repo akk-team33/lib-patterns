@@ -4,7 +4,8 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 /**
- * An immutable, abstract {@link Map.Entry} implementation that definitely does not support {@link #setValue(Object)}.
+ * An immutable, abstract {@link Map.Entry} implementation that definitely does not support
+ * {@link Map.Entry#setValue(Object)}.
  *
  * @param <K> the type of key.
  * @param <V> the type of value.
