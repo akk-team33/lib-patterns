@@ -13,8 +13,8 @@
     <artifactId>collection-mneme</artifactId>
 
     <name>Team33 Collection Library - Edition "mneme"</name>
-    <description>Provides immutable collection types that preserve the encounter order of their source
-        and may contain null elements.
+    <description>Provides collection types whose immutability is an explicit part of their API,
+        while remaining compatible with the Java Collection Framework.
     </description>
 
     <dependencies>

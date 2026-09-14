@@ -81,7 +81,6 @@ Java 17 or later
 ### next
 
 * ☐ Pinned module building-elara to 2.10.2 (still featured)
-* ☐ Pinned module collection-mneme to 2.10.2 (still featured)
 * ☐ Pinned module records-metis to 2.10.2 (still featured)
 * ☐ Pinned module records-triton to 2.10.2 (still featured)
 * ☐ Pinned module streamable-galatea to 2.10.2 (still featured)
@@ -96,6 +95,19 @@ Java 17 or later
 ## Change Log
 
 ### 2.11.0-SNAPSHOT
+
+* Module collection-mneme
+  * Added class ImmutableIterator
+  * Added class ImmutableListIterator
+  * Added class ImmutableCollection
+  * Added class ImmutableSet
+  * Added class ImmutableList
+  * Added class ImmutableEntry
+  * Added class ImmutableMap
+  * FinalSet extends ImmutableSet
+  * FinalList extends ImmutableList
+  * FinalEntry extends ImmutableEntry
+  * FinalMap extends ImmutableMap
 
 ### 2.10.2
 
