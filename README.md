@@ -80,13 +80,19 @@ Java 17 or later
 
 ### next
 
+* Pinned module collection-mneme to 2.10.3 (still featured)
+
 ### further
 
+* ☐ Module streamable-galatea:
+  * ☐ Removed deprecated interface Streamer
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
 
 ## Change Log
+
+### 2.11.0-SNAPSHOT
 
 ### 2.10.3
 
