@@ -14,12 +14,20 @@ public abstract class ImmutableEntry<K, V> implements Map.Entry<K, V> {
 
     /**
      * Returns an {@link ImmutableEntry} backed by the given <em>entry</em>.
+     * <p>
+     * Returns <em>entry</em> if it is already an {@link ImmutableEntry}.
      *
      * @param <K> the type of key in the result.
      * @param <V> the type of value in the result.
      */
     public static <K, V> ImmutableEntry<K, V> proxy(final Map.Entry<? extends K, ? extends V> entry) {
-        return new Proxy<>(entry);
+        //noinspection rawtypes
+        if (entry instanceof final ImmutableEntry immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(entry);
+        }
     }
 
     /**

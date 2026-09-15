@@ -15,11 +15,19 @@ public abstract class ImmutableCollection<E> extends AbstractCollection<E> {
     /**
      * Returns an {@link ImmutableCollection} backed by the given <em>collection</em>,
      * preserving the encounter order of the <em>collection</em>, if any.
+     * <p>
+     * Returns <em>collection</em> if it is already an {@link ImmutableCollection}.
      *
      * @param <E> the type of elements in the result.
      */
     public static <E> ImmutableCollection<E> proxy(final Collection<? extends E> collection) {
-        return new Proxy<>(collection);
+        //noinspection rawtypes
+        if (collection instanceof final ImmutableCollection immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(collection);
+        }
     }
 
     /**

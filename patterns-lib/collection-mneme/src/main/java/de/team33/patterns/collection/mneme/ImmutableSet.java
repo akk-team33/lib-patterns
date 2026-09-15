@@ -16,11 +16,19 @@ public abstract class ImmutableSet<E> extends ImmutableCollection<E> implements 
     /**
      * Returns an {@link ImmutableSet} backed by the given <em>set</em>,
      * preserving the encounter order of the <em>set</em>, if any.
+     * <p>
+     * Returns <em>set</em> if it is already an {@link ImmutableSet}.
      *
      * @param <E> the type of elements in the result.
      */
     public static <E> ImmutableSet<E> proxy(final Set<? extends E> set) {
-        return new Proxy<>(set);
+        //noinspection rawtypes
+        if (set instanceof final ImmutableSet immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(set);
+        }
     }
 
     /**

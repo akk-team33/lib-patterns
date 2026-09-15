@@ -12,11 +12,19 @@ public abstract class ImmutableListIterator<E> extends ImmutableIterator<E> impl
 
     /**
      * Returns an {@link ImmutableListIterator} backed by the given <em>iterator</em>.
+     * <p>
+     * Returns <em>iterator</em> if it is already an {@link ImmutableListIterator}.
      *
      * @param <E> the type of elements to be handled.
      */
     public static <E> ImmutableListIterator<E> proxy(final ListIterator<? extends E> iterator) {
-        return new Proxy<>(iterator);
+        //noinspection rawtypes
+        if (iterator instanceof final ImmutableListIterator immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(iterator);
+        }
     }
 
     /**

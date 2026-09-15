@@ -15,12 +15,20 @@ public abstract class ImmutableMap<K, V> extends AbstractMap<K, V> {
     /**
      * Returns an {@link ImmutableMap} backed by the given <em>map</em>,
      * preserving the encounter order of the <em>map</em>, if any.
+     * <p>
+     * Returns <em>map</em> if it is already an {@link ImmutableMap}.
      *
      * @param <K> the type of keys in the result.
      * @param <V> the type of values in the result.
      */
     public static <K, V> ImmutableMap<K, V> proxy(final Map<? extends K, ? extends V> map) {
-        return new Proxy<>(map);
+        //noinspection rawtypes
+        if (map instanceof final ImmutableMap immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(map);
+        }
     }
 
     /**

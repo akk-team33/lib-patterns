@@ -17,11 +17,19 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
 
     /**
      * Returns an {@link ImmutableList} backed by the given <em>list</em>.
+     * <p>
+     * Returns <em>list</em> if it is already an {@link ImmutableList}.
      *
      * @param <E> the type of elements in the result.
      */
     public static <E> ImmutableList<E> proxy(final List<? extends E> list) {
-        return new Proxy<>(list);
+        //noinspection rawtypes
+        if (list instanceof final ImmutableList immutable) {
+            //noinspection unchecked
+            return immutable;
+        } else {
+            return new Proxy<>(list);
+        }
     }
 
     /**

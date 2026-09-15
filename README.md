@@ -80,7 +80,7 @@ Java 17 or later
 
 ### next
 
-* Pinned module collection-mneme to 2.10.3 (still featured)
+* Pinned module collection-mneme to 2.11.0-SNAPSHOT (still featured)
 
 ### further
 
@@ -93,6 +93,13 @@ Java 17 or later
 ## Change Log
 
 ### 2.11.0-SNAPSHOT
+
+* Module collection-mneme
+  * Refined ImmutableXYZ.proxy(_xyz_):
+    * Avoid proxy instantiation if _xyz_ is already an ImmutableXYZ
+* ☐ Drafts:
+  * ☐ Added module zz-arbitrary-mimas
+  * ☐ Added module zz-arbitrary-tyche
 
 ### 2.10.3
 
