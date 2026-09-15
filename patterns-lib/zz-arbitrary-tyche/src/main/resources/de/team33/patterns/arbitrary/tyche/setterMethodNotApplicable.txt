@@ -1,0 +1,6 @@
+Method not applicable as setter!
+
+    target type: %1$s
+    method:      %2$s
+
+    Maybe the target type is not public? You may also ignore "%3$s" to avoid this problem.

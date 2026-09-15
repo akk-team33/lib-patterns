@@ -24,6 +24,8 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
+  * zz-arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
+  * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-math-my (Team33 Math Library - Edition "my")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
@@ -97,9 +99,9 @@ Java 17 or later
 * Module collection-mneme
   * Refined ImmutableXYZ.proxy(_xyz_):
     * Avoid proxy instantiation if _xyz_ is already an ImmutableXYZ
-* ☐ Drafts:
-  * ☐ Added module zz-arbitrary-mimas
-  * ☐ Added module zz-arbitrary-tyche
+* Drafts:
+  * Added module zz-arbitrary-mimas
+  * Added module zz-arbitrary-tyche
 
 ### 2.10.3
 
