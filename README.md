@@ -82,7 +82,7 @@ Java 17 or later
 
 ### next
 
-* Pinned module collection-mneme to 2.11.0-SNAPSHOT (still featured)
+* ☐ Pinned module collection-mneme to 2.10.4 (still featured)
 
 ### further
 
@@ -94,7 +94,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.11.0-SNAPSHOT
+### 2.10.4
 
 * Module collection-mneme
   * Refined ImmutableXYZ.proxy(_xyz_):
