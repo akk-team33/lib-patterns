@@ -1,4 +1,4 @@
-package de.team33.patterns.functions.alpha;
+package de.team33.patterns.predicates.aletheia;
 
 import java.util.function.Predicate;
 
@@ -14,7 +14,7 @@ public final class Predicates {
     private static final Predicate REJECT;
 
     static {
-        //noinspection rawtypes
+        //noinspection rawtypes,AnonymousInnerClassWithTooManyMethods,OverlyComplexAnonymousInnerClass
         ACCEPT = new Predicate() {
 
             @Override
@@ -43,7 +43,7 @@ public final class Predicates {
             }
         };
 
-        //noinspection rawtypes
+        //noinspection rawtypes,AnonymousInnerClassWithTooManyMethods,OverlyComplexAnonymousInnerClass
         REJECT = new Predicate() {
 
             @Override

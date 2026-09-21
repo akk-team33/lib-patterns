@@ -18,6 +18,7 @@
 
     <modules>
         <module>collection-mneme</module>
+        <module>predicates-aletheia</module>
         <module>zz-concept-alpha</module>
         <module>zz-arbitrary-mimas</module>
         <module>zz-arbitrary-tyche</module>

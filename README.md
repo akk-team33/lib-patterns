@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
+  * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -27,8 +28,9 @@ Java 17 or later
   * zz-arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
-  * zz-math-my (Team33 Math Library - Edition "my")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
+  * zz-math-my (Team33 Math Library - Edition "my")
+  * zz-predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
 
 ### Still Featured
 
@@ -86,6 +88,7 @@ Java 17 or later
 
 ### further
 
+* ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module records-triton:
@@ -93,6 +96,15 @@ Java 17 or later
   * ☐ Support for 'mappable' types
 
 ## Change Log
+
+### 2.11.0-SNAPSHOT
+
+* Added module predicates-aletheia
+* Drafts:
+  * Added module zz-predicates-aletheia
+    * Added drafts: and(), or()
+  * Module zz-conzept-alpha
+    * Removed package functions.alpha
 
 ### 2.10.4
 
