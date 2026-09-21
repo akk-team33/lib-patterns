@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.EnumSet;
+import java.util.List;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
@@ -315,6 +316,15 @@ class GeneratorTest {
         assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
     }
 
+    @Test
+    final void stream() {
+        final List<Byte> result = Generator.byDefault()
+                                           .stream(Generator::anyByte)
+                                           .limit(256)
+                                           .toList();
+        assertEquals(256, result.size());
+    }
+
     @SuppressWarnings({"unused", "PackageVisibleField"})
     enum Case {
 
@@ -327,7 +337,8 @@ class GeneratorTest {
         FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE),
                   true, -1, -1, -1, -1),
 
-        RANDOM(Generator.by(new SecureRandom())),
+        @SuppressWarnings("removal")
+        RANDOM(Generator.of(new SecureRandom())),
 
         SECURE_RANDOM(Generator.by(new SecureRandom()));
 
@@ -350,6 +361,7 @@ class GeneratorTest {
                  Integer.valueOf(expInt), Long.valueOf(expLong));
         }
 
+        @SuppressWarnings("ConstructorWithTooManyParameters")
         Case(final Generator generator, final Boolean expBoolean, final Byte expByte, final Short expShort,
              final Integer expInt, final Long expLong) {
             this.generator = generator;
