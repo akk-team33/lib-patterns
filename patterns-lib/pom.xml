@@ -25,6 +25,7 @@
         <module>zz-config-eunomia</module>
         <module>zz-json-jota</module>
         <module>zz-math-my</module>
+        <module>zz-predicates-aletheia</module>
     </modules>
 
     <dependencyManagement>

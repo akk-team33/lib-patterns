@@ -74,6 +74,7 @@
                         <artifact>zz-config-eunomia</artifact>
                         <artifact>zz-json-jota</artifact>
                         <artifact>zz-math-my</artifact>
+                        <artifact>zz-predicates-aletheia</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>
