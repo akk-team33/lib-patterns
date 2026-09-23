@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.security.SecureRandom;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Objects;
 
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
@@ -314,6 +315,26 @@ class GeneratorTest {
     final void anyOf_enum(final Case testCase) {
         final RoundingMode result = testCase.generator.anyOf(RoundingMode.class);
         assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
+    }
+
+    @Test
+    final void anyNullable_1() {
+        final String result = Generator.byDefault().anyNullable(1, Generator::anyString);
+        assertNull(result);
+    }
+
+    @Test
+    final void anyNullable_89() {
+        final int magic = 89;
+        final int limit = magic * 1_000;
+        final double expected = (1.0 * limit) / magic;
+        final double count = Generator.byDefault()
+                                      .stream(generator -> generator.anyNullable(magic, Generator::anyByte))
+                                      .limit(limit)
+                                      .filter(Objects::isNull)
+                                      .count();
+        final double delta = count - expected;
+        assertEquals(0.0, delta, 50.0);
     }
 
     @Test
