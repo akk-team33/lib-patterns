@@ -1,8 +1,11 @@
-package de.team33.patterns.arbitrary.mimas.sample;
+package de.team33.patterns.arbitrary.mimas.legacy;
 
 import de.team33.patterns.arbitrary.mimas.Charger;
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.arbitrary.mimas.Initiator;
+import de.team33.patterns.arbitrary.mimas.sample.Customer;
+import de.team33.patterns.arbitrary.mimas.sample.Employee;
+import de.team33.patterns.arbitrary.mimas.sample.Person;
 
 import java.math.BigInteger;
 import java.util.Random;
