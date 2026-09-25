@@ -23,4 +23,13 @@
         <skipGPG>true</skipGPG>
     </properties>
 
+    <dependencies>
+        <!-- testing -->
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>records-metis</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
 </project>

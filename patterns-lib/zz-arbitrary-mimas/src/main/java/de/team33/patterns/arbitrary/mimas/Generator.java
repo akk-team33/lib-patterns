@@ -20,10 +20,9 @@ import java.util.stream.Stream;
 public interface Generator extends BitGenerator {
 
     /**
-     * <b>Utility method:</b>
-     * Returns an arbitrary non-negative {@link BigInteger} representing a sequence of <em>numBits</em> significant
-     * bits, intended as a result of {@link #anyBits(int)}.
+     * @deprecated use {@link Basic} as basic implementation instead.
      */
+    @Deprecated(forRemoval = true)
     static BigInteger anyBits(final int numBits, final Random random) {
         return new BigInteger(numBits, random);
     }
@@ -33,23 +32,23 @@ public interface Generator extends BitGenerator {
      */
     @Deprecated(forRemoval = true)
     static Generator of(final Random random) {
-        return numBits -> anyBits(numBits, random);
+        return by(random);
     }
 
     /**
      * <b>Utility method:</b>
-     * Provides a new instance based on a given {@link Random}.
+     * Returns a new instance backed by a given {@link Random}.
      */
     static Generator by(final Random random) {
-        return numBits -> anyBits(numBits, random);
+        return new Basic(random);
     }
 
     /**
      * <b>Utility method:</b>
-     * Provides a new instance based on a new {@link SecureRandom}.
+     * Returns a new instance backed by a new {@link SecureRandom}.
      */
     static Generator byDefault() {
-        return by(new SecureRandom());
+        return new Basic();
     }
 
     /**
@@ -378,5 +377,37 @@ public interface Generator extends BitGenerator {
     @SuppressWarnings("unchecked")
     default <E, G extends Generator> Stream<E> stream(final Function<? super G, ? extends E> method) {
         return Stream.generate(() -> method.apply((G) this));
+    }
+
+    /**
+     * A basic implementation of a {@link Generator}
+     */
+    class Basic implements Generator {
+
+        private final Random random;
+
+        /**
+         * Creates an instance backed by a new {@link SecureRandom}.
+         */
+        public Basic() {
+            this(new SecureRandom());
+        }
+
+        /**
+         * Creates an instance backed by a given {@link Random}.
+         */
+        public Basic(final Random random) {
+            this.random = random;
+        }
+
+        /**
+         * {@inheritDoc}
+         * <p>
+         * This is a typical implementation.
+         */
+        @Override
+        public final BigInteger anyBits(final int numBits) {
+            return new BigInteger(numBits, random);
+        }
     }
 }
