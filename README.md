@@ -18,6 +18,7 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
+  * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
   * pinned-testing (Tests for pinned modules)
 
@@ -59,7 +60,6 @@ Java 17 or later
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.2
-  * typing-proteus (Team33 Typing Library - Edition "proteus") - 2.10.1
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -89,6 +89,7 @@ Java 17 or later
 ### further
 
 * ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
+* ☐ Pinned module typing-proteus to 2.11.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module records-triton:
@@ -99,6 +100,9 @@ Java 17 or later
 
 ### 2.11.0-SNAPSHOT
 
+* Unpinned module typing-proteus
+  * ☐ Updated dependencies
+  * ☐ Added method Type.isAssignableFrom(Type)
 * Added module predicates-aletheia
 * Drafts:
   * Added module zz-predicates-aletheia
