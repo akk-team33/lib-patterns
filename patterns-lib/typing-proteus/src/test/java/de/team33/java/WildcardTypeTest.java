@@ -1,6 +1,5 @@
 package de.team33.java;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
@@ -12,7 +11,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
-@Disabled
+@SuppressWarnings({"MethodMayBeStatic", "unused"})
 final class WildcardTypeTest {
 
     private static WildcardType wildcard(final String fieldName) throws NoSuchFieldException {
@@ -66,7 +65,7 @@ final class WildcardTypeTest {
         assertInstanceOf(TypeVariable.class, wildcard.getLowerBounds()[0]);
     }
 
-    @Test
+    //@Test
     void nested() throws NoSuchFieldException {
         final WildcardType wildcard = wildcard("nested");
 
@@ -75,7 +74,7 @@ final class WildcardTypeTest {
         assertEquals(Number.class, wildcard.getUpperBounds()[0]);
     }
 
-    @Test
+    //@Test
     void arrayUpperBound() throws NoSuchFieldException {
         final WildcardType wildcard = wildcard("arrayUpper");
 
@@ -84,7 +83,7 @@ final class WildcardTypeTest {
         assertInstanceOf(java.lang.reflect.GenericArrayType.class, wildcard.getUpperBounds()[0]);
     }
 
-    @Test
+    //@Test
     void arrayLowerBound() throws NoSuchFieldException {
         final WildcardType wildcard = wildcard("arrayLower");
 

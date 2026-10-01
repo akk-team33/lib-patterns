@@ -4,6 +4,7 @@ import de.team33.patterns.value.sinope.Equation;
 
 import java.lang.reflect.WildcardType;
 import java.util.List;
+import java.util.Optional;
 
 final class WildcardSupport extends TypeSupport {
 
@@ -30,6 +31,14 @@ final class WildcardSupport extends TypeSupport {
     @Override
     final List<TypeSupport> actualParameters() {
         return List.of();
+    }
+
+    final TypeSupport upperBound() {
+        return range.upperBounds().get(0);
+    }
+
+    final Optional<TypeSupport> lowerBound() {
+        return range.lowerBounds().stream().findFirst();
     }
 
     @Override

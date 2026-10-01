@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -137,6 +138,29 @@ public abstract class Type<T> {
 
     private static Type<?> by(final TypeSupport support) {
         return new Type<>(support) {};
+    }
+
+    private static boolean isWildcardAssignable(final WildcardSupport left, final Type<?> other) {
+        if (other.support instanceof final WildcardSupport right) {
+            return isWildcardAssignable(left, right);
+        } else if (by(left.upperBound()).isAssignableFrom(other)) {
+            return left.lowerBound()
+                       .map(Type::by)
+                       .map(other::isAssignableFrom)
+                       .orElse(true);
+        } else {
+            return false;
+        }
+    }
+
+    private static boolean isWildcardAssignable(final WildcardSupport left, final WildcardSupport right) {
+        if (by(left.upperBound()).isAssignableFrom(by(right.upperBound()))) {
+            final Type<?> leftLower = left.lowerBound().map(Type::by).orElse(null);
+            final Type<?> rightLower = right.lowerBound().map(Type::by).orElse(null);
+            return (null == leftLower) || ((null != rightLower) && rightLower.isAssignableFrom(leftLower));
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -313,6 +337,90 @@ public abstract class Type<T> {
     }
 
     /**
+     * Returns a {@link Type} representing the wrapper type corresponding to <em>this</em> type
+     * if it represents a primitive type.
+     * <p>
+     * Returns <em>this</em> if it does not represent a primitive type.
+     */
+    public final Type<T> boxed() {
+        // 1. this is instance of Type<T>,
+        //    e.g. Type<Integer>
+        // 2. core() is primitive => core() is instance of Class<T>,
+        //    e.g. core() == int.class => core() is instance of Class<Integer>
+        // noinspection unchecked
+        return core().isPrimitive() ? of(Boxing.boxed((Class<T>) core())) : this;
+    }
+
+    /**
+     * Determines whether <em>this</em> {@link Type} is assignable from the given <em>other</em> {@link Type}.
+     *
+     * @see Class#isAssignableFrom(Class)
+     */
+    public final boolean isAssignableFrom(final Type<?> other) {
+        if (support instanceof final WildcardSupport wildcard) {
+            return isWildcardAssignable(wildcard, other);
+        } else {
+            return isNonWildcardAssignableFrom(other);
+        }
+    }
+
+    private boolean isNonWildcardAssignableFrom(final Type<?> other) {
+        if (other.support instanceof final WildcardSupport wildcard) {
+            return isAssignableFrom(by(wildcard.upperBound()));
+        } else {
+            return core().isAssignableFrom(other.core()) && isParametersCompatible(other);
+        }
+    }
+
+    private boolean isParametersCompatible(final Type<?> other) {
+        // Precondition: core() != null
+        //            && other.core() != null
+        //            && core().isAssignableFrom(other.core())
+        if (actualParameters().isEmpty()) {
+            // No matter if this is raw or simply has no parameters ...
+            return true;
+        } else if (other.support.isRaw()) {
+            // => other is raw but this is not ...
+            return false;
+        } else if (core().isArray()) {
+            // => other.core().isArray()
+            return actualParameters().get(0).isAssignableFrom(other.actualParameters().get(0));
+        } else {
+            // Precondition: this.core() is not Object.class
+            // => this must be in type hierarchy of other to be assignable
+            final Type<?> leveled = other.allSuperTypes()
+                                         .filter(type -> core().equals(type.core()))
+                                         .findAny()
+                                         .orElseThrow(); // should not happen at all
+            return isParametersCompatible(leveled.actualParameters());
+        }
+    }
+
+    private boolean isParametersCompatible(final List<? extends Type<?>> otherParameters) {
+        // Precondition: actualParameters().size == otherParameters.size()
+        return IntStream.range(0, otherParameters.size())
+                        .allMatch(index -> isParameterCompatible(index, otherParameters.get(index)));
+    }
+
+    private boolean isParameterCompatible(final int index, final Type<?> otherParameter) {
+        final Type<?> actualParameter = actualParameters().get(index);
+        if (actualParameter.core() == null) {
+            return actualParameter.isAssignableFrom(otherParameter);
+        } else {
+            return actualParameter.equals(otherParameter);
+        }
+    }
+
+    private Stream<Type<?>> allSuperTypes() {
+        final Stream<Type<?>> head = Stream.of(this);
+        if (superTypes().isEmpty()) {
+            return head;
+        } else {
+            return Stream.concat(head, superTypes().stream().flatMap(Type::allSuperTypes));
+        }
+    }
+
+    /**
      * Indicates whether another object is a {@link Type} and represents the same type as
      * <em>this</em> {@code Type}.
      */
@@ -329,6 +437,37 @@ public abstract class Type<T> {
     @Override
     public final String toString() {
         return EQUATION.toString(this);
+    }
+
+    private enum Boxing {
+
+        BOOLEAN(boolean.class, Boolean.class),
+        BYTE(byte.class, Byte.class),
+        SHORT(short.class, Short.class),
+        CHAR(char.class, Character.class),
+        INT(int.class, Integer.class),
+        LONG(long.class, Long.class),
+        FLOAT(float.class, Float.class),
+        DOUBLE(double.class, Double.class),
+        VOID(void.class, Void.class);
+
+        private final Class<?> unboxed;
+        private final Class<?> boxed;
+
+        <T> Boxing(final Class<T> unboxed, final Class<T> boxed) {
+            this.unboxed = unboxed;
+            this.boxed = boxed;
+        }
+
+        @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
+        static <T> Class<T> boxed(final Class<T> candidate) {
+            //noinspection unchecked
+            return Stream.of(values())
+                         .filter(value -> value.unboxed.equals(candidate))
+                         .findAny()
+                         .map(value -> (Class<T>) value.boxed)
+                         .orElse(candidate);
+        }
     }
 
     private interface Key<T> extends Features.Key<T> {

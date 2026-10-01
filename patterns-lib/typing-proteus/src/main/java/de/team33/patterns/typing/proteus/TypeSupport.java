@@ -52,6 +52,10 @@ abstract class TypeSupport {
     @Override
     public abstract String toString();
 
+    final boolean isRaw() {
+        return (0 < formalParameters().size()) && actualParameters().isEmpty();
+    }
+
     interface Key<T> extends Features.Key<T> {
 
         Key<List<Object>> TO_LIST = named("TO_LIST");

@@ -24,6 +24,5 @@ class GenericArraySupport extends ArraySupport {
     @Override
     final List<TypeSupport> actualParameters() {
         return features().get(Key.ACTUAL_PARAMETERS, () -> List.of(componentType));
-
     }
 }

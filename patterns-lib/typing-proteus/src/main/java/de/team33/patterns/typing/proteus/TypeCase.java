@@ -9,7 +9,7 @@ enum TypeCase {
 
     CLASS(Class.class, (type, context) -> ClassCase.support(type)),
     GENERIC_ARRAY(GenericArrayType.class, GenericArraySupport::new),
-    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSupport::new),
+    PARAMETERIZED_TYPE(ParameterizedType.class, ParameterizedSupport::of),
     TYPE_VARIABLE(TypeVariable.class, TypeCase::variable),
     WILDCARD_TYPE(WildcardType.class, WildcardSupport::new);
 
@@ -22,7 +22,14 @@ enum TypeCase {
     }
 
     private static TypeSupport variable(final TypeVariable<?> type, final TypeSupport context) {
-        return context.actualParameter(type.getName());
+        if (null == context) {
+            throw new IllegalStateException(
+                    "Should not happen at all: TypeVariable <%s> without context".formatted(type));
+        } else if (context.isRaw()) {
+            return support(type.getBounds()[0], context);
+        } else {
+            return context.actualParameter(type.getName());
+        }
     }
 
     static TypeSupport support(final Type type, final TypeSupport context) {

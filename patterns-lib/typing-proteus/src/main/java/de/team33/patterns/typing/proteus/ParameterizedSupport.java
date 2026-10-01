@@ -4,14 +4,22 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.stream.Stream;
 
-class ParameterizedSupport extends SingleSupport {
+final class ParameterizedSupport extends SingleSupport {
 
     private final ParameterizedType type;
     private final TypeSupport context;
 
-    ParameterizedSupport(final ParameterizedType type, final TypeSupport context) {
+    private ParameterizedSupport(final ParameterizedType type, final TypeSupport context) {
         this.type = type;
         this.context = context;
+    }
+
+    static TypeSupport of(final ParameterizedType type, final TypeSupport context) {
+        if ((null != context) && context.isRaw()) {
+            return TypeCase.support(type.getRawType(), context);
+        } else {
+            return new ParameterizedSupport(type, context);
+        }
     }
 
     @Override
