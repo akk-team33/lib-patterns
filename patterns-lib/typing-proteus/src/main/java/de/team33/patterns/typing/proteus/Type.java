@@ -104,7 +104,7 @@ public abstract class Type<T> {
         if (Type.class.equals(support.core())) {
             return support.actualParameters().get(0);
         }
-        final TypeSupport superSupport = support.memberSupport(core.getGenericSuperclass());
+        final TypeSupport superSupport = support.memberType(core.getGenericSuperclass());
         return mainSupport(superSupport);
     }
 
@@ -210,42 +210,47 @@ public abstract class Type<T> {
     }
 
     private Type<?> memberType(final java.lang.reflect.Type type) {
-        return by(support.memberSupport(type));
+        return by(support.memberType(type));
     }
 
     /**
-     * Returns the direct supertype of the represented type, if any.
+     * Returns an {@link Optional} super type from which <em>this</em> type is directly derived, if any.
+     * Otherwise, returns {@link Optional#empty()}.
      *
      * @see Class#getSuperclass()
      * @see Class#getGenericSuperclass()
      */
     public final Optional<Type<?>> superType() {
-        return features.get(Key.SUPER_TYPE,
-                            () -> Optional.ofNullable(core().getGenericSuperclass())
-                                          .map(this::memberType));
+        return features.get(Key.SUPER_TYPE, () -> support.superType().map(Type::by));
     }
 
     /**
-     * Returns the direct superinterfaces of the represented type, if any.
+     * Returns a {@link List} of the interface types from which <em>this</em> type is directly derived, if any.
+     * Otherwise, returns an {@linkplain List#isEmpty() empty list}.
      *
      * @see Class#getInterfaces()
      * @see Class#getGenericInterfaces()
      */
     public final List<Type<?>> interfaces() {
-        return features.get(Key.INTERFACES,
-                            () -> Stream.of(core().getGenericInterfaces())
-                                        .map(this::memberType)
-                                        .collect(Collectors.toUnmodifiableList()));
+        return features.get(Key.INTERFACES, () -> support.interfaces().stream()
+                                                         .map(Type::by)
+                                                         .collect(Collectors.toUnmodifiableList()));
     }
 
     /**
-     * Returns all direct supertypes of the represented type,
-     * including its {@link #superType()} and {@link #interfaces()}.
+     * Returns a {@link List} of all the types from which <em>this</em> type is directly derived, if any.
+     * Otherwise, returns an {@linkplain List#isEmpty() empty list}.
+     * <p>
+     * Combines its {@link #superType()} and {@link #interfaces()} to a single {@link List}.
      */
     public final List<Type<?>> superTypes() {
-        return features.get(Key.SUPER_TYPES,
-                            () -> Stream.concat(superType().stream(), interfaces().stream())
-                                        .toList());
+        return features.get(Key.SUPER_TYPES, () -> support.superTypes().stream()
+                                                          .map(Type::by)
+                                                          .collect(Collectors.toUnmodifiableList()));
+    }
+
+    private Stream<Type<?>> typeHierarchy() {
+        return support.typeHierarchy().stream().map(Type::by);
     }
 
     /**
@@ -388,7 +393,7 @@ public abstract class Type<T> {
         } else {
             // Precondition: this.core() is not Object.class
             // => this must be in type hierarchy of other to be assignable
-            final Type<?> leveled = other.allSuperTypes()
+            final Type<?> leveled = other.typeHierarchy()
                                          .filter(type -> core().equals(type.core()))
                                          .findAny()
                                          .orElseThrow(); // should not happen at all
@@ -408,15 +413,6 @@ public abstract class Type<T> {
             return actualParameter.isAssignableFrom(otherParameter);
         } else {
             return actualParameter.equals(otherParameter);
-        }
-    }
-
-    private Stream<Type<?>> allSuperTypes() {
-        final Stream<Type<?>> head = Stream.of(this);
-        if (superTypes().isEmpty()) {
-            return head;
-        } else {
-            return Stream.concat(head, superTypes().stream().flatMap(Type::allSuperTypes));
         }
     }
 

@@ -101,10 +101,12 @@ Java 17 or later
 ### 2.11.0-SNAPSHOT
 
 * Unpinned module typing-proteus
-  * ☐ Updated dependencies
-  * ☐ Added method Type.isAssignableFrom(Type)
+    * Updated dependencies
+    * Added method Type.isAssignableFrom(Type)
 * Added module predicates-aletheia
 * Drafts:
+    * Module zz-arbitrary-mimas
+        * Added method Generator.any(Type)
   * Added module zz-predicates-aletheia
     * Added drafts: and(), or()
   * Module zz-conzept-alpha
