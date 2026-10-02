@@ -37,8 +37,32 @@ final class WildcardSupport extends TypeSupport {
         return range.upperBounds().get(0);
     }
 
+    @SuppressWarnings("WeakerAccess")
     final Optional<TypeSupport> lowerBound() {
         return range.lowerBounds().stream().findFirst();
+    }
+
+    @Override
+    final boolean isAssignableFrom(final TypeSupport other) {
+        if (other instanceof final WildcardSupport wildcard) {
+            return isAssignableFromWildcard(wildcard);
+        } else if (upperBound().isAssignableFrom(other)) {
+            return lowerBound().map(other::isAssignableFrom)
+                               .orElse(true);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isAssignableFromWildcard(final WildcardSupport other) {
+        if (upperBound().isAssignableFrom(other.upperBound())) {
+            return lowerBound().map(leftLower -> other.lowerBound()
+                                                      .map(rightLower -> rightLower.isAssignableFrom(leftLower))
+                                                      .orElse(false))
+                               .orElse(true);
+        } else {
+            return false;
+        }
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -138,29 +137,6 @@ public abstract class Type<T> {
 
     private static Type<?> by(final TypeSupport support) {
         return new Type<>(support) {};
-    }
-
-    private static boolean isWildcardAssignable(final WildcardSupport left, final Type<?> other) {
-        if (other.support instanceof final WildcardSupport right) {
-            return isWildcardAssignable(left, right);
-        } else if (by(left.upperBound()).isAssignableFrom(other)) {
-            return left.lowerBound()
-                       .map(Type::by)
-                       .map(other::isAssignableFrom)
-                       .orElse(true);
-        } else {
-            return false;
-        }
-    }
-
-    private static boolean isWildcardAssignable(final WildcardSupport left, final WildcardSupport right) {
-        if (by(left.upperBound()).isAssignableFrom(by(right.upperBound()))) {
-            final Type<?> leftLower = left.lowerBound().map(Type::by).orElse(null);
-            final Type<?> rightLower = right.lowerBound().map(Type::by).orElse(null);
-            return (null == leftLower) || ((null != rightLower) && rightLower.isAssignableFrom(leftLower));
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -362,58 +338,7 @@ public abstract class Type<T> {
      * @see Class#isAssignableFrom(Class)
      */
     public final boolean isAssignableFrom(final Type<?> other) {
-        if (support instanceof final WildcardSupport wildcard) {
-            return isWildcardAssignable(wildcard, other);
-        } else {
-            return isNonWildcardAssignableFrom(other);
-        }
-    }
-
-    private boolean isNonWildcardAssignableFrom(final Type<?> other) {
-        if (other.support instanceof final WildcardSupport wildcard) {
-            return isAssignableFrom(by(wildcard.upperBound()));
-        } else {
-            return core().isAssignableFrom(other.core()) && isParametersCompatible(other);
-        }
-    }
-
-    private boolean isParametersCompatible(final Type<?> other) {
-        // Precondition: core() != null
-        //            && other.core() != null
-        //            && core().isAssignableFrom(other.core())
-        if (actualParameters().isEmpty()) {
-            // No matter if this is raw or simply has no parameters ...
-            return true;
-        } else if (other.support.isRaw()) {
-            // => other is raw but this is not ...
-            return false;
-        } else if (core().isArray()) {
-            // => other.core().isArray()
-            return actualParameters().get(0).isAssignableFrom(other.actualParameters().get(0));
-        } else {
-            // Precondition: this.core() is not Object.class
-            // => this must be in type hierarchy of other to be assignable
-            final Type<?> leveled = other.typeHierarchy()
-                                         .filter(type -> core().equals(type.core()))
-                                         .findAny()
-                                         .orElseThrow(); // should not happen at all
-            return isParametersCompatible(leveled.actualParameters());
-        }
-    }
-
-    private boolean isParametersCompatible(final List<? extends Type<?>> otherParameters) {
-        // Precondition: actualParameters().size == otherParameters.size()
-        return IntStream.range(0, otherParameters.size())
-                        .allMatch(index -> isParameterCompatible(index, otherParameters.get(index)));
-    }
-
-    private boolean isParameterCompatible(final int index, final Type<?> otherParameter) {
-        final Type<?> actualParameter = actualParameters().get(index);
-        if (actualParameter.core() == null) {
-            return actualParameter.isAssignableFrom(otherParameter);
-        } else {
-            return actualParameter.equals(otherParameter);
-        }
+        return support.isAssignableFrom(other.support);
     }
 
     /**

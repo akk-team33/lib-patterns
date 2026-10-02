@@ -14,6 +14,17 @@ abstract class CoreSupport extends TypeSupport {
     }
 
     @Override
+    final boolean isAssignableFrom(final TypeSupport other) {
+        if (other instanceof final WildcardSupport wildcard) {
+            return isAssignableFrom(wildcard.upperBound());
+        } else {
+            return core().isAssignableFrom(other.core()) && isParametersCompatible(other);
+        }
+    }
+
+    abstract boolean isParametersCompatible(final TypeSupport other);
+
+    @Override
     public final boolean equals(final Object obj) {
         return EQUATION.equals(this, obj);
     }

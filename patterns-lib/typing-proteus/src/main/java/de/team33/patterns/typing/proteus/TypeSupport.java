@@ -76,6 +76,8 @@ abstract class TypeSupport {
 
     abstract List<TypeSupport> actualParameters();
 
+    abstract boolean isAssignableFrom(final TypeSupport other);
+
     @Override
     public abstract boolean equals(final Object obj);
 

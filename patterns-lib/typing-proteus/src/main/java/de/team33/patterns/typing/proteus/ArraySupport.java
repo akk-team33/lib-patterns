@@ -12,6 +12,11 @@ abstract class ArraySupport extends CoreSupport {
     }
 
     @Override
+    final boolean isParametersCompatible(final TypeSupport other) {
+        return actualParameters().get(0).isAssignableFrom(other.actualParameters().get(0));
+    }
+
+    @Override
     public final String toString() {
         return features().get(Key.TO_STRING, () -> actualParameters().get(0) + "[]");
     }
