@@ -1,7 +1,10 @@
 package de.team33.patterns.arbitrary.mimas;
 
+import de.team33.patterns.typing.proteus.Type;
+
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -346,6 +349,10 @@ public interface Generator extends BitGenerator {
      */
     default <E extends Enum<E>> E anyOf(final Class<E> enumClass) {
         return Generating.anyOf(this, enumClass.getEnumConstants());
+    }
+
+    default Map<String, Object> anyDataSet(final Map<String, Type<?>> description) {
+        return Generating.anyDataSet(this, description);
     }
 
     /**

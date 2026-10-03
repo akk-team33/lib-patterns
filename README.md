@@ -101,21 +101,21 @@ Java 17 or later
 ### 2.11.0-SNAPSHOT
 
 * Unpinned module typing-proteus
-    * Updated dependencies
-    * Added method Type.isAssignableFrom(Type)
+  * Updated dependencies
+  * Added method Type.isAssignableFrom (Type)
 * Added module predicates-aletheia
 * Drafts:
-    * Module zz-arbitrary-mimas
-        * Added method Generator.any(Type)
+  * Module zz-arbitrary-mimas
+    * ☐ Added method Generator.anyMap(Map)
   * Added module zz-predicates-aletheia
-    * Added drafts: and(), or()
+    * Added drafts: and (), or ()
   * Module zz-conzept-alpha
     * Removed package functions.alpha
 
 ### 2.10.4
 
 * Module collection-mneme
-  * Refined ImmutableXYZ.proxy(_xyz_):
+  * Refined ImmutableXYZ.proxy (_xyz_):
     * Avoid proxy instantiation if _xyz_ is already an ImmutableXYZ
 * Drafts:
   * Added module zz-arbitrary-mimas
@@ -158,9 +158,9 @@ Java 17 or later
 * Unpinned module streamable-naiad
   * Marked as deprecated
 * Unpinned module collection-mneme
-  * Added method FinalList.collector()
-  * Added method FinalSet.collector()
-  * Added method FinalMap.collector()
+  * Added method FinalList.collector ()
+  * Added method FinalSet.collector ()
+  * Added method FinalMap.collector ()
   * Some further refinements
 * Module building-elara
   * Refined dependencies
@@ -180,10 +180,10 @@ Java 17 or later
 * Module typing-proteus:
   * Refined javadoc
 * Unpinned module building-elara:
-  * Added method Setup.forEach(Stream)
+  * Added method Setup.forEach (Stream)
   * Marked as deprecated:
     * Dependency: streamable-galatea
-    * Method Setup.forEach(Streamable, BiFunction)
+    * Method Setup.forEach (Streamable, BiFunction)
 * Unpinned module files-styx:
   * Updated dependencies
 * Unpinned module files-pluto:
@@ -221,9 +221,9 @@ Java 17 or later
   * Refined tests
   * Marked as deprecated:
     * Descriptor
-    * Triton.descriptor(Class)
-    * Triton.toMap(Record)
-    * Triton.toRecord(Class,Map)
+    * Triton.descriptor (Class)
+    * Triton.toMap (Record)
+    * Triton.toRecord (Class,Map)
 * Drafts:
   * Removed module zz-records-rho
   * Removed module zz-typing-proteus
@@ -344,7 +344,7 @@ Java 17 or later
 * Added module hierarchy-mab
 * Added module io-adrastea
 * Refined module decision-thyone ...
-  * added methods Choices.applying(*)
+  * added methods Choices.applying (*)
 
 ### 2.5.0
 
@@ -364,7 +364,7 @@ Java 17 or later
 
 * Added module streamable-galatea
 * Refined module building-elara ...
-  * added method Setup.forEach(...)
+  * added method Setup.forEach (...)
   * removed deprecated class BuilderBase
 
 ### 2.2.0
@@ -377,7 +377,7 @@ Java 17 or later
 
 * Refined module lazy-narvi ...
   * removed deprecated items
-  * ReLazy & XReLazy: refactored reset() to avoid unnecessary activity
+  * ReLazy & XReLazy: refactored reset () to avoid unnecessary activity
 * Refined module expiry-tethys ...
   * refactored implementation
   * thoroughly refactored tests to reduce fragility
@@ -392,16 +392,16 @@ Java 17 or later
 ### 2.1.1
 
 * Refined module lazy-narvy ...
-  * Added method peek() to class LazyFeatures
+  * Added method peek () to class LazyFeatures
   * Added javadoc to class LazyFeatures
 
 ### 2.1.0
 
 * Unpinned and refined module collection-ceres
-  * Added method Collecting.retain(Collection, Object)
-  * Added method Collecting.retain(Collection, Object, Object, ...)
-  * Added method Collecting.Setup.retain(Object)
-  * Added method Collecting.Setup.retain(Object, Object, ...)
+  * Added method Collecting.retain (Collection, Object)
+  * Added method Collecting.retain (Collection, Object, Object, ...)
+  * Added method Collecting.Setup.retain (Object)
+  * Added method Collecting.Setup.retain (Object, Object, ...)
 
 ### 2.0.3
 
@@ -443,7 +443,7 @@ Java 17 or later
 ### 1.21.1
 
 * Refined module enums-pan ...
-  * Added method Values.mapAll(Predicate, Function)
+  * Added method Values.mapAll (Predicate, Function)
   * Refined javadoc
 * Refined module exceptional-dione ...
   * Added class Ignoring
@@ -482,7 +482,7 @@ Java 17 or later
 
 * Refined module io-deimos ...
   * Added class Resource
-  * Marked TextIO.read(InputStream) as deprecated
+  * Marked TextIO.read (InputStream) as deprecated
 
 ### 1.18.1
 
@@ -494,9 +494,9 @@ Java 17 or later
 
 * Added module collection-ceres
 * Removed some deprecated methods from non-deprecated classes
-  * de.team33.patterns.building.elara.Charger.release()
-  * de.team33.patterns.exceptional.dione.Revision.finish()
-  * de.team33.patterns.exceptional.dione.Revision.finish(Function)
+  * de.team33.patterns.building.elara.Charger.release ()
+  * de.team33.patterns.exceptional.dione.Revision.finish ()
+  * de.team33.patterns.exceptional.dione.Revision.finish (Function)
 
 ### 1.17.0
 
@@ -577,8 +577,8 @@ Java 17 or later
 
 * reflect-luna ...
   * de.team33.patterns.reflect.luna.Fields
-    * added method stream()
-    * added method toMap()
+    * added method stream ()
+    * added method toMap ()
     * refined samples
 
 ### 1.11.0

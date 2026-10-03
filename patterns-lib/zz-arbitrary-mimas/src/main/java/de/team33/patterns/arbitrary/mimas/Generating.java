@@ -1,9 +1,17 @@
 package de.team33.patterns.arbitrary.mimas;
 
+import de.team33.patterns.exceptional.dione.Conversion;
+import de.team33.patterns.typing.proteus.Type;
+
 import java.math.BigInteger;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.function.ObjIntConsumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static de.team33.patterns.exceptional.dione.Conversion.function;
 
 @SuppressWarnings("ClassWithTooManyMethods")
 final class Generating {
@@ -132,5 +140,25 @@ final class Generating {
 
     static String anyString(final BitGenerator generator) {
         return anyString(generator, 1 + anyInt(generator, MAX_STRING_LENGTH), Util.STD_CHARACTERS);
+    }
+
+    static Map<String, Object> anyDataSet(final BitGenerator generator, final Map<String, Type<?>> description) {
+        return description.entrySet().stream()
+                          .map(entry -> anyData(generator, entry))
+                          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
+    private static Map.Entry<String, Object> anyData(final BitGenerator generator, Map.Entry<String, Type<?>> entry) {
+        return new AbstractMap.SimpleEntry<>(entry.getKey(), anyValue(generator, entry.getValue()));
+    }
+
+    private static <T> T anyValue(final BitGenerator generator, final Type<T> type) {
+        final Class<?> genClass = generator.getClass();
+        final Type<?> genType = Type.of(genClass);
+        Methods.publicGetters(genClass)
+               .filter(method -> type.boxed().isAssignableFrom(genType.returnTypeOf(method).boxed()))
+               .findAny()
+               .map(function(method -> method.invoke(generator)));
+        return null;
     }
 }

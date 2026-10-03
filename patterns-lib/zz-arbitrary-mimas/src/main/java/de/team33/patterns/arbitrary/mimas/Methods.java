@@ -10,16 +10,16 @@ final class Methods {
 
     private static final int SYNTHETIC = 0x00001000;
     private static final int NON_INSTANCE = Modifier.STATIC | Modifier.NATIVE | SYNTHETIC;
-    private static final Set<String> IGNORABLE = Set.of("hashCode", "toString");
+    private static final Set<String> IGNORABLE = Set.of("hashCode", "toString", "wait");
 
     private Methods() {
     }
 
     static Stream<Method> publicGetters(final Class<?> targetClass) {
         return Stream.of(targetClass.getMethods())
-                     .filter(Methods::isNotIgnorable)
                      .filter(Methods::isInstance)
                      .filter(Methods::isGetterParameters)
+                     .filter(Methods::isNotIgnorable)
                      .filter(method -> isGetterResult(method, targetClass));
     }
 
