@@ -351,6 +351,29 @@ public interface Generator extends BitGenerator {
         return Generating.anyOf(this, enumClass.getEnumConstants());
     }
 
+    /**
+     * Returns a {@link Map} representing a data set based on a given data set <em>description</em>.
+     * <p>
+     * A typical implementation proceeds as follows:
+     * <p>
+     * For each entry in the <em>description</em>, <em>this</em> generator is searched for a public,
+     * parameterless instance method capable of returning a value that is compatible with the required type.
+     * Object specific methods like toString() or hashCode() are ignored.
+     * An entry in the resulting map is then formed from the description's key and the value returned by the method.
+     * If no suitable method is found, the corresponding value in the result is {@code null}.
+     * <p>
+     * If more than one suitable method exists, they are prioritized according to the following criteria:
+     * <ol>
+     *     <li>If "name" is the key of the description entry, a method named "anyName" is preferred.</li>
+     *     <li>If {@code Type.of(String.class)} is the type of the description entry,
+     *     a method named "anyString" is preferred.</li>
+     *     <li>A method whose name starts with "any" is preferred.</li>
+     *     <li>If {@code Type.of(CharSequence.class)} is the type of the description entry,
+     *     a method whose result is exactly of type {@code CharSequence} is preferred.</li>
+     * </ol>
+     * <p>
+     * If, beyond this, no method could be uniquely determined, an arbitrary one is used.
+     */
     default Map<String, Object> anyDataSet(final Map<String, Type<?>> description) {
         return Generating.anyDataSet(this, description);
     }
