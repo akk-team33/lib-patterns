@@ -1,13 +1,12 @@
 package de.team33.patterns.arbitrary.mimas;
 
-import de.team33.patterns.exceptional.dione.Conversion;
 import de.team33.patterns.typing.proteus.Type;
 
 import java.math.BigInteger;
 import java.util.AbstractMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.ObjIntConsumer;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -18,7 +17,6 @@ final class Generating {
 
     private static final int FLOAT_RESOLUTION = Float.SIZE - 8;
     private static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
-    private static final int MAX_STRING_LENGTH = 64;
     private static final int DEFAULT_BOUND_BITS = 16;
 
     private Generating() {
@@ -119,8 +117,11 @@ final class Generating {
         return characters.charAt(anyInt(generator, characters.length()));
     }
 
-    static char anyChar(final BitGenerator generator) {
-        return anyChar(generator, Util.STD_CHARACTERS);
+    static String anyString(final BitGenerator generator,
+                            final int minLength,
+                            final int maxLength,
+                            final CharSequence characters) {
+        return anyString(generator, 1 + anyInt(generator, minLength - 1, maxLength), characters);
     }
 
     static String anyString(final BitGenerator generator, final int length, final CharSequence characters) {
@@ -138,14 +139,12 @@ final class Generating {
                         .toString();
     }
 
-    static String anyString(final BitGenerator generator) {
-        return anyString(generator, 1 + anyInt(generator, MAX_STRING_LENGTH), Util.STD_CHARACTERS);
-    }
-
     static Map<String, Object> anyDataSet(final BitGenerator generator, final Map<String, Type<?>> description) {
         return description.entrySet().stream()
                           .map(entry -> anyData(generator, entry))
-                          .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                          .collect(LinkedHashMap::new,
+                                   (map, entry) -> map.put(entry.getKey(), entry.getValue()),
+                                   Map::putAll);
     }
 
     private static Map.Entry<String, Object> anyData(final BitGenerator generator, Map.Entry<String, Type<?>> entry) {
@@ -155,10 +154,11 @@ final class Generating {
     private static <T> T anyValue(final BitGenerator generator, final Type<T> type) {
         final Class<?> genClass = generator.getClass();
         final Type<?> genType = Type.of(genClass);
-        Methods.publicGetters(genClass)
-               .filter(method -> type.boxed().isAssignableFrom(genType.returnTypeOf(method).boxed()))
-               .findAny()
-               .map(function(method -> method.invoke(generator)));
-        return null;
+        //noinspection unchecked
+        return (T) Methods.publicGetters(genClass)
+                          .filter(method -> type.boxed().isAssignableFrom(genType.returnTypeOf(method).boxed()))
+                          .findAny()
+                          .map(function(method -> method.invoke(generator)))
+                          .orElse(null);
     }
 }

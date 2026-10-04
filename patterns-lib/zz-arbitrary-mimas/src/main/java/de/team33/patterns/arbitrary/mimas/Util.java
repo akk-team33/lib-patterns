@@ -6,9 +6,8 @@ import java.util.stream.Collectors;
 
 final class Util {
 
-    static final String STD_CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ " +
-                                         "!#$§%&*+,.?@äöüÄÖÜß";
     static final long MAX_RETRY = 16;
+    static final int MAX_STRING_LENGTH = 25;
 
     private static final String NEWLINE = String.format("%n");
     private static final String NO_RESOURCE = "Should not happen:" +

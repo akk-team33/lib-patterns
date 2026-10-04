@@ -55,7 +55,7 @@ abstract class SingleSupport extends CoreSupport {
         if (thisParameter instanceof final WildcardSupport wildcard) {
             return wildcard.isAssignableFrom(otherParameter);
         } else {
-            return actualParameters().get(index).equals(otherParameter);
+            return thisParameter.equals(otherParameter);
         }
     }
 

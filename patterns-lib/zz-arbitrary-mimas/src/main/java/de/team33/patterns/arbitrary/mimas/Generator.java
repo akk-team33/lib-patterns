@@ -9,6 +9,8 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.arbitrary.mimas.Util.MAX_STRING_LENGTH;
+
 /**
  * Represents a basic arbitrary value generator that defines methods for primitive values as well as
  * values of some other basic types, including {@code enum} types, {@link String} and {@link BigInteger}.
@@ -21,6 +23,8 @@ import java.util.stream.Stream;
 @SuppressWarnings("ClassWithTooManyMethods")
 @FunctionalInterface
 public interface Generator extends BitGenerator {
+
+    String CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß";
 
     /**
      * @deprecated use {@link Basic} as basic implementation instead.
@@ -276,54 +280,110 @@ public interface Generator extends BitGenerator {
     /**
      * Returns a {@code char} value from a predefined character set.
      * <p>
-     * A typical implementation will return an arbitrary {@code char} value from the predefined character set,
+     * A typical implementation will return an arbitrary {@code char} value,
      * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)} and returns
-     * one of {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}.
+     * one of {@link #CHARACTERS}.
      */
     default char anyChar() {
-        return Generating.anyChar(this);
+        return Generating.anyChar(this, CHARACTERS);
     }
 
     /**
      * Returns a {@code char} value from the given <em>characters</em>.
      * <p>
-     * A typical implementation will return an arbitrary {@code char} value from the given <em>characters</em>,
+     * A typical implementation will return an arbitrary {@code char} value,
      * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
-     *
-     * @param characters A {@link String} made up of the characters that are a possible result.
      */
     default char anyChar(final String characters) {
         return Generating.anyChar(this, characters);
     }
 
     /**
-     * Returns a {@link String} with the given <em>length</em> made up from the given <em>characters</em>.
+     * Returns a {@link String} with a length between <em>minLength</em> and <em>maxLength</em> (both inclusive)
+     * consisting of the given <em>characters</em>.
      * <p>
-     * A typical implementation will return an arbitrary {@link String} value made up from the given
-     * <em>characters</em>, with each possible value being equally probable.
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      *
-     * @param length     The length of the resulting string.
-     * @param characters A string made up of the characters that make up a possible result.
+     * @throws IllegalArgumentException if not {@code zero} &lt;= <em>minLength</em> &lt;= <em>maxLength</em>
+     */
+    default String anyString(final int minLength, final int maxLength, final CharSequence characters) {
+        return Generating.anyString(this, minLength, maxLength, characters);
+    }
+
+    /**
+     * Returns a {@link String} with a length between <em>minLength</em> and <em>maxLength</em> (both inclusive)
+     * consisting of predefined {@link #CHARACTERS}.
+     * <p>
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     *
+     * @throws IllegalArgumentException if not {@code zero} &lt;= <em>minLength</em> &lt;= <em>maxLength</em>
+     */
+    default String anyString(final int minLength, final int maxLength) {
+        return Generating.anyString(this, minLength, maxLength, CHARACTERS);
+    }
+
+    /**
+     * Returns a {@link String} with a given <em>length</em> consisting of the given <em>characters</em>.
+     * <p>
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     *
+     * @throws IllegalArgumentException if not {@code zero} &lt;= <em>length</em>
      */
     default String anyString(final int length, final String characters) {
         return Generating.anyString(this, length, characters);
     }
 
     /**
-     * Returns a {@link String} with a <em>length</em> between 1 and 64 consisting from a predefined character set.
+     * Returns a {@link String} with a given <em>length</em> consisting of predefined {@link #CHARACTERS}.
      * <p>
-     * The default implementation depends on the implementation of {@link #anyBits(int)} and uses
-     * {@code "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß"}
-     * as predefined character set.
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     *
+     * @throws IllegalArgumentException if not {@code zero} &lt;= <em>length</em>
+     */
+    default String anyString(final int length) {
+        return Generating.anyString(this, length, CHARACTERS);
+    }
+
+    /**
+     * Returns a {@link String} with a length between {@code zero} and {@code 25} (both inclusive)
+     * consisting of the given <em>characters</em>.
+     * <p>
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
+     */
+    default String anyString(final String characters) {
+        return Generating.anyString(this, 0, MAX_STRING_LENGTH, characters);
+    }
+
+    /**
+     * Returns a {@link String} with a length between {@code zero} and {@code 25} (both inclusive)
+     * consisting of predefined {@link #CHARACTERS}.
+     * <p>
+     * A typical implementation will return an arbitrary {@link String} value,
+     * with each possible value being equally probable.
+     * <p>
+     * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default String anyString() {
-        return Generating.anyString(this);
+        return Generating.anyString(this, 0, MAX_STRING_LENGTH, CHARACTERS);
     }
 
     /**
