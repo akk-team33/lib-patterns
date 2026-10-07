@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public interface Generator extends BitGenerator {
 
     String CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß";
-    int MAX_STRING_LENGTH = 25;
+    int MAX_STRING_LENGTH = 32;
 
     /**
      * @deprecated use {@link Basic} as basic implementation instead.
@@ -386,9 +386,9 @@ public interface Generator extends BitGenerator {
     }
 
     /**
-     * Returns one of the given {@code values}.
+     * Returns one of the given <em>values</em>.
      * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds,
+     * A typical implementation will return an arbitrary value,
      * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
@@ -399,9 +399,9 @@ public interface Generator extends BitGenerator {
     }
 
     /**
-     * Returns one of the given {@code enum} {@code values}.
+     * Returns one of the {@code enum} {@link Class#getEnumConstants() values} of the given <em>enumClass</em>.
      * <p>
-     * A typical implementation will return an arbitrary value within the defined bounds,
+     * A typical implementation will return an arbitrary value,
      * with each possible value being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
@@ -432,9 +432,11 @@ public interface Generator extends BitGenerator {
      * </ol>
      * <p>
      * If, beyond this, no method could be uniquely determined, an arbitrary one is used.
+     * <p>
+     * <b>NOTE:</b> this method may not work properly if <em>this</em> {@link Generator} implementation is generic.
      */
     default Map<String, Object> anyDataSet(final Map<String, Type<?>> description) {
-        return Generating.anyDataSet(this, description);
+        return new DataSetup(this).generate(description);
     }
 
     /**

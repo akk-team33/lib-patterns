@@ -1,12 +1,18 @@
 package de.team33.patterns.arbitrary.mimas.publics;
 
-import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.arbitrary.mimas.sample.FixedGenerator;
+import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigInteger;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.team33.patterns.arbitrary.mimas.Generator.CHARACTERS;
 import static de.team33.patterns.arbitrary.mimas.Generator.MAX_STRING_LENGTH;
@@ -15,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SuppressWarnings("ClassWithTooManyMethods")
 class FixedGeneratorTest {
 
-    private final Generator generator = new FixedGenerator();
+    private final FixedGenerator generator = new FixedGenerator();
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1, 2, 3, 5, 8, 13, 30})
@@ -242,15 +248,38 @@ class FixedGeneratorTest {
     }
 
     @Test
-    void anyOf() {
+    final void anyOf() {
+        final String[] values = {"a", "b", "c"};
+        final String result = generator.anyOf(values);
+        assertTrue(List.of(values).contains(result));
     }
 
     @Test
-    void testAnyOf() {
+    final void anyOf_enum() {
+        final RoundingMode result = generator.anyOf(RoundingMode.class);
+        assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
     }
 
     @Test
-    void anyDataSet() {
+    final void anyDataSet() {
+        final Map<String, Type<?>> description = new HashMap<>() {{
+            put("index", Type.of(int.class));
+            put("longIndex", Type.of(Long.class));
+            put("name", Type.of(String.class));
+            put("title", Type.of(String.class));
+            put("subTitle", Type.of(CharSequence.class));
+            put("missing", Type.of(Instant.class));
+        }};
+
+        final Map<String, Object> result = generator.anyDataSet(description);
+        assertEquals(description.keySet(), result.keySet());
+
+        assertEquals(generator.anyInt(), result.get("index"));
+        assertEquals(generator.anyLong(), result.get("longIndex"));
+        assertEquals(generator.anyName(), result.get("name"));
+        assertEquals(generator.anyTitle(), result.get("title"));
+        assertEquals(generator.anyCharSequence(), result.get("subTitle"));
+        assertNull(result.get("missing"));
     }
 
     @Test

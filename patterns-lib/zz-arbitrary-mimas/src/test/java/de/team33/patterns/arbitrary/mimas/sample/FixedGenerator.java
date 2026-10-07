@@ -10,8 +10,20 @@ public class FixedGenerator implements Generator {
     private final BigInteger value = new BigInteger(256, new SecureRandom());
 
     @Override
-    public BigInteger anyBits(final int numBits) {
+    public final BigInteger anyBits(final int numBits) {
         final BigInteger mask = BigInteger.ONE.shiftLeft(numBits).subtract(BigInteger.ONE);
         return value.and(mask);
+    }
+
+    public final String anyName() {
+        return "name:" + anyString("abcdefghijklmnopqrstuvwxyz");
+    }
+
+    public final String anyTitle() {
+        return "title:" + anyString(5);
+    }
+
+    public final CharSequence anyCharSequence() {
+        return "charSequence:" + anyString(3);
     }
 }
