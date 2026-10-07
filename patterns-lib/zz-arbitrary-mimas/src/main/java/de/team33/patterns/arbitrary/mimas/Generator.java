@@ -9,8 +9,6 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static de.team33.patterns.arbitrary.mimas.Util.MAX_STRING_LENGTH;
-
 /**
  * Represents a basic arbitrary value generator that defines methods for primitive values as well as
  * values of some other basic types, including {@code enum} types, {@link String} and {@link BigInteger}.
@@ -25,6 +23,7 @@ import static de.team33.patterns.arbitrary.mimas.Util.MAX_STRING_LENGTH;
 public interface Generator extends BitGenerator {
 
     String CHARACTERS = "0123456789_abcdefghijklmnopqrstuvwxyz-ABCDEFGHIJKLMNOPQRSTUVWXYZ !#$§%&*+,.?@äöüÄÖÜß";
+    int MAX_STRING_LENGTH = 25;
 
     /**
      * @deprecated use {@link Basic} as basic implementation instead.
@@ -307,7 +306,7 @@ public interface Generator extends BitGenerator {
      * consisting of the given <em>characters</em>.
      * <p>
      * A typical implementation will return an arbitrary {@link String} value,
-     * with each possible value being equally probable.
+     * with each possible length being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      *
@@ -322,7 +321,7 @@ public interface Generator extends BitGenerator {
      * consisting of predefined {@link #CHARACTERS}.
      * <p>
      * A typical implementation will return an arbitrary {@link String} value,
-     * with each possible value being equally probable.
+     * with each possible length being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      *
@@ -361,11 +360,11 @@ public interface Generator extends BitGenerator {
     }
 
     /**
-     * Returns a {@link String} with a length between {@code zero} and {@code 25} (both inclusive)
+     * Returns a {@link String} with a length between {@code zero} and {@link #MAX_STRING_LENGTH} (both inclusive)
      * consisting of the given <em>characters</em>.
      * <p>
      * A typical implementation will return an arbitrary {@link String} value,
-     * with each possible value being equally probable.
+     * with each possible length being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
@@ -374,11 +373,11 @@ public interface Generator extends BitGenerator {
     }
 
     /**
-     * Returns a {@link String} with a length between {@code zero} and {@code 25} (both inclusive)
+     * Returns a {@link String} with a length between {@code zero} and {@link #MAX_STRING_LENGTH} (both inclusive)
      * consisting of predefined {@link #CHARACTERS}.
      * <p>
      * A typical implementation will return an arbitrary {@link String} value,
-     * with each possible value being equally probable.
+     * with each possible length being equally probable.
      * <p>
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */

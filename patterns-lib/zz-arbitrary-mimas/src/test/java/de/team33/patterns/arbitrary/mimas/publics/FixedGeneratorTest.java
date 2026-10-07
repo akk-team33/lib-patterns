@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigInteger;
 
 import static de.team33.patterns.arbitrary.mimas.Generator.CHARACTERS;
+import static de.team33.patterns.arbitrary.mimas.Generator.MAX_STRING_LENGTH;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("ClassWithTooManyMethods")
@@ -176,16 +177,68 @@ class FixedGeneratorTest {
 
     @Test
     final void anyString() {
-        final var result = generator.anyString();
-        assertFalse(result.isEmpty());
-        assertFalse(64 < result.length());
+        final String result = generator.anyString();
+        assertFalse(MAX_STRING_LENGTH < result.length());
         for (int index = 0; index < result.length(); ++index) {
             assertFalse(0 > CHARACTERS.indexOf(result.charAt(index)));
         }
     }
 
     @Test
-    void testAnyString() {
+    final void anyString_length() {
+        final int length = 13;
+        final String result = generator.anyString(length);
+        assertEquals(length, result.length());
+        for (int index = 0; index < result.length(); ++index) {
+            assertFalse(0 > CHARACTERS.indexOf(result.charAt(index)));
+        }
+    }
+
+    @Test
+    final void anyString_range() {
+        final String characters = "abc-123";
+        final int min = 5;
+        final int max = 13;
+        final String result = generator.anyString(min, max, characters);
+        assertFalse(min > result.length());
+        assertFalse(max < result.length());
+        for (int index = 0; index < result.length(); ++index) {
+            assertFalse(0 > CHARACTERS.indexOf(result.charAt(index)));
+        }
+    }
+
+    @Test
+    final void anyString_of() {
+        final String characters = "abc-123";
+        final String result = generator.anyString(characters);
+        assertFalse(MAX_STRING_LENGTH < result.length());
+        for (int index = 0; index < result.length(); ++index) {
+            assertFalse(0 > characters.indexOf(result.charAt(index)));
+        }
+    }
+
+    @Test
+    final void anyString_length_of() {
+        final String characters = "abc-123";
+        final int length = 17;
+        final String result = generator.anyString(length, characters);
+        assertEquals(length, result.length());
+        for (int index = 0; index < result.length(); ++index) {
+            assertFalse(0 > characters.indexOf(result.charAt(index)));
+        }
+    }
+
+    @Test
+    final void anyString_range_of() {
+        final String characters = "abc-123";
+        final int min = 3;
+        final int max = 7;
+        final String result = generator.anyString(min, max, characters);
+        assertFalse(min > result.length());
+        assertFalse(max < result.length());
+        for (int index = 0; index < result.length(); ++index) {
+            assertFalse(0 > characters.indexOf(result.charAt(index)));
+        }
     }
 
     @Test
