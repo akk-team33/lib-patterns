@@ -17,11 +17,12 @@ import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 class GeneratorTest {
 
     @Test
     final void simple() {
-        final Generator generator = Generator.by(new SecureRandom());
+        final Generator generator = new Generator.Basic(new SecureRandom());
         assertInstanceOf(Generator.class, generator);
         assertInstanceOf(Boolean.class, generator.anyBoolean());
         assertInstanceOf(Byte.class, generator.anyByte());
@@ -318,7 +319,7 @@ class GeneratorTest {
 
     @Test
     final void nullable_1() {
-        final String result = Generator.byDefault().nullable(1, Generator::anyString);
+        final String result = new Generator.Basic().nullable(1, Generator::anyString);
         assertNull(result);
     }
 
@@ -330,7 +331,7 @@ class GeneratorTest {
             put("index", Type.of(int.class));
             put("birth", Type.of(Instant.class));
         }};
-        final Map<String, Object> result = Generator.byDefault().anyDataSet(description);
+        final Map<String, Object> result = new Generator.Basic().anyDataSet(description);
         assertTrue(result.containsKey("firstName"));
         assertTrue(result.containsKey("lastName"));
         assertTrue(result.containsKey("index"));
@@ -342,21 +343,21 @@ class GeneratorTest {
         final int magic = 89;
         final int limit = magic * 1_000;
         final double expected = (1.0 * limit) / magic;
-        final double count = Generator.byDefault()
-                                      .stream(generator -> generator.nullable(magic, Generator::anyByte))
-                                      .limit(limit)
-                                      .filter(Objects::isNull)
-                                      .count();
+        final double count = new Generator.Basic()
+                .stream(generator -> generator.nullable(magic, Generator::anyByte))
+                .limit(limit)
+                .filter(Objects::isNull)
+                .count();
         final double delta = count - expected;
         assertEquals(0.0, delta, 80.0);
     }
 
     @Test
     final void stream() {
-        final List<Byte> result = Generator.byDefault()
-                                           .stream(Generator::anyByte)
-                                           .limit(256)
-                                           .toList();
+        final List<Byte> result = new Generator.Basic()
+                .stream(Generator::anyByte)
+                .limit(256)
+                .toList();
         assertEquals(256, result.size());
     }
 
@@ -375,7 +376,7 @@ class GeneratorTest {
         @SuppressWarnings("removal")
         RANDOM(Generator.of(new SecureRandom())),
 
-        SECURE_RANDOM(Generator.by(new SecureRandom()));
+        SECURE_RANDOM(new Generator.Basic(new SecureRandom()));
 
         final Generator generator;
         final Boolean expBoolean;

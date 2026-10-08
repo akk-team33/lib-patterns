@@ -5,11 +5,10 @@ import java.util.function.ObjIntConsumer;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-@SuppressWarnings("ClassWithTooManyMethods")
 final class Generating {
 
-    private static final int FLOAT_RESOLUTION = Float.SIZE - 8;
-    private static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
+    static final int FLOAT_RESOLUTION = Float.SIZE - 8;
+    static final int DOUBLE_RESOLUTION = Double.SIZE - 11;
     private static final int DEFAULT_BOUND_BITS = 16;
 
     private Generating() {
@@ -30,60 +29,12 @@ final class Generating {
         return (sb, index) -> sb.append(characters.charAt(index));
     }
 
-    static boolean anyBoolean(final BitGenerator generator) {
-        return generator.anyBits(1).equals(BigInteger.ONE);
-    }
-
-    static byte anyByte(final BitGenerator generator) {
-        return generator.anyBits(Byte.SIZE).byteValue();
-    }
-
-    static short anyShort(final BitGenerator generator) {
-        return generator.anyBits(Short.SIZE).shortValue();
-    }
-
-    static int anyInt(final BitGenerator generator) {
-        return generator.anyBits(Integer.SIZE).intValue();
-    }
-
     static int anyInt(final BitGenerator generator, final int bound) {
         return anyBigInteger(generator, BigInteger.valueOf(bound)).intValue();
     }
 
     static int anyInt(final BitGenerator generator, final int min, final int bound) {
         return anyBigInteger(generator, BigInteger.valueOf(min), BigInteger.valueOf(bound)).intValue();
-    }
-
-    static int anySmallInt(final BitGenerator generator, final int bound) {
-        return anySmallBigInteger(generator, BigInteger.valueOf(bound)).intValue();
-    }
-
-    static long anyLong(final BitGenerator generator) {
-        return generator.anyBits(Long.SIZE).longValue();
-    }
-
-    static long anyLong(final BitGenerator generator, final long bound) {
-        return anyBigInteger(generator, BigInteger.valueOf(bound)).longValue();
-    }
-
-    static long anyLong(final BitGenerator generator, final long min, final long bound) {
-        return anyBigInteger(generator, BigInteger.valueOf(min), BigInteger.valueOf(bound)).longValue();
-    }
-
-    static float anyFloat(final BitGenerator generator) {
-        final float numerator = generator.anyBits(FLOAT_RESOLUTION).floatValue();
-        final float denominator = BigInteger.ONE.shiftLeft(FLOAT_RESOLUTION).floatValue();
-        return numerator / denominator;
-    }
-
-    static double anyDouble(final BitGenerator generator) {
-        final double numerator = generator.anyBits(DOUBLE_RESOLUTION).doubleValue();
-        final double denominator = BigInteger.ONE.shiftLeft(DOUBLE_RESOLUTION).doubleValue();
-        return numerator / denominator;
-    }
-
-    static BigInteger anyBigInteger(final BitGenerator generator) {
-        return BigInteger.valueOf(anyLong(generator));
     }
 
     static BigInteger anyBigInteger(final BitGenerator generator, final BigInteger bound) {

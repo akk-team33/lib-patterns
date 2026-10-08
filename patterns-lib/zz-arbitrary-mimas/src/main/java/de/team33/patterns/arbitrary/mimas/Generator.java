@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static de.team33.patterns.arbitrary.mimas.Generating.DOUBLE_RESOLUTION;
+import static de.team33.patterns.arbitrary.mimas.Generating.FLOAT_RESOLUTION;
+
 /**
  * Represents a basic arbitrary value generator that defines methods for primitive values as well as
  * values of some other basic types, including {@code enum} types, {@link String} and {@link BigInteger}.
@@ -29,33 +32,18 @@ public interface Generator extends BitGenerator {
     /**
      * @deprecated use {@link Basic} as basic implementation instead.
      */
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Deprecated(forRemoval = true)
     static BigInteger anyBits(final int numBits, final Random random) {
         return new BigInteger(numBits, random);
     }
 
     /**
-     * @deprecated use {@link #by(Random)} instead.
+     * @deprecated use {@link Basic#Basic(Random)} instead.
      */
     @Deprecated(forRemoval = true)
     static Generator of(final Random random) {
-        return by(random);
-    }
-
-    /**
-     * <b>Utility method:</b>
-     * Returns a new instance backed by a given {@link Random}.
-     */
-    static Generator by(final Random random) {
         return new Basic(random);
-    }
-
-    /**
-     * <b>Utility method:</b>
-     * Returns a new instance backed by a new {@link SecureRandom}.
-     */
-    static Generator byDefault() {
-        return new Basic();
     }
 
     /**
@@ -66,7 +54,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default boolean anyBoolean() {
-        return Generating.anyBoolean(this);
+        return anyBits(1).equals(BigInteger.ONE);
     }
 
     /**
@@ -78,7 +66,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default byte anyByte() {
-        return Generating.anyByte(this);
+        return anyBits(Byte.SIZE).byteValue();
     }
 
     /**
@@ -90,7 +78,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default short anyShort() {
-        return Generating.anyShort(this);
+        return anyBits(Short.SIZE).shortValue();
     }
 
     /**
@@ -102,7 +90,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default int anyInt() {
-        return Generating.anyInt(this);
+        return anyBits(Integer.SIZE).intValue();
     }
 
     /**
@@ -144,7 +132,7 @@ public interface Generator extends BitGenerator {
      * @throws IllegalArgumentException if not {@code zero} &lt; <em>bound</em>
      */
     default int anySmallInt(final int bound) {
-        return Generating.anySmallInt(this, bound);
+        return Generating.anySmallBigInteger(this, BigInteger.valueOf(bound)).intValue();
     }
 
     /**
@@ -156,7 +144,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default long anyLong() {
-        return Generating.anyLong(this);
+        return anyBits(Long.SIZE).longValue();
     }
 
     /**
@@ -170,7 +158,7 @@ public interface Generator extends BitGenerator {
      * @throws IllegalArgumentException if not {@code zero} &lt; <em>bound</em>
      */
     default long anyLong(final long bound) {
-        return Generating.anyLong(this, bound);
+        return Generating.anyBigInteger(this, BigInteger.valueOf(bound)).longValue();
     }
 
     /**
@@ -184,7 +172,7 @@ public interface Generator extends BitGenerator {
      * @throws IllegalArgumentException if not <em>min</em> &lt; <em>bound</em>
      */
     default long anyLong(final long min, final long bound) {
-        return Generating.anyLong(this, min, bound);
+        return Generating.anyBigInteger(this, BigInteger.valueOf(min), BigInteger.valueOf(bound)).longValue();
     }
 
     /**
@@ -196,7 +184,9 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default float anyFloat() {
-        return Generating.anyFloat(this);
+        final float numerator = anyBits(FLOAT_RESOLUTION).floatValue();
+        final float denominator = BigInteger.ONE.shiftLeft(FLOAT_RESOLUTION).floatValue();
+        return numerator / denominator;
     }
 
     /**
@@ -208,7 +198,9 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default double anyDouble() {
-        return Generating.anyDouble(this);
+        final double numerator = anyBits(DOUBLE_RESOLUTION).doubleValue();
+        final double denominator = BigInteger.ONE.shiftLeft(DOUBLE_RESOLUTION).doubleValue();
+        return numerator / denominator;
     }
 
     /**
@@ -220,7 +212,7 @@ public interface Generator extends BitGenerator {
      * The default implementation depends on the implementation of {@link #anyBits(int)}.
      */
     default BigInteger anyBigInteger() {
-        return Generating.anyBigInteger(this);
+        return BigInteger.valueOf(anyBits(Long.SIZE).longValue());
     }
 
     /**
@@ -510,6 +502,7 @@ public interface Generator extends BitGenerator {
         /**
          * Creates an instance backed by a given {@link Random}.
          */
+        @SuppressWarnings("WeakerAccess")
         public Basic(final Random random) {
             this.random = random;
         }
