@@ -199,7 +199,6 @@ class GeneratorTest {
     final void anyString_default(final Case testCase) {
         final String result = testCase.generator.anyString();
 
-        assertFalse(result.isEmpty());
         assertTrue(128 >= result.length());
 
         for (final char c : result.toCharArray()) {

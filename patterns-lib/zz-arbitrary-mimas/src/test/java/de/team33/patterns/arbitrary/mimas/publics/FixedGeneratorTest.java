@@ -9,10 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static de.team33.patterns.arbitrary.mimas.Generator.CHARACTERS;
 import static de.team33.patterns.arbitrary.mimas.Generator.MAX_STRING_LENGTH;
@@ -283,10 +280,20 @@ class FixedGeneratorTest {
     }
 
     @Test
-    void anyNullable() {
+    final void anyNullable_1() {
+        final String result = generator.anyNullable(1, FixedGenerator::anyName);
+        assertNull(result);
     }
 
     @Test
-    void stream() {
+    final void anyOptional_1() {
+        final Optional<String> result = generator.anyOptional(1, FixedGenerator::anyName);
+        assertEquals(Optional.empty(), result);
+    }
+
+    @Test
+    final void stream() {
+        final List<String> result = generator.stream(FixedGenerator::anyName).limit(3).toList();
+        assertEquals(3, result.size());
     }
 }
