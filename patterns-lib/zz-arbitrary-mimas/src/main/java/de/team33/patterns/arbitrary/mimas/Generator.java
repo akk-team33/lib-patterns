@@ -454,7 +454,7 @@ public interface Generator extends BitGenerator {
      * @throws IllegalArgumentException if not {@code zero} &lt; <em>possibilities</em>
      */
     @SuppressWarnings({"unchecked", "ReturnOfNull"})
-    default <E, G extends Generator> E anyNullable(final int possibilities, final Function<? super G, E> method) {
+    default <E, G extends Generator> E nullable(final int possibilities, final Function<? super G, E> method) {
         return (0 == anyInt(possibilities)) ? null : method.apply((G) this);
     }
 
@@ -473,8 +473,8 @@ public interface Generator extends BitGenerator {
      * @throws IllegalArgumentException if not {@code zero} &lt; <em>possibilities</em>
      */
     @SuppressWarnings("unchecked")
-    default <E, G extends Generator> Optional<E> anyOptional(final int possibilities,
-                                                             final Function<? super G, ? extends E> method) {
+    default <E, G extends Generator> Optional<E> optional(final int possibilities,
+                                                          final Function<? super G, ? extends E> method) {
         return Stream.generate(() -> (E) method.apply((G) this))
                      .limit(anyInt(possibilities))
                      .findAny();

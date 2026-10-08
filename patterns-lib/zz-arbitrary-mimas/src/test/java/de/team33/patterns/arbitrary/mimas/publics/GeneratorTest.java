@@ -317,8 +317,8 @@ class GeneratorTest {
     }
 
     @Test
-    final void anyNullable_1() {
-        final String result = Generator.byDefault().anyNullable(1, Generator::anyString);
+    final void nullable_1() {
+        final String result = Generator.byDefault().nullable(1, Generator::anyString);
         assertNull(result);
     }
 
@@ -338,12 +338,12 @@ class GeneratorTest {
     }
 
     @Test
-    final void anyNullable_89() {
+    final void nullable_89() {
         final int magic = 89;
         final int limit = magic * 1_000;
         final double expected = (1.0 * limit) / magic;
         final double count = Generator.byDefault()
-                                      .stream(generator -> generator.anyNullable(magic, Generator::anyByte))
+                                      .stream(generator -> generator.nullable(magic, Generator::anyByte))
                                       .limit(limit)
                                       .filter(Objects::isNull)
                                       .count();
