@@ -158,10 +158,9 @@ abstract class GeneratorTestBase<G extends Generator> {
 
     @Test
     final void anyString_range() {
-        final String characters = "abc-123";
         final int min = 5;
         final int max = 13;
-        final String result = generator.anyString(min, max, characters);
+        final String result = generator.anyString(min, max);
         assertFalse(min > result.length());
         assertFalse(max < result.length());
         for (int index = 0; index < result.length(); ++index) {
