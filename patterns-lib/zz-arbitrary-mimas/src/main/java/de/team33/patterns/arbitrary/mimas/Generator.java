@@ -33,7 +33,7 @@ public interface Generator extends BitGenerator {
      * @deprecated use {@link Basic} as basic implementation instead.
      */
     @SuppressWarnings("DeprecatedIsStillUsed")
-    @Deprecated(forRemoval = true)
+    @Deprecated
     static BigInteger anyBits(final int numBits, final Random random) {
         return new BigInteger(numBits, random);
     }
@@ -41,7 +41,7 @@ public interface Generator extends BitGenerator {
     /**
      * @deprecated use {@link Basic#Basic(Random)} instead.
      */
-    @Deprecated(forRemoval = true)
+    @Deprecated
     static Generator of(final Random random) {
         return new Basic(random);
     }
@@ -404,13 +404,13 @@ public interface Generator extends BitGenerator {
     }
 
     /**
-     * Returns a {@link Map} representing a data set based on a given data set <em>description</em>.
+     * Returns a {@link Map} representing a dataset based on a given dataset <em>description</em>.
      * <p>
      * A typical implementation proceeds as follows:
      * <p>
      * For each entry in the <em>description</em>, <em>this</em> generator is searched for a public,
-     * parameterless instance method capable of returning a value that is compatible with the required type.
-     * Object specific methods like toString() or hashCode() are ignored.
+     * parameterless instance method whose name starts with "any" and which can return a value compatible with
+     * the required type.
      * An entry in the resulting map is then formed from the description's key and the value returned by the method.
      * If no suitable method is found, the corresponding value in the result is {@code null}.
      * <p>
@@ -419,7 +419,6 @@ public interface Generator extends BitGenerator {
      *     <li>If "name" is the key of the description entry, a method named "anyName" is preferred.</li>
      *     <li>If {@code Type.of(String.class)} is the type of the description entry,
      *     a method named "anyString" is preferred.</li>
-     *     <li>A method whose name starts with "any" is preferred.</li>
      *     <li>If {@code Type.of(CharSequence.class)} is the type of the description entry,
      *     a method whose result is exactly of type {@code CharSequence} is preferred.</li>
      * </ol>
@@ -428,7 +427,7 @@ public interface Generator extends BitGenerator {
      * <p>
      * <b>NOTE:</b> this method may not work properly if <em>this</em> {@link Generator} implementation is generic.
      */
-    default Map<String, Object> anyDataSet(final Map<String, Type<?>> description) {
+    default Map<String, Object> anyDataset(final Map<String, Type<?>> description) {
         return new DataSetup(this).generate(description);
     }
 

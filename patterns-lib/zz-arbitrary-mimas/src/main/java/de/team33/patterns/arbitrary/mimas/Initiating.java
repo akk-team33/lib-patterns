@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
+@Deprecated
 final class Initiating<S extends Initiator, T> extends Supplying<S> {
 
     private static final String NO_SUPPLIER = Util.load(Initiating.class, "noSupplierMethodFound4Parameter.txt");
@@ -76,6 +77,7 @@ final class Initiating<S extends Initiator, T> extends Supplying<S> {
         }
     }
 
+    @Deprecated
     private static final class LocalException extends UnfitConditionException {
 
         LocalException(final String message, final Throwable cause) {

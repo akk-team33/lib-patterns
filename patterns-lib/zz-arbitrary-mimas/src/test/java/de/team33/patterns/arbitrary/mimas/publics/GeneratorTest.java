@@ -324,14 +324,14 @@ class GeneratorTest {
     }
 
     @Test
-    final void anyDataSet() {
+    final void anyDataset() {
         final Map<String, Type<?>> description = new TreeMap<>() {{
             put("firstName", Type.of(String.class));
             put("lastName", Type.of(String.class));
             put("index", Type.of(int.class));
             put("birth", Type.of(Instant.class));
         }};
-        final Map<String, Object> result = new Generator.Basic().anyDataSet(description);
+        final Map<String, Object> result = new Generator.Basic().anyDataset(description);
         assertTrue(result.containsKey("firstName"));
         assertTrue(result.containsKey("lastName"));
         assertTrue(result.containsKey("index"));
@@ -373,7 +373,7 @@ class GeneratorTest {
         FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE),
                   true, -1, -1, -1, -1),
 
-        @SuppressWarnings("removal")
+        @SuppressWarnings("deprecation")
         RANDOM(Generator.of(new SecureRandom())),
 
         SECURE_RANDOM(new Generator.Basic(new SecureRandom()));

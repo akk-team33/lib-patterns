@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("PackageVisibleField")
+@Deprecated
 class Supplying<S> {
 
     private static final Map<Class<?>, List<Method>> SUPPLIERS = new ConcurrentHashMap<>(0);

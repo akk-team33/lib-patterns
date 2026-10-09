@@ -15,6 +15,7 @@ final class Util {
     private Util() {
     }
 
+    @Deprecated
     static String load(final Class<?> context, final String resource) {
         try (final InputStream in = context.getResourceAsStream(resource)) {
             return load(in);

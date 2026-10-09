@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public final class Buildable {
 
     private final String stringValue;
@@ -20,6 +21,7 @@ public final class Buildable {
         longList = new ArrayList<>(builder.longList);
     }
 
+    @SuppressWarnings("StaticMethodOnlyUsedInOneClass")
     public static Builder builder() {
         return new Builder();
     }
@@ -40,11 +42,13 @@ public final class Buildable {
 
     @Override
     public final boolean equals(final Object obj) {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return (this == obj) || ((obj instanceof final Buildable other) && asList(this).equals(asList(other)));
     }
 
     @Override
     public final int hashCode() {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return asList(this).hashCode();
     }
 

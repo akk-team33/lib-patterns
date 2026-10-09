@@ -18,16 +18,12 @@
     </description>
 
     <properties>
-        <skipJavadoc>true</skipJavadoc>
+        <skipJavadoc>false</skipJavadoc>
         <skipHome>true</skipHome>
         <skipGPG>true</skipGPG>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-dione</artifactId>
-        </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
             <artifactId>typing-proteus</artifactId>

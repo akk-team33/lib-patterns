@@ -66,7 +66,7 @@ class FixedGeneratorTest extends GeneratorTestBase<FixedGenerator> {
     }
 
     @Test
-    final void anyDataSet_predictable() {
+    final void anyDataset_predictable() {
         final Map<String, Type<?>> description = new HashMap<>() {{
             put("index", Type.of(int.class));
             put("longIndex", Type.of(Long.class));
@@ -76,7 +76,7 @@ class FixedGeneratorTest extends GeneratorTestBase<FixedGenerator> {
             put("missing", Type.of(Instant.class));
         }};
 
-        final Map<String, Object> result = generator().anyDataSet(description);
+        final Map<String, Object> result = generator().anyDataset(description);
         assertEquals(description.keySet(), result.keySet());
 
         assertEquals(generator().anyInt(), result.get("index"));

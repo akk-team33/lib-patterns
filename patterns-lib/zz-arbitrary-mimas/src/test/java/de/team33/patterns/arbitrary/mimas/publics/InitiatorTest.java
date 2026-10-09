@@ -10,6 +10,8 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("unused")
+@Deprecated
 public class InitiatorTest implements Initiator {
 
     private final Record expected = new Record(true,

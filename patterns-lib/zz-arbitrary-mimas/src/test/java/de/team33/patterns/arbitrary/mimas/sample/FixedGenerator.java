@@ -7,7 +7,7 @@ import java.security.SecureRandom;
 
 public class FixedGenerator implements Generator {
 
-    @SuppressWarnings("removal")
+    @SuppressWarnings("deprecation")
     private final BigInteger value = Generator.anyBits(256, new SecureRandom());
 
     @Override

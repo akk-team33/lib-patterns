@@ -13,6 +13,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Deprecated
 class SupplierNotApplicableTest extends Random implements Generator, Charger, Initiator {
 
     @Test

@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import static java.lang.String.format;
 
+@Deprecated
 final class Charging<S extends Charger, T> extends Supplying<S> {
 
     private static final String METHOD_NOT_APPLICABLE = Util.load(Charging.class, "setterMethodNotApplicable.txt");
@@ -78,6 +79,7 @@ final class Charging<S extends Charger, T> extends Supplying<S> {
         }
     }
 
+    @Deprecated
     private static final class LocalException extends UnfitConditionException {
 
         LocalException(final String message, final Throwable cause) {

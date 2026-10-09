@@ -2,15 +2,16 @@ package de.team33.patterns.arbitrary.mimas;
 
 import de.team33.patterns.typing.proteus.Type;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.BinaryOperator;
 
-import static de.team33.patterns.exceptional.dione.Conversion.function;
-
 class DataSetup {
+
+    private static final String ANY = "any";
 
     private final BitGenerator generator;
     private final Type<?> genType;
@@ -32,24 +33,34 @@ class DataSetup {
         return new AbstractMap.SimpleEntry<>(entry.getKey(), generate(entry.getValue(), new Priority(entry)));
     }
 
+    private static Object invoke(final Method method, final BitGenerator generator) {
+        try {
+            return method.invoke(generator);
+        } catch (final IllegalAccessException | InvocationTargetException e) {
+            throw new IllegalStateException(("Method not applicable: %n%n" +
+                                             "    %s%n").formatted(method), e);
+        }
+    }
+
     private Object generate(final Type<?> type, final BinaryOperator<Method> priority) {
         return Methods.publicGetters(genType.core())
+                      .filter(method -> method.getName().startsWith(ANY))
                       .filter(method -> type.boxed().isAssignableFrom(genType.returnTypeOf(method).boxed()))
                       .reduce(priority)
-                      .map(function(method -> method.invoke(generator)))
+                      .map(method -> invoke(method, generator))
                       .orElse(null);
     }
 
     private final class Priority implements BinaryOperator<Method> {
 
-        private static final String ANY = "any";
-
-        private final String name;
         private final Type<?> type;
+        private final String nameByName;
+        private final String nameByType;
 
         private Priority(final Map.Entry<String, Type<?>> entry) {
-            this.name = entry.getKey();
             this.type = entry.getValue();
+            this.nameByName = ANY + firstToUpper(entry.getKey());
+            this.nameByType = ANY + firstToUpper(type.core().getSimpleName());
         }
 
         private static String firstToUpper(final String name) {
@@ -59,7 +70,6 @@ class DataSetup {
         @SuppressWarnings("MethodWithMultipleReturnPoints")
         @Override
         public final Method apply(final Method left, final Method right) {
-            final String nameByName = ANY + firstToUpper(name);
             final String leftName = left.getName();
             if (leftName.equals(nameByName)) {
                 return left;
@@ -69,18 +79,10 @@ class DataSetup {
                 return right;
             }
 
-            final String nameByType = ANY + firstToUpper(type.core().getSimpleName());
             if (leftName.equals(nameByType)) {
                 return left;
             }
             if (rightName.equals(nameByType)) {
-                return right;
-            }
-
-            if (leftName.startsWith(ANY)) {
-                return left;
-            }
-            if (rightName.startsWith(ANY)) {
                 return right;
             }
 

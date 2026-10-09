@@ -216,7 +216,7 @@ abstract class GeneratorTestBase<G extends Generator> {
     }
 
     @Test
-    final void anyDataSet() {
+    final void anyDataset() {
         final Map<String, Type<?>> description = new HashMap<>() {{
             put("index", Type.of(int.class));
             put("longIndex", Type.of(Long.class));
@@ -226,7 +226,7 @@ abstract class GeneratorTestBase<G extends Generator> {
             put("missing", Type.of(Instant.class));
         }};
 
-        final Map<String, Object> result = generator.anyDataSet(description);
+        final Map<String, Object> result = generator.anyDataset(description);
         assertEquals(description.keySet(), result.keySet());
     }
 
