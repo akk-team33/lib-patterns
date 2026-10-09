@@ -106,7 +106,12 @@ Java 17 or later
 * Added module predicates-aletheia
 * Drafts:
   * Module zz-arbitrary-mimas
-    * ☐ Added method Generator.anyMap(Map)
+    * Added class Generator.Basic
+    * Added method Generator.anyDataset(Map)
+    * Marked as deprecated:
+      * Charger
+      * Initiator
+      * UnfitConditionException
   * Added module zz-predicates-aletheia
     * Added drafts: and (), or ()
   * Module zz-conzept-alpha
