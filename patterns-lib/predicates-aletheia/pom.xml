@@ -15,4 +15,10 @@
     <name>Team33 Predicates Library - Edition "aletheia"</name>
     <description>Provides Predicates for special cases.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>value-sinope</artifactId>
+        </dependency>
+    </dependencies>
 </project>
