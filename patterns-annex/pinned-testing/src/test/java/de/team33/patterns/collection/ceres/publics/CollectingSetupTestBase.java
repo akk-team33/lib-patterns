@@ -101,7 +101,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(expected, result);
     }
 
-    @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+    @SuppressWarnings("Convert2MethodRef")
     @Test
     final void removeAll() {
         final List<String> original = SUPPLY.anyStringList(36);
@@ -170,7 +170,7 @@ abstract class CollectingSetupTestBase<S extends Collecting.Setup<String, List<S
         assertEquals(expected, result);
     }
 
-    @SuppressWarnings({"Convert2MethodRef", "FunctionalExpressionCanBeFolded"})
+    @SuppressWarnings("Convert2MethodRef")
     @Test
     final void retainAll() {
         final List<String> original = SUPPLY.anyStringList(36);

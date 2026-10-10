@@ -31,7 +31,6 @@ Java 17 or later
   * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
   * zz-math-my (Team33 Math Library - Edition "my")
-  * zz-predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
 
 ### Still Featured
 
@@ -115,8 +114,6 @@ Java 17 or later
 * Added module predicates-aletheia
 * Drafts:
   * Removed module zz-arbitrary-mimas
-  * Added module zz-predicates-aletheia
-    * Added drafts: and (), or ()
   * Module zz-conzept-alpha
     * Removed package functions.alpha
 
