@@ -16,6 +16,7 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
+  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
@@ -26,7 +27,6 @@ Java 17 or later
 
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
-  * zz-arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
@@ -36,7 +36,6 @@ Java 17 or later
 ### Still Featured
 
 * (patterns-lib - previous releases)
-  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.8.1
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.10.2
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
@@ -90,8 +89,11 @@ Java 17 or later
 
 * ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module typing-proteus to 2.11.0-SNAPSHOT (still featured)
+* ☐ Pinned module arbitrary-mimas to 2.11.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
+* ☐ Module arbitrary-mimas:
+  * ☐ Removed deprecated items
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
@@ -103,15 +105,16 @@ Java 17 or later
 * Unpinned module typing-proteus
   * Updated dependencies
   * Added method Type.isAssignableFrom (Type)
+* Unpinned module arbitrary-mimas
+  * Added class Generator.Basic
+  * Added method Generator.anyDataset(Map)
+  * Marked as deprecated:
+    * Charger
+    * Initiator
+    * UnfitConditionException
 * Added module predicates-aletheia
 * Drafts:
-  * Module zz-arbitrary-mimas
-    * Added class Generator.Basic
-    * Added method Generator.anyDataset(Map)
-    * Marked as deprecated:
-      * Charger
-      * Initiator
-      * UnfitConditionException
+  * Removed module zz-arbitrary-mimas
   * Added module zz-predicates-aletheia
     * Added drafts: and (), or ()
   * Module zz-conzept-alpha

@@ -13,6 +13,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("unused")
+@Deprecated
 public class ChargerTest implements Charger {
 
     private final Sample sample = new Sample().setBooleanValue(false)
@@ -107,7 +108,7 @@ public class ChargerTest implements Charger {
         return sample.getLongList();
     }
 
-    @SuppressWarnings("UseOfObsoleteDateTimeApi")
+    @SuppressWarnings({"UseOfObsoleteDateTimeApi", "MethodMayBeStatic"})
     public final Date anyDate() {
         return new Date();
     }

@@ -68,7 +68,6 @@
                         <artifact>pwgen-main</artifact>
 
                         <!-- draft -->
-                        <artifact>zz-arbitrary-mimas</artifact>
                         <artifact>zz-arbitrary-tyche</artifact>
                         <artifact>zz-concept-alpha</artifact>
                         <artifact>zz-config-eunomia</artifact>

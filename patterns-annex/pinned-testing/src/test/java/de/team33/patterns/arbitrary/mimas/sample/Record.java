@@ -2,7 +2,7 @@ package de.team33.patterns.arbitrary.mimas.sample;
 
 import java.util.List;
 
-@SuppressWarnings({"unused", "BooleanParameter", "ConstructorWithTooManyParameters", "AssignmentToNull"})
+@SuppressWarnings({"unused", "BooleanParameter", "ConstructorWithTooManyParameters", "AssignmentToNull", "WeakerAccess"})
 public class Record {
 
     private final boolean booleanValue;
@@ -12,7 +12,6 @@ public class Record {
     private final List<String> stringList;
     private final List<Long> longList;
 
-    @SuppressWarnings("TypeMayBeWeakened")
     public Record(final boolean booleanValue, final String stringValue, final int intValue, final Long longValue,
                   final List<String> stringList, final List<Long> longList) {
         this.booleanValue = booleanValue;
@@ -59,11 +58,13 @@ public class Record {
 
     @Override
     public final boolean equals(final Object obj) {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return (this == obj) || ((obj instanceof Record) && toList().equals(((Record) obj).toList()));
     }
 
     @Override
     public final int hashCode() {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return toList().hashCode();
     }
 

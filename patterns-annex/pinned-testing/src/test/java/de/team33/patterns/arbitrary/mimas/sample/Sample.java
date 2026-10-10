@@ -40,11 +40,13 @@ public class Sample {
 
     @Override
     public final boolean equals(final Object obj) {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return (this == obj) || ((obj instanceof final Sample other) && asList(this).equals(asList(other)));
     }
 
     @Override
     public final int hashCode() {
+        //noinspection ObjectInstantiationInEqualsHashCode
         return asList(this).hashCode();
     }
 

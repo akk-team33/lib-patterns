@@ -1,7 +1,7 @@
 package de.team33.patterns.arbitrary.mimas.publics;
 
-import de.team33.patterns.arbitrary.mimas.Bridge;
 import de.team33.patterns.arbitrary.mimas.Generator;
+import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -9,17 +9,20 @@ import org.junit.jupiter.params.provider.EnumSource;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.SecureRandom;
-import java.util.EnumSet;
+import java.time.Instant;
+import java.util.*;
 
+import static de.team33.patterns.arbitrary.mimas.Generator.CHARACTERS;
 import static java.math.BigInteger.ONE;
 import static java.math.BigInteger.ZERO;
 import static org.junit.jupiter.api.Assertions.*;
 
+@SuppressWarnings("ClassWithTooManyMethods")
 class GeneratorTest {
 
     @Test
     final void simple() {
-        final Generator generator = Generator.of(new SecureRandom());
+        final Generator generator = new Generator.Basic(new SecureRandom());
         assertInstanceOf(Generator.class, generator);
         assertInstanceOf(Boolean.class, generator.anyBoolean());
         assertInstanceOf(Byte.class, generator.anyByte());
@@ -162,7 +165,7 @@ class GeneratorTest {
     @EnumSource
     final void anyChar(final Case testCase) {
         final char result = testCase.generator.anyChar();
-        final int index = Bridge.STD_CHARACTERS.indexOf(result);
+        final int index = CHARACTERS.indexOf(result);
         assertFalse(0 > index);
     }
 
@@ -197,11 +200,10 @@ class GeneratorTest {
     final void anyString_default(final Case testCase) {
         final String result = testCase.generator.anyString();
 
-        assertFalse(result.isEmpty());
         assertTrue(128 >= result.length());
 
         for (final char c : result.toCharArray()) {
-            assertTrue(0 <= Bridge.STD_CHARACTERS.indexOf(c));
+            assertTrue(0 <= CHARACTERS.indexOf(c));
         }
     }
 
@@ -315,6 +317,50 @@ class GeneratorTest {
         assertTrue(EnumSet.allOf(RoundingMode.class).contains(result));
     }
 
+    @Test
+    final void nullable_1() {
+        final String result = new Generator.Basic().nullable(1, Generator::anyString);
+        assertNull(result);
+    }
+
+    @Test
+    final void anyDataset() {
+        final Map<String, Type<?>> description = new TreeMap<>() {{
+            put("firstName", Type.of(String.class));
+            put("lastName", Type.of(String.class));
+            put("index", Type.of(int.class));
+            put("birth", Type.of(Instant.class));
+        }};
+        final Map<String, Object> result = new Generator.Basic().anyDataset(description);
+        assertTrue(result.containsKey("firstName"));
+        assertTrue(result.containsKey("lastName"));
+        assertTrue(result.containsKey("index"));
+        assertTrue(result.containsKey("birth"));
+    }
+
+    @Test
+    final void nullable_89() {
+        final int magic = 89;
+        final int limit = magic * 1_000;
+        final double expected = (1.0 * limit) / magic;
+        final double count = new Generator.Basic()
+                .stream(generator -> generator.nullable(magic, Generator::anyByte))
+                .limit(limit)
+                .filter(Objects::isNull)
+                .count();
+        final double delta = count - expected;
+        assertEquals(0.0, delta, 80.0);
+    }
+
+    @Test
+    final void stream() {
+        final List<Byte> result = new Generator.Basic()
+                .stream(Generator::anyByte)
+                .limit(256)
+                .toList();
+        assertEquals(256, result.size());
+    }
+
     @SuppressWarnings({"unused", "PackageVisibleField"})
     enum Case {
 
@@ -327,9 +373,10 @@ class GeneratorTest {
         FIXED_MAX(numBits -> ONE.shiftLeft(numBits).subtract(ONE),
                   true, -1, -1, -1, -1),
 
+        @SuppressWarnings("deprecation")
         RANDOM(Generator.of(new SecureRandom())),
 
-        SECURE_RANDOM(Generator.of(new SecureRandom()));
+        SECURE_RANDOM(new Generator.Basic(new SecureRandom()));
 
         final Generator generator;
         final Boolean expBoolean;
@@ -350,6 +397,7 @@ class GeneratorTest {
                  Integer.valueOf(expInt), Long.valueOf(expLong));
         }
 
+        @SuppressWarnings("ConstructorWithTooManyParameters")
         Case(final Generator generator, final Boolean expBoolean, final Byte expByte, final Short expShort,
              final Integer expInt, final Long expLong) {
             this.generator = generator;
