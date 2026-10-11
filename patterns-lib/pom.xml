@@ -18,6 +18,7 @@
 
     <modules>
         <module>arbitrary-mimas</module>
+        <module>beans-hermes</module>
         <module>collection-mneme</module>
         <module>predicates-aletheia</module>
         <module>typing-proteus</module>
