@@ -51,7 +51,7 @@ class ReflectorTest {
     }
 
     @Test
-    final void toRecord() {
+    final void toBean() {
         final Sample sample = new Sample(GENERATOR.anyInt(),
                                          GENERATOR.anyString(),
                                          Instant.now().plusMillis(GENERATOR.anyShort()));
@@ -60,12 +60,12 @@ class ReflectorTest {
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Sample result = reflector.toRecord(map);
+        final Sample result = reflector.toBean(map);
         assertEquals(sample, result);
     }
 
     @Test
-    final void toRecord_fail() {
+    final void toBean_fail() {
         final Sample sample = new Sample(GENERATOR.anyInt(),
                                          GENERATOR.anyString(),
                                          Instant.now().plusMillis(GENERATOR.anyShort()));
@@ -74,7 +74,7 @@ class ReflectorTest {
             put("name", sample.timestamp);
             put("timestamp", sample.name);
         }};
-        assertThrows(IllegalArgumentException.class, () -> reflector.toRecord(map));
+        assertThrows(IllegalArgumentException.class, () -> reflector.toBean(map));
     }
 
     private record Sample(int index, String name, Instant timestamp) {}

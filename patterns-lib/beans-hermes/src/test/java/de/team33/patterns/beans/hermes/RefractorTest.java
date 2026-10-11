@@ -73,21 +73,21 @@ class RefractorTest {
 
     @ParameterizedTest
     @MethodSource("cases")
-    final <T, U> void toRecord(final Case<T, U> given) {
-        final Sample<T, U> result = given.refractor().toRecord(given.map);
+    final <T, U> void toBean(final Case<T, U> given) {
+        final Sample<T, U> result = given.refractor().toBean(given.map);
         assertEquals(given.sample, result);
     }
 
     @ParameterizedTest
     @MethodSource("cases")
-    final <T, U> void toRecord_mismatch(final Case<T, U> given) {
+    final <T, U> void toBean_mismatch(final Case<T, U> given) {
         final Map<String, Object> map = new LinkedHashMap<>() {{
             put("index", given.sample.index);
             put("name", given.sample.timestamp);
             put("timestamp", given.sample.name);
         }};
         try {
-            final Sample<T, U> result = given.refractor().toRecord(map);
+            final Sample<T, U> result = given.refractor().toBean(map);
             fail("expected to fail - but was " + result);
         } catch (final IllegalArgumentException e) {
             // e.printStackTrace();

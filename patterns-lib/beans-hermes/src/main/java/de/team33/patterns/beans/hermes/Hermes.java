@@ -12,9 +12,11 @@ public final class Hermes {
     private Hermes() {}
 
     /**
-     * Returns an immutable {@link Map} describing the given <em>recordClass</em>.
+     * Returns an immutable {@link Map} describing the given <em>beanClass</em>.
+     * <p>
+     * Each entry of the {@link Map} describes a single bean property as follows:
      * <table>
-     *     <caption>Each entry of the {@link Map} describes a single record component as follows:</caption>
+     *     <caption></caption>
      *     <tr>
      *         <th>key</th>
      *         <th>value</th>
@@ -24,19 +26,21 @@ public final class Hermes {
      *         <td>{@link Class}{@code <?>}</td>
      *     </tr>
      *     <tr>
-     *         <td>The name of the record component</td>
-     *         <td>The type of the record component</td>
+     *         <td>The name of the bean property</td>
+     *         <td>The type of the bean property</td>
      *     </tr>
      * </table>
      */
-    public static <T extends Record> Map<String, Class<?>> description(final Class<T> recordClass) {
-        return Reflector.of(recordClass).description();
+    public static <T> Map<String, Class<?>> description(final Class<T> beanClass) {
+        return Reflector.of(beanClass).description();
     }
 
     /**
-     * Returns an immutable {@link Map} describing the given <em>recordType</em>.
+     * Returns an immutable {@link Map} describing the given <em>beanType</em>.
+     * <p>
+     * Each entry of the {@link Map} describes a single bean property as follows:
      * <table>
-     *     <caption>Each entry of the {@link Map} describes a single record component as follows:</caption>
+     *     <caption></caption>
      *     <tr>
      *         <th>key</th>
      *         <th>value</th>
@@ -46,50 +50,49 @@ public final class Hermes {
      *         <td>{@link Type}{@code <?>}</td>
      *     </tr>
      *     <tr>
-     *         <td>The name of the record component</td>
-     *         <td>The type of the record component</td>
+     *         <td>The name of the bean property</td>
+     *         <td>The type of the bean property</td>
      *     </tr>
      * </table>
      */
-    public static <T extends Record> Map<String, Type<?>> description(final Type<T> recordType) {
-        return Refractor.of(recordType).description();
+    public static <T> Map<String, Type<?>> description(final Type<T> beanType) {
+        return Refractor.of(beanType).description();
     }
 
     /**
-     * Returns a {@link Map} containing the component values of the given <em>source</em>.
+     * Returns a {@link Map} containing the property values of the given <em>bean</em>.
      * <p>
-     * The returned {@link Map} is independent of the supplied record instance,
-     * preserves the declaration order of the record components and is mutable.
+     * The returned {@link Map} is independent of the supplied bean instance and is mutable.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static Map<String, Object> toMap(final Record source) {
-        return Reflector.of((Class) source.getClass())
-                        .toMap(source);
+    public static Map<String, Object> toMap(final Object bean) {
+        return Reflector.of((Class) bean.getClass())
+                        .toMap(bean);
     }
 
     /**
-     * Returns a new instance of the given <em>recordClass</em>, mapped from the given <em>source</em>.
+     * Returns a new instance of the given <em>beanClass</em>, mapped from the given <em>source</em>.
      * <p>
-     * Missing component values are treated as {@code null}. This may fail for primitive record components.
-     * Source values for unknown record components are ignored.
+     * Missing property values are treated as {@code null}. This may fail for primitive bean properties.
+     * Source values for unknown bean properties are ignored.
      *
-     * @param <T> The record type.
+     * @param <T> The bean type.
      */
-    public static <T extends Record> T toRecord(final Class<T> recordClass, final Map<String, Object> source) {
-        return Reflector.of(recordClass)
-                        .toRecord(source);
+    public static <T> T toBean(final Class<T> beanClass, final Map<String, Object> source) {
+        return Reflector.of(beanClass)
+                        .toBean(source);
     }
 
     /**
-     * Returns a new instance of the given <em>recordType</em>, mapped from the given <em>source</em>.
+     * Returns a new instance of the given <em>beanType</em>, mapped from the given <em>source</em>.
      * <p>
-     * Missing component values are treated as {@code null}. This may fail for primitive record components.
-     * Source values for unknown record components are ignored.
+     * Missing property values are treated as {@code null}. This may fail for primitive bean properties.
+     * Source values for unknown bean properties are ignored.
      *
-     * @param <T> The record type.
+     * @param <T> The bean type.
      */
-    public static <T extends Record> T toRecord(final Type<T> recordType, final Map<String, Object> source) {
-        return Refractor.of(recordType)
-                        .toRecord(source);
+    public static <T> T toBean(final Type<T> beanType, final Map<String, Object> source) {
+        return Refractor.of(beanType)
+                        .toBean(source);
     }
 }

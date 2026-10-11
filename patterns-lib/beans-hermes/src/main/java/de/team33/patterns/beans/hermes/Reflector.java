@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-final class Reflector<T extends Record> {
+final class Reflector<T> {
 
     @SuppressWarnings("rawtypes")
     private static final Map<Class, Reflector> CACHE = new ConcurrentHashMap<>();
@@ -45,7 +45,7 @@ final class Reflector<T extends Record> {
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends Record> Reflector<T> of(final Class<T> recordClass) {
+    static <T> Reflector<T> of(final Class<T> recordClass) {
         return CACHE.computeIfAbsent(recordClass, Reflector::new);
     }
 
@@ -93,7 +93,7 @@ final class Reflector<T extends Record> {
         }
     }
 
-    final T toRecord(final Map<String, Object> map) {
+    final T toBean(final Map<String, Object> map) {
         final Object[] arguments = description.keySet().stream()
                                               .map(map::get)
                                               .toArray(Object[]::new);

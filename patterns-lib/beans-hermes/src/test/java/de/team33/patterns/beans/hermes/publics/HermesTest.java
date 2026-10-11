@@ -58,38 +58,38 @@ class HermesTest {
     }
 
     @Test
-    final void toRecord_byClass() {
+    final void toBean_byClass() {
         final Sample sample = anySample();
         final Map<String, Object> map = new LinkedHashMap<>() {{
             put("index", sample.index);
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Sample result = Hermes.toRecord(Sample.class, map);
+        final Sample result = Hermes.toBean(Sample.class, map);
         assertEquals(sample, result);
     }
 
     @Test
-    final void toRecord_byType() {
+    final void toBean_byType() {
         final Sample sample = anySample();
         final Map<String, Object> map = new LinkedHashMap<>() {{
             put("index", sample.index);
             put("name", sample.name);
             put("timestamp", sample.timestamp);
         }};
-        final Sample result = Hermes.toRecord(Type.of(Sample.class), map);
+        final Sample result = Hermes.toBean(Type.of(Sample.class), map);
         assertEquals(sample, result);
     }
 
     @Test
-    final void toRecord_mismatch() {
+    final void toBean_mismatch() {
         final Sample sample = anySample();
         final Map<String, Object> source = new LinkedHashMap<>() {{
             put("index", sample.index);
             put("name", sample.timestamp);
             put("timestamp", sample.name);
         }};
-        assertThrows(IllegalArgumentException.class, () -> Hermes.toRecord(Sample.class, source));
+        assertThrows(IllegalArgumentException.class, () -> Hermes.toBean(Sample.class, source));
     }
 
     private record Sample(int index, String name, Instant timestamp) {}

@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-final class Refractor<T extends Record> {
+final class Refractor<T> {
 
     @SuppressWarnings("rawtypes")
     private static final Map<Type, Refractor> CACHE = new ConcurrentHashMap<>();
@@ -26,7 +26,7 @@ final class Refractor<T extends Record> {
     }
 
     @SuppressWarnings("unchecked")
-    static <T extends Record> Refractor<T> of(final Type<T> recordType) {
+    static <T> Refractor<T> of(final Type<T> recordType) {
         return CACHE.computeIfAbsent(recordType, Refractor::new);
     }
 
@@ -40,7 +40,7 @@ final class Refractor<T extends Record> {
         return reflector.toMap(record);
     }
 
-    final T toRecord(final Map<String, Object> map) {
+    final T toBean(final Map<String, Object> map) {
         final Map<String, Object> verified =
                 map.entrySet().stream()
                    .filter(e -> description.containsKey(e.getKey()))
@@ -48,7 +48,7 @@ final class Refractor<T extends Record> {
                    .collect(LinkedHashMap::new,
                             (result, entry) -> result.put(entry.getKey(), entry.getValue()),
                             Map::putAll);
-        return reflector.toRecord(verified);
+        return reflector.toBean(verified);
     }
 
     private <V> Map.Entry<String, V> verified(final Map.Entry<String, V> entry) {
