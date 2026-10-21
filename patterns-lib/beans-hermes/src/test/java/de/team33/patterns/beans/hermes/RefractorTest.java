@@ -2,14 +2,15 @@ package de.team33.patterns.beans.hermes;
 
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.typing.proteus.Type;
+import de.team33.patterns.value.sinope.Equation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RefractorTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     private final Refractor<Sample<String, Instant>> refractor = Refractor.of(new Type<>() {});
 
@@ -98,5 +99,69 @@ class RefractorTest {
     private record Case<T, U>(Type<Sample<T, U>> type, Sample<T, U> sample,
                               Map<String, Object> map, Refractor<Sample<T, U>> refractor) {}
 
-    private record Sample<T, U>(int index, T name, U timestamp) {}
+    @SuppressWarnings("unused")
+    static final class Sample<T, U> {
+
+        @SuppressWarnings("rawtypes")
+        private static final Equation<Sample> EQUATION = Equation.of(Sample.class, Sample::toList);
+
+        private int index;
+        private T name;
+        private U timestamp;
+
+        Sample() {
+        }
+
+        Sample(final int index, final T name, final U timestamp) {
+            this.index = index;
+            this.name = name;
+            this.timestamp = timestamp;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+
+        public Sample<T, U> setIndex(final int index) {
+            this.index = index;
+            return this;
+        }
+
+        public T getName() {
+            return name;
+        }
+
+        public Sample<T, U> setName(final T name) {
+            this.name = name;
+            return this;
+        }
+
+        public U getTimestamp() {
+            return timestamp;
+        }
+
+        public Sample<T, U> setTimestamp(final U timestamp) {
+            this.timestamp = timestamp;
+            return this;
+        }
+
+        private List<?> toList() {
+            return List.of(index, name, timestamp);
+        }
+
+        @Override
+        public final boolean equals(final Object obj) {
+            return EQUATION.equals(this, obj);
+        }
+
+        @Override
+        public final int hashCode() {
+            return EQUATION.hashCode(this);
+        }
+
+        @Override
+        public final String toString() {
+            return EQUATION.toString(this);
+        }
+    }
 }

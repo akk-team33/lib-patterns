@@ -66,8 +66,9 @@ final class Reflector<T> {
         }
     }
 
-    final Streamable<RecordComponent> components() {
-        return components;
+    final Streamable<BeanComponent> components() {
+        // return components;
+        throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     final Map<String, Class<?>> description() {

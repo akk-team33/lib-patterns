@@ -4,7 +4,6 @@ import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.typing.proteus.Type;
 
-import java.lang.reflect.RecordComponent;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,10 +17,11 @@ final class Refractor<T> {
     private final FinalMap<String, Type<?>> description;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private Refractor(final Type<T> recordType) {
-        this.reflector = Reflector.of((Class) recordType.core());
+    private Refractor(final Type<T> beanType) {
+        this.reflector = Reflector.of((Class) beanType.core());
         this.description = reflector.components().stream()
-                                    .map(FinalEntry.mapping(RecordComponent::getName, recordType::typeOf))
+                                    .map(FinalEntry.mapping(BeanComponent::getName,
+                                                            component -> component.type(beanType)))
                                     .collect(FinalMap.collector());
     }
 
