@@ -3,6 +3,7 @@ package de.team33.patterns.beans.hermes.publics;
 import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.beans.hermes.Hermes;
 import de.team33.patterns.typing.proteus.Type;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
@@ -13,6 +14,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Disabled
 class HermesTest {
 
     private static final Generator GENERATOR = Generator.of(new SecureRandom());

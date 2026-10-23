@@ -22,9 +22,10 @@ public class Supply implements Generator {
     }
 
     public final List<String> anyStringList(final int size) {
-        return Stream.generate(this::anyString)
-                     .limit(size)
-                     .collect(Collectors.toList());
+        return stream(Generator::anyString)
+                .distinct()
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     public final Set<String> anyStringSet(final int size) {
