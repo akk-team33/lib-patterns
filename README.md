@@ -85,9 +85,9 @@ Java 17 or later
 
 ### further
 
-* ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
-* ☐ Pinned module typing-proteus to 2.11.0-SNAPSHOT (still featured)
-* ☐ Pinned module arbitrary-mimas to 2.11.0-SNAPSHOT (still featured)
+* ☐ Pinned module predicates-aletheia to 2.11.0 (still featured)
+* ☐ Pinned module typing-proteus to 2.11.0 (still featured)
+* ☐ Pinned module arbitrary-mimas to 2.11.0 (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -98,7 +98,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.11.0-SNAPSHOT
+### 2.11.0
 
 * Pinned module collection-mneme to 2.10.4 (still featured)
 * Unpinned module typing-proteus

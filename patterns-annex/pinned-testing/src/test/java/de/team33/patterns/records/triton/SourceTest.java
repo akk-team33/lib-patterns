@@ -100,7 +100,7 @@ class SourceTest {
     @Test
     final void expect_positive() {
         final String text = SUPPLY.anyString();
-        final int index = SUPPLY.anyInt(text.length());
+        final int index = SUPPLY.anyInt(text.length() + 1);
         final Source source = new Source(text).skip(index);
         final char sample = text.charAt(index);
 
@@ -142,7 +142,7 @@ class SourceTest {
     final void skipWhitespace_negative() {
         final String text = SUPPLY.anyString()
                                   .replace(' ', '_');
-        final int index = SUPPLY.anyInt(text.length());
+        final int index = SUPPLY.anyInt(text.length() + 1);
         final Source source = new Source(text).skip(index);
 
         source.skipWhitespace();
