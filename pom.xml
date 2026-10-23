@@ -68,8 +68,9 @@
                         <artifact>pwgen-main</artifact>
 
                         <!-- draft -->
-                        <artifact>zz-arbitrary-tyche</artifact>
                         <artifact>zz-concept-alpha</artifact>
+                        <artifact>zz-arbitrary-tyche</artifact>
+                        <artifact>zz-beans-hermes</artifact>
                         <artifact>zz-config-eunomia</artifact>
                         <artifact>zz-json-jota</artifact>
                         <artifact>zz-math-my</artifact>

@@ -17,7 +17,6 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
-  * beans-hermes (Team33 JavaBeans Library - Edition "hermes")
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
@@ -29,6 +28,7 @@ Java 17 or later
 * (patterns-lib)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
   * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
+  * zz-beans-hermes (Team33 JavaBeans Library - Edition "hermes")
   * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
   * zz-math-my (Team33 Math Library - Edition "my")
@@ -83,14 +83,12 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module collection-mneme to 2.10.4 (still featured)
-
 ### further
 
+* ☐ Pinned module collection-mneme to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module typing-proteus to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module arbitrary-mimas to 2.11.0-SNAPSHOT (still featured)
-* ☐ Pinned module beans-hermes to 2.11.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -113,12 +111,12 @@ Java 17 or later
     * Charger
     * Initiator
     * UnfitConditionException
-* Added module beans-hermes
 * Added module predicates-aletheia
 * Drafts:
   * Removed module zz-arbitrary-mimas
   * Module zz-conzept-alpha
     * Removed package functions.alpha
+  * Added module zz-beans-hermes
 
 ### 2.10.4
 

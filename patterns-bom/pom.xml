@@ -28,11 +28,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>beans-hermes</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>collection-mneme</artifactId>
                 <version>${project.version}</version>
             </dependency>
