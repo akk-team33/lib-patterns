@@ -17,7 +17,6 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
-  * collection-mneme (Team33 Collection Library - Edition "mneme")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
@@ -39,6 +38,7 @@ Java 17 or later
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.10.2
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
+  * collection-mneme (Team33 Collection Library - Edition "mneme") - 2.10.4
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
   * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
@@ -85,7 +85,6 @@ Java 17 or later
 
 ### further
 
-* ☐ Pinned module collection-mneme to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module predicates-aletheia to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module typing-proteus to 2.11.0-SNAPSHOT (still featured)
 * ☐ Pinned module arbitrary-mimas to 2.11.0-SNAPSHOT (still featured)
@@ -101,6 +100,7 @@ Java 17 or later
 
 ### 2.11.0-SNAPSHOT
 
+* Pinned module collection-mneme to 2.10.4 (still featured)
 * Unpinned module typing-proteus
   * Updated dependencies
   * Added method Type.isAssignableFrom (Type)
