@@ -23,6 +23,7 @@
 
     <modules>
         <module>predicates-aletheia</module>
+        <module>typing-proteus</module>
     </modules>
 
     <dependencyManagement>

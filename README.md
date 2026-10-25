@@ -18,7 +18,6 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * config-eunomia (Team33 Config Library - Edition "eunomia")
-  * typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Drafts - not deployed, not featured
 
@@ -57,6 +56,7 @@ Java 17 or later
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.2
+  * typing-proteus (Team33 Typing Library - Edition "proteus") - 2.11.0
   * value-sinope (Team33 Value Library - Edition "sinope") - 2.9.0
 
 ### Deprecated
@@ -88,6 +88,7 @@ Java 17 or later
 
 ### further
 
+* ☐ Pinned module config-eunomia to 2.12.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -103,7 +104,7 @@ Java 17 or later
 * Added module config-eunomia
 * Pinned: Created parent module patterns-pinned
 * Pinned module predicates-aletheia to 2.11.0 (still featured)
-* ☐ Pinned module typing-proteus to 2.11.0 (still featured)
+* Pinned module typing-proteus to 2.11.0 (still featured)
 * ☐ Pinned module arbitrary-mimas to 2.11.0 (still featured)
 * Drafts:
   * Removed module zz-config-eunomia
