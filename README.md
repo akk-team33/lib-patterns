@@ -16,7 +16,6 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
-  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * config-eunomia (Team33 Config Library - Edition "eunomia")
 
 ### Drafts - not deployed, not featured
@@ -31,6 +30,7 @@ Java 17 or later
 ### Still Featured
 
 * (patterns-lib - previous releases)
+  * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas") - 2.11.0
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.10.2
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
@@ -105,7 +105,7 @@ Java 17 or later
 * Pinned: Created parent module patterns-pinned
 * Pinned module predicates-aletheia to 2.11.0 (still featured)
 * Pinned module typing-proteus to 2.11.0 (still featured)
-* ☐ Pinned module arbitrary-mimas to 2.11.0 (still featured)
+* Pinned module arbitrary-mimas to 2.11.0 (still featured)
 * Drafts:
   * Removed module zz-config-eunomia
   * Created parent module patterns-drafts

@@ -69,10 +69,6 @@
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
 
-                        <!-- pinned -->
-                        <artifact>patterns-pinned</artifact>
-                        <artifact>predicates-aletheia</artifact>
-
                         <!-- draft -->
                         <artifact>patterns-drafts</artifact>
                         <artifact>concept-alpha</artifact>
@@ -80,6 +76,12 @@
                         <artifact>beans-hermes</artifact>
                         <artifact>json-jota</artifact>
                         <artifact>math-my</artifact>
+
+                        <!-- pinned -->
+                        <artifact>patterns-pinned</artifact>
+                        <artifact>arbitrary-mimas</artifact>
+                        <artifact>predicates-aletheia</artifact>
+                        <artifact>typing-proteus</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

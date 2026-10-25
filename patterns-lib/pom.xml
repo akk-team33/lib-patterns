@@ -17,7 +17,6 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
-        <module>arbitrary-mimas</module>
         <module>config-eunomia</module>
     </modules>
 
