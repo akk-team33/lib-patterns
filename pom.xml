@@ -49,6 +49,7 @@
     <modules>
         <module>patterns-bom</module>
         <module>patterns-lib</module>
+        <module>patterns-drafts</module>
         <module>patterns-home</module>
         <module>patterns-annex</module>
     </modules>
@@ -68,6 +69,7 @@
                         <artifact>pwgen-main</artifact>
 
                         <!-- draft -->
+                        <artifact>patterns-drafts</artifact>
                         <artifact>zz-concept-alpha</artifact>
                         <artifact>zz-arbitrary-tyche</artifact>
                         <artifact>zz-beans-hermes</artifact>
