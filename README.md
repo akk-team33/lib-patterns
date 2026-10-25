@@ -20,12 +20,10 @@ Java 17 or later
   * config-eunomia (Team33 Config Library - Edition "eunomia")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
-* patterns-annex (Team33 Patterns Annex)
-  * pinned-testing (Tests for pinned modules)
 
 ### Drafts - not deployed, not featured
 
-* (patterns-lib)
+* patterns-drafts (Team33 Patterns Drafts)
   * zz-concept-alpha (Misc ideas, concepts and drafts)
   * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * zz-beans-hermes (Team33 JavaBeans Library - Edition "hermes")
@@ -79,6 +77,11 @@ Java 17 or later
   * streamable-naiad (Team33 Streamable Library - Edition "naiad") - 2.10.2
   * tuple-janus (Team33 Tuple Library - Edition "janus") - 2.8.2
 
+### Annex - not deployed, not featured
+
+* patterns-annex (Team33 Patterns Annex)
+  * pinned-testing (Tests for pinned modules)
+
 ## TODO
 
 ### next
@@ -103,6 +106,8 @@ Java 17 or later
 * Added module config-eunomia
 * Drafts:
   * Removed module zz-config-eunomia
+  * Created parent module patterns-drafts
+  * Moved draft modules from patterns-lib to patterns-drafts
 
 ### 2.11.0
 

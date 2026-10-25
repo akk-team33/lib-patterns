@@ -21,11 +21,6 @@
         <module>config-eunomia</module>
         <module>predicates-aletheia</module>
         <module>typing-proteus</module>
-        <module>zz-concept-alpha</module>
-        <module>zz-arbitrary-tyche</module>
-        <module>zz-beans-hermes</module>
-        <module>zz-json-jota</module>
-        <module>zz-math-my</module>
     </modules>
 
     <dependencyManagement>

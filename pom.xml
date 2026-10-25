@@ -49,8 +49,8 @@
     <modules>
         <module>patterns-bom</module>
         <module>patterns-lib</module>
-        <module>patterns-drafts</module>
         <module>patterns-home</module>
+        <module>patterns-drafts</module>
         <module>patterns-annex</module>
     </modules>
 
