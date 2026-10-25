@@ -24,11 +24,11 @@ Java 17 or later
 ### Drafts - not deployed, not featured
 
 * patterns-drafts (Team33 Patterns Drafts)
-  * zz-concept-alpha (Misc ideas, concepts and drafts)
-  * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
-  * zz-beans-hermes (Team33 JavaBeans Library - Edition "hermes")
-  * zz-json-jota (Team33 JSON Library - Edition "jota")
-  * zz-math-my (Team33 Math Library - Edition "my")
+  * concept-alpha (Misc ideas, concepts and drafts)
+  * arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
+  * beans-hermes (Team33 JavaBeans Library - Edition "hermes")
+  * json-jota (Team33 JSON Library - Edition "jota")
+  * math-my (Team33 Math Library - Edition "my")
 
 ### Still Featured
 
@@ -108,6 +108,7 @@ Java 17 or later
   * Removed module zz-config-eunomia
   * Created parent module patterns-drafts
   * Moved draft modules from patterns-lib to patterns-drafts
+  * Renamed draft modules zz-* -> *
 
 ### 2.11.0
 

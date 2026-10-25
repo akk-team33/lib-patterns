@@ -22,11 +22,11 @@
     </properties>
 
     <modules>
-        <module>zz-concept-alpha</module>
-        <module>zz-arbitrary-tyche</module>
-        <module>zz-beans-hermes</module>
-        <module>zz-json-jota</module>
-        <module>zz-math-my</module>
+        <module>concept-alpha</module>
+        <module>arbitrary-tyche</module>
+        <module>beans-hermes</module>
+        <module>json-jota</module>
+        <module>math-my</module>
     </modules>
 
     <dependencyManagement>

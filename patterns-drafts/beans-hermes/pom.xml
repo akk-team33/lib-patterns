@@ -10,7 +10,7 @@
         <version>2.12.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-beans-hermes</artifactId>
+    <artifactId>beans-hermes</artifactId>
 
     <name>Team33 JavaBeans Library - Edition "hermes"</name>
     <description>Provides conversions between JavaBeans and Map representations.</description>

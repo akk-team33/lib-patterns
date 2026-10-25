@@ -70,11 +70,11 @@
 
                         <!-- draft -->
                         <artifact>patterns-drafts</artifact>
-                        <artifact>zz-concept-alpha</artifact>
-                        <artifact>zz-arbitrary-tyche</artifact>
-                        <artifact>zz-beans-hermes</artifact>
-                        <artifact>zz-json-jota</artifact>
-                        <artifact>zz-math-my</artifact>
+                        <artifact>concept-alpha</artifact>
+                        <artifact>arbitrary-tyche</artifact>
+                        <artifact>beans-hermes</artifact>
+                        <artifact>json-jota</artifact>
+                        <artifact>math-my</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>
