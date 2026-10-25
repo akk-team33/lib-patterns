@@ -51,6 +51,7 @@
         <module>patterns-lib</module>
         <module>patterns-home</module>
         <module>patterns-drafts</module>
+        <module>patterns-pinned</module>
         <module>patterns-annex</module>
     </modules>
 
@@ -67,6 +68,9 @@
                         <artifact>pinned-testing</artifact>
                         <artifact>pwgen-fat</artifact>
                         <artifact>pwgen-main</artifact>
+
+                        <!-- pinned -->
+                        <artifact>patterns-pinned</artifact>
 
                         <!-- draft -->
                         <artifact>patterns-drafts</artifact>
