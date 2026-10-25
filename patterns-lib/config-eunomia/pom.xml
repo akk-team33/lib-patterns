@@ -10,16 +10,10 @@
         <version>2.12.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>zz-config-eunomia</artifactId>
+    <artifactId>config-eunomia</artifactId>
 
-    <name>DRAFT: Team33 Config Library - Edition "eunomia"</name>
+    <name>Team33 Config Library - Edition "eunomia"</name>
     <description>Provides persistent, hierarchical configuration based on Java records.</description>
-
-    <properties>
-        <skipJavadoc>true</skipJavadoc>
-        <skipHome>true</skipHome>
-        <skipGPG>true</skipGPG>
-    </properties>
 
     <dependencies>
         <dependency>

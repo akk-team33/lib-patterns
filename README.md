@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
+  * config-eunomia (Team33 Config Library - Edition "eunomia")
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
 * patterns-annex (Team33 Patterns Annex)
@@ -28,7 +29,6 @@ Java 17 or later
   * zz-concept-alpha (Misc ideas, concepts and drafts)
   * zz-arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * zz-beans-hermes (Team33 JavaBeans Library - Edition "hermes")
-  * zz-config-eunomia (Team33 Config Library - Edition "eunomia")
   * zz-json-jota (Team33 JSON Library - Edition "jota")
   * zz-math-my (Team33 Math Library - Edition "my")
 
@@ -97,6 +97,12 @@ Java 17 or later
   * ☐ Support for 'mappable' types
 
 ## Change Log
+
+### 2.12.0-SNAPSHOT
+
+* Added module config-eunomia
+* Drafts:
+  * Removed module zz-config-eunomia
 
 ### 2.11.0
 
