@@ -18,7 +18,6 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * arbitrary-mimas (Team33 Arbitrary Library - Edition "mimas")
   * config-eunomia (Team33 Config Library - Edition "eunomia")
-  * predicates-aletheia (Team33 Predicates Library - Edition "aletheia")
   * typing-proteus (Team33 Typing Library - Edition "proteus")
 
 ### Drafts - not deployed, not featured
@@ -51,6 +50,7 @@ Java 17 or later
   * lazy-janus (Team33 Lazy Initialization Library - Edition "janus") - 2.9.0
   * matching-rhea (Team33 Pattern Matching Library - Edition "rhea") - 2.7.0
   * pooling-ariel (Team33 Pooling Library - Edition "ariel") - 2.7.0
+  * predicates-aletheia (Team33 Predicates Library - Edition "aletheia") - 2.11.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * records-metis (Team33 Records Library - Edition "metis") - 2.10.2
   * records-triton (Team33 Records Library - Edition "triton") - 2.10.2
@@ -88,9 +88,6 @@ Java 17 or later
 
 ### further
 
-* ☐ Pinned module predicates-aletheia to 2.11.0 (still featured)
-* ☐ Pinned module typing-proteus to 2.11.0 (still featured)
-* ☐ Pinned module arbitrary-mimas to 2.11.0 (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -105,7 +102,7 @@ Java 17 or later
 
 * Added module config-eunomia
 * Pinned: Created parent module patterns-pinned
-* ☐ Pinned module predicates-aletheia to 2.11.0 (still featured)
+* Pinned module predicates-aletheia to 2.11.0 (still featured)
 * ☐ Pinned module typing-proteus to 2.11.0 (still featured)
 * ☐ Pinned module arbitrary-mimas to 2.11.0 (still featured)
 * Drafts:

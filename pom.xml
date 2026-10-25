@@ -71,6 +71,7 @@
 
                         <!-- pinned -->
                         <artifact>patterns-pinned</artifact>
+                        <artifact>predicates-aletheia</artifact>
 
                         <!-- draft -->
                         <artifact>patterns-drafts</artifact>

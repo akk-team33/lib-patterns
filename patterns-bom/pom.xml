@@ -33,11 +33,6 @@
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>
-                <artifactId>predicates-aletheia</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>de.team33.patterns</groupId>
                 <artifactId>typing-proteus</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -134,6 +129,11 @@
                 <groupId>de.team33.patterns</groupId>
                 <artifactId>pooling-ariel</artifactId>
                 <version>2.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>de.team33.patterns</groupId>
+                <artifactId>predicates-aletheia</artifactId>
+                <version>2.11.0</version>
             </dependency>
             <dependency>
                 <groupId>de.team33.patterns</groupId>

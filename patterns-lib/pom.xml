@@ -19,7 +19,6 @@
     <modules>
         <module>arbitrary-mimas</module>
         <module>config-eunomia</module>
-        <module>predicates-aletheia</module>
         <module>typing-proteus</module>
     </modules>
 
