@@ -12,7 +12,7 @@
 
     <groupId>de.team33.patterns</groupId>
     <artifactId>patterns-root</artifactId>
-    <version>2.12.0-SNAPSHOT</version>
+    <version>2.12.0</version>
     <packaging>pom</packaging>
 
     <name>Team33 Patterns Library Root</name>
@@ -51,7 +51,6 @@
         <module>patterns-lib</module>
         <module>patterns-home</module>
         <module>patterns-drafts</module>
-        <module>patterns-pinned</module>
         <module>patterns-annex</module>
     </modules>
 
@@ -76,12 +75,6 @@
                         <artifact>beans-hermes</artifact>
                         <artifact>json-jota</artifact>
                         <artifact>math-my</artifact>
-
-                        <!-- pinned -->
-                        <artifact>patterns-pinned</artifact>
-                        <artifact>arbitrary-mimas</artifact>
-                        <artifact>predicates-aletheia</artifact>
-                        <artifact>typing-proteus</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

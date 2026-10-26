@@ -88,7 +88,7 @@ Java 17 or later
 
 ### further
 
-* ☐ Pinned module config-eunomia to 2.12.0-SNAPSHOT (still featured)
+* ☐ Pinned module config-eunomia to 2.12.0 (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -99,7 +99,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.12.0-SNAPSHOT
+### 2.12.0
 
 * Added module config-eunomia
 * Pinned module predicates-aletheia to 2.11.0 (still featured)
