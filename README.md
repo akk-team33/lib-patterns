@@ -86,9 +86,10 @@ Java 17 or later
 
 ### next
 
+* ☐ Pinned module config-eunomia to 2.12.0 (still featured)
+
 ### further
 
-* ☐ Pinned module config-eunomia to 2.12.0 (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -98,6 +99,8 @@ Java 17 or later
   * ☐ Support for 'mappable' types
 
 ## Change Log
+
+### 2.13.0-SNAPSHOT
 
 ### 2.12.0
 
