@@ -102,7 +102,6 @@ Java 17 or later
 ### 2.12.0-SNAPSHOT
 
 * Added module config-eunomia
-* Pinned: Created parent module patterns-pinned
 * Pinned module predicates-aletheia to 2.11.0 (still featured)
 * Pinned module typing-proteus to 2.11.0 (still featured)
 * Pinned module arbitrary-mimas to 2.11.0 (still featured)
