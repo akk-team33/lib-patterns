@@ -14,6 +14,10 @@
  * Missing values and {@code null} values therefore leave existing values unchanged.
  * This allows configuration records to represent partially specified configurations,
  * which is particularly useful for hierarchical configuration.
+ * <p>
+ * Configurations are persisted in JSON format. The module
+ * <a href="https://www.team33.de/dev/patterns/2.x/patterns-lib/records-triton">records-triton</a>
+ * is used for this purpose, and its associated limitations apply accordingly.
  *
  * @see <a href="https://de.wikipedia.org/wiki/(15)_Eunomia" target="_blank">Eunomia (Asteroid)</a>
  * @see <a href="https://de.wikipedia.org/wiki/Eunomia_(Mythologie)" target="_blank">Eunomia (Mythologie)</a>

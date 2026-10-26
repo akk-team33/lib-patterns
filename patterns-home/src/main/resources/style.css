@@ -1,0 +1,39 @@
+body {
+    font-family: sans-serif;
+    width: 90%;
+    margin: auto;
+}
+td {
+    text-align: left;
+    vertical-align: top;
+}
+a:link {
+    text-decoration: inherit;
+}
+a:hover {
+    background-color: #c0c0c0;
+}
+.updated {
+    background-color: #c0ffb0;
+}
+.deprecated {
+    background-color: #ffc0b0;
+}
+.module {
+    display: inline-block;
+    border-top: 1px solid grey;
+    border-left: 1px solid grey;
+    padding: 2px 10px;
+}
+.moduleRef {
+    display: inline-block;
+    width: 10em;
+}
+.moduleState {
+    display: inline-block;
+    width: 5.5em;
+}
+.moduleVersion {
+    display: inline-block;
+    width: 5em;
+}

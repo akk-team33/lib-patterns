@@ -3,27 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>de.team33.patterns - Java Development by Andreas Kluge-Kaindl, Bremen (de)</title>
-    <style>
-        td {
-          text-align: left;
-          vertical-align: top;
-        }
-        a:link {
-            text-decoration: inherit;
-        }
-        a:hover {
-            background-color: #c0c0c0;
-        }
-    </style>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <h5><a href="../..">Java Development by Andreas Kluge-Kaindl, Bremen (de)</a></h5>
 <h1>de.team33.patterns</h1>
+
 <h2>Current Version</h2>
 <ul>
-    <li>${project.version}</li>
+    <li><span class="updated">${project.version}</span></li>
     <li>Requires Java 17 or later</li>
 </ul>
+
 <h2>Resources</h2>
 <ul>
     <li><a href="https://github.com/akk-team33/lib-patterns/"
@@ -33,85 +24,194 @@
     <li><a href="https://mvnrepository.com/artifact/de.team33.patterns/"
            target="_blank">MVN<small>REPOSITORY</small></a></li>
 </ul>
-<h2>Modules</h2>
-<table>
-    <tr>
-        <th>Updated ${project.version}</th>
-        <th>Still Featured</th>
-        <th>Deprecated</th>
-    </tr>
-    <tr>
-        <td>
-            <ul>
-                <li><a href="patterns-bom">patterns-bom</a></li>
-                <li>patterns-lib ...
-                    <ul>
-                        <li><a href="patterns-lib/config-eunomia">config-eunomia</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>(<a href="patterns-bom">patterns-bom</a>)</li>
-                <li>(patterns-lib) ...
-                    <ul>
-                        <li><a href="patterns-lib/arbitrary-mimas">arbitrary-mimas</a> - 2.11.0</li>
-                        <li><a href="patterns-lib/building-anthe">building-anthe</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/building-elara">building-elara</a> - 2.10.2</li>
-                        <li><a href="patterns-lib/collection-ceres">collection-ceres</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/collection-mneme">collection-mneme</a> - 2.10.4</li>
-                        <li><a href="patterns-lib/decision-thyone">decision-thyone</a> - 2.8.1</li>
-                        <li><a href="patterns-lib/enums-pan">enums-pan</a> - 2.8.1</li>
-                        <li><a href="patterns-lib/exceptional-dione">exceptional-dione</a> - 2.8.1</li>
-                        <li><a href="patterns-lib/execution-metis">execution-metis</a> - 2.7.0</li>
-                        <li><a href="patterns-lib/expiry-tethys">expiry-tethys</a> - 2.7.2</li>
-                        <li><a href="patterns-lib/files-pluto">files-pluto</a> - 2.10.1</li>
-                        <li><a href="patterns-lib/files-styx">files-styx</a> - 2.10.1</li>
-                        <li><a href="patterns-lib/hashing-pandia">hashing-pandia</a> - 2.7.2</li>
-                        <li><a href="patterns-lib/io-thalassa">io-thalassa</a> - 2.10.1</li>
-                        <li><a href="patterns-lib/io-thalassa-base">io-thalassa-base</a> - 2.10.1</li>
-                        <li><a href="patterns-lib/io-thalassa-records">io-thalassa-records</a> - 2.10.1</li>
-                        <li><a href="patterns-lib/lazy-janus">lazy-janus</a> - 2.9.0</li>
-                        <li><a href="patterns-lib/matching-rhea">matching-rhea</a> - 2.7.0</li>
-                        <li><a href="patterns-lib/pooling-ariel">pooling-ariel</a> - 2.7.0</li>
-                        <li><a href="patterns-lib/predicates-aletheia">predicates-aletheia</a> - 2.11.0</li>
-                        <li><a href="patterns-lib/proving-kerberos">proving-kerberos</a> - 2.7.0</li>
-                        <li><a href="patterns-lib/records-metis">records-metis</a> - 2.10.2</li>
-                        <li><a href="patterns-lib/records-triton">records-triton</a> - 2.10.2</li>
-                        <li><a href="patterns-lib/reflect-luna">reflect-luna</a> - 2.7.2</li>
-                        <li><a href="patterns-lib/reflect-pandora">reflect-pandora</a> - 2.7.2</li>
-                        <li><a href="patterns-lib/streamable-galatea">streamable-galatea</a> - 2.10.2</li>
-                        <li><a href="patterns-lib/typing-proteus">typing-proteus</a> - 2.11.0</li>
-                        <li><a href="patterns-lib/value-sinope">value-sinope</a> - 2.9.0</li>
-                    </ul>
-                </li>
-            </ul>
-        </td>
-        <td>
-            <ul>
-                <li>(<a href="patterns-bom">patterns-bom</a>)</li>
-                <li>(patterns-lib) ...
-                    <ul>
-                        <li><a href="patterns-lib/decision-carpo">decision-carpo</a> - 2.8.2</li>
-                        <li><a href="../1.x/patterns-lib/decision-leda">decision-leda</a> - 1.26.0</li>
-                        <li><a href="../1.x/patterns-lib/decision-telesto">decision-telesto</a> - 1.26.0</li>
-                        <li><a href="patterns-lib/hierarchy-mab">hierarchy-mab</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/io-adrastea">io-adrastea</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/io-deimos">io-deimos</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/io-phobos">io-phobos</a> - 2.8.0</li>
-                        <li><a href="patterns-lib/lazy-narvi">lazy-narvi</a> - 2.9.0</li>
-                        <li><a href="patterns-lib/notes-eris">notes-eris</a> - 2.8.2</li>
-                        <li><a href="../1.x/patterns-lib/random-mimas">random-mimas</a> - 1.13.0</li>
-                        <li><a href="../1.x/patterns-lib/random-tarvos">random-tarvos</a> - 1.19.0</li>
-                        <li><a href="../1.x/patterns-lib/serial-charon">serial-charon</a> - 1.27.0</li>
-                        <li><a href="patterns-lib/streamable-naiad">streamable-naiad</a> - 2.10.2</li>
-                        <li><a href="patterns-lib/tuple-janus">tuple-janus</a> - 2.8.2</li>
-                    </ul>
-                </li>
-            </ul>
-        </td>
-    </tr>
-</table>
+
+<h2>Bill of Materials</h2>
+<div class="modules">
+    <div class="module updated">
+        <span class="moduleRef"><a href="patterns-bom">patterns-bom</a></span>
+        <span class="moduleVersion">current</span>
+    </div>
+</div>
+
+<h2>Library Modules</h2>
+<h3>Stable</h3>
+<div class="modules">
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/arbitrary-mimas">arbitrary-mimas</a></span>
+        <span class="moduleVersion">2.11.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/building-anthe">building-anthe</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/building-elara">building-elara</a></span>
+        <span class="moduleVersion">2.10.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/collection-ceres">collection-ceres</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/collection-mneme">collection-mneme</a></span>
+        <span class="moduleVersion">2.10.4</span>
+    </div>
+    <div class="module updated">
+        <span class="moduleRef"><a href="patterns-lib/config-eunomia">config-eunomia</a></span>
+        <span class="moduleVersion">current</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/decision-thyone">decision-thyone</a></span>
+        <span class="moduleVersion">2.8.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/enums-pan">enums-pan</a></span>
+        <span class="moduleVersion">2.8.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/exceptional-dione">exceptional-dione</a></span>
+        <span class="moduleVersion">2.8.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/execution-metis">execution-metis</a></span>
+        <span class="moduleVersion">2.7.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/expiry-tethys">expiry-tethys</a></span>
+        <span class="moduleVersion">2.7.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/files-pluto">files-pluto</a></span>
+        <span class="moduleVersion">2.10.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/files-styx">files-styx</a></span>
+        <span class="moduleVersion">2.10.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/hashing-pandia">hashing-pandia</a></span>
+        <span class="moduleVersion">2.7.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/io-thalassa">io-thalassa</a></span>
+        <span class="moduleVersion">2.10.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/io-thalassa-base">io-thalassa-base</a></span>
+        <span class="moduleVersion">2.10.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/io-thalassa-records">io-thalassa-records</a></span>
+        <span class="moduleVersion">2.10.1</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/lazy-janus">lazy-janus</a></span>
+        <span class="moduleVersion">2.9.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/matching-rhea">matching-rhea</a></span>
+        <span class="moduleVersion">2.7.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/pooling-ariel">pooling-ariel</a></span>
+        <span class="moduleVersion">2.7.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/predicates-aletheia">predicates-aletheia</a></span>
+        <span class="moduleVersion">2.11.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/proving-kerberos">proving-kerberos</a></span>
+        <span class="moduleVersion">2.7.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/records-metis">records-metis</a></span>
+        <span class="moduleVersion">2.10.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/records-triton">records-triton</a></span>
+        <span class="moduleVersion">2.10.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/reflect-luna">reflect-luna</a></span>
+        <span class="moduleVersion">2.7.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/reflect-pandora">reflect-pandora</a></span>
+        <span class="moduleVersion">2.7.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/streamable-galatea">streamable-galatea</a></span>
+        <span class="moduleVersion">2.10.2</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/typing-proteus">typing-proteus</a></span>
+        <span class="moduleVersion">2.11.0</span>
+    </div>
+    <div class="module">
+        <span class="moduleRef"><a href="patterns-lib/value-sinope">value-sinope</a></span>
+        <span class="moduleVersion">2.9.0</span>
+    </div>
+</div>
+
+<h3>Deprecated</h3>
+<div class="modules">
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/decision-carpo">decision-carpo</a></span>
+        <span class="moduleVersion">2.8.2</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="../1.x/patterns-lib/decision-leda">decision-leda</a></span>
+        <span class="moduleVersion">1.26.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="../1.x/patterns-lib/decision-telesto">decision-telesto</a></span>
+        <span class="moduleVersion">1.26.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/hierarchy-mab">hierarchy-mab</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/io-adrastea">io-adrastea</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/io-deimos">io-deimos</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/io-phobos">io-phobos</a></span>
+        <span class="moduleVersion">2.8.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/lazy-narvi">lazy-narvi</a></span>
+        <span class="moduleVersion">2.9.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/notes-eris">notes-eris</a></span>
+        <span class="moduleVersion">2.8.2</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="../1.x/patterns-lib/random-mimas">random-mimas</a></span>
+        <span class="moduleVersion">1.13.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="../1.x/patterns-lib/random-tarvos">random-tarvos</a></span>
+        <span class="moduleVersion">1.19.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="../1.x/patterns-lib/serial-charon">serial-charon</a></span>
+        <span class="moduleVersion">1.27.0</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/streamable-naiad">streamable-naiad</a></span>
+        <span class="moduleVersion">2.10.2</span>
+    </div>
+    <div class="module deprecated">
+        <span class="moduleRef"><a href="patterns-lib/tuple-janus">tuple-janus</a></span>
+        <span class="moduleVersion">2.8.2</span>
+    </div>
+</div>
 </body>
 </html>
