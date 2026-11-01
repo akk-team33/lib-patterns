@@ -102,6 +102,10 @@ Java 17 or later
 
 ### 2.13.0-SNAPSHOT
 
+* Drafts:
+  * ☐ Unpinned module records-triton as draft:
+    * ☐ Added support for 'listable' types
+
 ### 2.12.0
 
 * Added module config-eunomia

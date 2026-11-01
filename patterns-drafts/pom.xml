@@ -27,6 +27,7 @@
         <module>beans-hermes</module>
         <module>json-jota</module>
         <module>math-my</module>
+        <module>records-triton</module>
     </modules>
 
     <dependencyManagement>
@@ -68,6 +69,19 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>javadoc-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <executions>
