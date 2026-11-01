@@ -1,11 +1,13 @@
 package de.team33.patterns.records.triton.publics;
 
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.records.triton.Descriptor;
 import de.team33.patterns.records.triton.RenderOption;
 import de.team33.patterns.records.triton.Triton;
 import de.team33.patterns.records.triton.TritonTestBase;
 import de.team33.patterns.records.triton.testing.Supply;
 import de.team33.patterns.typing.proteus.Type;
+import de.team33.patterns.value.sinope.Equation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -25,9 +27,13 @@ class TritonTest extends TritonTestBase {
     private static final Supply SUPPLY = new Supply();
 
     private static Sample anySample() {
-        return new Sample(SUPPLY.anyString(),
+        return new Sample(SUPPLY.anyInt(),
+                          SUPPLY.anyString(),
                           Instant.now().plusMillis(SUPPLY.anyShort()),
-                          UUID.randomUUID());
+                          UUID.randomUUID(),
+                          SUPPLY.stream(Generator::anyLong)
+                                .limit(SUPPLY.anyInt(0, 16))
+                                .toArray(Long[]::new));
     }
 
     private static GenericSample<GenericSample<Class<?>>> anyGenericSample() {
@@ -118,7 +124,7 @@ class TritonTest extends TritonTestBase {
     final void descriptor() {
         final Descriptor<Sample> result = Triton.descriptor(Sample.class);
         assertEquals(Sample.class, result.recordType());
-        assertEquals(List.of("name", "create", "uuid"), result.names());
+        assertEquals(List.of("index", "name", "create", "uuid", "longs"), result.names());
         assertEquals(String.class, result.type("name"));
         assertEquals(Instant.class, result.type("create"));
         assertEquals(UUID.class, result.type("uuid"));
@@ -136,7 +142,28 @@ class TritonTest extends TritonTestBase {
     static class FailingC {
     }
 
-    private record Sample(String name, Instant create, UUID uuid) {
+    private record Sample(int index, String name, Instant create, UUID uuid, Long[] longs) {
+
+        private static final Equation<Sample> EQUATION = Equation.of(Sample.class, Sample::toList);
+
+        private List toList() {
+            return List.of(index, name, create, uuid, List.of(longs));
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            return EQUATION.equals(this, obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return EQUATION.hashCode(this);
+        }
+
+        @Override
+        public String toString() {
+            return EQUATION.toString(this);
+        }
     }
 
     private record GenericSample<X>(String name, Instant create, UUID uuid, X extra) {
