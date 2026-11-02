@@ -1,4 +1,4 @@
-package de.team33.patterns.json.jota;
+package de.team33.patterns.json.sinope;
 
 import java.util.LinkedHashMap;
 

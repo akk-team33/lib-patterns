@@ -10,9 +10,9 @@
         <version>2.13.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>json-jota</artifactId>
+    <artifactId>json-sinope</artifactId>
 
-    <name>Team33 Json Library - Edition "jota"</name>
+    <name>Team33 Json Library - Edition "sinope"</name>
     <description>Provides JSON mapping.</description>
 
     <dependencies>

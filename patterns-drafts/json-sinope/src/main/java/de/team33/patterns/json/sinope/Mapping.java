@@ -1,8 +1,8 @@
-package de.team33.patterns.json.jota;
+package de.team33.patterns.json.sinope;
 
 import de.team33.patterns.exceptional.dione.XFunction;
 
-import static de.team33.patterns.json.jota.Util.typeName;
+import static de.team33.patterns.json.sinope.Util.typeName;
 
 /**
  * Abstracts a customizable bidirectional mapping between a source type and a target type.
