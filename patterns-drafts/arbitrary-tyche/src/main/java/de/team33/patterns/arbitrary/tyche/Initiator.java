@@ -11,7 +11,7 @@ import java.util.List;
  * If there are multiple constructors, it is assumed that the public constructor with the largest number of parameters
  * should be used.
  *
- * @see de.team33.patterns.arbitrary.mimas package
+ * @see de.team33.patterns.arbitrary.tyche package
  */
 public interface Initiator {
 

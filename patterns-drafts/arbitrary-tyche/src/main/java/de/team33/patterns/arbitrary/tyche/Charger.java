@@ -26,7 +26,7 @@ import java.util.List;
  * of a specific type (not void). The {@link Object#hashCode() hashCode()} and {@link Object#toString() toString()}
  * methods are ignored.
  *
- * @see de.team33.patterns.arbitrary.mimas package
+ * @see de.team33.patterns.arbitrary.tyche package
  */
 public interface Charger {
 
