@@ -25,7 +25,7 @@
         <module>concept-alpha</module>
         <module>arbitrary-tyche</module>
         <module>beans-hermes</module>
-        <module>json-sinope</module>
+        <module>json-charon</module>
         <module>math-my</module>
         <module>records-triton</module>
     </modules>

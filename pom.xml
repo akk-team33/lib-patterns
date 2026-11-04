@@ -73,7 +73,7 @@
                         <artifact>concept-alpha</artifact>
                         <artifact>arbitrary-tyche</artifact>
                         <artifact>beans-hermes</artifact>
-                        <artifact>json-sinope</artifact>
+                        <artifact>json-charon</artifact>
                         <artifact>math-my</artifact>
                         <artifact>records-triton</artifact>
                     </excludeArtifacts>

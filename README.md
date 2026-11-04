@@ -24,7 +24,7 @@ Java 17 or later
   * concept-alpha (Misc ideas, concepts and drafts)
   * arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * beans-hermes (Team33 JavaBeans Library - Edition "hermes")
-  * json-sinope (Team33 JSON Library - Edition "jota")
+  * json-charon (Team33 JSON Library - Edition "charon")
   * math-my (Team33 Math Library - Edition "my")
 
 ### Still Featured
@@ -105,8 +105,8 @@ Java 17 or later
 * Drafts:
   * ☐ Unpinned module records-triton as draft:
     * ☐ Added support for 'listable' types
-  * Renamed module json-jota to json-sinope
-    * ☐ Added support for JSON Number
+  * Renamed module json-jota to json-charon
+    * ☐ Added JSON representation
 
 ### 2.12.0
 

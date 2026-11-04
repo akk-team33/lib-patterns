@@ -10,10 +10,10 @@
         <version>2.13.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>json-sinope</artifactId>
+    <artifactId>json-charon</artifactId>
 
-    <name>Team33 Json Library - Edition "sinope"</name>
-    <description>Provides JSON mapping.</description>
+    <name>Team33 Json Library - Edition "charon"</name>
+    <description>Provides JSON parsing/renderig and representation.</description>
 
     <dependencies>
         <dependency>
