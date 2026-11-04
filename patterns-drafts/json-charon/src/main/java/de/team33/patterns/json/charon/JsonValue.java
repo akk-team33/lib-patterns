@@ -1,6 +1,6 @@
 package de.team33.patterns.json.charon;
 
-interface JsonValue {
+public interface JsonValue {
 
     JsonValue NULL = new JsonValue() {
 
