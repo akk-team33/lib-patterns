@@ -106,7 +106,7 @@ Java 17 or later
   * ☐ Unpinned module records-triton as draft:
     * ☐ Added support for 'listable' types
   * Renamed module json-jota to json-charon
-    * ☐ Added JSON representation
+    * Added JSON representation classes
 
 ### 2.12.0
 
