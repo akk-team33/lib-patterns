@@ -17,35 +17,35 @@ public class JsonNumber implements JsonValue {
         this.value = value;
     }
 
-    public static JsonNumber valueOf(final byte value) {
+    public static JsonNumber of(final byte value) {
         return new JsonNumber(BigDecimal.valueOf(value));
     }
 
-    public static JsonNumber valueOf(final short value) {
+    public static JsonNumber of(final short value) {
         return new JsonNumber(BigDecimal.valueOf(value));
     }
 
-    public static JsonNumber valueOf(final int value) {
+    public static JsonNumber of(final int value) {
         return new JsonNumber(BigDecimal.valueOf(value));
     }
 
-    public static JsonNumber valueOf(final long value) {
+    public static JsonNumber of(final long value) {
         return new JsonNumber(BigDecimal.valueOf(value));
     }
 
-    public static JsonNumber valueOf(final float value) {
+    public static JsonNumber of(final float value) {
         return new JsonNumber(new BigDecimal(Float.toString(value)));
     }
 
-    public static JsonNumber valueOf(final double value) {
+    public static JsonNumber of(final double value) {
         return new JsonNumber(new BigDecimal(Double.toString(value)));
     }
 
-    public static JsonNumber valueOf(final BigInteger value) {
+    public static JsonNumber of(final BigInteger value) {
         return new JsonNumber(new BigDecimal(value));
     }
 
-    public static JsonNumber valueOf(final BigDecimal value) {
+    public static JsonNumber of(final BigDecimal value) {
         return new JsonNumber(Objects.requireNonNull(value));
     }
 

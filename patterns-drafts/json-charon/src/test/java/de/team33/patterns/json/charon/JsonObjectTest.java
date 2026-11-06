@@ -9,8 +9,8 @@ class JsonObjectTest {
     @Test
     final void builder() {
         final JsonObject object = JsonObject.builder()
-                                            .put("name1", new JsonBoolean(false))
-                                            .put("name2", new JsonBoolean(true))
+                                            .put("name1", JsonBoolean.FALSE)
+                                            .put("name2", JsonBoolean.TRUE)
                                             .put("name1", JsonValue.NULL)
                                             .put("name2", JsonValue.NULL)
                                             .build();

@@ -6,7 +6,7 @@ public interface JsonValue {
 
         @Override
         public String toString() {
-            return "%s.NULL".formatted(JsonValue.class.getSimpleName());
+            return "null";
         }
     };
 }

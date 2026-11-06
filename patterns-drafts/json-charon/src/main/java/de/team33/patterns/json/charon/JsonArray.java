@@ -1,66 +1,35 @@
 package de.team33.patterns.json.charon;
 
-import de.team33.patterns.value.sinope.Equation;
+import de.team33.patterns.streamable.galatea.Buffer;
+import de.team33.patterns.streamable.galatea.Streamable;
 
-import java.util.ArrayList;
+import java.util.AbstractList;
 import java.util.List;
-
-import static java.util.Objects.requireNonNull;
+import java.util.RandomAccess;
+import java.util.stream.Collector;
 
 @SuppressWarnings("StaticInheritance")
-final class JsonArray implements JsonValue {
+public final class JsonArray extends AbstractList<JsonValue> implements RandomAccess, JsonValue {
 
-    private static final Equation<JsonArray> EQUATION = Equation.of(JsonArray.class, jsonArray -> jsonArray.values);
+    /**
+     * A {@link Collector} to {@linkplain java.util.stream.Stream#collect(Collector) collect} elements of
+     * {@link JsonValue} into a new {@link JsonArray}.
+     */
+    public static final Collector<JsonValue, ?, JsonArray> COLLECTOR = Buffer.collector(JsonArray::new);
 
     private final List<JsonValue> values;
 
-    private JsonArray(final List<JsonValue> values) {
-        this.values = List.copyOf(values);
+    private JsonArray(final Streamable<JsonValue> buffer) {
+        this.values = buffer.toList();
     }
 
-    static Builder builder() {
-        return new Builder();
-    }
-
-    final JsonValue get(final int index) {
+    @Override
+    public final JsonValue get(final int index) {
         return values.get(index);
     }
 
-    final int size() {
+    @Override
+    public final int size() {
         return values.size();
-    }
-
-    @Override
-    public final boolean equals(final Object obj) {
-        return EQUATION.equals(this, obj);
-    }
-
-    @Override
-    public final int hashCode() {
-        return EQUATION.hashCode(this);
-    }
-
-    @Override
-    public final String toString() {
-        return EQUATION.toString(this);
-    }
-
-    static final class Builder {
-
-        private final List<JsonValue> values = new ArrayList<>();
-
-        final Builder add(final JsonValue value) {
-            values.add(requireNonNull(value));
-            return this;
-        }
-
-        @SuppressWarnings({"MethodMayBeStatic", "UnusedReturnValue", "unused"})
-        final Builder addAll(final Builder other) {
-            throw new UnsupportedOperationException("should never be called");
-        }
-
-        final JsonArray build() {
-            return new JsonArray(values);
-        }
     }
 }

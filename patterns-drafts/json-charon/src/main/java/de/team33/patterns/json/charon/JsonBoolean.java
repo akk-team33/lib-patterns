@@ -1,5 +1,17 @@
 package de.team33.patterns.json.charon;
 
 @SuppressWarnings("StaticInheritance")
-record JsonBoolean(boolean value) implements JsonValue {
+public enum JsonBoolean implements JsonValue {
+
+    FALSE,
+    TRUE;
+
+    public static JsonBoolean of(final boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
+    @Override
+    public String toString() {
+        return name().toLowerCase();
+    }
 }
