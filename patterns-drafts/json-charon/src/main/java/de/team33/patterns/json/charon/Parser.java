@@ -1,6 +1,8 @@
 package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 final class Parser {
@@ -73,20 +75,20 @@ final class Parser {
         }
     }
 
-    private JsonArray parseArray() {
+    private JsonValue parseArray() {
         source.expect('[')
               .skipWhitespace();
-        final JsonArray.Builder builder = JsonArray.builder();
+        final List<JsonValue> builder = new ArrayList<>();
         if (source.hasMore() && ']' == source.peek()) {
             source.skip();
         } else {
             parseArrayBody(builder);
             source.expect(']');
         }
-        return builder.build();
+        return Json.valueOf(builder);
     }
 
-    private void parseArrayBody(final JsonArray.Builder builder) {
+    private void parseArrayBody(final List<? super JsonValue> builder) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
             builder.add(parseValue());
@@ -98,22 +100,21 @@ final class Parser {
         }
     }
 
-    private JsonString parseString() {
-        return new JsonString(StringLiteral.parse(source));
+    private JsonValue parseString() {
+        return Json.valueOf(StringLiteral.parse(source));
     }
 
     private void parseMember(final JsonObject.Builder builder) {
         final JsonValue next = parseValue();
-        if (next instanceof final JsonString jsonString) {
-            final String name = jsonString.value();
+        if (JsonType.STRING == next.type()) {
+            final String name = next.asString();
             source.expect(COLON)
                   .skipWhitespace();
             final JsonValue value = parseValue();
             builder.put(name, value);
         } else {
             throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
-                                                                         next.getClass().getSimpleName()));
+                    "expected a value of type %s - but was %s".formatted(JsonType.STRING, next.type()));
         }
     }
 
@@ -122,27 +123,27 @@ final class Parser {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return JsonValue.NULL;
+            return Json.NULL;
         }
         throw new IllegalArgumentException(
                 "expected null - but was %s".formatted(candidate));
     }
 
-    private JsonBoolean parseBoolean() {
+    private JsonValue parseBoolean() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (BOOLEAN.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return new JsonBoolean("true".equals(candidate));
+            return Json.valueOf("true".equals(candidate));
         }
         throw new IllegalArgumentException("expected one of {true, false} - but was %s".formatted(candidate));
     }
 
-    private JsonNumber parseNumber() {
+    private JsonValue parseNumber() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NUMBER.matcher(candidate).matches()) {
             final BigDecimal number = new BigDecimal(candidate);
             source.skip(candidate.length());
-            return new JsonNumber(number);
+            return Json.valueOf(number);
         }
         throw new IllegalArgumentException("expected Json number - but was %s".formatted(candidate));
     }

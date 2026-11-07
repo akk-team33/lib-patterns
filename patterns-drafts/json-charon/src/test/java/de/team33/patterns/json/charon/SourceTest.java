@@ -1,6 +1,7 @@
 package de.team33.patterns.json.charon;
 
 import de.team33.patterns.json.charon.testing.Supply;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -97,7 +98,7 @@ class SourceTest {
         }
     }
 
-    @Test
+    @RepeatedTest(5)
     final void expect_positive() {
         final String text = SUPPLY.anyString();
         final int index = SUPPLY.anyInt(text.length());
@@ -108,7 +109,7 @@ class SourceTest {
         assertEquals(index + 1, source.index());
     }
 
-    @Test
+    @RepeatedTest(5)
     final void expect_negative() {
         final String text = SUPPLY.anyString();
         final int index = SUPPLY.anyInt(text.length());
@@ -127,7 +128,7 @@ class SourceTest {
         }
     }
 
-    @Test
+    @RepeatedTest(5)
     final void skipWhitespace_positive() {
         final String head = SUPPLY.anyString();
         final int index = head.length();
@@ -138,11 +139,11 @@ class SourceTest {
         assertEquals(index + 10, source.index());
     }
 
-    @Test
+    @RepeatedTest(5)
     final void skipWhitespace_negative() {
         final String text = SUPPLY.anyString()
                                   .replace(' ', '_');
-        final int index = SUPPLY.anyInt(text.length());
+        final int index = SUPPLY.anyInt(1 + text.length());
         final Source source = new Source(text).skip(index);
 
         source.skipWhitespace();

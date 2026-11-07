@@ -5,6 +5,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -13,50 +14,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RendererTest {
 
     private static Stream<JsonValue> jsonValues() {
-        return Stream.of(JsonValue.NULL,
-                         new JsonBoolean(true),
-                         new JsonBoolean(false),
-                         new JsonNumber(BigDecimal.ONE),
-                         new JsonNumber(BigDecimal.valueOf(278)),
-                         new JsonNumber(new BigDecimal("123456789.123456789")),
-                         new JsonNumber(new BigDecimal("0.123E1234")),
-                         new JsonNumber(BigDecimal.valueOf(-1)),
-                         new JsonNumber(BigDecimal.valueOf(0)),
-                         new JsonNumber(BigDecimal.valueOf(-123.45)),
-                         new JsonNumber(new BigDecimal("1E5")),
-                         new JsonNumber(new BigDecimal("-1.2e-5")),
-                         new JsonString(" abc "),
-                         new JsonString("\\\"\b\f\n\r\t"),
+        return Stream.of(Json.NULL,
+                         Json.valueOf(true),
+                         Json.valueOf(false),
+                         Json.valueOf(BigDecimal.ONE),
+                         Json.valueOf(BigDecimal.valueOf(278)),
+                         Json.valueOf(new BigDecimal("123456789.123456789")),
+                         Json.valueOf(new BigDecimal("0.123E1234")),
+                         Json.valueOf(BigDecimal.valueOf(-1)),
+                         Json.valueOf(BigDecimal.valueOf(0)),
+                         Json.valueOf(BigDecimal.valueOf(-123.45)),
+                         Json.valueOf(new BigDecimal("1E5")),
+                         Json.valueOf(new BigDecimal("-1.2e-5")),
+                         Json.valueOf(" abc "),
+                         Json.valueOf("\\\"\b\f\n\r\t"),
                          JsonObject.builder().build(),
-                         JsonArray.builder().build(),
-                         JsonArray.builder()
-                                  .add(new JsonString("a"))
-                                  .add(new JsonBoolean(true))
-                                  .add(JsonValue.NULL)
-                                  .add(new JsonNumber(new BigDecimal("1.23")))
-                                  .add(JsonObject.builder()
-                                                 .put("name", new JsonString("value"))
-                                                 .build())
-                                  .build(),
+                         Json.valueOf(List.of()),
+                         Json.valueOf(List.of(
+                                 Json.valueOf("a"),
+                                 Json.valueOf(true),
+                                 Json.NULL,
+                                 Json.valueOf(new BigDecimal("1.23")),
+                                 JsonObject.builder()
+                                           .put("name", Json.valueOf("value"))
+                                           .build())),
                          JsonObject.builder()
-                                   .put("name1", JsonValue.NULL)
-                                   .put("name2", JsonValue.NULL)
-                                   .put("name3",
-                                        JsonArray.builder()
-                                                 .add(JsonValue.NULL)
-                                                 .add(JsonValue.NULL)
-                                                 .add(new JsonNumber(BigDecimal.valueOf(3)))
-                                                 .build())
+                                   .put("name1", Json.NULL)
+                                   .put("name2", Json.NULL)
+                                   .put("name3", Json.valueOf(List.of(
+                                           Json.NULL,
+                                           Json.NULL,
+                                           Json.valueOf(BigDecimal.valueOf(3)))))
                                    .build(),
                          JsonObject.builder()
-                                   .put("name1", new JsonString("value1"))
-                                   .put("name2", new JsonString("value2"))
-                                   .put("name3",
-                                        JsonArray.builder()
-                                                 .add(new JsonNumber(BigDecimal.valueOf(1)))
-                                                 .add(new JsonNumber(BigDecimal.valueOf(2)))
-                                                 .add(new JsonNumber(BigDecimal.valueOf(3)))
-                                                 .build())
+                                   .put("name1", Json.valueOf("value1"))
+                                   .put("name2", Json.valueOf("value2"))
+                                   .put("name3", Json.valueOf(List.of(
+                                           Json.valueOf(BigDecimal.valueOf(1)),
+                                           Json.valueOf(BigDecimal.valueOf(2)),
+                                           Json.valueOf(BigDecimal.valueOf(3)))))
                                    .build());
     }
 
@@ -84,7 +80,7 @@ class RendererTest {
         if (value instanceof final JsonObject object && options.contains(RenderOption.SKIP_NULL)) {
             final JsonObject.Builder builder = JsonObject.builder();
             object.stream()
-                  .filter(entry -> JsonValue.NULL != entry.value())
+                  .filter(entry -> Json.NULL != entry.value())
                   .forEach(entry -> builder.put(entry.name(), entry.value()));
             return builder.build();
         }

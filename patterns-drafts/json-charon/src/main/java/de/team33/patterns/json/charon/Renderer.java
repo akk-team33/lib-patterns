@@ -21,7 +21,7 @@ final class Renderer {
 
     private Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
-        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonValue.NULL != entry.value()
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.value()
                                                        : entry -> true;
         this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
                                                              : new FormattedSeparation();
@@ -50,12 +50,12 @@ final class Renderer {
     }
 
     private Renderer add(final JsonValue source, final int indentation) {
-        if (JsonValue.NULL == source) {
-            return add("null");
-        } else {
-            final JsonType type = JsonType.of(source.getClass());
-            return type.render(this, source, indentation);
-        }
+        return switch (source.type()) {
+            case NULL, BOOLEAN, NUMBER -> add(source.toString());
+            case STRING -> addString(source);
+            case ARRAY -> addArray(source, indentation);
+            default -> JsonType.of(source.getClass()).render(this, source, indentation);
+        };
     }
 
     @Override
@@ -84,11 +84,11 @@ final class Renderer {
         }
     }
 
-    private Renderer addArray(final JsonArray source, final int indentation) {
-        return add("[").addArrayBody(source, arrSeparation.next(indentation)).add("]");
+    private Renderer addArray(final JsonValue source, final int indentation) {
+        return add("[").addArrayBody(source.asArray(), arrSeparation.next(indentation)).add("]");
     }
 
-    private Renderer addArrayBody(final JsonArray source, final int indentation) {
+    private Renderer addArrayBody(final List<? extends JsonValue> source, final int indentation) {
         final int size = source.size();
         if (0 < size) {
             for (int index = 0; index < source.size(); ++index) {
@@ -115,24 +115,12 @@ final class Renderer {
         return addNewLine(indentation);
     }
 
-    private Renderer addString(final JsonString source, final int indentation) {
-        return add(StringLiteral.render(source.value()));
-    }
-
-    private Renderer addNumber(final JsonNumber source, final int indentation) {
-        return add(source.value().toString());
-    }
-
-    private Renderer addBoolean(final JsonBoolean source, final int indentation) {
-        return add(Boolean.toString(source.value()));
+    private Renderer addString(final JsonValue source) {
+        return add(StringLiteral.render(source.asString()));
     }
 
     private enum JsonType {
 
-        BOOLEAN(JsonBoolean.class, Renderer::addBoolean),
-        NUMBER(JsonNumber.class, Renderer::addNumber),
-        STRING(JsonString.class, Renderer::addString),
-        ARRAY(JsonArray.class, Renderer::addArray),
         OBJECT(JsonObject.class, Renderer::addObject);
 
         private static final Values<JsonType> VALUES = Values.of(JsonType.class);

@@ -4,6 +4,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,49 +13,46 @@ import static org.junit.jupiter.api.Assertions.fail;
 class ParserTest {
 
     static Stream<ParseCase> parseCases() {
-        return Stream.of(new ParseCase("null", JsonValue.NULL),
-                         new ParseCase(" \n\t null \r\f", JsonValue.NULL),
-                         new ParseCase(" true", new JsonBoolean(true)),
-                         new ParseCase("false ", new JsonBoolean(false)),
-                         new ParseCase("1", new JsonNumber(BigDecimal.ONE)),
-                         new ParseCase("278", new JsonNumber(BigDecimal.valueOf(278))),
+        return Stream.of(new ParseCase("null", Json.NULL),
+                         new ParseCase(" \n\t null \r\f", Json.NULL),
+                         new ParseCase(" true", Json.valueOf(true)),
+                         new ParseCase("false ", Json.valueOf(false)),
+                         new ParseCase("1", Json.valueOf(BigDecimal.ONE)),
+                         new ParseCase("278", Json.valueOf(BigDecimal.valueOf(278))),
                          new ParseCase(" 123456789.123456789",
-                                       new JsonNumber(new BigDecimal("123456789.123456789"))),
-                         new ParseCase(" 0.123E1234  ", new JsonNumber(new BigDecimal("0.123E1234"))),
-                         new ParseCase("-1", new JsonNumber(BigDecimal.valueOf(-1))),
-                         new ParseCase("0", new JsonNumber(BigDecimal.valueOf(0))),
-                         new ParseCase("-123.45", new JsonNumber(BigDecimal.valueOf(-123.45))),
-                         new ParseCase("1E5", new JsonNumber(new BigDecimal("1E5"))),
-                         new ParseCase("-1.2e-5", new JsonNumber(new BigDecimal("-1.2e-5"))),
-                         new ParseCase(" \" abc \" ", new JsonString(" abc ")),
+                                       Json.valueOf(new BigDecimal("123456789.123456789"))),
+                         new ParseCase(" 0.123E1234  ", Json.valueOf(new BigDecimal("0.123E1234"))),
+                         new ParseCase("-1", Json.valueOf(BigDecimal.valueOf(-1))),
+                         new ParseCase("0", Json.valueOf(BigDecimal.valueOf(0))),
+                         new ParseCase("-123.45", Json.valueOf(BigDecimal.valueOf(-123.45))),
+                         new ParseCase("1E5", Json.valueOf(new BigDecimal("1E5"))),
+                         new ParseCase("-1.2e-5", Json.valueOf(new BigDecimal("-1.2e-5"))),
+                         new ParseCase(" \" abc \" ", Json.valueOf(" abc ")),
                          new ParseCase("\t \"\\\\\\\"\\b\\f\\n\\r\\t\" \n",
-                                       new JsonString("\\\"\b\f\n\r\t")),
+                                       Json.valueOf("\\\"\b\f\n\r\t")),
                          new ParseCase("{}", JsonObject.builder().build()),
-                         new ParseCase("[]", JsonArray.builder().build()),
+                         new ParseCase("[]", Json.valueOf(List.of())),
                          new ParseCase("[\"a\", true, null, 1.23, {\"name\" : \"value\"}]",
-                                       JsonArray.builder()
-                                                .add(new JsonString("a"))
-                                                .add(new JsonBoolean(true))
-                                                .add(JsonValue.NULL)
-                                                .add(new JsonNumber(new BigDecimal("1.23")))
-                                                .add(JsonObject.builder()
-                                                               .put("name", new JsonString("value"))
-                                                               .build())
-                                                .build()),
+                                       Json.valueOf(List.of(Json.valueOf("a"),
+                                                            Json.valueOf(true),
+                                                            Json.NULL,
+                                                            Json.valueOf(new BigDecimal("1.23")),
+                                                            JsonObject.builder()
+                                                                      .put("name", Json.valueOf("value"))
+                                                                      .build()))),
                          new ParseCase("{\n" +
                                        "        \"name1\" : \"value1\" ,\n" +
                                        "        \"name2\" : \"value2\"\n,\n" +
                                        "        \"name3\" : [1, 2, 3]\n" +
                                        "    }",
                                        JsonObject.builder()
-                                                 .put("name1", new JsonString("value1"))
-                                                 .put("name2", new JsonString("value2"))
+                                                 .put("name1", Json.valueOf("value1"))
+                                                 .put("name2", Json.valueOf("value2"))
                                                  .put("name3",
-                                                      JsonArray.builder()
-                                                               .add(new JsonNumber(BigDecimal.valueOf(1)))
-                                                               .add(new JsonNumber(BigDecimal.valueOf(2)))
-                                                               .add(new JsonNumber(BigDecimal.valueOf(3)))
-                                                               .build())
+                                                      Json.valueOf(List.of(
+                                                              Json.valueOf(BigDecimal.valueOf(1)),
+                                                              Json.valueOf(BigDecimal.valueOf(2)),
+                                                              Json.valueOf(BigDecimal.valueOf(3)))))
                                                  .build()));
     }
 

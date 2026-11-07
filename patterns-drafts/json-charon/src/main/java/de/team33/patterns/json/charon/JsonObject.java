@@ -16,6 +16,11 @@ final class JsonObject extends AbstractList<JsonObject.Entry> implements JsonVal
     }
 
     @Override
+    public final JsonType type() {
+        return JsonType.OBJECT;
+    }
+
+    @Override
     public final Entry get(final int index) {
         return entries.get(index);
     }
