@@ -1,12 +1,12 @@
 package de.team33.patterns.json.charon;
 
-public interface JsonValue {
+interface JsonValue {
 
     JsonValue NULL = new JsonValue() {
 
         @Override
         public String toString() {
-            return "null";
+            return "%s.NULL".formatted(JsonValue.class.getSimpleName());
         }
     };
 }

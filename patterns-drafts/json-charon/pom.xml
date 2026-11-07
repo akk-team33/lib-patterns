@@ -36,6 +36,10 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>typing-proteus</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>collection-mneme</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>de.team33.patterns</groupId>

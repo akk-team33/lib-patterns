@@ -50,8 +50,12 @@ final class Renderer {
     }
 
     private Renderer add(final JsonValue source, final int indentation) {
-        final JsonType type = JsonType.of(source.getClass());
-        return type.render(this, source, indentation);
+        if (JsonValue.NULL == source) {
+            return add("null");
+        } else {
+            final JsonType type = JsonType.of(source.getClass());
+            return type.render(this, source, indentation);
+        }
     }
 
     @Override
@@ -63,7 +67,6 @@ final class Renderer {
         return add("{").addObjectBody(source, objSeparation.next(indentation)).add("}");
     }
 
-    @SuppressWarnings("TypeMayBeWeakened")
     private Renderer addObjectBody(final JsonObject source, final int indentation) {
         final List<JsonObject.Entry> entries = source.stream()
                                                      .filter(entryFilter)
@@ -113,19 +116,24 @@ final class Renderer {
     }
 
     private Renderer addString(final JsonString source, final int indentation) {
-        return add(StringLiteral.render(source.toString()));
+        return add(StringLiteral.render(source.value()));
     }
 
-    private Renderer addValue(final JsonValue source, final int indentation) {
-        return add(source.toString());
+    private Renderer addNumber(final JsonNumber source, final int indentation) {
+        return add(source.value().toString());
+    }
+
+    private Renderer addBoolean(final JsonBoolean source, final int indentation) {
+        return add(Boolean.toString(source.value()));
     }
 
     private enum JsonType {
 
+        BOOLEAN(JsonBoolean.class, Renderer::addBoolean),
+        NUMBER(JsonNumber.class, Renderer::addNumber),
         STRING(JsonString.class, Renderer::addString),
         ARRAY(JsonArray.class, Renderer::addArray),
-        OBJECT(JsonObject.class, Renderer::addObject),
-        VALUE(JsonValue.class, Renderer::addValue);
+        OBJECT(JsonObject.class, Renderer::addObject);
 
         private static final Values<JsonType> VALUES = Values.of(JsonType.class);
 
