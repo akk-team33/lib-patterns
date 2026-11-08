@@ -17,6 +17,7 @@
     <description>Parent of team33 patterns library collection</description>
 
     <modules>
+        <module>collection-mneme</module>
         <module>config-eunomia</module>
     </modules>
 

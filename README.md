@@ -16,6 +16,7 @@ Java 17 or later
 
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
+  * collection-mneme (Team33 Collection Library - Edition "mneme")
   * config-eunomia (Team33 Config Library - Edition "eunomia")
 
 ### Drafts - not deployed, not featured
@@ -34,7 +35,6 @@ Java 17 or later
   * building-anthe (Team33 Building Library - Edition "anthe") - 2.8.0
   * building-elara (Team33 Building Library - Edition "elara") - 2.10.2
   * collection-ceres (Team33 Collection Library - Edition "ceres") - 2.8.0
-  * collection-mneme (Team33 Collection Library - Edition "mneme") - 2.10.4
   * decision-thyone (Team33 Decision Library - Edition "thyone") - 2.8.1
   * enums-pan (Team33 Enums Library - Edition "pan") - 2.8.1
   * exceptional-dione (Team33 Exceptional Library - Edition "dione") - 2.8.1
@@ -90,6 +90,7 @@ Java 17 or later
 
 ### further
 
+* ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -102,6 +103,8 @@ Java 17 or later
 
 ### 2.13.0-SNAPSHOT
 
+* Unpinned module collection-mneme
+  * fixed equals(), hashCode(), toString()
 * Drafts:
   * ☐ Unpinned module records-triton as draft:
     * ☐ Added support for 'listable' types
