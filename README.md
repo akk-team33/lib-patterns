@@ -86,10 +86,9 @@ Java 17 or later
 
 ### next
 
-* ☐ Pinned module config-eunomia to 2.12.0 (still featured)
-
 ### further
 
+* ☐ Pinned module config-eunomia to 2.13.0-SNAPSHOT (still featured)
 * ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
