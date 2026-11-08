@@ -7,7 +7,6 @@ import de.team33.patterns.streamable.galatea.Buffer;
 import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -17,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FinalMapTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     @Test
     final void empty() {
@@ -52,8 +51,8 @@ class FinalMapTest {
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
-                                                         .add(expected.get(1))
-                                                         .map(FinalMap::of);
+                                                       .add(expected.get(1))
+                                                       .map(FinalMap::of);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -67,9 +66,9 @@ class FinalMapTest {
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
-                                                         .add(expected.get(1))
-                                                         .add(expected.get(2))
-                                                         .map(FinalMap::of);
+                                                       .add(expected.get(1))
+                                                       .add(expected.get(2))
+                                                       .map(FinalMap::of);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -83,11 +82,11 @@ class FinalMapTest {
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
-                                                         .add(expected.get(1))
-                                                         .add(expected.get(2))
-                                                         .add(expected.get(3))
-                                                         .add(expected.get(4))
-                                                         .map(FinalMap::of);
+                                                       .add(expected.get(1))
+                                                       .add(expected.get(2))
+                                                       .add(expected.get(3))
+                                                       .add(expected.get(4))
+                                                       .map(FinalMap::of);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 

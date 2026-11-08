@@ -27,8 +27,9 @@ class ImmutableEntryTest {
         assertEquals(original, immutable);
         assertEquals(immutable, original);
         assertNotEquals(immutable, other);
-        //noinspection MisorderedAssertEqualsArguments
+        //noinspection MisorderedAssertEqualsArguments,AssertBetweenInconvertibleTypes
         assertNotEquals(immutable, this);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(this, immutable);
     }
 

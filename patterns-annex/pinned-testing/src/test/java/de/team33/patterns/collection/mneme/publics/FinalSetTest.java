@@ -5,7 +5,6 @@ import de.team33.patterns.collection.mneme.FinalSet;
 import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FinalSetTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     @Test
     final void empty() {

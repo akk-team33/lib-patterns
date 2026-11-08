@@ -141,8 +141,9 @@ class ImmutableMapTest {
         assertEquals(anyMap, immutable);
         assertEquals(immutable, anyMap);
         assertNotEquals(immutable, anyOtherMap);
-        //noinspection MisorderedAssertEqualsArguments
+        //noinspection MisorderedAssertEqualsArguments,AssertBetweenInconvertibleTypes
         assertNotEquals(immutable, this);
+        //noinspection AssertBetweenInconvertibleTypes
         assertNotEquals(this, immutable);
     }
 

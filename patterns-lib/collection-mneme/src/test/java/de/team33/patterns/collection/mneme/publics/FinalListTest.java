@@ -5,7 +5,6 @@ import de.team33.patterns.collection.mneme.FinalList;
 import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -16,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FinalListTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     @Test
     final void empty() {

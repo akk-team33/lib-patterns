@@ -4,7 +4,6 @@ import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.collection.mneme.ImmutableListIterator;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ImmutableListIteratorTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     private final List<String> list = Stream.generate(GENERATOR::anyString)
                                             .limit(GENERATOR.anyInt(5))
