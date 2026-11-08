@@ -144,6 +144,27 @@ public abstract class ImmutableList<E> extends ImmutableCollection<E> implements
         throw new UnsupportedOperationException("ImmutableList does not support replaceAll()");
     }
 
+    /**
+     * Returns {@code true} if <em>obj</em> is a {@link List} that contains the same elements as <em>this</em> list
+     * in the same order.
+     *
+     * @see List#equals(Object)
+     */
+    @Override
+    public final boolean equals(final Object obj) {
+        return (this == obj) || support.equals(obj);
+    }
+
+    /**
+     * Returns a hash code that is consistent with {@link #equals(Object)}.
+     *
+     * @see List#hashCode()
+     */
+    @Override
+    public final int hashCode() {
+        return support.hashCode();
+    }
+
     private static final class Proxy<E> extends ImmutableList<E> {
 
         private final List<? extends E> core;
