@@ -107,4 +107,9 @@ class ImmutableListTest extends ImmutableCollectionTestBase<Object, ImmutableLis
     final void testHashCode() {
         assertEquals(anyList.hashCode(), ImmutableList.proxy(anyList).hashCode());
     }
+
+    @Test
+    final void testToString() {
+        assertEquals(anyList.toString(), ImmutableList.proxy(anyList).toString());
+    }
 }

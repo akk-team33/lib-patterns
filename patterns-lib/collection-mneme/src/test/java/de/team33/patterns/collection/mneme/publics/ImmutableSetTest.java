@@ -52,6 +52,11 @@ class ImmutableSetTest extends ImmutableCollectionTestBase<Object, ImmutableSet<
     }
 
     @Test
+    final void testToString() {
+        assertEquals(anySet.toString(), ImmutableSet.proxy(anySet).toString());
+    }
+
+    @Test
     final void proxy_iterator() {
         final Set<Object> result = new HashSet<>();
         ImmutableSet.proxy(anySet).iterator().forEachRemaining(result::add);
