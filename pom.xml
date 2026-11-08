@@ -75,7 +75,6 @@
                         <artifact>beans-hermes</artifact>
                         <artifact>json-charon</artifact>
                         <artifact>math-my</artifact>
-                        <artifact>records-triton</artifact>
                     </excludeArtifacts>
                 </configuration>
             </plugin>

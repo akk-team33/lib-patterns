@@ -106,8 +106,6 @@ Java 17 or later
   * fixed ImmutableList: equals() and hashCode()
   * refined FinalList.of(Collection), FinalSet.of(Collection), FinalMap.of(Map)
 * Drafts:
-  * ☐ Unpinned module records-triton as draft:
-    * ☐ Added support for 'listable' types
   * Added module json-charon
   * Removed module json-jota
 

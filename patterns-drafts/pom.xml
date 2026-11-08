@@ -27,7 +27,6 @@
         <module>beans-hermes</module>
         <module>json-charon</module>
         <module>math-my</module>
-        <module>records-triton</module>
     </modules>
 
     <dependencyManagement>

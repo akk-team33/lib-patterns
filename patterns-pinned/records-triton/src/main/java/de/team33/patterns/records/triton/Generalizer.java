@@ -119,8 +119,8 @@ enum Generalizer {
                     .entrySet()
                     .stream()
                     .collect(JsonObject::builder,
-                             (builder, entry) -> builder.put(entry.getKey(), map(entry.getValue())),
-                             JsonObject.Builder::putAll)
+                              (builder, entry) -> builder.put(entry.getKey(), map(entry.getValue())),
+                              JsonObject.Builder::putAll)
                     .build();
     }
 
