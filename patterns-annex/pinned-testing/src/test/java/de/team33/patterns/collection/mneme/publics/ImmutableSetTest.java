@@ -1,56 +1,70 @@
 package de.team33.patterns.collection.mneme.publics;
 
 import de.team33.patterns.collection.mneme.ImmutableSet;
+import de.team33.patterns.collection.mneme.testing.Supply;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ImmutableSetTest extends ImmutableCollectionTestBase<Object, ImmutableSet<Object>> {
 
-    private static final List<Object> ANY_LIST = Arrays.asList(Instant.now(), null, 2, "3");
-    private static final Set<Object> ANY_SET = new HashSet<>(ANY_LIST);
+    private static final Supply SUPPLY = new Supply();
+
+    private final List<Object> anyList = anyList();
+    private final Set<Object> anySet = new HashSet<>(anyList);
 
     ImmutableSetTest() {
-        super(ImmutableSet.proxy(Set.of()), ImmutableSet.proxy(new HashSet<>(ANY_LIST)));
+        super(ImmutableSet.proxy(Set.of()), ImmutableSet.proxy(new HashSet<>(anyList())));
+    }
+
+    static List<Object> anyList() {
+        return SUPPLY.stream(Supply::anyObject)
+                     .limit(SUPPLY.anyInt(4, 8))
+                     .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
     final Object anyElement() {
-        return this;
+        return SUPPLY.anyObject();
     }
 
     @Override
     final Collection<Object> anyElements() {
-        //noinspection AssignmentOrReturnOfFieldWithMutableType
-        return ANY_LIST;
+        return anyList();
     }
 
     @SuppressWarnings({"EqualsWithItself", "SimplifiableAssertion", "EqualsBetweenInconvertibleTypes"})
     @Test
     final void testEquals() {
-        final ImmutableSet<Object> proxy = ImmutableSet.proxy(ANY_SET);
+        final ImmutableSet<Object> proxy = ImmutableSet.proxy(anySet);
         assertTrue(proxy.equals(proxy));
-        assertTrue(proxy.equals(ANY_SET));
-        assertFalse(proxy.equals(ANY_LIST));
+        assertTrue(anySet.equals(proxy));
+        assertTrue(proxy.equals(anySet));
+        assertFalse(proxy.equals(anyList));
     }
 
     @Test
     final void testHashCode() {
-        assertEquals(ANY_SET.hashCode(), ImmutableSet.proxy(ANY_SET).hashCode());
+        assertEquals(anySet.hashCode(), ImmutableSet.proxy(anySet).hashCode());
+    }
+
+    @Test
+    final void testToString() {
+        assertEquals(anySet.toString(), ImmutableSet.proxy(anySet).toString());
     }
 
     @Test
     final void proxy_iterator() {
         final Set<Object> result = new HashSet<>();
-        ImmutableSet.proxy(ANY_SET).iterator().forEachRemaining(result::add);
-        assertEquals(ANY_SET, result);
+        ImmutableSet.proxy(anySet).iterator().forEachRemaining(result::add);
+        assertEquals(anySet, result);
     }
 
     @Test
     final void proxy_size() {
-        assertEquals(ANY_SET.size(), ImmutableSet.proxy(ANY_SET).size());
+        assertEquals(anySet.size(), ImmutableSet.proxy(anySet).size());
     }
 }
