@@ -4,7 +4,6 @@ import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.collection.mneme.FinalEntry;
 import org.junit.jupiter.api.Test;
 
-import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.AbstractMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FinalEntryTest {
 
-    private static final Generator GENERATOR = Generator.of(new SecureRandom());
+    private static final Generator GENERATOR = new Generator.Basic();
 
     @Test
     final void of() {
