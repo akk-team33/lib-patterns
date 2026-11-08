@@ -129,16 +129,6 @@ public class Json {
         }
 
         @Override
-        public boolean equals(final Object obj) {
-            return this == obj || obj instanceof Array other && value.equals(other.value);
-        }
-
-        @Override
-        public int hashCode() {
-            return value.hashCode();
-        }
-
-        @Override
         public String toString() {
             return value.toString();
         }
