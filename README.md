@@ -104,12 +104,13 @@ Java 17 or later
 ### 2.13.0-SNAPSHOT
 
 * Unpinned module collection-mneme
-  * fixed equals(), hashCode(), toString()
+  * fixed ImmutableList: equals() and hashCode()
+  * refined FinalList.of(Collection), FinalSet.of(Collection), FinalMap.of(Map)
 * Drafts:
   * ☐ Unpinned module records-triton as draft:
     * ☐ Added support for 'listable' types
-  * Renamed module json-jota to json-charon
-    * Added JSON representation classes
+  * Added module json-charon
+  * Removed module json-jota
 
 ### 2.12.0
 

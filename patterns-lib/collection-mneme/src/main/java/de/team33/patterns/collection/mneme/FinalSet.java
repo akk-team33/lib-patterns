@@ -81,11 +81,18 @@ public final class FinalSet<E> extends ImmutableSet<E> {
 
     /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
+     * <p>
+     * Returns <em>source</em> if it is already a {@link FinalSet}.
      *
      * @param <E> the type of elements in the resulting set.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <E> FinalSet<E> of(final Collection<? extends E> source) {
-        return new FinalSet<>(Streamable.cast(source::stream));
+        if (source instanceof final FinalSet finalSet) {
+            return finalSet;
+        } else {
+            return new FinalSet<>(Streamable.cast(source::stream));
+        }
     }
 
     /**

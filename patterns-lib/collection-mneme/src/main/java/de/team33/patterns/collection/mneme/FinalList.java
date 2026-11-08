@@ -79,11 +79,18 @@ public final class FinalList<E> extends ImmutableList<E> implements RandomAccess
 
     /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
+     * <p>
+     * Returns <em>source</em> if it is already a {@link FinalList}.
      *
      * @param <E> the type of elements in the resulting list.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <E> FinalList<E> of(final Collection<? extends E> source) {
-        return new FinalList<>(Streamable.cast(source::stream));
+        if (source instanceof final FinalList finalList) {
+            return finalList;
+        } else {
+            return new FinalList<>(Streamable.cast(source::stream));
+        }
     }
 
     /**

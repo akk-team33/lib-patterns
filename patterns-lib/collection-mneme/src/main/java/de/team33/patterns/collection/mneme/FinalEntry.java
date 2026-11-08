@@ -39,10 +39,10 @@ public final class FinalEntry<K, V> extends ImmutableEntry<K, V> {
      * @param <K> the type of the <em>key</em> of a resulting entry
      * @param <V> the type of the <em>value</em> of a resulting entry
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <K, V> FinalEntry<K, V> of(final Map.Entry<? extends K, ? extends V> entry) {
-        if (entry instanceof final FinalEntry<? extends K, ? extends V> finalEntry) {
-            //noinspection unchecked
-            return (FinalEntry<K, V>) finalEntry;
+        if (entry instanceof final FinalEntry finalEntry) {
+            return finalEntry;
         } else {
             return new FinalEntry<>(entry.getKey(), entry.getValue());
         }

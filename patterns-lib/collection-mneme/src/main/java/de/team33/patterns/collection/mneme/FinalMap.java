@@ -115,12 +115,19 @@ public final class FinalMap<K, V> extends ImmutableMap<K, V> {
 
     /**
      * Returns a {@link FinalMap} created from the given <em>source</em>.
+     * <p>
+     * Returns <em>source</em> if it is already a {@link FinalMap}.
      *
      * @param <K> the type of keys in the resulting map.
      * @param <V> the type of values in the resulting map.
      */
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public static <K, V> FinalMap<K, V> of(final Map<? extends K, ? extends V> source) {
-        return new FinalMap<>(source);
+        if (source instanceof final FinalMap finalMap) {
+            return finalMap;
+        } else {
+            return new FinalMap<>(source);
+        }
     }
 
     /**
