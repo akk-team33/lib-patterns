@@ -1,6 +1,8 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.arbitrary.mimas.Generator;
 import de.team33.patterns.records.triton.testing.Supply;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -97,10 +99,10 @@ class SourceTest {
         }
     }
 
-    @Test
+    @RepeatedTest(5)
     final void expect_positive() {
-        final String text = SUPPLY.anyString();
-        final int index = SUPPLY.anyInt(text.length() + 1);
+        final String text = SUPPLY.anyString(1, 32);
+        final int index = SUPPLY.anyInt(text.length());
         final Source source = new Source(text).skip(index);
         final char sample = text.charAt(index);
 
@@ -108,23 +110,13 @@ class SourceTest {
         assertEquals(index + 1, source.index());
     }
 
-    @Test
+    @RepeatedTest(5)
     final void expect_negative() {
-        final String text = SUPPLY.anyString();
-        final int index = SUPPLY.anyInt(text.length());
+        final char sample = Generator.CHARACTERS.charAt(0);
+        final String text = SUPPLY.anyString(Generator.CHARACTERS.substring(1));
+        final int index = SUPPLY.anyInt(1 + text.length());
         final Source source = new Source(text).skip(index);
-        final char exclude = text.charAt(index);
-        char sample = SUPPLY.anyChar();
-        while (exclude == sample) {
-            sample = SUPPLY.anyChar();
-        }
-
-        try {
-            source.expect(sample);
-            fail("expected to fail - but index was %d -> %d".formatted(index, source.index()));
-        } catch (final IllegalArgumentException e) {
-            // as expected
-        }
+        assertThrows(IllegalArgumentException.class, () -> source.expect(sample));
     }
 
     @Test

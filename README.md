@@ -88,7 +88,7 @@ Java 17 or later
 
 ### further
 
-* ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
+* ☐ Pinned module collection-mneme to 2.12.1 (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -99,7 +99,7 @@ Java 17 or later
 
 ## Change Log
 
-### 2.13.0-SNAPSHOT
+### 2.12.1
 
 * Pinned module config-eunomia to 2.12.0 (still featured)
 * Unpinned module collection-mneme
