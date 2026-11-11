@@ -2,7 +2,9 @@ package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 final class Parser {
@@ -50,20 +52,20 @@ final class Parser {
         return result;
     }
 
-    private JsonObject parseObject() {
+    private JsonValue parseObject() {
         source.expect('{')
               .skipWhitespace();
-        final JsonObject.Builder builder = JsonObject.builder();
+        final Map<String, JsonValue> builder = new LinkedHashMap<>();
         if (source.hasMore() && '}' == source.peek()) {
             source.skip();
         } else {
             parseObjectBody(builder);
             source.expect('}');
         }
-        return builder.build();
+        return Json.valueOf(builder);
     }
 
-    private void parseObjectBody(final JsonObject.Builder builder) {
+    private void parseObjectBody(final Map<? super String, ? super JsonValue> builder) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
             parseMember(builder);
@@ -72,6 +74,20 @@ final class Parser {
                 source.skip()
                       .skipWhitespace();
             }
+        }
+    }
+
+    private void parseMember(final Map<? super String, ? super JsonValue> builder) {
+        final JsonValue next = parseValue();
+        if (JsonType.STRING == next.type()) {
+            final String name = next.asString();
+            source.expect(COLON)
+                  .skipWhitespace();
+            final JsonValue value = parseValue();
+            builder.put(name, value);
+        } else {
+            throw new IllegalArgumentException(
+                    "expected a value of type %s - but was %s".formatted(JsonType.STRING, next.type()));
         }
     }
 
@@ -102,20 +118,6 @@ final class Parser {
 
     private JsonValue parseString() {
         return Json.valueOf(StringLiteral.parse(source));
-    }
-
-    private void parseMember(final JsonObject.Builder builder) {
-        final JsonValue next = parseValue();
-        if (JsonType.STRING == next.type()) {
-            final String name = next.asString();
-            source.expect(COLON)
-                  .skipWhitespace();
-            final JsonValue value = parseValue();
-            builder.put(name, value);
-        } else {
-            throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonType.STRING, next.type()));
-        }
     }
 
     @SuppressWarnings("SameReturnValue")

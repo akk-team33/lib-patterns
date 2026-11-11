@@ -1,9 +1,11 @@
 package de.team33.patterns.json.charon;
 
 import de.team33.patterns.collection.mneme.ImmutableList;
+import de.team33.patterns.collection.mneme.ImmutableMap;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a JSON value.
@@ -12,6 +14,7 @@ import java.util.Collection;
  * {@link Json#valueOf(CharSequence)}, {@link Json#valueOf(Collection)}, {@link Json#valueOf(Map)}
  * to get an instance.
  */
+@SuppressWarnings("InterfaceMayBeAnnotatedFunctional")
 public interface JsonValue {
 
     /**
@@ -57,5 +60,15 @@ public interface JsonValue {
      */
     default ImmutableList<JsonValue> asArray() {
         throw new UnsupportedOperationException("type is not ARRAY");
+    }
+
+    /**
+     * Returns the {@link ImmutableMap} value represented by <em>this</em> {@link JsonValue}
+     * if its {@link #type()} is {@link JsonType#OBJECT}.
+     *
+     * @throws UnsupportedOperationException if {@link #type()} is not {@link JsonType#OBJECT}.
+     */
+    default ImmutableMap<String, JsonValue> asObject() {
+        throw new UnsupportedOperationException("type is not OBJECT");
     }
 }

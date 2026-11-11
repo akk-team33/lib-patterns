@@ -1,8 +1,7 @@
 package de.team33.patterns.json.charon;
 
-import de.team33.patterns.enums.pan.Values;
-
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -15,13 +14,13 @@ final class Renderer {
     private static final String NEWLINE = "%n".formatted();
 
     private final StringBuilder target;
-    private final Predicate<JsonObject.Entry> entryFilter;
+    private final Predicate<Map.Entry<?, ?>> entryFilter;
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
     private Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
-        this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.value()
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.getValue()
                                                        : entry -> true;
         this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
                                                              : new FormattedSeparation();
@@ -54,7 +53,7 @@ final class Renderer {
             case NULL, BOOLEAN, NUMBER -> add(source.toString());
             case STRING -> addString(source);
             case ARRAY -> addArray(source, indentation);
-            default -> JsonType.of(source.getClass()).render(this, source, indentation);
+            case OBJECT -> addObject(source, indentation);
         };
     }
 
@@ -63,20 +62,20 @@ final class Renderer {
         return target.toString();
     }
 
-    private Renderer addObject(final JsonObject source, final int indentation) {
+    private Renderer addObject(final JsonValue source, final int indentation) {
         return add("{").addObjectBody(source, objSeparation.next(indentation)).add("}");
     }
 
-    private Renderer addObjectBody(final JsonObject source, final int indentation) {
-        final List<JsonObject.Entry> entries = source.stream()
-                                                     .filter(entryFilter)
-                                                     .toList();
+    private Renderer addObjectBody(final JsonValue source, final int indentation) {
+        final List<Map.Entry<String, JsonValue>> entries = source.asObject().entrySet().stream()
+                                                                 .filter(entryFilter)
+                                                                 .toList();
         final int size = entries.size();
         if (0 < size) {
             for (int index = 0; index < size; index++) {
-                final JsonObject.Entry entry = entries.get(index);
+                final Map.Entry<String, JsonValue> entry = entries.get(index);
                 objSeparation.addSeparator(index, indentation);
-                add(StringLiteral.render(entry.name())).add(" : ").add(entry.value(), indentation);
+                add(StringLiteral.render(entry.getKey())).add(" : ").add(entry.getValue(), indentation);
             }
             return objSeparation.addSeparator(0, objSeparation.prev(indentation));
         } else {
@@ -117,44 +116,6 @@ final class Renderer {
 
     private Renderer addString(final JsonValue source) {
         return add(StringLiteral.render(source.asString()));
-    }
-
-    private enum JsonType {
-
-        OBJECT(JsonObject.class, Renderer::addObject);
-
-        private static final Values<JsonType> VALUES = Values.of(JsonType.class);
-
-        private final Class<? extends JsonValue> jsonType;
-        @SuppressWarnings("rawtypes")
-        private final Rendering rendering;
-
-        <T extends JsonValue> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
-            this.jsonType = jsonType;
-            this.rendering = rendering;
-        }
-
-        static JsonType of(final Class<? extends JsonValue> sourceType) {
-            return VALUES.findAny(value -> value.jsonType.isAssignableFrom(sourceType))
-                         .orElseThrow(() -> new IllegalStateException(
-                                 // Difficult to test (should not happen at all) ...
-                                 "unexpected source type: %s".formatted(sourceType.getCanonicalName())));
-        }
-
-        final Renderer render(final Renderer renderer, final JsonValue source, final int indentation) {
-            return rendering.render(renderer, source, indentation);
-        }
-    }
-
-    @FunctionalInterface
-    private interface Rendering<T extends JsonValue> {
-
-        Renderer renderT(Renderer renderer, T source, int indentation);
-
-        @SuppressWarnings("unchecked")
-        default Renderer render(final Renderer renderer, final JsonValue source, final int indentation) {
-            return renderT(renderer, (T) source, indentation);
-        }
     }
 
     private interface Separation {

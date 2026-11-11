@@ -1,10 +1,13 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.collection.mneme.FinalEntry;
+import de.team33.patterns.collection.mneme.FinalMap;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,30 +33,29 @@ class ParserTest {
                          new ParseCase(" \" abc \" ", Json.valueOf(" abc ")),
                          new ParseCase("\t \"\\\\\\\"\\b\\f\\n\\r\\t\" \n",
                                        Json.valueOf("\\\"\b\f\n\r\t")),
-                         new ParseCase("{}", JsonObject.builder().build()),
+                         new ParseCase("{}", Json.valueOf(Map.of())),
                          new ParseCase("[]", Json.valueOf(List.of())),
                          new ParseCase("[\"a\", true, null, 1.23, {\"name\" : \"value\"}]",
                                        Json.valueOf(List.of(Json.valueOf("a"),
                                                             Json.valueOf(true),
                                                             Json.NULL,
                                                             Json.valueOf(new BigDecimal("1.23")),
-                                                            JsonObject.builder()
-                                                                      .put("name", Json.valueOf("value"))
-                                                                      .build()))),
-                         new ParseCase("{\n" +
-                                       "        \"name1\" : \"value1\" ,\n" +
-                                       "        \"name2\" : \"value2\"\n,\n" +
-                                       "        \"name3\" : [1, 2, 3]\n" +
-                                       "    }",
-                                       JsonObject.builder()
-                                                 .put("name1", Json.valueOf("value1"))
-                                                 .put("name2", Json.valueOf("value2"))
-                                                 .put("name3",
-                                                      Json.valueOf(List.of(
-                                                              Json.valueOf(BigDecimal.valueOf(1)),
-                                                              Json.valueOf(BigDecimal.valueOf(2)),
-                                                              Json.valueOf(BigDecimal.valueOf(3)))))
-                                                 .build()));
+                                                            Json.valueOf(FinalMap.of("name", Json.valueOf("value")))))),
+                         new ParseCase("""
+                                               {
+                                                   "name1" : "value1" ,
+                                                   "name2" : "value2"
+                                               ,
+                                                   "name3" : [1, 2, 3]
+                                               }""",
+                                       Json.valueOf(Stream.of(FinalEntry.of("name1", Json.valueOf("value1")),
+                                                              FinalEntry.of("name2", Json.valueOf("value2")),
+                                                              FinalEntry.of("name3",
+                                                                            Json.valueOf(List.of(
+                                                                                    Json.valueOf(BigDecimal.valueOf(1)),
+                                                                                    Json.valueOf(BigDecimal.valueOf(2)),
+                                                                                    Json.valueOf(BigDecimal.valueOf(3))))))
+                                                          .collect(FinalMap.collector()))));
     }
 
     static Stream<String> failCases() {
