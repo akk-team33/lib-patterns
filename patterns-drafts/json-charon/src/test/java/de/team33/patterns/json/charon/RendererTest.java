@@ -93,7 +93,7 @@ class RendererTest {
     final void render(final RenderCase given) {
         final String result = Renderer.render(given.source, given.options);
         // System.out.println(result);
-        assertEquals(given.expected, Parser.parse(result));
+        assertEquals(given.expected, Json.parse(result));
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")

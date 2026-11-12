@@ -65,6 +65,13 @@ public final class Json {
         return new JObject(FinalMap.of(value));
     }
 
+    /**
+     * Returns a {@link JsonValue} that is parsed from a given JSON <em>source</em>.
+     */
+    public static JsonValue parse(final String source) {
+        return new Parser(source).parseRoot();
+    }
+
     private enum Null implements JsonValue {
 
         INSTANCE;

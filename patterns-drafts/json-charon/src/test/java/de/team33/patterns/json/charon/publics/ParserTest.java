@@ -1,7 +1,9 @@
-package de.team33.patterns.json.charon;
+package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
+import de.team33.patterns.json.charon.Json;
+import de.team33.patterns.json.charon.JsonValue;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -86,7 +88,7 @@ class ParserTest {
     @ParameterizedTest
     @MethodSource("parseCases")
     final void parse(final ParseCase given) {
-        final JsonValue result = Parser.parse(given.source);
+        final JsonValue result = Json.parse(given.source);
         assertEquals(given.expected, result);
     }
 
@@ -94,7 +96,7 @@ class ParserTest {
     @MethodSource("failCases")
     final void parse_fail(final String given) {
         try {
-            final JsonValue result = Parser.parse(given);
+            final JsonValue result = Json.parse(given);
             fail("expected to fail - but was %s".formatted(result));
         } catch (final IllegalArgumentException e) {
             // as expected
