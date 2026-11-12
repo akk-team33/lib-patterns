@@ -27,7 +27,7 @@ final class Parser {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    JsonValue parseRoot() {
+    JsonValue parse() {
         source.skipWhitespace();
         final JsonValue result = parseValue();
         source.failIfMore();

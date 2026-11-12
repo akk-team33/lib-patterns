@@ -73,14 +73,14 @@ public final class Json {
      * Returns a {@link JsonValue} that is parsed from a given JSON <em>source</em>.
      */
     public static JsonValue parse(final String source) {
-        return new Parser(source).parseRoot();
+        return new Parser(source).parse();
     }
 
     /**
      * Returns a JSON string from a given {@link JsonValue} applying the given <em>options</em>.
      */
     public static String render(final JsonValue source, final Set<RenderOption> options) {
-        return new Renderer(options).add(source, 0)
+        return new Renderer(options).render(source, 0)
                                     .toString();
     }
 
