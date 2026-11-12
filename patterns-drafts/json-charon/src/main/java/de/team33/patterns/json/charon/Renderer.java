@@ -18,7 +18,7 @@ final class Renderer {
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
-    private Renderer(final Set<RenderOption> options) {
+    Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
         this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.getValue()
                                                        : entry -> true;
@@ -26,11 +26,6 @@ final class Renderer {
                                                              : new FormattedSeparation();
         this.arrSeparation = options.contains(FORMAT_ARRAY) ? new FormattedSeparation()
                                                             : new InlineSeparation();
-    }
-
-    static String render(final JsonValue source, final Set<RenderOption> options) {
-        return new Renderer(options).add(source, 0)
-                                    .toString();
     }
 
     private Renderer add(final String source) {
@@ -48,7 +43,7 @@ final class Renderer {
                          .collect(joining()));
     }
 
-    private Renderer add(final JsonValue source, final int indentation) {
+    Renderer add(final JsonValue source, final int indentation) {
         return switch (source.type()) {
             case NULL, BOOLEAN, NUMBER -> add(source.toString());
             case STRING -> addString(source);

@@ -1,7 +1,11 @@
-package de.team33.patterns.json.charon;
+package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
+import de.team33.patterns.json.charon.Json;
+import de.team33.patterns.json.charon.JsonType;
+import de.team33.patterns.json.charon.JsonValue;
+import de.team33.patterns.json.charon.RenderOption;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -91,7 +95,7 @@ class RendererTest {
     @ParameterizedTest
     @MethodSource("renderCases")
     final void render(final RenderCase given) {
-        final String result = Renderer.render(given.source, given.options);
+        final String result = Json.render(given.source, given.options);
         // System.out.println(result);
         assertEquals(given.expected, Json.parse(result));
     }

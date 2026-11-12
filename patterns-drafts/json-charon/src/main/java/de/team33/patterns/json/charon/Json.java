@@ -9,18 +9,22 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public final class Json {
 
     /**
-     * A singleton representation of JSON null.
+     * A singleton representation of JSON {@code null} as regular {@link JsonValue}.
      */
     public static final JsonValue NULL = Null.INSTANCE;
+
+    private Json() {}
 
     /**
      * Returns a {@link JsonValue} of {@link JsonValue#type()} {@link JsonType#BOOLEAN}
      * from the given {@code boolean} <em>value</em>.
      */
+    @SuppressWarnings("BooleanParameter")
     public static JsonValue valueOf(final boolean value) {
         return new Boolean(value);
     }
@@ -70,6 +74,14 @@ public final class Json {
      */
     public static JsonValue parse(final String source) {
         return new Parser(source).parseRoot();
+    }
+
+    /**
+     * Returns a JSON string from a given {@link JsonValue} applying the given <em>options</em>.
+     */
+    public static String render(final JsonValue source, final Set<RenderOption> options) {
+        return new Renderer(options).add(source, 0)
+                                    .toString();
     }
 
     private enum Null implements JsonValue {
