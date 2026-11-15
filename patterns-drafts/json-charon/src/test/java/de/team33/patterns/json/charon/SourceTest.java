@@ -18,7 +18,7 @@ class SourceTest {
     static Stream<AnyMoreCase> anyMoreCases() {
         return Stream.of(new AnyMoreCase("", 0, false),
                          new AnyMoreCase(SUPPLY.anyString(), Integer.MAX_VALUE, false),
-                         new AnyMoreCase(SUPPLY.anyString(), 0, true));
+                         new AnyMoreCase(SUPPLY.anyString(1, 32), 0, true));
     }
 
     static Stream<PeekCase> peekCases() {

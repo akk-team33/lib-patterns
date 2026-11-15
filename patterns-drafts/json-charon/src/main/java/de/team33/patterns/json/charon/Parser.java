@@ -58,7 +58,7 @@ final class Parser {
             parseObjectBody(builder);
             source.expect('}');
         }
-        return Json.valueOf(builder);
+        return new JsonObject(builder);
     }
 
     private void parseObjectBody(final Map<? super String, ? super JsonValue> builder) {
@@ -75,15 +75,16 @@ final class Parser {
 
     private void parseMember(final Map<? super String, ? super JsonValue> builder) {
         final JsonValue next = parseValue();
-        if (JsonType.STRING == next.type()) {
-            final String name = next.asString();
+        if (next instanceof final JsonString jsonString) {
+            final String name = jsonString.value();
             source.expect(COLON)
                   .skipWhitespace();
             final JsonValue value = parseValue();
             builder.put(name, value);
         } else {
             throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonType.STRING, next.type()));
+                    "expected a value of %s - but was %s".formatted(JsonString.class.getCanonicalName(),
+                                                                    next.getClass().getCanonicalName()));
         }
     }
 
@@ -97,7 +98,7 @@ final class Parser {
             parseArrayBody(builder);
             source.expect(']');
         }
-        return Json.valueOf(builder);
+        return new JsonArray(builder);
     }
 
     private void parseArrayBody(final List<? super JsonValue> builder) {
@@ -113,7 +114,7 @@ final class Parser {
     }
 
     private JsonValue parseString() {
-        return Json.valueOf(StringLiteral.parse(source));
+        return new JsonString(StringLiteral.parse(source));
     }
 
     @SuppressWarnings("SameReturnValue")
@@ -131,7 +132,7 @@ final class Parser {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (BOOLEAN.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return Json.valueOf("true".equals(candidate));
+            return new JsonBoolean("true".equals(candidate));
         }
         throw new IllegalArgumentException("expected one of {true, false} - but was %s".formatted(candidate));
     }
@@ -141,7 +142,7 @@ final class Parser {
         if (NUMBER.matcher(candidate).matches()) {
             final BigDecimal number = new BigDecimal(candidate);
             source.skip(candidate.length());
-            return Json.valueOf(number);
+            return new JsonNumber(number);
         }
         throw new IllegalArgumentException("expected Json number - but was %s".formatted(candidate));
     }

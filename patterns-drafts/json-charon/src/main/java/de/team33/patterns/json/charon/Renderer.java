@@ -1,7 +1,12 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.collection.mneme.FinalEntry;
+import de.team33.patterns.collection.mneme.FinalMap;
+import de.team33.patterns.collection.mneme.ImmutableMap;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -12,6 +17,14 @@ import static java.util.stream.Collectors.joining;
 final class Renderer {
 
     private static final String NEWLINE = "%n".formatted();
+    private static final ImmutableMap<Class<? extends JsonValue>, Rendering<?>> RENDERINGS =
+            Stream.of(renderEntry(JsonNull.class, Renderer::renderPlain),
+                      renderEntry(JsonBoolean.class, Renderer::renderPlain),
+                      renderEntry(JsonNumber.class, Renderer::renderPlain),
+                      renderEntry(JsonString.class, Renderer::renderString),
+                      renderEntry(JsonArray.class, Renderer::renderArray),
+                      renderEntry(JsonObject.class, Renderer::renderObject))
+                  .collect(FinalMap.collector());
 
     private final StringBuilder target;
     private final Predicate<Map.Entry<?, ?>> entryFilter;
@@ -26,6 +39,11 @@ final class Renderer {
                                                              : new FormattedSeparation();
         this.arrSeparation = options.contains(FORMAT_ARRAY) ? new FormattedSeparation()
                                                             : new InlineSeparation();
+    }
+
+    private static <J extends JsonValue>
+    Map.Entry<Class<J>, Rendering<J>> renderEntry(final Class<J> jClass, final Rendering<J> rendering) {
+        return FinalEntry.of(jClass, rendering);
     }
 
     private Renderer append(final String source) {
@@ -43,13 +61,29 @@ final class Renderer {
                             .collect(joining()));
     }
 
+    private static Rendering<?> rendering(final Class<? extends JsonValue> type) {
+        return Optional.ofNullable(RENDERINGS.get(type))
+                       .orElseThrow(() -> new IllegalArgumentException("not supported: " + type));
+    }
+
     Renderer render(final JsonValue source, final int indentation) {
-        return switch (source.type()) {
-            case NULL, BOOLEAN, NUMBER -> append(source.toString());
-            case STRING -> render(source.asString());
-            case ARRAY -> render(source.asArray(), indentation);
-            case OBJECT -> render(source.asObject(), indentation);
-        };
+        return rendering(source.getClass()).render(this, source, indentation);
+    }
+
+    private Renderer renderObject(final JsonObject value, final int indentation) {
+        return append("{").renderBody(value.value(), objSeparation.next(indentation)).append("}");
+    }
+
+    private Renderer renderArray(final JsonArray value, final int indentation) {
+        return append("[").renderBody(value.value(), arrSeparation.next(indentation)).append("]");
+    }
+
+    private Renderer renderString(final JsonString value, final int indentation) {
+        return append(StringLiteral.render(value.value()));
+    }
+
+    private Renderer renderPlain(final JsonValue value, final int indentation) {
+        return append(value.toString());
     }
 
     @Override
@@ -97,6 +131,17 @@ final class Renderer {
 
     private Renderer render(final String source) {
         return append(StringLiteral.render(source));
+    }
+
+    @FunctionalInterface
+    private interface Rendering<J extends JsonValue> {
+
+        Renderer renderJ(Renderer renderer, J jsonValue, int indentation);
+
+        @SuppressWarnings("unchecked")
+        default Renderer render(final Renderer renderer, final JsonValue jsonValue, final int indentation) {
+            return renderJ(renderer, (J) jsonValue, indentation);
+        }
     }
 
     private interface Separation {

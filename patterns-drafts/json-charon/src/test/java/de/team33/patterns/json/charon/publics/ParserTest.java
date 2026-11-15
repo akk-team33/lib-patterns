@@ -2,8 +2,7 @@ package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonValue;
+import de.team33.patterns.json.charon.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -20,29 +19,30 @@ class ParserTest {
     static Stream<ParseCase> parseCases() {
         return Stream.of(new ParseCase("null", Json.NULL),
                          new ParseCase(" \n\t null \r\f", Json.NULL),
-                         new ParseCase(" true", Json.valueOf(true)),
-                         new ParseCase("false ", Json.valueOf(false)),
-                         new ParseCase("1", Json.valueOf(BigDecimal.ONE)),
-                         new ParseCase("278", Json.valueOf(BigDecimal.valueOf(278))),
+                         new ParseCase(" true", new JsonBoolean(true)),
+                         new ParseCase("false ", new JsonBoolean(false)),
+                         new ParseCase("1", new JsonNumber(BigDecimal.ONE)),
+                         new ParseCase("278", new JsonNumber(BigDecimal.valueOf(278))),
                          new ParseCase(" 123456789.123456789",
-                                       Json.valueOf(new BigDecimal("123456789.123456789"))),
-                         new ParseCase(" 0.123E1234  ", Json.valueOf(new BigDecimal("0.123E1234"))),
-                         new ParseCase("-1", Json.valueOf(BigDecimal.valueOf(-1))),
-                         new ParseCase("0", Json.valueOf(BigDecimal.valueOf(0))),
-                         new ParseCase("-123.45", Json.valueOf(BigDecimal.valueOf(-123.45))),
-                         new ParseCase("1E5", Json.valueOf(new BigDecimal("1E5"))),
-                         new ParseCase("-1.2e-5", Json.valueOf(new BigDecimal("-1.2e-5"))),
-                         new ParseCase(" \" abc \" ", Json.valueOf(" abc ")),
+                                       new JsonNumber(new BigDecimal("123456789.123456789"))),
+                         new ParseCase(" 0.123E1234  ", new JsonNumber(new BigDecimal("0.123E1234"))),
+                         new ParseCase("-1", new JsonNumber(BigDecimal.valueOf(-1))),
+                         new ParseCase("0", new JsonNumber(BigDecimal.valueOf(0))),
+                         new ParseCase("-123.45", new JsonNumber(BigDecimal.valueOf(-123.45))),
+                         new ParseCase("1E5", new JsonNumber(new BigDecimal("1E5"))),
+                         new ParseCase("-1.2e-5", new JsonNumber(new BigDecimal("-1.2e-5"))),
+                         new ParseCase(" \" abc \" ", new JsonString(" abc ")),
                          new ParseCase("\t \"\\\\\\\"\\b\\f\\n\\r\\t\" \n",
-                                       Json.valueOf("\\\"\b\f\n\r\t")),
-                         new ParseCase("{}", Json.valueOf(Map.of())),
-                         new ParseCase("[]", Json.valueOf(List.of())),
+                                       new JsonString("\\\"\b\f\n\r\t")),
+                         new ParseCase("{}", new JsonObject(Map.of())),
+                         new ParseCase("[]", new JsonArray(List.of())),
                          new ParseCase("[\"a\", true, null, 1.23, {\"name\" : \"value\"}]",
-                                       Json.valueOf(List.of(Json.valueOf("a"),
-                                                            Json.valueOf(true),
-                                                            Json.NULL,
-                                                            Json.valueOf(new BigDecimal("1.23")),
-                                                            Json.valueOf(FinalMap.of("name", Json.valueOf("value")))))),
+                                       new JsonArray(List.of(
+                                               new JsonString("a"),
+                                               new JsonBoolean(true),
+                                               Json.NULL,
+                                               new JsonNumber(new BigDecimal("1.23")),
+                                               new JsonObject(FinalMap.of("name", new JsonString("value")))))),
                          new ParseCase("""
                                                {
                                                    "name1" : "value1" ,
@@ -50,14 +50,14 @@ class ParserTest {
                                                ,
                                                    "name3" : [1, 2, 3]
                                                }""",
-                                       Json.valueOf(Stream.of(FinalEntry.of("name1", Json.valueOf("value1")),
-                                                              FinalEntry.of("name2", Json.valueOf("value2")),
-                                                              FinalEntry.of("name3",
-                                                                            Json.valueOf(List.of(
-                                                                                    Json.valueOf(BigDecimal.valueOf(1)),
-                                                                                    Json.valueOf(BigDecimal.valueOf(2)),
-                                                                                    Json.valueOf(BigDecimal.valueOf(3))))))
-                                                          .collect(FinalMap.collector()))));
+                                       new JsonObject(Stream.of(FinalEntry.of("name1", new JsonString("value1")),
+                                                                FinalEntry.of("name2", new JsonString("value2")),
+                                                                FinalEntry.of("name3",
+                                                                            new JsonArray(List.of(
+                                                                                    new JsonNumber(BigDecimal.valueOf(1)),
+                                                                                    new JsonNumber(BigDecimal.valueOf(2)),
+                                                                                    new JsonNumber(BigDecimal.valueOf(3))))))
+                                                            .collect(FinalMap.collector()))));
     }
 
     static Stream<String> failCases() {

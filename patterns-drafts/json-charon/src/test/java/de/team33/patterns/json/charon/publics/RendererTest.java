@@ -2,10 +2,7 @@ package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonType;
-import de.team33.patterns.json.charon.JsonValue;
-import de.team33.patterns.json.charon.RenderOption;
+import de.team33.patterns.json.charon.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -19,42 +16,42 @@ class RendererTest {
 
     private static Stream<JsonValue> jsonValues() {
         return Stream.of(Json.NULL,
-                         Json.valueOf(true),
-                         Json.valueOf(false),
-                         Json.valueOf(BigDecimal.ONE),
-                         Json.valueOf(BigDecimal.valueOf(278)),
-                         Json.valueOf(new BigDecimal("123456789.123456789")),
-                         Json.valueOf(new BigDecimal("0.123E1234")),
-                         Json.valueOf(BigDecimal.valueOf(-1)),
-                         Json.valueOf(BigDecimal.valueOf(0)),
-                         Json.valueOf(BigDecimal.valueOf(-123.45)),
-                         Json.valueOf(new BigDecimal("1E5")),
-                         Json.valueOf(new BigDecimal("-1.2e-5")),
-                         Json.valueOf(" abc "),
-                         Json.valueOf("\\\"\b\f\n\r\t"),
-                         Json.valueOf(Map.of()),
-                         Json.valueOf(List.of()),
-                         Json.valueOf(List.of(
-                                 Json.valueOf("a"),
-                                 Json.valueOf(true),
+                         new JsonBoolean(true),
+                         new JsonBoolean(false),
+                         new JsonNumber(BigDecimal.ONE),
+                         new JsonNumber(BigDecimal.valueOf(278)),
+                         new JsonNumber(new BigDecimal("123456789.123456789")),
+                         new JsonNumber(new BigDecimal("0.123E1234")),
+                         new JsonNumber(BigDecimal.valueOf(-1)),
+                         new JsonNumber(BigDecimal.valueOf(0)),
+                         new JsonNumber(BigDecimal.valueOf(-123.45)),
+                         new JsonNumber(new BigDecimal("1E5")),
+                         new JsonNumber(new BigDecimal("-1.2e-5")),
+                         new JsonString(" abc "),
+                         new JsonString("\\\"\b\f\n\r\t"),
+                         new JsonObject(Map.of()),
+                         new JsonArray(List.of()),
+                         new JsonArray(List.of(
+                                 new JsonString("a"),
+                                 new JsonBoolean(true),
                                  Json.NULL,
-                                 Json.valueOf(new BigDecimal("1.23")),
-                                 Json.valueOf(Map.of("name", Json.valueOf("value"))),
-                                 Json.valueOf(new LinkedHashMap<>() {{
+                                 new JsonNumber(new BigDecimal("1.23")),
+                                 new JsonObject(Map.of("name", new JsonString("value"))),
+                                 new JsonObject(new LinkedHashMap<>() {{
                                      put("name1", Json.NULL);
                                      put("name2", Json.NULL);
-                                     put("name3", Json.valueOf(List.of(
+                                     put("name3", new JsonArray(List.of(
                                              Json.NULL,
                                              Json.NULL,
-                                             Json.valueOf(BigDecimal.valueOf(3)))));
+                                             new JsonNumber(BigDecimal.valueOf(3)))));
                                  }}),
-                                 Json.valueOf(new LinkedHashMap<>() {{
-                                     put("name1", Json.valueOf("value1"));
-                                     put("name2", Json.valueOf("value2"));
-                                     put("name3", Json.valueOf(List.of(
-                                             Json.valueOf(BigDecimal.valueOf(1)),
-                                             Json.valueOf(BigDecimal.valueOf(1)),
-                                             Json.valueOf(BigDecimal.valueOf(3)))));
+                                 new JsonObject(new LinkedHashMap<>() {{
+                                     put("name1", new JsonString("value1"));
+                                     put("name2", new JsonString("value2"));
+                                     put("name3", new JsonArray(List.of(
+                                             new JsonNumber(BigDecimal.valueOf(1)),
+                                             new JsonNumber(BigDecimal.valueOf(1)),
+                                             new JsonNumber(BigDecimal.valueOf(3)))));
                                  }}))));
     }
 
@@ -78,16 +75,17 @@ class RendererTest {
         return new RenderCase(value, options, expected(value, options));
     }
 
+    @SuppressWarnings("ChainOfInstanceofChecks")
     private static JsonValue expected(final JsonValue value, final Set<RenderOption> options) {
-        if (JsonType.OBJECT == value.type() && options.contains(RenderOption.SKIP_NULL)) {
-            return Json.valueOf(value.asObject().entrySet().stream()
-                                     .filter(entry -> Json.NULL != entry.getValue())
-                                     .map(entry -> FinalEntry.of(entry.getKey(), expected(entry.getValue(), options)))
-                                     .collect(FinalMap.collector()));
-        } else if (JsonType.ARRAY == value.type() && options.contains(RenderOption.SKIP_NULL)) {
-            return Json.valueOf(value.asArray().stream()
-                                     .map(elem -> expected(elem, options))
-                                     .toList());
+        if (value instanceof final JsonObject jsonObject && options.contains(RenderOption.SKIP_NULL)) {
+            return new JsonObject(jsonObject.value().entrySet().stream()
+                                            .filter(entry -> Json.NULL != entry.getValue())
+                                            .map(entry -> FinalEntry.of(entry.getKey(), expected(entry.getValue(), options)))
+                                            .collect(FinalMap.collector()));
+        } else if (value instanceof final JsonArray jsonArray && options.contains(RenderOption.SKIP_NULL)) {
+            return new JsonArray(jsonArray.value().stream()
+                                          .map(elem -> expected(elem, options))
+                                          .toList());
         }
         return value;
     }
