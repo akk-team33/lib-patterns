@@ -1,4 +1,4 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import de.team33.patterns.value.sinope.Equation;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings("StaticInheritance")
-final class JsonArray implements JsonValue {
+public final class JsonArray implements JsonValue {
 
     private static final Equation<JsonArray> EQUATION = Equation.of(JsonArray.class, jsonArray -> jsonArray.values);
 
@@ -18,15 +18,15 @@ final class JsonArray implements JsonValue {
         this.values = List.copyOf(values);
     }
 
-    static Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    final JsonValue get(final int index) {
+    public final JsonValue get(final int index) {
         return values.get(index);
     }
 
-    final int size() {
+    public final int size() {
         return values.size();
     }
 
@@ -45,21 +45,21 @@ final class JsonArray implements JsonValue {
         return EQUATION.toString(this);
     }
 
-    static final class Builder {
+    public static final class Builder {
 
         private final List<JsonValue> values = new ArrayList<>();
 
-        final Builder add(final JsonValue value) {
+        public final Builder add(final JsonValue value) {
             values.add(requireNonNull(value));
             return this;
         }
 
         @SuppressWarnings({"MethodMayBeStatic", "UnusedReturnValue", "unused"})
-        final Builder addAll(final Builder other) {
+        public final Builder addAll(final Builder other) {
             throw new UnsupportedOperationException("should never be called");
         }
 
-        final JsonArray build() {
+        public final JsonArray build() {
             return new JsonArray(values);
         }
     }

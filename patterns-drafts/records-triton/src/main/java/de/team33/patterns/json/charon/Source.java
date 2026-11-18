@@ -1,4 +1,4 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import java.util.Objects;
 

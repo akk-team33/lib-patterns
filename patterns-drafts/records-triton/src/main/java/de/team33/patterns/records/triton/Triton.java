@@ -1,6 +1,8 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.collection.mneme.FinalList;
+import de.team33.patterns.json.charon.Json;
+import de.team33.patterns.json.charon.JsonValue;
 import de.team33.patterns.records.metis.Metis;
 import de.team33.patterns.typing.proteus.Type;
 
@@ -44,7 +46,7 @@ public final class Triton {
     @SuppressWarnings("OverloadedVarargsMethod")
     public static String toJson(final Record source, final RenderOption... options) {
         final JsonValue value = Generalizer.map(source);
-        return Renderer.render(value, Set.of(options));
+        return Json.render(value, Set.of(options));
     }
 
     /**
@@ -65,7 +67,7 @@ public final class Triton {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Record> T toRecord(final Type<T> recordType, final String json) {
-        final JsonValue value = Parser.parse(json);
+        final JsonValue value = Json.parse(json);
         final Object result = Resolver.resolve(recordType, value);
         return (T) result;
     }

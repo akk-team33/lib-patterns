@@ -1,4 +1,4 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
 import java.util.regex.Pattern;
@@ -15,19 +15,15 @@ final class Parser {
 
     private final Source source;
 
-    private Parser(final String source) {
+    Parser(final String source) {
         this.source = new Source(source);
-    }
-
-    static JsonValue parse(final String source) {
-        return new Parser(source).parseRoot();
     }
 
     private static boolean isLimitChar(final char c) {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    private JsonValue parseRoot() {
+    JsonValue parseRoot() {
         source.skipWhitespace();
         final JsonValue result = parseValue();
         source.failIfMore();

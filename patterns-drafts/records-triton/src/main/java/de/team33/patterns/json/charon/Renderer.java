@@ -1,6 +1,7 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import de.team33.patterns.enums.pan.Values;
+import de.team33.patterns.records.triton.RenderOption;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +20,7 @@ final class Renderer {
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
-    private Renderer(final Set<RenderOption> options) {
+    Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
         this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonValue.NULL != entry.value()
                                                        : entry -> true;
@@ -27,11 +28,6 @@ final class Renderer {
                                                              : new FormattedSeparation();
         this.arrSeparation = options.contains(FORMAT_ARRAY) ? new FormattedSeparation()
                                                             : new InlineSeparation();
-    }
-
-    static String render(final JsonValue source, final Set<RenderOption> options) {
-        return new Renderer(options).add(source, 0)
-                                    .toString();
     }
 
     private Renderer add(final String source) {
@@ -49,7 +45,7 @@ final class Renderer {
                          .collect(joining()));
     }
 
-    private Renderer add(final JsonValue source, final int indentation) {
+    Renderer add(final JsonValue source, final int indentation) {
         if (JsonValue.NULL == source) {
             return add("null");
         } else {

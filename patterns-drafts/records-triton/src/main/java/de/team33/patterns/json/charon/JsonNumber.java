@@ -1,12 +1,12 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 @SuppressWarnings("StaticInheritance")
-record JsonNumber(BigDecimal value) implements JsonValue {
+public record JsonNumber(BigDecimal value) implements JsonValue {
 
-    JsonNumber {
+    public JsonNumber {
         Objects.requireNonNull(value);
     }
 }

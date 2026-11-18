@@ -1,5 +1,7 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon.publics;
 
+import de.team33.patterns.json.charon.*;
+import de.team33.patterns.records.triton.RenderOption;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -94,9 +96,9 @@ class RendererTest {
     @ParameterizedTest
     @MethodSource("renderCases")
     final void render(final RenderCase given) {
-        final String result = Renderer.render(given.source, given.options);
+        final String result = Json.render(given.source, given.options);
         // System.out.println(result);
-        assertEquals(given.expected, Parser.parse(result));
+        assertEquals(given.expected, Json.parse(result));
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")

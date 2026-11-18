@@ -1,4 +1,4 @@
-package de.team33.patterns.records.triton;
+package de.team33.patterns.json.charon;
 
 import de.team33.patterns.records.triton.testing.Supply;
 import org.junit.jupiter.api.Test;
