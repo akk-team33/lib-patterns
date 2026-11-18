@@ -43,9 +43,9 @@ enum Generalizer {
         this.mapper = mapper;
     }
 
-    static JsonValue map(final Object source) {
+    static JsonItem map(final Object source) {
         if (null == source) {
-            return JsonValue.NULL;
+            return JsonItem.NULL;
         } else {
             final Class<?> sourceClass = source.getClass();
             return VALUES.findAny(value -> value.responsibility.test(sourceClass))
@@ -92,7 +92,7 @@ enum Generalizer {
         return new JsonNumber(source);
     }
 
-    private static JsonValue mapEnum(final Enum<?> source) {
+    private static JsonItem mapEnum(final Enum<?> source) {
         return mapString(source.name());
     }
 
@@ -128,10 +128,10 @@ enum Generalizer {
     @FunctionalInterface
     interface Mapper<T> {
 
-        JsonValue mapT(T source);
+        JsonItem mapT(T source);
 
         @SuppressWarnings("unchecked")
-        default JsonValue map(final Object source) {
+        default JsonItem map(final Object source) {
             return mapT((T) source);
         }
     }

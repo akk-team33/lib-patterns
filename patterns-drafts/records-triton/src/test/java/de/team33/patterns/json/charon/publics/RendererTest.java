@@ -14,8 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RendererTest {
 
-    private static Stream<JsonValue> jsonValues() {
-        return Stream.of(JsonValue.NULL,
+    private static Stream<JsonItem> jsonValues() {
+        return Stream.of(JsonItem.NULL,
                          new JsonBoolean(true),
                          new JsonBoolean(false),
                          new JsonNumber(BigDecimal.ONE),
@@ -34,19 +34,19 @@ class RendererTest {
                          JsonArray.builder()
                                   .add(new JsonString("a"))
                                   .add(new JsonBoolean(true))
-                                  .add(JsonValue.NULL)
+                                  .add(JsonItem.NULL)
                                   .add(new JsonNumber(new BigDecimal("1.23")))
                                   .add(JsonObject.builder()
                                                  .put("name", new JsonString("value"))
                                                  .build())
                                   .build(),
                          JsonObject.builder()
-                                   .put("name1", JsonValue.NULL)
-                                   .put("name2", JsonValue.NULL)
+                                   .put("name1", JsonItem.NULL)
+                                   .put("name2", JsonItem.NULL)
                                    .put("name3",
                                         JsonArray.builder()
-                                                 .add(JsonValue.NULL)
-                                                 .add(JsonValue.NULL)
+                                                 .add(JsonItem.NULL)
+                                                 .add(JsonItem.NULL)
                                                  .add(new JsonNumber(BigDecimal.valueOf(3)))
                                                  .build())
                                    .build(),
@@ -78,15 +78,15 @@ class RendererTest {
         return jsonValues().map(value -> renderCase(options, value));
     }
 
-    private static RenderCase renderCase(final EnumSet<RenderOption> options, final JsonValue value) {
+    private static RenderCase renderCase(final EnumSet<RenderOption> options, final JsonItem value) {
         return new RenderCase(value, options, expected(value, options));
     }
 
-    private static JsonValue expected(final JsonValue value, final Set<RenderOption> options) {
+    private static JsonItem expected(final JsonItem value, final Set<RenderOption> options) {
         if (value instanceof final JsonObject object && options.contains(RenderOption.SKIP_NULL)) {
             final JsonObject.Builder builder = JsonObject.builder();
             object.stream()
-                  .filter(entry -> JsonValue.NULL != entry.value())
+                  .filter(entry -> JsonItem.NULL != entry.value())
                   .forEach(entry -> builder.put(entry.name(), entry.value()));
             return builder.build();
         }
@@ -102,6 +102,6 @@ class RendererTest {
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
-    record RenderCase(JsonValue source, Set<RenderOption> options, JsonValue expected) {
+    record RenderCase(JsonItem source, Set<RenderOption> options, JsonItem expected) {
     }
 }

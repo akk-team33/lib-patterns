@@ -8,13 +8,13 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 @SuppressWarnings("StaticInheritance")
-public final class JsonArray implements JsonValue {
+public final class JsonArray implements JsonItem {
 
     private static final Equation<JsonArray> EQUATION = Equation.of(JsonArray.class, jsonArray -> jsonArray.values);
 
-    private final List<JsonValue> values;
+    private final List<JsonItem> values;
 
-    private JsonArray(final List<JsonValue> values) {
+    private JsonArray(final List<JsonItem> values) {
         this.values = List.copyOf(values);
     }
 
@@ -22,7 +22,7 @@ public final class JsonArray implements JsonValue {
         return new Builder();
     }
 
-    public final JsonValue get(final int index) {
+    public final JsonItem get(final int index) {
         return values.get(index);
     }
 
@@ -47,9 +47,9 @@ public final class JsonArray implements JsonValue {
 
     public static final class Builder {
 
-        private final List<JsonValue> values = new ArrayList<>();
+        private final List<JsonItem> values = new ArrayList<>();
 
-        public final Builder add(final JsonValue value) {
+        public final Builder add(final JsonItem value) {
             values.add(requireNonNull(value));
             return this;
         }

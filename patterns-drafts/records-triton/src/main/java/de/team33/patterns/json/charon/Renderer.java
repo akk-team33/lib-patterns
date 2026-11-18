@@ -22,7 +22,7 @@ final class Renderer {
 
     Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
-        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonValue.NULL != entry.value()
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonItem.NULL != entry.value()
                                                        : entry -> true;
         this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
                                                              : new FormattedSeparation();
@@ -45,8 +45,8 @@ final class Renderer {
                          .collect(joining()));
     }
 
-    Renderer add(final JsonValue source, final int indentation) {
-        if (JsonValue.NULL == source) {
+    Renderer add(final JsonItem source, final int indentation) {
+        if (JsonItem.NULL == source) {
             return add("null");
         } else {
             final JsonType type = JsonType.of(source.getClass());
@@ -133,34 +133,34 @@ final class Renderer {
 
         private static final Values<JsonType> VALUES = Values.of(JsonType.class);
 
-        private final Class<? extends JsonValue> jsonType;
+        private final Class<? extends JsonItem> jsonType;
         @SuppressWarnings("rawtypes")
         private final Rendering rendering;
 
-        <T extends JsonValue> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
+        <T extends JsonItem> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
             this.jsonType = jsonType;
             this.rendering = rendering;
         }
 
-        static JsonType of(final Class<? extends JsonValue> sourceType) {
+        static JsonType of(final Class<? extends JsonItem> sourceType) {
             return VALUES.findAny(value -> value.jsonType.isAssignableFrom(sourceType))
                          .orElseThrow(() -> new IllegalStateException(
                                  // Difficult to test (should not happen at all) ...
                                  "unexpected source type: %s".formatted(sourceType.getCanonicalName())));
         }
 
-        final Renderer render(final Renderer renderer, final JsonValue source, final int indentation) {
+        final Renderer render(final Renderer renderer, final JsonItem source, final int indentation) {
             return rendering.render(renderer, source, indentation);
         }
     }
 
     @FunctionalInterface
-    private interface Rendering<T extends JsonValue> {
+    private interface Rendering<T extends JsonItem> {
 
         Renderer renderT(Renderer renderer, T source, int indentation);
 
         @SuppressWarnings("unchecked")
-        default Renderer render(final Renderer renderer, final JsonValue source, final int indentation) {
+        default Renderer render(final Renderer renderer, final JsonItem source, final int indentation) {
             return renderT(renderer, (T) source, indentation);
         }
     }

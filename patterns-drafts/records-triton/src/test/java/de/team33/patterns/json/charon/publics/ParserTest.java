@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 class ParserTest {
 
     static Stream<ParseCase> parseCases() {
-        return Stream.of(new ParseCase("null", JsonValue.NULL),
-                         new ParseCase(" \n\t null \r\f", JsonValue.NULL),
+        return Stream.of(new ParseCase("null", JsonItem.NULL),
+                         new ParseCase(" \n\t null \r\f", JsonItem.NULL),
                          new ParseCase(" true", new JsonBoolean(true)),
                          new ParseCase("false ", new JsonBoolean(false)),
                          new ParseCase("1", new JsonNumber(BigDecimal.ONE)),
@@ -36,7 +36,7 @@ class ParserTest {
                                        JsonArray.builder()
                                                 .add(new JsonString("a"))
                                                 .add(new JsonBoolean(true))
-                                                .add(JsonValue.NULL)
+                                                .add(JsonItem.NULL)
                                                 .add(new JsonNumber(new BigDecimal("1.23")))
                                                 .add(JsonObject.builder()
                                                                .put("name", new JsonString("value"))
@@ -87,7 +87,7 @@ class ParserTest {
     @ParameterizedTest
     @MethodSource("parseCases")
     final void parse(final ParseCase given) {
-        final JsonValue result = Json.parse(given.source);
+        final JsonItem result = Json.parse(given.source);
         assertEquals(given.expected, result);
     }
 
@@ -95,13 +95,13 @@ class ParserTest {
     @MethodSource("failCases")
     final void parse_fail(final String given) {
         try {
-            final JsonValue result = Json.parse(given);
+            final JsonItem result = Json.parse(given);
             fail("expected to fail - but was %s".formatted(result));
         } catch (final IllegalArgumentException e) {
             // as expected
         }
     }
 
-    record ParseCase(String source, JsonValue expected) {
+    record ParseCase(String source, JsonItem expected) {
     }
 }

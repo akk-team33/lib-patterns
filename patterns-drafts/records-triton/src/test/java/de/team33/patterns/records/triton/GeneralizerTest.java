@@ -39,9 +39,9 @@ class GeneralizerTest {
                                                                  .build()),
                          new Case<>(new SampleRecord(null, null, null),
                                     JsonObject.builder()
-                                              .put("name", JsonValue.NULL)
-                                              .put("lValue", JsonValue.NULL)
-                                              .put("eValue", JsonValue.NULL)
+                                              .put("name", JsonItem.NULL)
+                                              .put("lValue", JsonItem.NULL)
+                                              .put("eValue", JsonItem.NULL)
                                               .build()));
     }
 
@@ -53,10 +53,10 @@ class GeneralizerTest {
     @ParameterizedTest
     @MethodSource("cases")
     final <T> void map(final Case<T> given) {
-        final JsonValue result = Generalizer.map(given.source);
+        final JsonItem result = Generalizer.map(given.source);
         assertEquals(given.expected, result);
     }
 
-    record Case<T>(T source, JsonValue expected) {
+    record Case<T>(T source, JsonItem expected) {
     }
 }

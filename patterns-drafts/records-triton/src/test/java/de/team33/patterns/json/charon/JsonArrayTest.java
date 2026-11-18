@@ -17,6 +17,6 @@ class JsonArrayTest {
         //noinspection EqualsWithItself
         assertEquals(left, left);
         //noinspection MisorderedAssertEqualsArguments
-        assertNotEquals(left, JsonValue.NULL);
+        assertNotEquals(left, JsonItem.NULL);
     }
 }

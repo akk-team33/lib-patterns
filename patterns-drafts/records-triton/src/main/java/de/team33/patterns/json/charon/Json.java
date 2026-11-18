@@ -6,12 +6,12 @@ import java.util.Set;
 
 public class Json {
 
-    public static String render(final JsonValue value, final Set<RenderOption> options) {
+    public static String render(final JsonItem value, final Set<RenderOption> options) {
         return new Renderer(options).add(value, 0)
                                     .toString();
     }
 
-    public static JsonValue parse(final String source) {
+    public static JsonItem parse(final String source) {
         return new Parser(source).parseRoot();
     }
 }

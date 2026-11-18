@@ -1,7 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonValue;
+import de.team33.patterns.json.charon.JsonItem;
 import de.team33.patterns.typing.proteus.Type;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -139,14 +139,14 @@ class ResolverTest extends TritonTestBase {
 
     record MapCase<T>(Type<T> targetType, String source, T expected) {
 
-        final JsonValue value() {
+        final JsonItem value() {
             return Json.parse(source);
         }
     }
 
     record FailCase(Type<?> type, String source, Class<? extends Exception> expected) {
 
-        final JsonValue value() {
+        final JsonItem value() {
             return Json.parse(source);
         }
     }

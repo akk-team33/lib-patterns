@@ -3,7 +3,7 @@ package de.team33.patterns.json.charon;
 import java.util.*;
 
 @SuppressWarnings("StaticInheritance")
-public final class JsonObject extends AbstractList<JsonObject.Entry> implements JsonValue {
+public final class JsonObject extends AbstractList<JsonObject.Entry> implements JsonItem {
 
     private final List<Entry> entries;
 
@@ -25,7 +25,7 @@ public final class JsonObject extends AbstractList<JsonObject.Entry> implements 
         return entries.size();
     }
 
-    public record Entry(String name, JsonValue value) {
+    public record Entry(String name, JsonItem value) {
     }
 
     public static final class Builder {
@@ -33,7 +33,7 @@ public final class JsonObject extends AbstractList<JsonObject.Entry> implements 
         private final Map<String, Integer> indices = new HashMap<>();
         private final List<Entry> entries = new ArrayList<>();
 
-        public final Builder put(final String name, final JsonValue value) {
+        public final Builder put(final String name, final JsonItem value) {
             final Entry entry = new Entry(name, value);
             final int index = indices.computeIfAbsent(name, any -> entries.size());
             if (index < entries.size()) {

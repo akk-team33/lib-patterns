@@ -23,16 +23,16 @@ final class Parser {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    JsonValue parseRoot() {
+    JsonItem parseRoot() {
         source.skipWhitespace();
-        final JsonValue result = parseValue();
+        final JsonItem result = parseValue();
         source.failIfMore();
         return result;
     }
 
-    private JsonValue parseValue() {
+    private JsonItem parseValue() {
         final char next = source.peek();
-        final JsonValue result = switch (next) {
+        final JsonItem result = switch (next) {
             case '{' -> parseObject();
             case '[' -> parseArray();
             case '"' -> parseString();
@@ -99,12 +99,12 @@ final class Parser {
     }
 
     private void parseMember(final JsonObject.Builder builder) {
-        final JsonValue next = parseValue();
+        final JsonItem next = parseValue();
         if (next instanceof final JsonString jsonString) {
             final String name = jsonString.value();
             source.expect(COLON)
                   .skipWhitespace();
-            final JsonValue value = parseValue();
+            final JsonItem value = parseValue();
             builder.put(name, value);
         } else {
             throw new IllegalArgumentException(
@@ -114,11 +114,11 @@ final class Parser {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private JsonValue parseNull() {
+    private JsonItem parseNull() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return JsonValue.NULL;
+            return JsonItem.NULL;
         }
         throw new IllegalArgumentException(
                 "expected null - but was %s".formatted(candidate));

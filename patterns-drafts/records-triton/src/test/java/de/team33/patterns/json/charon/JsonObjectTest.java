@@ -11,12 +11,12 @@ class JsonObjectTest {
         final JsonObject object = JsonObject.builder()
                                             .put("name1", new JsonBoolean(false))
                                             .put("name2", new JsonBoolean(true))
-                                            .put("name1", JsonValue.NULL)
-                                            .put("name2", JsonValue.NULL)
+                                            .put("name1", JsonItem.NULL)
+                                            .put("name2", JsonItem.NULL)
                                             .build();
         assertEquals("name1", object.get(0).name());
-        assertEquals(JsonValue.NULL, object.get(0).value());
+        assertEquals(JsonItem.NULL, object.get(0).value());
         assertEquals("name2", object.get(1).name());
-        assertEquals(JsonValue.NULL, object.get(1).value());
+        assertEquals(JsonItem.NULL, object.get(1).value());
     }
 }
