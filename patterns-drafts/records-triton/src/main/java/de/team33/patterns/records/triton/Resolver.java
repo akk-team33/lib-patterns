@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -200,10 +201,12 @@ final class Resolver {
             componentType = targetType.actualParameters().get(0);
         }
 
-        final Object map(final JsonArray source) {
-            final Object array = Array.newInstance(componentType.core(), source.size());
-            for (int index = 0; index < source.size(); ++index) {
-                final var component = resolve(componentType, source.get(index));
+        final Object map(final JsonArray value) {
+            final List<JsonItem> values = value.value();
+            final int size = values.size();
+            final Object array = Array.newInstance(componentType.core(), size);
+            for (int index = 0; index < size; ++index) {
+                final Object component = resolve(componentType, values.get(index));
                 Array.set(array, index, component);
             }
             return array;
@@ -219,18 +222,19 @@ final class Resolver {
             this.description = Metis.description((Type) targetType);
         }
 
-        final Object map(final JsonObject source) {
+        final Object map(final JsonObject value) {
             final Map<String, Object> stage =
-                    source.stream()
-                          .filter(entry -> description.containsKey(entry.name()))
-                          .collect(HashMap::new, this::putNext, Map::putAll);
+                    value.value().entrySet().stream()
+                         .filter(entry -> description.containsKey(entry.getKey()))
+                         .collect(HashMap::new, this::putNext, Map::putAll);
             //noinspection rawtypes,unchecked
             return Metis.toRecord((Type) targetType, stage);
         }
 
-        private void putNext(final Map<? super String, Object> map, final JsonObject.Entry entry) {
-            final String name = entry.name();
-            map.put(name, resolve(description.get(name), entry.value()));
+        private void putNext(final Map<? super String, Object> map,
+                             final Map.Entry<String, ? extends JsonItem> entry) {
+            final String name = entry.getKey();
+            map.put(name, resolve(description.get(name), entry.getValue()));
         }
     }
 }

@@ -1,12 +1,10 @@
 package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
-@SuppressWarnings("StaticInheritance")
-public record JsonNumber(BigDecimal value) implements JsonItem {
+public class JsonNumber extends JsonUnit<BigDecimal> {
 
-    public JsonNumber {
-        Objects.requireNonNull(value);
+    public JsonNumber(final BigDecimal value) {
+        super(value);
     }
 }

@@ -1,5 +1,6 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.enums.pan.Values;
 import de.team33.patterns.json.charon.*;
 import de.team33.patterns.records.metis.Metis;
@@ -110,19 +111,15 @@ enum Generalizer {
 
     private static JsonArray mapArray(final Object array) {
         return IntStream.range(0, Array.getLength(array))
-                        .mapToObj(index -> map(Array.get(array, index)))
-                        .collect(JsonArray::builder, JsonArray.Builder::add, JsonArray.Builder::addAll)
-                        .build();
+                        .mapToObj(index -> Array.get(array, index))
+                        .map(Generalizer::map)
+                        .collect(JsonArray.collector());
     }
 
     private static JsonObject mapRecord(final Record source) {
-        return Metis.toMap(source)
-                    .entrySet()
-                    .stream()
-                    .collect(JsonObject::builder,
-                             (builder, entry) -> builder.put(entry.getKey(), map(entry.getValue())),
-                             JsonObject.Builder::putAll)
-                    .build();
+        return Metis.toMap(source).entrySet().stream()
+                    .map(entry -> FinalEntry.of(entry.getKey(), map(entry.getValue())))
+                    .collect(JsonObject.collector());
     }
 
     @FunctionalInterface

@@ -4,6 +4,7 @@ import de.team33.patterns.enums.pan.Values;
 import de.team33.patterns.records.triton.RenderOption;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,13 +17,13 @@ final class Renderer {
     private static final String NEWLINE = "%n".formatted();
 
     private final StringBuilder target;
-    private final Predicate<JsonObject.Entry> entryFilter;
+    private final Predicate<Map.Entry<String, ? extends JsonItem>> entryFilter;
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
     Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
-        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonItem.NULL != entry.value()
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonItem.NULL != entry.getValue()
                                                        : entry -> true;
         this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
                                                              : new FormattedSeparation();
@@ -63,16 +64,16 @@ final class Renderer {
         return add("{").addObjectBody(source, objSeparation.next(indentation)).add("}");
     }
 
-    private Renderer addObjectBody(final JsonObject source, final int indentation) {
-        final List<JsonObject.Entry> entries = source.stream()
-                                                     .filter(entryFilter)
-                                                     .toList();
+    private Renderer addObjectBody(final JsonObject value, final int indentation) {
+        final List<Map.Entry<String, JsonItem>> entries = value.value().entrySet().stream()
+                                                               .filter(entryFilter)
+                                                               .toList();
         final int size = entries.size();
         if (0 < size) {
             for (int index = 0; index < size; index++) {
-                final JsonObject.Entry entry = entries.get(index);
+                final Map.Entry<String, JsonItem> entry = entries.get(index);
                 objSeparation.addSeparator(index, indentation);
-                add(StringLiteral.render(entry.name())).add(" : ").add(entry.value(), indentation);
+                add(StringLiteral.render(entry.getKey())).add(" : ").add(entry.getValue(), indentation);
             }
             return objSeparation.addSeparator(0, objSeparation.prev(indentation));
         } else {
@@ -84,12 +85,13 @@ final class Renderer {
         return add("[").addArrayBody(source, arrSeparation.next(indentation)).add("]");
     }
 
-    private Renderer addArrayBody(final JsonArray source, final int indentation) {
-        final int size = source.size();
+    private Renderer addArrayBody(final JsonArray value, final int indentation) {
+        final List<JsonItem> values = value.value();
+        final int size = values.size();
         if (0 < size) {
-            for (int index = 0; index < source.size(); ++index) {
+            for (int index = 0; index < size; ++index) {
                 arrSeparation.addSeparator(index, indentation);
-                add(source.get(index), indentation);
+                add(values.get(index), indentation);
             }
             return arrSeparation.addSeparator(0, arrSeparation.prev(indentation));
         } else {

@@ -1,5 +1,8 @@
 package de.team33.patterns.json.charon;
 
-@SuppressWarnings("StaticInheritance")
-public record JsonBoolean(boolean value) implements JsonItem {
+public class JsonBoolean extends JsonUnit<Boolean> {
+
+    public JsonBoolean(final Boolean value) {
+        super(value);
+    }
 }

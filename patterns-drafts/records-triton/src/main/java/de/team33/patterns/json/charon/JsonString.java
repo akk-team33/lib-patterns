@@ -1,11 +1,8 @@
 package de.team33.patterns.json.charon;
 
-import java.util.Objects;
+public class JsonString extends JsonUnit<String> {
 
-@SuppressWarnings("StaticInheritance")
-public record JsonString(String value) implements JsonItem {
-
-    public JsonString {
-        Objects.requireNonNull(value);
+    public JsonString(final String value) {
+        super(value);
     }
 }

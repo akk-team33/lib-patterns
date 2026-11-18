@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -32,17 +33,15 @@ class GeneralizerTest {
                          new Case<>(EnumSample.V3, new JsonString("V3")),
                          new Case<>('c', new JsonString("c")),
                          new Case<>("any string", new JsonString("any string")),
-                         new Case<>(new int[]{1, 2, 3}, JsonArray.builder()
-                                                                 .add(new JsonNumber(new BigDecimal(1)))
-                                                                 .add(new JsonNumber(new BigDecimal(2)))
-                                                                 .add(new JsonNumber(new BigDecimal(3)))
-                                                                 .build()),
-                         new Case<>(new SampleRecord(null, null, null),
-                                    JsonObject.builder()
-                                              .put("name", JsonItem.NULL)
-                                              .put("lValue", JsonItem.NULL)
-                                              .put("eValue", JsonItem.NULL)
-                                              .build()));
+                         new Case<>(new int[]{1, 2, 3}, Stream.of(new JsonNumber(new BigDecimal(1)),
+                                                                  new JsonNumber(new BigDecimal(2)),
+                                                                  new JsonNumber(new BigDecimal(3)))
+                                                              .collect(JsonArray.collector())),
+                         new Case<>(new SampleRecord(null, null, null), new JsonObject(new LinkedHashMap<>() {{
+                             put("name", JsonItem.NULL);
+                             put("lValue", JsonItem.NULL);
+                             put("eValue", JsonItem.NULL);
+                         }})));
     }
 
     @Test

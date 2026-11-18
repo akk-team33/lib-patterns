@@ -1,6 +1,10 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.streamable.galatea.Buffer;
+
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 final class Parser {
@@ -47,20 +51,20 @@ final class Parser {
     private JsonObject parseObject() {
         source.expect('{')
               .skipWhitespace();
-        final JsonObject.Builder builder = JsonObject.builder();
+        final Map<String, JsonItem> stage = new LinkedHashMap<>();
         if (source.hasMore() && '}' == source.peek()) {
             source.skip();
         } else {
-            parseObjectBody(builder);
+            parseObjectBody(stage);
             source.expect('}');
         }
-        return builder.build();
+        return new JsonObject(stage);
     }
 
-    private void parseObjectBody(final JsonObject.Builder builder) {
+    private void parseObjectBody(final Map<? super String, ? super JsonItem> stage) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            parseMember(builder);
+            parseMember(stage);
             next = source.peek();
             if (COMMA == next) {
                 source.skip()
@@ -69,23 +73,37 @@ final class Parser {
         }
     }
 
+    private void parseMember(final Map<? super String, ? super JsonItem> stage) {
+        final JsonItem next = parseValue();
+        if (next instanceof final JsonString jsonString) {
+            final String name = jsonString.value();
+            source.expect(COLON)
+                  .skipWhitespace();
+            final JsonItem value = parseValue();
+            stage.put(name, value);
+        } else {
+            throw new IllegalArgumentException(
+                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
+                                                                         next.getClass().getSimpleName()));
+        }
+    }
+
     private JsonArray parseArray() {
-        source.expect('[')
-              .skipWhitespace();
-        final JsonArray.Builder builder = JsonArray.builder();
+        source.expect('[').skipWhitespace();
+        final Buffer<JsonItem> buffer = Buffer.empty();
         if (source.hasMore() && ']' == source.peek()) {
             source.skip();
         } else {
-            parseArrayBody(builder);
+            parseArrayBody(buffer);
             source.expect(']');
         }
-        return builder.build();
+        return new JsonArray(buffer);
     }
 
-    private void parseArrayBody(final JsonArray.Builder builder) {
+    private void parseArrayBody(final Buffer<? super JsonItem> buffer) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            builder.add(parseValue());
+            buffer.add(parseValue());
             next = source.peek();
             if (COMMA == next) {
                 source.skip()
@@ -96,21 +114,6 @@ final class Parser {
 
     private JsonString parseString() {
         return new JsonString(StringLiteral.parse(source));
-    }
-
-    private void parseMember(final JsonObject.Builder builder) {
-        final JsonItem next = parseValue();
-        if (next instanceof final JsonString jsonString) {
-            final String name = jsonString.value();
-            source.expect(COLON)
-                  .skipWhitespace();
-            final JsonItem value = parseValue();
-            builder.put(name, value);
-        } else {
-            throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
-                                                                         next.getClass().getSimpleName()));
-        }
     }
 
     @SuppressWarnings("SameReturnValue")

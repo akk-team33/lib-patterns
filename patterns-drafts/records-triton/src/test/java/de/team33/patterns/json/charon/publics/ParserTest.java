@@ -1,10 +1,14 @@
 package de.team33.patterns.json.charon.publics;
 
+import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.json.charon.*;
+import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,33 +34,30 @@ class ParserTest {
                          new ParseCase(" \" abc \" ", new JsonString(" abc ")),
                          new ParseCase("\t \"\\\\\\\"\\b\\f\\n\\r\\t\" \n",
                                        new JsonString("\\\"\b\f\n\r\t")),
-                         new ParseCase("{}", JsonObject.builder().build()),
-                         new ParseCase("[]", JsonArray.builder().build()),
+                         new ParseCase("{}", new JsonObject(Streamable.empty())),
+                         new ParseCase("[]", new JsonArray(Streamable.empty())),
                          new ParseCase("[\"a\", true, null, 1.23, {\"name\" : \"value\"}]",
-                                       JsonArray.builder()
-                                                .add(new JsonString("a"))
-                                                .add(new JsonBoolean(true))
-                                                .add(JsonItem.NULL)
-                                                .add(new JsonNumber(new BigDecimal("1.23")))
-                                                .add(JsonObject.builder()
-                                                               .put("name", new JsonString("value"))
-                                                               .build())
-                                                .build()),
-                         new ParseCase("{\n" +
-                                       "        \"name1\" : \"value1\" ,\n" +
-                                       "        \"name2\" : \"value2\"\n,\n" +
-                                       "        \"name3\" : [1, 2, 3]\n" +
-                                       "    }",
-                                       JsonObject.builder()
-                                                 .put("name1", new JsonString("value1"))
-                                                 .put("name2", new JsonString("value2"))
-                                                 .put("name3",
-                                                      JsonArray.builder()
-                                                               .add(new JsonNumber(BigDecimal.valueOf(1)))
-                                                               .add(new JsonNumber(BigDecimal.valueOf(2)))
-                                                               .add(new JsonNumber(BigDecimal.valueOf(3)))
-                                                               .build())
-                                                 .build()));
+                                       new JsonArray(List.of(
+                                               new JsonString("a"),
+                                               new JsonBoolean(true),
+                                               JsonItem.NULL,
+                                               new JsonNumber(new BigDecimal("1.23")),
+                                               new JsonObject(FinalMap.of("name", new JsonString("value")))))),
+                         new ParseCase("""
+                                               {
+                                                   "name1" : "value1" ,
+                                                   "name2" : "value2"
+                                                   ,
+                                                   "name3" : [1, 2, 3]
+                                               }""",
+                                       new LinkedHashMap<String, JsonItem>() {{
+                                           put("name1", new JsonString("value1"));
+                                           put("name2", new JsonString("value2"));
+                                           put("name3", new JsonArray(List.of(
+                                                   new JsonNumber(BigDecimal.valueOf(1)),
+                                                   new JsonNumber(BigDecimal.valueOf(2)),
+                                                   new JsonNumber(BigDecimal.valueOf(3)))));
+                                       }}.entrySet().stream().collect(JsonObject.collector())));
     }
 
     static Stream<String> failCases() {
