@@ -46,7 +46,7 @@ enum Generalizer {
 
     static JsonItem map(final Object source) {
         if (null == source) {
-            return JsonItem.NULL;
+            return Json.NULL;
         } else {
             final Class<?> sourceClass = source.getClass();
             return VALUES.findAny(value -> value.responsibility.test(sourceClass))

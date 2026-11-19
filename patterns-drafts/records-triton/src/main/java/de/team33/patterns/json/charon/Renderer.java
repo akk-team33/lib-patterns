@@ -23,7 +23,7 @@ final class Renderer {
 
     Renderer(final Set<RenderOption> options) {
         this.target = new StringBuilder();
-        this.entryFilter = options.contains(SKIP_NULL) ? entry -> JsonItem.NULL != entry.getValue()
+        this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.getValue()
                                                        : entry -> true;
         this.objSeparation = options.contains(INLINE_OBJECT) ? new InlineSeparation()
                                                              : new FormattedSeparation();
@@ -47,7 +47,7 @@ final class Renderer {
     }
 
     Renderer add(final JsonItem source, final int indentation) {
-        if (JsonItem.NULL == source) {
+        if (Json.NULL == source) {
             return add("null");
         } else {
             final JsonType type = JsonType.of(source.getClass());

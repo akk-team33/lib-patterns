@@ -17,8 +17,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 class ParserTest {
 
     static Stream<ParseCase> parseCases() {
-        return Stream.of(new ParseCase("null", JsonItem.NULL),
-                         new ParseCase(" \n\t null \r\f", JsonItem.NULL),
+        return Stream.of(new ParseCase("null", Json.NULL),
+                         new ParseCase(" \n\t null \r\f", Json.NULL),
                          new ParseCase(" true", new JsonBoolean(true)),
                          new ParseCase("false ", new JsonBoolean(false)),
                          new ParseCase("1", new JsonNumber(BigDecimal.ONE)),
@@ -40,7 +40,7 @@ class ParserTest {
                                        new JsonArray(List.of(
                                                new JsonString("a"),
                                                new JsonBoolean(true),
-                                               JsonItem.NULL,
+                                               Json.NULL,
                                                new JsonNumber(new BigDecimal("1.23")),
                                                new JsonObject(FinalMap.of("name", new JsonString("value")))))),
                          new ParseCase("""

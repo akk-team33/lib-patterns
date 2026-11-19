@@ -35,7 +35,7 @@ final class Resolver {
     }
 
     private Object apply(final JsonItem value) {
-        if (JsonItem.NULL == value) {
+        if (Json.NULL == value) {
             return mapNull();
         } else if (mapping.isApplicable(value)) {
             return mapping.method(this)

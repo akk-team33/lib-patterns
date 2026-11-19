@@ -121,7 +121,7 @@ final class Parser {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return JsonItem.NULL;
+            return Json.NULL;
         }
         throw new IllegalArgumentException(
                 "expected null - but was %s".formatted(candidate));

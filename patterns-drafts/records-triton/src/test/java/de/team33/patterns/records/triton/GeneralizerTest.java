@@ -38,9 +38,9 @@ class GeneralizerTest {
                                                                   new JsonNumber(new BigDecimal(3)))
                                                               .collect(JsonArray.collector())),
                          new Case<>(new SampleRecord(null, null, null), new JsonObject(new LinkedHashMap<>() {{
-                             put("name", JsonItem.NULL);
-                             put("lValue", JsonItem.NULL);
-                             put("eValue", JsonItem.NULL);
+                             put("name", Json.NULL);
+                             put("lValue", Json.NULL);
+                             put("eValue", Json.NULL);
                          }})));
     }
 

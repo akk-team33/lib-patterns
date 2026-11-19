@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class RendererTest {
 
     private static Stream<JsonItem> jsonValues() {
-        return Stream.of(JsonItem.NULL,
+        return Stream.of(Json.NULL,
                          new JsonBoolean(true),
                          new JsonBoolean(false),
                          new JsonNumber(BigDecimal.ONE),
@@ -39,15 +39,15 @@ class RendererTest {
                          new JsonArray(List.of(
                                  new JsonString("a"),
                                  new JsonBoolean(true),
-                                 JsonItem.NULL,
+                                 Json.NULL,
                                  new JsonNumber(new BigDecimal("1.23")),
                                  new JsonObject(FinalMap.of("name", new JsonString("value"))))),
                          new JsonObject(new LinkedHashMap<>() {{
-                             put("name1", JsonItem.NULL);
-                             put("name2", JsonItem.NULL);
+                             put("name1", Json.NULL);
+                             put("name2", Json.NULL);
                              put("name3", new JsonArray(List.of(
-                                     JsonItem.NULL,
-                                     JsonItem.NULL,
+                                     Json.NULL,
+                                     Json.NULL,
                                      new JsonNumber(BigDecimal.valueOf(3)))));
                          }}),
                          new JsonObject(new LinkedHashMap<>() {{
@@ -84,7 +84,7 @@ class RendererTest {
     private static JsonItem expected(final JsonItem value, final Set<RenderOption> options) {
         if (value instanceof final JsonObject jsonObject && options.contains(RenderOption.SKIP_NULL)) {
             return jsonObject.value().entrySet().stream()
-                             .filter(entry -> JsonItem.NULL != entry.getValue())
+                             .filter(entry -> Json.NULL != entry.getValue())
                              .map(entry -> FinalEntry.of(entry.getKey(),
                                                          expected(entry.getValue(), options)))
                              .collect(JsonObject.collector());
