@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-public final class JsonArray extends JsonUnit<ImmutableList<JsonItem>> {
+public final class JsonArray extends JsonEntity<ImmutableList<JsonItem>> {
 
     public JsonArray(final Collection<? extends JsonItem> source) {
         super(FinalList.of(source));

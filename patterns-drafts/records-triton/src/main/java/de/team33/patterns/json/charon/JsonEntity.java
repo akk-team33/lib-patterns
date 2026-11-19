@@ -4,14 +4,14 @@ import de.team33.patterns.value.sinope.Equation;
 
 import java.util.Objects;
 
-class JsonUnit<V> implements JsonItem {
+class JsonEntity<V> implements JsonItem {
 
     @SuppressWarnings("rawtypes")
-    private static final Equation<JsonUnit> EQUATION = Equation.of(JsonUnit.class, JsonUnit::value);
+    private static final Equation<JsonEntity> EQUATION = Equation.of(JsonEntity.class, JsonEntity::value);
 
     private final V value;
 
-    JsonUnit(final V value) {
+    JsonEntity(final V value) {
         this.value = Objects.requireNonNull(value, "<value> must not be null - but was");
     }
 

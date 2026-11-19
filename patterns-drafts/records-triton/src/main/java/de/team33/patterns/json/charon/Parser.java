@@ -29,14 +29,19 @@ final class Parser {
 
     JsonItem parseRoot() {
         source.skipWhitespace();
-        final JsonItem result = parseValue();
+        final JsonItem result = parseItem();
         source.failIfMore();
         return result;
     }
 
-    private JsonItem parseValue() {
-        final char next = source.peek();
-        final JsonItem result = switch (next) {
+    private JsonItem parseItem() {
+        final JsonItem result = parseItem(source.peek());
+        source.skipWhitespace();
+        return result;
+    }
+
+    private JsonItem parseItem(final char next) {
+        return switch (next) {
             case '{' -> parseObject();
             case '[' -> parseArray();
             case '"' -> parseString();
@@ -44,8 +49,6 @@ final class Parser {
             case 't', 'f' -> parseBoolean();
             default -> parseNumber();
         };
-        source.skipWhitespace();
-        return result;
     }
 
     private JsonObject parseObject() {
@@ -74,12 +77,12 @@ final class Parser {
     }
 
     private void parseMember(final Map<? super String, ? super JsonItem> stage) {
-        final JsonItem next = parseValue();
+        final JsonItem next = parseItem();
         if (next instanceof final JsonString jsonString) {
             final String name = jsonString.value();
             source.expect(COLON)
                   .skipWhitespace();
-            final JsonItem value = parseValue();
+            final JsonItem value = parseItem();
             stage.put(name, value);
         } else {
             throw new IllegalArgumentException(
@@ -103,7 +106,7 @@ final class Parser {
     private void parseArrayBody(final Buffer<? super JsonItem> buffer) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            buffer.add(parseValue());
+            buffer.add(parseItem());
             next = source.peek();
             if (COMMA == next) {
                 source.skip()

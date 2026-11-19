@@ -8,7 +8,7 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import java.util.Map;
 import java.util.stream.Collector;
 
-public final class JsonObject extends JsonUnit<ImmutableMap<String, JsonItem>> {
+public final class JsonObject extends JsonEntity<ImmutableMap<String, JsonItem>> {
 
     public JsonObject(final Map<String, ? extends JsonItem> source) {
         super(FinalMap.of(source));
