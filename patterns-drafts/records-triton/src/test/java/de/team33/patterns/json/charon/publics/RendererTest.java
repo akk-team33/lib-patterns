@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RendererTest {
 
-    private static Stream<JsonItem> jsonValues() {
+    private static Stream<Json.Value> jsonValues() {
         return Stream.of(Json.NULL,
                          new JsonBoolean(true),
                          new JsonBoolean(false),
@@ -76,12 +76,12 @@ class RendererTest {
         return jsonValues().map(value -> renderCase(options, value));
     }
 
-    private static RenderCase renderCase(final EnumSet<RenderOption> options, final JsonItem value) {
+    private static RenderCase renderCase(final EnumSet<RenderOption> options, final Json.Value value) {
         return new RenderCase(value, options, expected(value, options));
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
-    private static JsonItem expected(final JsonItem value, final Set<RenderOption> options) {
+    private static Json.Value expected(final Json.Value value, final Set<RenderOption> options) {
         if (value instanceof final JsonObject jsonObject && options.contains(RenderOption.SKIP_NULL)) {
             return jsonObject.value().entrySet().stream()
                              .filter(entry -> Json.NULL != entry.getValue())
@@ -105,6 +105,6 @@ class RendererTest {
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
-    record RenderCase(JsonItem source, Set<RenderOption> options, JsonItem expected) {
+    record RenderCase(Json.Value source, Set<RenderOption> options, Json.Value expected) {
     }
 }

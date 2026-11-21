@@ -44,7 +44,7 @@ enum Generalizer {
         this.mapper = mapper;
     }
 
-    static JsonItem map(final Object source) {
+    static Json.Value map(final Object source) {
         if (null == source) {
             return Json.NULL;
         } else {
@@ -93,7 +93,7 @@ enum Generalizer {
         return new JsonNumber(source);
     }
 
-    private static JsonItem mapEnum(final Enum<?> source) {
+    private static Json.Value mapEnum(final Enum<?> source) {
         return mapString(source.name());
     }
 
@@ -125,10 +125,10 @@ enum Generalizer {
     @FunctionalInterface
     interface Mapper<T> {
 
-        JsonItem mapT(T source);
+        Json.Value mapT(T source);
 
         @SuppressWarnings("unchecked")
-        default JsonItem map(final Object source) {
+        default Json.Value map(final Object source) {
             return mapT((T) source);
         }
     }

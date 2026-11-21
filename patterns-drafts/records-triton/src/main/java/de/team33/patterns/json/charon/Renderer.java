@@ -17,7 +17,7 @@ final class Renderer {
     private static final String NEWLINE = "%n".formatted();
 
     private final StringBuilder target;
-    private final Predicate<Map.Entry<String, ? extends JsonItem>> entryFilter;
+    private final Predicate<Map.Entry<String, ? extends Json.Value>> entryFilter;
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
@@ -46,7 +46,7 @@ final class Renderer {
                          .collect(joining()));
     }
 
-    Renderer add(final JsonItem source, final int indentation) {
+    Renderer add(final Json.Value source, final int indentation) {
         if (Json.NULL == source) {
             return add("null");
         } else {
@@ -65,13 +65,13 @@ final class Renderer {
     }
 
     private Renderer addObjectBody(final JsonObject value, final int indentation) {
-        final List<Map.Entry<String, JsonItem>> entries = value.value().entrySet().stream()
-                                                               .filter(entryFilter)
-                                                               .toList();
+        final List<Map.Entry<String, Json.Value>> entries = value.value().entrySet().stream()
+                                                                 .filter(entryFilter)
+                                                                 .toList();
         final int size = entries.size();
         if (0 < size) {
             for (int index = 0; index < size; index++) {
-                final Map.Entry<String, JsonItem> entry = entries.get(index);
+                final Map.Entry<String, Json.Value> entry = entries.get(index);
                 objSeparation.addSeparator(index, indentation);
                 add(StringLiteral.render(entry.getKey())).add(" : ").add(entry.getValue(), indentation);
             }
@@ -86,7 +86,7 @@ final class Renderer {
     }
 
     private Renderer addArrayBody(final JsonArray value, final int indentation) {
-        final List<JsonItem> values = value.value();
+        final List<Json.Value> values = value.value();
         final int size = values.size();
         if (0 < size) {
             for (int index = 0; index < size; ++index) {
@@ -135,34 +135,34 @@ final class Renderer {
 
         private static final Values<JsonType> VALUES = Values.of(JsonType.class);
 
-        private final Class<? extends JsonItem> jsonType;
+        private final Class<? extends Json.Value> jsonType;
         @SuppressWarnings("rawtypes")
         private final Rendering rendering;
 
-        <T extends JsonItem> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
+        <T extends Json.Value> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
             this.jsonType = jsonType;
             this.rendering = rendering;
         }
 
-        static JsonType of(final Class<? extends JsonItem> sourceType) {
+        static JsonType of(final Class<? extends Json.Value> sourceType) {
             return VALUES.findAny(value -> value.jsonType.isAssignableFrom(sourceType))
                          .orElseThrow(() -> new IllegalStateException(
                                  // Difficult to test (should not happen at all) ...
                                  "unexpected source type: %s".formatted(sourceType.getCanonicalName())));
         }
 
-        final Renderer render(final Renderer renderer, final JsonItem source, final int indentation) {
+        final Renderer render(final Renderer renderer, final Json.Value source, final int indentation) {
             return rendering.render(renderer, source, indentation);
         }
     }
 
     @FunctionalInterface
-    private interface Rendering<T extends JsonItem> {
+    private interface Rendering<T extends Json.Value> {
 
         Renderer renderT(Renderer renderer, T source, int indentation);
 
         @SuppressWarnings("unchecked")
-        default Renderer render(final Renderer renderer, final JsonItem source, final int indentation) {
+        default Renderer render(final Renderer renderer, final Json.Value source, final int indentation) {
             return renderT(renderer, (T) source, indentation);
         }
     }

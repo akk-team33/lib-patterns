@@ -8,17 +8,17 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import java.util.Map;
 import java.util.stream.Collector;
 
-public final class JsonObject extends JsonEntity<ImmutableMap<String, JsonItem>> {
+public final class JsonObject extends JsonEntity<ImmutableMap<String, Json.Value>> {
 
-    public JsonObject(final Map<String, ? extends JsonItem> source) {
+    public JsonObject(final Map<String, ? extends Json.Value> source) {
         super(FinalMap.of(source));
     }
 
-    public JsonObject(final Streamable<? extends Map.Entry<String, ? extends JsonItem>> source) {
+    public JsonObject(final Streamable<? extends Map.Entry<String, ? extends Json.Value>> source) {
         super(FinalMap.of(source));
     }
 
-    public static Collector<Map.Entry<String, ? extends JsonItem>, ?, JsonObject> collector() {
+    public static Collector<Map.Entry<String, ? extends Json.Value>, ?, JsonObject> collector() {
         return Buffer.collector(JsonObject::new);
     }
 }

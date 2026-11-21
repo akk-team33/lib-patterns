@@ -52,10 +52,10 @@ class GeneralizerTest {
     @ParameterizedTest
     @MethodSource("cases")
     final <T> void map(final Case<T> given) {
-        final JsonItem result = Generalizer.map(given.source);
+        final Json.Value result = Generalizer.map(given.source);
         assertEquals(given.expected, result);
     }
 
-    record Case<T>(T source, JsonItem expected) {
+    record Case<T>(T source, Json.Value expected) {
     }
 }

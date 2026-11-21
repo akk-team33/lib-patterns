@@ -50,7 +50,7 @@ class ParserTest {
                                                    ,
                                                    "name3" : [1, 2, 3]
                                                }""",
-                                       new LinkedHashMap<String, JsonItem>() {{
+                                       new LinkedHashMap<String, Json.Value>() {{
                                            put("name1", new JsonString("value1"));
                                            put("name2", new JsonString("value2"));
                                            put("name3", new JsonArray(List.of(
@@ -88,7 +88,7 @@ class ParserTest {
     @ParameterizedTest
     @MethodSource("parseCases")
     final void parse(final ParseCase given) {
-        final JsonItem result = Json.parse(given.source);
+        final Json.Value result = Json.parse(given.source);
         assertEquals(given.expected, result);
     }
 
@@ -96,13 +96,13 @@ class ParserTest {
     @MethodSource("failCases")
     final void parse_fail(final String given) {
         try {
-            final JsonItem result = Json.parse(given);
+            final Json.Value result = Json.parse(given);
             fail("expected to fail - but was %s".formatted(result));
         } catch (final IllegalArgumentException e) {
             // as expected
         }
     }
 
-    record ParseCase(String source, JsonItem expected) {
+    record ParseCase(String source, Json.Value expected) {
     }
 }

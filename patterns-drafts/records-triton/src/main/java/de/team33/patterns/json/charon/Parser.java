@@ -27,20 +27,20 @@ final class Parser {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    JsonItem parseRoot() {
+    Json.Value parseRoot() {
         source.skipWhitespace();
-        final JsonItem result = parseItem();
+        final Json.Value result = parseItem();
         source.failIfMore();
         return result;
     }
 
-    private JsonItem parseItem() {
-        final JsonItem result = parseItem(source.peek());
+    private Json.Value parseItem() {
+        final Json.Value result = parseItem(source.peek());
         source.skipWhitespace();
         return result;
     }
 
-    private JsonItem parseItem(final char next) {
+    private Json.Value parseItem(final char next) {
         return switch (next) {
             case '{' -> parseObject();
             case '[' -> parseArray();
@@ -54,7 +54,7 @@ final class Parser {
     private JsonObject parseObject() {
         source.expect('{')
               .skipWhitespace();
-        final Map<String, JsonItem> stage = new LinkedHashMap<>();
+        final Map<String, Json.Value> stage = new LinkedHashMap<>();
         if (source.hasMore() && '}' == source.peek()) {
             source.skip();
         } else {
@@ -64,7 +64,7 @@ final class Parser {
         return new JsonObject(stage);
     }
 
-    private void parseObjectBody(final Map<? super String, ? super JsonItem> stage) {
+    private void parseObjectBody(final Map<? super String, ? super Json.Value> stage) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
             parseMember(stage);
@@ -76,13 +76,13 @@ final class Parser {
         }
     }
 
-    private void parseMember(final Map<? super String, ? super JsonItem> stage) {
-        final JsonItem next = parseItem();
+    private void parseMember(final Map<? super String, ? super Json.Value> stage) {
+        final Json.Value next = parseItem();
         if (next instanceof final JsonString jsonString) {
             final String name = jsonString.value();
             source.expect(COLON)
                   .skipWhitespace();
-            final JsonItem value = parseItem();
+            final Json.Value value = parseItem();
             stage.put(name, value);
         } else {
             throw new IllegalArgumentException(
@@ -93,7 +93,7 @@ final class Parser {
 
     private JsonArray parseArray() {
         source.expect('[').skipWhitespace();
-        final Buffer<JsonItem> buffer = Buffer.empty();
+        final Buffer<Json.Value> buffer = Buffer.empty();
         if (source.hasMore() && ']' == source.peek()) {
             source.skip();
         } else {
@@ -103,7 +103,7 @@ final class Parser {
         return new JsonArray(buffer);
     }
 
-    private void parseArrayBody(final Buffer<? super JsonItem> buffer) {
+    private void parseArrayBody(final Buffer<? super Json.Value> buffer) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
             buffer.add(parseItem());
@@ -120,7 +120,7 @@ final class Parser {
     }
 
     @SuppressWarnings("SameReturnValue")
-    private JsonItem parseNull() {
+    private Json.Value parseNull() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());

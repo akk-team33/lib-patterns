@@ -9,21 +9,21 @@ import java.util.Collection;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-public final class JsonArray extends JsonEntity<ImmutableList<JsonItem>> {
+public final class JsonArray extends JsonEntity<ImmutableList<Json.Value>> {
 
-    public JsonArray(final Collection<? extends JsonItem> source) {
+    public JsonArray(final Collection<? extends Json.Value> source) {
         super(FinalList.of(source));
     }
 
-    public JsonArray(final Streamable<? extends JsonItem> source) {
+    public JsonArray(final Streamable<? extends Json.Value> source) {
         super(FinalList.of(source));
     }
 
     /**
-     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link JsonItem}s
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link Json.Value}s
      * into a new {@link JsonArray}.
      */
-    public static Collector<JsonItem, ?, JsonArray> collector() {
+    public static Collector<Json.Value, ?, JsonArray> collector() {
         return Buffer.collector(JsonArray::new);
     }
 }

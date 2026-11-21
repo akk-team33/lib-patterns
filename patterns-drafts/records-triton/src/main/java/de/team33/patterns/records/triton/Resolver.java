@@ -30,11 +30,11 @@ final class Resolver {
         }
     }
 
-    static Object resolve(final Type<?> targetType, final JsonItem value) {
+    static Object resolve(final Type<?> targetType, final Json.Value value) {
         return new Resolver(targetType).apply(value);
     }
 
-    private Object apply(final JsonItem value) {
+    private Object apply(final Json.Value value) {
         if (Json.NULL == value) {
             return mapNull();
         } else if (mapping.isApplicable(value)) {
@@ -151,13 +151,13 @@ final class Resolver {
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);
 
         private final Predicate<Type<?>> responsibility;
-        private final Class<? extends JsonItem> jsonClass;
+        private final Class<? extends Json.Value> jsonClass;
         @SuppressWarnings("rawtypes")
         private final Method method;
 
-        <T extends JsonItem> Mapping(final Predicate<Class<?>> responsibility,
-                                     final Class<T> jsonClass,
-                                     final Method<T> method) {
+        <T extends Json.Value> Mapping(final Predicate<Class<?>> responsibility,
+                                       final Class<T> jsonClass,
+                                       final Method<T> method) {
             this.responsibility = type -> responsibility.test(type.core());
             this.jsonClass = jsonClass;
             this.method = method;
@@ -173,21 +173,21 @@ final class Resolver {
                          .orElse(null);
         }
 
-        final Function<JsonItem, Object> method(final Resolver resolver) {
+        final Function<Json.Value, Object> method(final Resolver resolver) {
             return value -> method.map(resolver, value);
         }
 
-        final boolean isApplicable(final JsonItem value) {
+        final boolean isApplicable(final Json.Value value) {
             return jsonClass.isInstance(value);
         }
 
         @FunctionalInterface
-        interface Method<T extends JsonItem> {
+        interface Method<T extends Json.Value> {
 
             Object mapT(Resolver resolver, T value);
 
             @SuppressWarnings("unchecked")
-            default Object map(final Resolver resolver, final JsonItem value) {
+            default Object map(final Resolver resolver, final Json.Value value) {
                 return mapT(resolver, (T) value);
             }
         }
@@ -202,7 +202,7 @@ final class Resolver {
         }
 
         final Object map(final JsonArray value) {
-            final List<JsonItem> values = value.value();
+            final List<Json.Value> values = value.value();
             final int size = values.size();
             final Object array = Array.newInstance(componentType.core(), size);
             for (int index = 0; index < size; ++index) {
@@ -232,7 +232,7 @@ final class Resolver {
         }
 
         private void putNext(final Map<? super String, Object> map,
-                             final Map.Entry<String, ? extends JsonItem> entry) {
+                             final Map.Entry<String, ? extends Json.Value> entry) {
             final String name = entry.getKey();
             map.put(name, resolve(description.get(name), entry.getValue()));
         }

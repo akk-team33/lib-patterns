@@ -12,13 +12,13 @@ public enum JsonCase {
     ARRAY(JsonArray.class),
     OBJECT(JsonObject.class);
 
-    private final Class<? extends JsonItem> jsonType;
+    private final Class<? extends Json.Value> jsonType;
 
-    JsonCase(final Class<? extends JsonItem> jsonType) {
+    JsonCase(final Class<? extends Json.Value> jsonType) {
         this.jsonType = jsonType;
     }
 
-    public static JsonCase of(final JsonItem item) {
+    public static JsonCase of(final Json.Value item) {
         return Stream.of(values())
                      .filter(value -> value.jsonType.isInstance(item))
                      .findAny()
@@ -27,7 +27,7 @@ public enum JsonCase {
     }
 
     @SuppressWarnings("ReturnOfNull")
-    private static Class<?> type(final JsonItem item) {
+    private static Class<?> type(final Json.Value item) {
         return (null == item) ? null : item.getClass();
     }
 }
