@@ -21,4 +21,9 @@ public final class JsonObject extends JsonEntity<ImmutableMap<String, Json.Value
     public static Collector<Map.Entry<String, ? extends Json.Value>, ?, JsonObject> collector() {
         return Buffer.collector(JsonObject::new);
     }
+
+    @Override
+    public Json.Type type() {
+        return Json.Type.OBJECT;
+    }
 }

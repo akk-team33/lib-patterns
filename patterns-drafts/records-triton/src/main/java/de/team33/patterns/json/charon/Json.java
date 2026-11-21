@@ -54,7 +54,7 @@ public class Json {
         OBJECT;
     }
 
-    public static interface Value {
+    public interface Value {
 
         /**
          * Determines whether <em>this</em> is an instance of the given <em>type</em>.
@@ -88,5 +88,10 @@ public class Json {
                            .filter(type::isInstance)
                            .map(type::cast);
         }
+
+        /**
+         * Returns the {@link Type} of <em>this</em> value.
+         */
+        Type type();
     }
 }

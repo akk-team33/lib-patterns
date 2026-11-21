@@ -26,4 +26,9 @@ public final class JsonArray extends JsonEntity<ImmutableList<Json.Value>> {
     public static Collector<Json.Value, ?, JsonArray> collector() {
         return Buffer.collector(JsonArray::new);
     }
+
+    @Override
+    public Json.Type type() {
+        return Json.Type.ARRAY;
+    }
 }

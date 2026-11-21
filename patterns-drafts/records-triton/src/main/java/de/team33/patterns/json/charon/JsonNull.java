@@ -8,4 +8,9 @@ enum JsonNull implements Json.Value {
     public String toString() {
         return "null";
     }
+
+    @Override
+    public Json.Type type() {
+        return Json.Type.NULL;
+    }
 }

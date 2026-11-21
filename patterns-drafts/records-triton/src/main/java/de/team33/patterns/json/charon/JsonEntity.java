@@ -4,7 +4,7 @@ import de.team33.patterns.value.sinope.Equation;
 
 import java.util.Objects;
 
-class JsonEntity<V> implements Json.Value {
+abstract class JsonEntity<V> implements Json.Value {
 
     @SuppressWarnings("rawtypes")
     private static final Equation<JsonEntity> EQUATION = Equation.of(JsonEntity.class, JsonEntity::value);
