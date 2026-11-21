@@ -21,8 +21,8 @@ class RendererTest {
 
     private static Stream<Json.Value> jsonValues() {
         return Stream.of(Json.NULL,
-                         new JsonBoolean(true),
-                         new JsonBoolean(false),
+                         Json.valueOf(true),
+                         Json.valueOf(false),
                          new JsonNumber(BigDecimal.ONE),
                          new JsonNumber(BigDecimal.valueOf(278)),
                          new JsonNumber(new BigDecimal("123456789.123456789")),
@@ -38,7 +38,7 @@ class RendererTest {
                          new JsonArray(List.of()),
                          new JsonArray(List.of(
                                  new JsonString("a"),
-                                 new JsonBoolean(true),
+                                 Json.valueOf(true),
                                  Json.NULL,
                                  new JsonNumber(new BigDecimal("1.23")),
                                  new JsonObject(FinalMap.of("name", new JsonString("value"))))),

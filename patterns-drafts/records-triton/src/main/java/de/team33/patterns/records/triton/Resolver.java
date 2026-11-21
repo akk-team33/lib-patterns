@@ -30,8 +30,13 @@ final class Resolver {
         }
     }
 
+    @SuppressWarnings("ReturnOfNull")
     static Object resolve(final Type<?> targetType, final Json.Value value) {
-        return new Resolver(targetType).apply(value);
+        return switch (value.type()) {
+            case NULL -> null; // TODO?: Nullable.resolve(targetType);
+            case BOOLEAN -> Boolable.resolve(value.asBoolean(), targetType);
+            default -> new Resolver(targetType).apply(value);
+        };
     }
 
     private Object apply(final Json.Value value) {
@@ -51,10 +56,6 @@ final class Resolver {
             throw new IllegalArgumentException("not nullable: " + targetType);
         }
         return null;
-    }
-
-    private boolean mapBoolean(final JsonBoolean source) {
-        return source.value();
     }
 
     private byte mapByte(final JsonNumber source) {
@@ -132,7 +133,6 @@ final class Resolver {
 
     private enum Mapping {
 
-        BOOLEAN(isOneOf(boolean.class, Boolean.class), JsonBoolean.class, Resolver::mapBoolean),
         BYTE(isOneOf(byte.class, Byte.class), JsonNumber.class, Resolver::mapByte),
         SHORT(isOneOf(short.class, Short.class), JsonNumber.class, Resolver::mapShort),
         INT(isOneOf(int.class, Integer.class), JsonNumber.class, Resolver::mapInt),

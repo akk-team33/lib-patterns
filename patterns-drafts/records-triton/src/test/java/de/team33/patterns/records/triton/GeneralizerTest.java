@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class GeneralizerTest {
 
     static Stream<Case<?>> cases() {
-        return Stream.of(new Case<>(true, new JsonBoolean(true)),
-                         new Case<>(false, new JsonBoolean(false)),
-                         new Case<>(Boolean.TRUE, new JsonBoolean(true)),
-                         new Case<>(Boolean.FALSE, new JsonBoolean(false)),
+        return Stream.of(new Case<>(true, Json.valueOf(true)),
+                         new Case<>(false, Json.valueOf(false)),
+                         new Case<>(Boolean.TRUE, Json.valueOf(true)),
+                         new Case<>(Boolean.FALSE, Json.valueOf(false)),
                          new Case<>((byte) 16, new JsonNumber(BigDecimal.valueOf(16))),
                          new Case<>((short) 17, new JsonNumber(BigDecimal.valueOf(17))),
                          new Case<>(18, new JsonNumber(BigDecimal.valueOf(18))),

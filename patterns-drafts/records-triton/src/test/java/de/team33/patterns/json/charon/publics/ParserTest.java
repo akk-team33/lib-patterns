@@ -19,8 +19,8 @@ class ParserTest {
     static Stream<ParseCase> parseCases() {
         return Stream.of(new ParseCase("null", Json.NULL),
                          new ParseCase(" \n\t null \r\f", Json.NULL),
-                         new ParseCase(" true", new JsonBoolean(true)),
-                         new ParseCase("false ", new JsonBoolean(false)),
+                         new ParseCase(" true", Json.valueOf(true)),
+                         new ParseCase("false ", Json.valueOf(false)),
                          new ParseCase("1", new JsonNumber(BigDecimal.ONE)),
                          new ParseCase("278", new JsonNumber(BigDecimal.valueOf(278))),
                          new ParseCase(" 123456789.123456789",
@@ -39,7 +39,7 @@ class ParserTest {
                          new ParseCase("[\"a\", true, null, 1.23, {\"name\" : \"value\"}]",
                                        new JsonArray(List.of(
                                                new JsonString("a"),
-                                               new JsonBoolean(true),
+                                               Json.valueOf(true),
                                                Json.NULL,
                                                new JsonNumber(new BigDecimal("1.23")),
                                                new JsonObject(FinalMap.of("name", new JsonString("value")))))),

@@ -57,8 +57,8 @@ enum Generalizer {
         }
     }
 
-    private static JsonBoolean mapBoolean(final boolean source) {
-        return new JsonBoolean(source);
+    private static Json.Value mapBoolean(final boolean source) {
+        return Json.valueOf(source);
     }
 
     private static JsonNumber mapByte(final byte source) {
