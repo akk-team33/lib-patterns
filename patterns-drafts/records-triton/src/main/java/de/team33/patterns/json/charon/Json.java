@@ -16,4 +16,40 @@ public class Json {
     public static JsonItem parse(final String source) {
         return new Parser(source).parseRoot();
     }
+
+    /**
+     * Identifies the type of a JSON value.
+     */
+    public enum Type {
+
+        /**
+         * Identifies a JSON null.
+         */
+        NULL,
+
+        /**
+         * Identifies a JSON boolean.
+         */
+        BOOLEAN,
+
+        /**
+         * Identifies a JSON number.
+         */
+        NUMBER,
+
+        /**
+         * Identifies a JSON string.
+         */
+        STRING,
+
+        /**
+         * Identifies a JSON array.
+         */
+        ARRAY,
+
+        /**
+         * Identifies a JSON object.
+         */
+        OBJECT;
+    }
 }
