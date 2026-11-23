@@ -7,8 +7,9 @@ import de.team33.patterns.typing.proteus.Type;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * A utility to convert between {@linkplain Record Records} and JSON-formatted {@linkplain String Strings}.
@@ -41,7 +42,8 @@ public final class Triton {
     @SuppressWarnings("OverloadedVarargsMethod")
     public static String toJson(final Record source, final RenderOption... options) {
         final Json.Value value = Generalizer.map(source);
-        return Json.render(value, Set.of(options));
+        final var jsonOptions = Stream.of(options).map(option -> option.jsonOption()).collect(Collectors.toSet());
+        return Json.render(value, jsonOptions);
     }
 
     /**

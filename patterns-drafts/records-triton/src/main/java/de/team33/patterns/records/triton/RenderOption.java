@@ -1,5 +1,7 @@
 package de.team33.patterns.records.triton;
 
+import de.team33.patterns.json.charon.Json;
+
 /**
  * Defines options for JSON rendering.
  */
@@ -10,19 +12,29 @@ public enum RenderOption {
      * <p>
      * By default, {@code null} values will be rendered.
      */
-    SKIP_NULL,
+    SKIP_NULL(Json.Option.SKIP_NULL),
 
     /**
      * Causes JSON objects to be rendered in a single line.
      * <p>
      * By default, JSON objects are rendered in multi-line format.
      */
-    INLINE_OBJECT,
+    INLINE_OBJECT(Json.Option.INLINE_OBJECT),
 
     /**
      * Causes JSON arrays to be rendered in multi-line format.
      * <p>
      * By default, JSON arrays are rendered in a single line.
      */
-    FORMAT_ARRAY
+    FORMAT_ARRAY(Json.Option.FORMAT_ARRAY);
+
+    private final Json.Option jsonOption;
+
+    RenderOption(final Json.Option jsonOption) {
+        this.jsonOption = jsonOption;
+    }
+
+    Json.Option jsonOption() {
+        return jsonOption;
+    }
 }

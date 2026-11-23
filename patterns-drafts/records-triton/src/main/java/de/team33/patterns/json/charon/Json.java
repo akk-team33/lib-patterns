@@ -1,7 +1,5 @@
 package de.team33.patterns.json.charon;
 
-import de.team33.patterns.records.triton.RenderOption;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -9,7 +7,7 @@ public class Json {
 
     public static final Value NULL = JsonNull.INSTANCE;
 
-    public static String render(final Value value, final Set<RenderOption> options) {
+    public static String render(final Value value, final Set<Option> options) {
         return new Renderer(options).add(value, 0)
                                     .toString();
     }
@@ -93,5 +91,32 @@ public class Json {
          * Returns the {@link Type} of <em>this</em> value.
          */
         Type type();
+    }
+
+    /**
+     * Defines options for JSON rendering.
+     */
+    public enum Option {
+
+        /**
+         * Causes {@code null} values to be skipped during rendering of JSON objects.
+         * <p>
+         * By default, {@code null} values will be rendered.
+         */
+        SKIP_NULL,
+
+        /**
+         * Causes JSON objects to be rendered in a single line.
+         * <p>
+         * By default, JSON objects are rendered in multi-line format.
+         */
+        INLINE_OBJECT,
+
+        /**
+         * Causes JSON arrays to be rendered in multi-line format.
+         * <p>
+         * By default, JSON arrays are rendered in a single line.
+         */
+        FORMAT_ARRAY
     }
 }

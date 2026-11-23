@@ -1,7 +1,6 @@
 package de.team33.patterns.json.charon;
 
 import de.team33.patterns.enums.pan.Values;
-import de.team33.patterns.records.triton.RenderOption;
 
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.team33.patterns.records.triton.RenderOption.*;
+import static de.team33.patterns.json.charon.Json.Option.*;
 import static java.util.stream.Collectors.joining;
 
 final class Renderer {
@@ -21,7 +20,7 @@ final class Renderer {
     private final Separation arrSeparation;
     private final Separation objSeparation;
 
-    Renderer(final Set<RenderOption> options) {
+    Renderer(final Set<Json.Option> options) {
         this.target = new StringBuilder();
         this.entryFilter = options.contains(SKIP_NULL) ? entry -> Json.NULL != entry.getValue()
                                                        : entry -> true;

@@ -3,7 +3,6 @@ package de.team33.patterns.json.charon.publics;
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.json.charon.*;
-import de.team33.patterns.records.triton.RenderOption;
 import de.team33.patterns.streamable.galatea.Streamable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -61,34 +60,34 @@ class RendererTest {
     }
 
     static Stream<RenderCase> renderCases() {
-        return Stream.of(EnumSet.noneOf(RenderOption.class),
-                         EnumSet.of(RenderOption.SKIP_NULL),
-                         EnumSet.of(RenderOption.INLINE_OBJECT),
-                         EnumSet.of(RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY))
+        return Stream.of(EnumSet.noneOf(Json.Option.class),
+                         EnumSet.of(Json.Option.SKIP_NULL),
+                         EnumSet.of(Json.Option.INLINE_OBJECT),
+                         EnumSet.of(Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.INLINE_OBJECT),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.INLINE_OBJECT, Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.INLINE_OBJECT, Json.Option.FORMAT_ARRAY))
                      .flatMap(RendererTest::renderCases);
     }
 
-    private static Stream<RenderCase> renderCases(final EnumSet<RenderOption> options) {
+    private static Stream<RenderCase> renderCases(final EnumSet<Json.Option> options) {
         return jsonValues().map(value -> renderCase(options, value));
     }
 
-    private static RenderCase renderCase(final EnumSet<RenderOption> options, final Json.Value value) {
+    private static RenderCase renderCase(final EnumSet<Json.Option> options, final Json.Value value) {
         return new RenderCase(value, options, expected(value, options));
     }
 
     @SuppressWarnings("ChainOfInstanceofChecks")
-    private static Json.Value expected(final Json.Value value, final Set<RenderOption> options) {
-        if (value instanceof final JsonObject jsonObject && options.contains(RenderOption.SKIP_NULL)) {
+    private static Json.Value expected(final Json.Value value, final Set<Json.Option> options) {
+        if (value instanceof final JsonObject jsonObject && options.contains(Json.Option.SKIP_NULL)) {
             return jsonObject.value().entrySet().stream()
                              .filter(entry -> Json.NULL != entry.getValue())
                              .map(entry -> FinalEntry.of(entry.getKey(),
                                                          expected(entry.getValue(), options)))
                              .collect(JsonObject.collector());
-        } else if (value instanceof final JsonArray jsonArray && options.contains(RenderOption.SKIP_NULL)) {
+        } else if (value instanceof final JsonArray jsonArray && options.contains(Json.Option.SKIP_NULL)) {
             return new JsonArray(jsonArray.value().stream()
                                           .map(elem -> expected(elem, options))
                                           .toList());
@@ -105,6 +104,6 @@ class RendererTest {
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
-    record RenderCase(Json.Value source, Set<RenderOption> options, Json.Value expected) {
+    record RenderCase(Json.Value source, Set<Json.Option> options, Json.Value expected) {
     }
 }
