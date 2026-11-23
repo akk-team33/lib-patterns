@@ -1,7 +1,6 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonArray;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -37,7 +36,7 @@ class GeneralizerTest {
                          new Case<>(new int[]{1, 2, 3}, Stream.of(Json.value(new BigDecimal(1)),
                                                                   Json.value(new BigDecimal(2)),
                                                                   Json.value(new BigDecimal(3)))
-                                                              .collect(JsonArray.collector())),
+                                                              .collect(Json.arrayCollector())),
                          new Case<>(new SampleRecord(null, null, null), Json.value(new LinkedHashMap<>() {{
                              put("name", Json.NULL);
                              put("lValue", Json.NULL);

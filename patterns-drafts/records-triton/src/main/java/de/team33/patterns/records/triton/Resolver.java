@@ -1,7 +1,7 @@
 package de.team33.patterns.records.triton;
 
 import de.team33.patterns.enums.pan.Values;
-import de.team33.patterns.json.charon.*;
+import de.team33.patterns.json.charon.Json;
 import de.team33.patterns.records.metis.Metis;
 import de.team33.patterns.typing.proteus.Type;
 
@@ -42,7 +42,7 @@ final class Resolver {
                           .apply(value);
         }
         throw new IllegalArgumentException(
-                "illegal Json type: %s - expected: %s".formatted(value.getClass(), mapping.jsonClass));
+                "illegal Json type: %s - expected: %s".formatted(value.type(), mapping.jsonType));
     }
 
     @SuppressWarnings({"ReturnOfNull", "SameReturnValue"})
@@ -53,60 +53,60 @@ final class Resolver {
         return null;
     }
 
-    private boolean mapBoolean(final JsonBoolean source) {
-        return source.value();
+    private boolean mapBoolean(final Json.Value source) {
+        return source.asBoolean();
     }
 
-    private byte mapByte(final JsonNumber source) {
-        return source.value().byteValueExact();
+    private byte mapByte(final Json.Value source) {
+        return source.asBigDecimal().byteValueExact();
     }
 
-    private short mapShort(final JsonNumber source) {
-        return source.value().shortValueExact();
+    private short mapShort(final Json.Value source) {
+        return source.asBigDecimal().shortValueExact();
     }
 
-    private int mapInt(final JsonNumber source) {
-        return source.value().intValueExact();
+    private int mapInt(final Json.Value source) {
+        return source.asBigDecimal().intValueExact();
     }
 
-    private long mapLong(final JsonNumber source) {
-        return source.value().longValueExact();
+    private long mapLong(final Json.Value source) {
+        return source.asBigDecimal().longValueExact();
     }
 
-    private float mapFloat(final JsonNumber source) {
-        return source.value().floatValue();
+    private float mapFloat(final Json.Value source) {
+        return source.asBigDecimal().floatValue();
     }
 
-    private double mapDouble(final JsonNumber source) {
-        return source.value().doubleValue();
+    private double mapDouble(final Json.Value source) {
+        return source.asBigDecimal().doubleValue();
     }
 
-    private char mapChar(final JsonString source) {
-        final String cString = source.value();
+    private char mapChar(final Json.Value source) {
+        final String cString = source.asString();
         if (1 == cString.length()) {
             return cString.charAt(0);
         }
         throw new IllegalArgumentException("illegal character: '%s'".formatted(cString));
     }
 
-    private BigInteger mapBigInteger(final JsonNumber source) {
-        return source.value().toBigIntegerExact();
+    private BigInteger mapBigInteger(final Json.Value source) {
+        return source.asBigDecimal().toBigIntegerExact();
     }
 
-    private BigDecimal mapBigDecimal(final JsonNumber source) {
-        return source.value();
+    private BigDecimal mapBigDecimal(final Json.Value source) {
+        return source.asBigDecimal();
     }
 
-    private String mapString(final JsonString source) {
-        return source.value();
+    private String mapString(final Json.Value source) {
+        return source.asString();
     }
 
-    private Object mapStringable(final JsonString source) {
-        return Stringable.decode(targetType.core(), source.value());
+    private Object mapStringable(final Json.Value source) {
+        return Stringable.decode(targetType.core(), source.asString());
     }
 
-    private Enum<?> mapEnum(final JsonString source) {
-        return mapEnum(source.value());
+    private Enum<?> mapEnum(final Json.Value source) {
+        return mapEnum(source.asString());
     }
 
     private Enum<?> mapEnum(final String name) {
@@ -122,44 +122,43 @@ final class Resolver {
                 "Cannot find enum value %s of type %s".formatted(name, targetType));
     }
 
-    private Object mapArray(final JsonArray source) {
-        return new ArrayMapper().map(source);
+    private Object mapArray(final Json.Value source) {
+        return new ArrayMapper().map(source.asList());
     }
 
-    private Object mapRecord(final JsonObject source) {
-        return new RecordMapper().map(source);
+    private Object mapRecord(final Json.Value source) {
+        return new RecordMapper().map(source.asMap());
     }
 
     private enum Mapping {
 
-        BOOLEAN(isOneOf(boolean.class, Boolean.class), JsonBoolean.class, Resolver::mapBoolean),
-        BYTE(isOneOf(byte.class, Byte.class), JsonNumber.class, Resolver::mapByte),
-        SHORT(isOneOf(short.class, Short.class), JsonNumber.class, Resolver::mapShort),
-        INT(isOneOf(int.class, Integer.class), JsonNumber.class, Resolver::mapInt),
-        LONG(isOneOf(long.class, Long.class), JsonNumber.class, Resolver::mapLong),
-        FLOAT(isOneOf(float.class, Float.class), JsonNumber.class, Resolver::mapFloat),
-        DOUBLE(isOneOf(double.class, Double.class), JsonNumber.class, Resolver::mapDouble),
-        BIG_INT(BigInteger.class::equals, JsonNumber.class, Resolver::mapBigInteger),
-        BIG_DEC(BigDecimal.class::equals, JsonNumber.class, Resolver::mapBigDecimal),
-        CHAR(isOneOf(char.class, Character.class), JsonString.class, Resolver::mapChar),
-        STRING(String.class::equals, JsonString.class, Resolver::mapString),
-        ENUM(Class::isEnum, JsonString.class, Resolver::mapEnum),
-        ARRAY(Class::isArray, JsonArray.class, Resolver::mapArray),
-        RECORD(Class::isRecord, JsonObject.class, Resolver::mapRecord),
-        STRINGABLE(Stringable::supports, JsonString.class, Resolver::mapStringable);
+        BOOLEAN(isOneOf(boolean.class, Boolean.class), Json.Type.BOOLEAN, Resolver::mapBoolean),
+        BYTE(isOneOf(byte.class, Byte.class), Json.Type.NUMBER, Resolver::mapByte),
+        SHORT(isOneOf(short.class, Short.class), Json.Type.NUMBER, Resolver::mapShort),
+        INT(isOneOf(int.class, Integer.class), Json.Type.NUMBER, Resolver::mapInt),
+        LONG(isOneOf(long.class, Long.class), Json.Type.NUMBER, Resolver::mapLong),
+        FLOAT(isOneOf(float.class, Float.class), Json.Type.NUMBER, Resolver::mapFloat),
+        DOUBLE(isOneOf(double.class, Double.class), Json.Type.NUMBER, Resolver::mapDouble),
+        BIG_INT(BigInteger.class::equals, Json.Type.NUMBER, Resolver::mapBigInteger),
+        BIG_DEC(BigDecimal.class::equals, Json.Type.NUMBER, Resolver::mapBigDecimal),
+        CHAR(isOneOf(char.class, Character.class), Json.Type.STRING, Resolver::mapChar),
+        STRING(String.class::equals, Json.Type.STRING, Resolver::mapString),
+        ENUM(Class::isEnum, Json.Type.STRING, Resolver::mapEnum),
+        ARRAY(Class::isArray, Json.Type.ARRAY, Resolver::mapArray),
+        RECORD(Class::isRecord, Json.Type.OBJECT, Resolver::mapRecord),
+        STRINGABLE(Stringable::supports, Json.Type.STRING, Resolver::mapStringable);
 
         private static final Values<Mapping> VALUES = Values.of(Mapping.class);
 
         private final Predicate<Type<?>> responsibility;
-        private final Class<? extends Json.Value> jsonClass;
-        @SuppressWarnings("rawtypes")
+        private final Json.Type jsonType;
         private final Method method;
 
-        <T extends Json.Value> Mapping(final Predicate<Class<?>> responsibility,
-                                       final Class<T> jsonClass,
-                                       final Method<T> method) {
+        Mapping(final Predicate<Class<?>> responsibility,
+                final Json.Type jsonType,
+                final Method method) {
             this.responsibility = type -> responsibility.test(type.core());
-            this.jsonClass = jsonClass;
+            this.jsonType = jsonType;
             this.method = method;
         }
 
@@ -178,18 +177,13 @@ final class Resolver {
         }
 
         final boolean isApplicable(final Json.Value value) {
-            return jsonClass.isInstance(value);
+            return jsonType == value.type();
         }
 
         @FunctionalInterface
-        interface Method<T extends Json.Value> {
+        interface Method {
 
-            Object mapT(Resolver resolver, T value);
-
-            @SuppressWarnings("unchecked")
-            default Object map(final Resolver resolver, final Json.Value value) {
-                return mapT(resolver, (T) value);
-            }
+            Object map(Resolver resolver, Json.Value value);
         }
     }
 
@@ -201,8 +195,7 @@ final class Resolver {
             componentType = targetType.actualParameters().get(0);
         }
 
-        final Object map(final JsonArray value) {
-            final List<Json.Value> values = value.value();
+        final Object map(final List<? extends Json.Value> values) {
             final int size = values.size();
             final Object array = Array.newInstance(componentType.core(), size);
             for (int index = 0; index < size; ++index) {
@@ -222,11 +215,11 @@ final class Resolver {
             this.description = Metis.description((Type) targetType);
         }
 
-        final Object map(final JsonObject value) {
+        final Object map(final Map<String, ? extends Json.Value> values) {
             final Map<String, Object> stage =
-                    value.value().entrySet().stream()
-                         .filter(entry -> description.containsKey(entry.getKey()))
-                         .collect(HashMap::new, this::putNext, Map::putAll);
+                    values.entrySet().stream()
+                          .filter(entry -> description.containsKey(entry.getKey()))
+                          .collect(HashMap::new, this::putNext, Map::putAll);
             //noinspection rawtypes,unchecked
             return Metis.toRecord((Type) targetType, stage);
         }

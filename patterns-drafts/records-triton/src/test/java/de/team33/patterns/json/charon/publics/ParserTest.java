@@ -3,7 +3,6 @@ package de.team33.patterns.json.charon.publics;
 import de.team33.patterns.collection.mneme.FinalList;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonObject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -58,7 +57,7 @@ class ParserTest {
                                                    Json.value(BigDecimal.valueOf(1)),
                                                    Json.value(BigDecimal.valueOf(2)),
                                                    Json.value(BigDecimal.valueOf(3)))));
-                                       }}.entrySet().stream().collect(JsonObject.collector())));
+                                       }}.entrySet().stream().collect(Json.objectCollector())));
     }
 
     static Stream<String> failCases() {

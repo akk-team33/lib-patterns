@@ -3,8 +3,6 @@ package de.team33.patterns.json.charon.publics;
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
 import de.team33.patterns.json.charon.Json;
-import de.team33.patterns.json.charon.JsonArray;
-import de.team33.patterns.json.charon.JsonObject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -80,18 +78,17 @@ class RendererTest {
         return new RenderCase(value, options, expected(value, options));
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
     private static Json.Value expected(final Json.Value value, final Set<Json.Option> options) {
-        if (value instanceof final JsonObject jsonObject && options.contains(Json.Option.SKIP_NULL)) {
-            return jsonObject.value().entrySet().stream()
-                             .filter(entry -> Json.NULL != entry.getValue())
-                             .map(entry -> FinalEntry.of(entry.getKey(),
-                                                         expected(entry.getValue(), options)))
-                             .collect(JsonObject.collector());
-        } else if (value instanceof final JsonArray jsonArray && options.contains(Json.Option.SKIP_NULL)) {
-            return Json.value(jsonArray.value().stream()
-                                          .map(elem -> expected(elem, options))
-                                          .toList());
+        if (Json.Type.OBJECT == value.type() && options.contains(Json.Option.SKIP_NULL)) {
+            return value.asMap().entrySet().stream()
+                        .filter(entry -> Json.NULL != entry.getValue())
+                        .map(entry -> FinalEntry.of(entry.getKey(),
+                                                    expected(entry.getValue(), options)))
+                        .collect(Json.objectCollector());
+        } else if (Json.Type.ARRAY == value.type() && options.contains(Json.Option.SKIP_NULL)) {
+            return Json.value(value.asList().stream()
+                                   .map(elem -> expected(elem, options))
+                                   .toList());
         }
         return value;
     }

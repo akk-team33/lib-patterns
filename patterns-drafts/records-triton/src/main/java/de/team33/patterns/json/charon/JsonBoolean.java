@@ -1,13 +1,18 @@
 package de.team33.patterns.json.charon;
 
-public class JsonBoolean extends JsonEntity<Boolean> {
+class JsonBoolean extends JsonEntity<Boolean> {
 
-    public JsonBoolean(final Boolean value) {
+    JsonBoolean(final Boolean value) {
         super(value);
     }
 
     @Override
     public final Json.Type type() {
         return Json.Type.BOOLEAN;
+    }
+
+    @Override
+    public final boolean asBoolean() {
+        return value();
     }
 }

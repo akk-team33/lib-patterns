@@ -1,7 +1,11 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.streamable.galatea.Buffer;
+
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Stream;
 
 public class Json {
 
@@ -49,6 +53,22 @@ public class Json {
      */
     public static Value value(final Map<String, ? extends Value> value) {
         return new JsonObject(value);
+    }
+
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link Value}s
+     * into a new {@link Value} that {@link Value#isArray()}.
+     */
+    public static Collector<Value, ?, Value> arrayCollector() {
+        return Buffer.collector(JsonArray::new);
+    }
+
+    /**
+     * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link Map.Entry}s
+     * into a new {@link Value} that {@link Value#isObject()}.
+     */
+    public static Collector<Map.Entry<String, ? extends Value>, ?, Value> objectCollector() {
+        return Buffer.collector(JsonObject::new);
     }
 
     public static String render(final Value value, final Set<Option> options) {
