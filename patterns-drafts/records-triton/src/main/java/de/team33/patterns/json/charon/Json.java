@@ -43,6 +43,14 @@ public class Json {
         return new JsonArray(value);
     }
 
+    /**
+     * Returns a {@link Value} that {@link Value#isObject()}
+     * and is represented by the given {@link Map} <em>value</em>.
+     */
+    public static Value value(final Map<String, ? extends Value> value) {
+        return new JsonObject(value);
+    }
+
     public static String render(final Value value, final Set<Option> options) {
         return new Renderer(options).add(value, 0)
                                     .toString();
