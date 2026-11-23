@@ -3,13 +3,18 @@ package de.team33.patterns.json.charon;
 import de.team33.patterns.streamable.galatea.Buffer;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
-public class Json {
+public final class Json {
 
     public static final Value NULL = JsonNull.INSTANCE;
+
+    private Json() {}
 
     private static String typeMismatch(final Json.Type expected, final Json.Value actual) {
         return "<this> JSON value ist not %s - but %s".formatted(expected, actual.type());
@@ -19,6 +24,7 @@ public class Json {
      * Returns a {@link Value} that {@link Value#isBoolean()}
      * and is represented by the given {@code boolean} <em>value</em>.
      */
+    @SuppressWarnings("BooleanParameter")
     public static Value value(final boolean value) {
         return new JsonBoolean(value);
     }
@@ -81,13 +87,14 @@ public class Json {
     }
 
     /**
-     * Identifies the type of a JSON value.
+     * Identifies the type of JSON value.
      */
     public enum Type {
 
         /**
          * Identifies a JSON null.
          */
+        @SuppressWarnings("InnerClassFieldHidesOuterClassField")
         NULL,
 
         /**
@@ -113,43 +120,11 @@ public class Json {
         /**
          * Identifies a JSON object.
          */
-        OBJECT;
+        OBJECT
     }
 
+    @SuppressWarnings({"InterfaceMayBeAnnotatedFunctional", "unused"})
     public interface Value {
-
-        /**
-         * Determines whether <em>this</em> is an instance of the given <em>type</em>.
-         */
-        default boolean is(final Class<? extends Value> type) {
-            return type.isInstance(this);
-        }
-
-        /**
-         * Returns <em>this</em> as an instance of the given <em>type</em>,
-         * provided that it is indeed an instance of that type.
-         *
-         * @param <T> The expected type.
-         * @throws ClassCastException if <em>this</em> is not an instance of the given <em>type</em>.
-         * @see #is(Class)
-         */
-        default <T extends Value> T as(final Class<T> type) {
-            return type.cast(this);
-        }
-
-        /**
-         * Returns <em>this</em> as an {@linkplain Optional optional} instance of the given <em>type</em>.
-         * <p>
-         * Returns {@link Optional#empty()} if <em>this</em> is not an instance of the given <em>type</em>.
-         *
-         * @param <T> The expected type.
-         */
-        @SuppressWarnings("BoundedWildcard")
-        default <T extends Value> Optional<T> asOptional(final Class<T> type) {
-            return Optional.of(this)
-                           .filter(type::isInstance)
-                           .map(type::cast);
-        }
 
         /**
          * Returns the {@link Type} of <em>this</em> value.
