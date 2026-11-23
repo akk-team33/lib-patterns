@@ -1,11 +1,47 @@
 package de.team33.patterns.json.charon;
 
-import java.util.Optional;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.util.*;
 
 public class Json {
 
     public static final Value NULL = JsonNull.INSTANCE;
+
+    private static String typeMismatch(final Json.Type expected, final Json.Value actual) {
+        return "<this> JSON value ist not %s - but %s".formatted(expected, actual.type());
+    }
+
+    /**
+     * Returns a {@link Value} that {@link Value#isBoolean()}
+     * and is represented by the given {@code boolean} <em>value</em>.
+     */
+    public static Value value(final boolean value) {
+        return new JsonBoolean(value);
+    }
+
+    /**
+     * Returns a {@link Value} that {@link Value#isNumber()}
+     * and is represented by the given {@link BigDecimal} <em>value</em>.
+     */
+    public static Value value(final BigDecimal value) {
+        return new JsonNumber(value);
+    }
+
+    /**
+     * Returns a {@link Value} that {@link Value#isString()}
+     * and is represented by the given {@link String} <em>value</em>.
+     */
+    public static Value value(final String value) {
+        return new JsonString(value);
+    }
+
+    /**
+     * Returns a {@link Value} that {@link Value#isArray()}
+     * and is represented by the given {@link Collection} <em>value</em>.
+     */
+    public static Value value(final Collection<? extends Value> value) {
+        return new JsonArray(value);
+    }
 
     public static String render(final Value value, final Set<Option> options) {
         return new Renderer(options).add(value, 0)
@@ -91,6 +127,115 @@ public class Json {
          * Returns the {@link Type} of <em>this</em> value.
          */
         Type type();
+
+        /**
+         * Determines whether <em>this</em> value is JSON null.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#NULL}.
+         */
+        default boolean isNull() {
+            return Type.NULL == type();
+        }
+
+        /**
+         * Determines whether <em>this</em> value is a JSON boolean.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#BOOLEAN}.
+         */
+        default boolean isBoolean() {
+            return Type.BOOLEAN == type();
+        }
+
+        /**
+         * Determines whether <em>this</em> value is a JSON number.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#NUMBER}.
+         */
+        default boolean isNumber() {
+            return Type.NUMBER == type();
+        }
+
+        /**
+         * Determines whether <em>this</em> value is a JSON string.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#STRING}.
+         */
+        default boolean isString() {
+            return Type.STRING == type();
+        }
+
+        /**
+         * Determines whether <em>this</em> value is a JSON array.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#ARRAY}.
+         */
+        default boolean isArray() {
+            return Type.ARRAY == type();
+        }
+
+        /**
+         * Determines whether <em>this</em> value is a JSON object.
+         * <p>
+         * This is the case if and only if {@link #type()} is {@link Type#OBJECT}.
+         */
+        default boolean isObject() {
+            return Type.OBJECT == type();
+        }
+
+        /**
+         * Returns the {@code boolean} that represents <em>this</em> JSON value
+         * if it {@linkplain #isBoolean() is a JSON boolean}.
+         *
+         * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
+         *                                       {@linkplain #isBoolean() a JSON boolean}.
+         */
+        default boolean asBoolean() {
+            throw new UnsupportedOperationException(typeMismatch(Type.BOOLEAN, this));
+        }
+
+        /**
+         * Returns the {@link BigDecimal} that represents <em>this</em> JSON value
+         * if it {@linkplain #isNumber() is a JSON number}.
+         *
+         * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
+         *                                       {@linkplain #isNumber() a JSON number}.
+         */
+        default BigDecimal asBigDecimal() {
+            throw new UnsupportedOperationException(typeMismatch(Type.NUMBER, this));
+        }
+
+        /**
+         * Returns the {@link String} that represents <em>this</em> JSON value
+         * if it {@linkplain #isString() is a JSON string}.
+         *
+         * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
+         *                                       {@linkplain #isString() a JSON string}.
+         */
+        default String asString() {
+            throw new UnsupportedOperationException(typeMismatch(Type.STRING, this));
+        }
+
+        /**
+         * Returns the (immutable) {@link List} that represents <em>this</em> JSON value
+         * if it {@linkplain #isArray() is a JSON array}.
+         *
+         * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
+         *                                       {@linkplain #isArray() a JSON array}.
+         */
+        default List<Value> asList() {
+            throw new UnsupportedOperationException(typeMismatch(Type.ARRAY, this));
+        }
+
+        /**
+         * Returns the (immutable) {@link Map} that represents <em>this</em> JSON value
+         * if it {@linkplain #isObject() is a JSON object}.
+         *
+         * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
+         *                                       {@linkplain #isObject() a JSON object}.
+         */
+        default Map<String, Value> asMap() {
+            throw new UnsupportedOperationException(typeMismatch(Type.OBJECT, this));
+        }
     }
 
     /**
