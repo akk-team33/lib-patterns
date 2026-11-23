@@ -11,11 +11,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 /**
- * A utility to convert between:
- * <ul>
- *     <li>{@linkplain Record Records} and JSON-formatted {@linkplain String Strings}</li>
- *     <li>{@linkplain Record Records} and {@linkplain Map Map} representations</li>
- * </ul>
+ * A utility to convert between {@linkplain Record Records} and JSON-formatted {@linkplain String Strings}.
  *
  * @see de.team33.patterns.records.triton package
  */
