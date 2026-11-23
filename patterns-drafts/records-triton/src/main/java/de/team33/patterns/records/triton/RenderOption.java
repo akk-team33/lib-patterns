@@ -15,14 +15,14 @@ public enum RenderOption {
     /**
      * Causes JSON objects to be rendered in a single line.
      * <p>
-     * By default, JSON objects ar rendered in multi-line format.
+     * By default, JSON objects are rendered in multi-line format.
      */
     INLINE_OBJECT,
 
     /**
      * Causes JSON arrays to be rendered in multi-line format.
      * <p>
-     * By default, JSON arrays ar rendered in a single line.
+     * By default, JSON arrays are rendered in a single line.
      */
     FORMAT_ARRAY
 }
