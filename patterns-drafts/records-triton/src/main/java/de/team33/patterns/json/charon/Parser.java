@@ -1,5 +1,6 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.collection.mneme.FinalList;
 import de.team33.patterns.streamable.galatea.Buffer;
 
 import java.math.BigDecimal;
@@ -51,7 +52,7 @@ final class Parser {
         };
     }
 
-    private JsonObject parseObject() {
+    private Json.Value parseObject() {
         source.expect('{')
               .skipWhitespace();
         final Map<String, Json.Value> stage = new LinkedHashMap<>();
@@ -61,7 +62,7 @@ final class Parser {
             parseObjectBody(stage);
             source.expect('}');
         }
-        return new JsonObject(stage);
+        return Json.value(stage);
     }
 
     private void parseObjectBody(final Map<? super String, ? super Json.Value> stage) {
@@ -91,7 +92,7 @@ final class Parser {
         }
     }
 
-    private JsonArray parseArray() {
+    private Json.Value parseArray() {
         source.expect('[').skipWhitespace();
         final Buffer<Json.Value> buffer = Buffer.empty();
         if (source.hasMore() && ']' == source.peek()) {
@@ -100,7 +101,7 @@ final class Parser {
             parseArrayBody(buffer);
             source.expect(']');
         }
-        return new JsonArray(buffer);
+        return Json.value(FinalList.of(buffer));
     }
 
     private void parseArrayBody(final Buffer<? super Json.Value> buffer) {
@@ -115,8 +116,8 @@ final class Parser {
         }
     }
 
-    private JsonString parseString() {
-        return new JsonString(StringLiteral.parse(source));
+    private Json.Value parseString() {
+        return Json.value(StringLiteral.parse(source));
     }
 
     @SuppressWarnings("SameReturnValue")
@@ -130,21 +131,21 @@ final class Parser {
                 "expected null - but was %s".formatted(candidate));
     }
 
-    private JsonBoolean parseBoolean() {
+    private Json.Value parseBoolean() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (BOOLEAN.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return new JsonBoolean("true".equals(candidate));
+            return Json.value("true".equals(candidate));
         }
         throw new IllegalArgumentException("expected one of {true, false} - but was %s".formatted(candidate));
     }
 
-    private JsonNumber parseNumber() {
+    private Json.Value parseNumber() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NUMBER.matcher(candidate).matches()) {
             final BigDecimal number = new BigDecimal(candidate);
             source.skip(candidate.length());
-            return new JsonNumber(number);
+            return Json.value(number);
         }
         throw new IllegalArgumentException("expected Json number - but was %s".formatted(candidate));
     }

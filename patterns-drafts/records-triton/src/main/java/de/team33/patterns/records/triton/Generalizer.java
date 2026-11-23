@@ -2,7 +2,9 @@ package de.team33.patterns.records.triton;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.enums.pan.Values;
-import de.team33.patterns.json.charon.*;
+import de.team33.patterns.json.charon.Json;
+import de.team33.patterns.json.charon.JsonArray;
+import de.team33.patterns.json.charon.JsonObject;
 import de.team33.patterns.records.metis.Metis;
 
 import java.lang.reflect.Array;
@@ -57,56 +59,56 @@ enum Generalizer {
         }
     }
 
-    private static JsonBoolean mapBoolean(final boolean source) {
-        return new JsonBoolean(source);
+    private static Json.Value mapBoolean(final boolean source) {
+        return Json.value(source);
     }
 
-    private static JsonNumber mapByte(final byte source) {
+    private static Json.Value mapByte(final byte source) {
         return mapLong(source);
     }
 
-    private static JsonNumber mapShort(final short source) {
+    private static Json.Value mapShort(final short source) {
         return mapLong(source);
     }
 
-    private static JsonNumber mapInt(final int source) {
+    private static Json.Value mapInt(final int source) {
         return mapLong(source);
     }
 
-    private static JsonNumber mapLong(final long source) {
+    private static Json.Value mapLong(final long source) {
         return mapBigDecimal(BigDecimal.valueOf(source));
     }
 
-    private static JsonNumber mapFloat(final float source) {
+    private static Json.Value mapFloat(final float source) {
         return mapBigDecimal(new BigDecimal(Float.toString(source)));
     }
 
-    private static JsonNumber mapDouble(final double source) {
+    private static Json.Value mapDouble(final double source) {
         return mapBigDecimal(new BigDecimal(Double.toString(source)));
     }
 
-    private static JsonNumber mapBigInteger(final BigInteger source) {
+    private static Json.Value mapBigInteger(final BigInteger source) {
         return mapBigDecimal(new BigDecimal(source));
     }
 
-    private static JsonNumber mapBigDecimal(final BigDecimal source) {
-        return new JsonNumber(source);
+    private static Json.Value mapBigDecimal(final BigDecimal source) {
+        return Json.value(source);
     }
 
     private static Json.Value mapEnum(final Enum<?> source) {
         return mapString(source.name());
     }
 
-    private static JsonString mapChar(final char source) {
+    private static Json.Value mapChar(final char source) {
         return mapString(Character.toString(source));
     }
 
-    private static JsonString mapStringable(final Object source) {
+    private static Json.Value mapStringable(final Object source) {
         return mapString(Stringable.encode(source));
     }
 
-    private static JsonString mapString(final String source) {
-        return new JsonString(source);
+    private static Json.Value mapString(final String source) {
+        return Json.value(source);
     }
 
     private static JsonArray mapArray(final Object array) {

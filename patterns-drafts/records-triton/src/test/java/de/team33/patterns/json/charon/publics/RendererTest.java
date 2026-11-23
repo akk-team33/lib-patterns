@@ -2,8 +2,9 @@ package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.json.charon.*;
-import de.team33.patterns.streamable.galatea.Streamable;
+import de.team33.patterns.json.charon.Json;
+import de.team33.patterns.json.charon.JsonArray;
+import de.team33.patterns.json.charon.JsonObject;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -20,42 +21,42 @@ class RendererTest {
 
     private static Stream<Json.Value> jsonValues() {
         return Stream.of(Json.NULL,
-                         new JsonBoolean(true),
-                         new JsonBoolean(false),
-                         new JsonNumber(BigDecimal.ONE),
-                         new JsonNumber(BigDecimal.valueOf(278)),
-                         new JsonNumber(new BigDecimal("123456789.123456789")),
-                         new JsonNumber(new BigDecimal("0.123E1234")),
-                         new JsonNumber(BigDecimal.valueOf(-1)),
-                         new JsonNumber(BigDecimal.valueOf(0)),
-                         new JsonNumber(BigDecimal.valueOf(-123.45)),
-                         new JsonNumber(new BigDecimal("1E5")),
-                         new JsonNumber(new BigDecimal("-1.2e-5")),
-                         new JsonString(" abc "),
-                         new JsonString("\\\"\b\f\n\r\t"),
-                         new JsonObject(Streamable.empty()),
-                         new JsonArray(List.of()),
-                         new JsonArray(List.of(
-                                 new JsonString("a"),
-                                 new JsonBoolean(true),
+                         Json.value(true),
+                         Json.value(false),
+                         Json.value(BigDecimal.ONE),
+                         Json.value(BigDecimal.valueOf(278)),
+                         Json.value(new BigDecimal("123456789.123456789")),
+                         Json.value(new BigDecimal("0.123E1234")),
+                         Json.value(BigDecimal.valueOf(-1)),
+                         Json.value(BigDecimal.valueOf(0)),
+                         Json.value(BigDecimal.valueOf(-123.45)),
+                         Json.value(new BigDecimal("1E5")),
+                         Json.value(new BigDecimal("-1.2e-5")),
+                         Json.value(" abc "),
+                         Json.value("\\\"\b\f\n\r\t"),
+                         Json.value(FinalMap.empty()),
+                         Json.value(List.of()),
+                         Json.value(List.of(
+                                 Json.value("a"),
+                                 Json.value(true),
                                  Json.NULL,
-                                 new JsonNumber(new BigDecimal("1.23")),
-                                 new JsonObject(FinalMap.of("name", new JsonString("value"))))),
-                         new JsonObject(new LinkedHashMap<>() {{
+                                 Json.value(new BigDecimal("1.23")),
+                                 Json.value(FinalMap.of("name", Json.value("value"))))),
+                         Json.value(new LinkedHashMap<>() {{
                              put("name1", Json.NULL);
                              put("name2", Json.NULL);
-                             put("name3", new JsonArray(List.of(
+                             put("name3", Json.value(List.of(
                                      Json.NULL,
                                      Json.NULL,
-                                     new JsonNumber(BigDecimal.valueOf(3)))));
+                                     Json.value(BigDecimal.valueOf(3)))));
                          }}),
-                         new JsonObject(new LinkedHashMap<>() {{
-                             put("name1", new JsonString("value1"));
-                             put("name2", new JsonString("value2"));
-                             put("name3", new JsonArray(List.of(
-                                     new JsonNumber(BigDecimal.valueOf(1)),
-                                     new JsonNumber(BigDecimal.valueOf(2)),
-                                     new JsonNumber(BigDecimal.valueOf(3)))));
+                         Json.value(new LinkedHashMap<>() {{
+                             put("name1", Json.value("value1"));
+                             put("name2", Json.value("value2"));
+                             put("name3", Json.value(List.of(
+                                     Json.value(BigDecimal.valueOf(1)),
+                                     Json.value(BigDecimal.valueOf(2)),
+                                     Json.value(BigDecimal.valueOf(3)))));
                          }}));
     }
 
@@ -88,7 +89,7 @@ class RendererTest {
                                                          expected(entry.getValue(), options)))
                              .collect(JsonObject.collector());
         } else if (value instanceof final JsonArray jsonArray && options.contains(Json.Option.SKIP_NULL)) {
-            return new JsonArray(jsonArray.value().stream()
+            return Json.value(jsonArray.value().stream()
                                           .map(elem -> expected(elem, options))
                                           .toList());
         }
