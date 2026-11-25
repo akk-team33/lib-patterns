@@ -1,7 +1,5 @@
 package de.team33.patterns.json.charon;
 
-import de.team33.patterns.enums.pan.Values;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,23 +33,21 @@ final class Renderer {
         return this;
     }
 
-    private Renderer addNewLine(final int indentation) {
-        return add(NEWLINE).addSpace(indentation);
-    }
-
     private Renderer addSpace(final int indentation) {
         return add(Stream.generate(() -> "   ")
                          .limit(indentation)
                          .collect(joining()));
     }
 
-    Renderer add(final Json.Value source, final int indentation) {
-        if (Json.NULL == source) {
-            return add("null");
-        } else {
-            final JsonType type = JsonType.of(source.getClass());
-            return type.render(this, source, indentation);
-        }
+    Renderer render(final Json.Value source, final int indentation) {
+        return switch (source.type()) {
+            case NULL -> add("null");
+            case BOOLEAN -> add(source.asBoolean().toString());
+            case NUMBER -> add(source.asBigDecimal().toString());
+            case STRING -> add(StringLiteral.render(source.asString()));
+            case ARRAY -> addArray(source.asList(), indentation);
+            case OBJECT -> addObject(source.asMap(), indentation);
+        };
     }
 
     @Override
@@ -59,12 +55,12 @@ final class Renderer {
         return target.toString();
     }
 
-    private Renderer addObject(final JsonObject source, final int indentation) {
+    private Renderer addObject(final Map<String, Json.Value> source, final int indentation) {
         return add("{").addObjectBody(source, objSeparation.next(indentation)).add("}");
     }
 
-    private Renderer addObjectBody(final JsonObject value, final int indentation) {
-        final List<Map.Entry<String, Json.Value>> entries = value.value().entrySet().stream()
+    private Renderer addObjectBody(final Map<String, Json.Value> value, final int indentation) {
+        final List<Map.Entry<String, Json.Value>> entries = value.entrySet().stream()
                                                                  .filter(entryFilter)
                                                                  .toList();
         final int size = entries.size();
@@ -72,7 +68,7 @@ final class Renderer {
             for (int index = 0; index < size; index++) {
                 final Map.Entry<String, Json.Value> entry = entries.get(index);
                 objSeparation.addSeparator(index, indentation);
-                add(StringLiteral.render(entry.getKey())).add(" : ").add(entry.getValue(), indentation);
+                add(StringLiteral.render(entry.getKey())).add(" : ").render(entry.getValue(), indentation);
             }
             return objSeparation.addSeparator(0, objSeparation.prev(indentation));
         } else {
@@ -80,89 +76,20 @@ final class Renderer {
         }
     }
 
-    private Renderer addArray(final JsonArray source, final int indentation) {
-        return add("[").addArrayBody(source, arrSeparation.next(indentation)).add("]");
+    private Renderer addArray(final List<? extends Json.Value> values, final int indentation) {
+        return add("[").addArrayBody(values, arrSeparation.next(indentation)).add("]");
     }
 
-    private Renderer addArrayBody(final JsonArray value, final int indentation) {
-        final List<Json.Value> values = value.value();
+    private Renderer addArrayBody(final List<? extends Json.Value> values, final int indentation) {
         final int size = values.size();
         if (0 < size) {
             for (int index = 0; index < size; ++index) {
                 arrSeparation.addSeparator(index, indentation);
-                add(values.get(index), indentation);
+                render(values.get(index), indentation);
             }
             return arrSeparation.addSeparator(0, arrSeparation.prev(indentation));
         } else {
             return this;
-        }
-    }
-
-    private Renderer addInlineSeparator(final int index) {
-        if (0 < index) {
-            add(", ");
-        }
-        return this;
-    }
-
-    private Renderer addFormattedSeparator(final int index, final int indentation) {
-        if (0 < index) {
-            add(",");
-        }
-        return addNewLine(indentation);
-    }
-
-    private Renderer addString(final JsonString source, final int indentation) {
-        return add(StringLiteral.render(source.value()));
-    }
-
-    private Renderer addNumber(final JsonNumber source, final int indentation) {
-        return add(source.value().toString());
-    }
-
-    private Renderer addBoolean(final JsonBoolean source, final int indentation) {
-        return add(Boolean.toString(source.value()));
-    }
-
-    private enum JsonType {
-
-        BOOLEAN(JsonBoolean.class, Renderer::addBoolean),
-        NUMBER(JsonNumber.class, Renderer::addNumber),
-        STRING(JsonString.class, Renderer::addString),
-        ARRAY(JsonArray.class, Renderer::addArray),
-        OBJECT(JsonObject.class, Renderer::addObject);
-
-        private static final Values<JsonType> VALUES = Values.of(JsonType.class);
-
-        private final Class<? extends Json.Value> jsonType;
-        @SuppressWarnings("rawtypes")
-        private final Rendering rendering;
-
-        <T extends Json.Value> JsonType(final Class<T> jsonType, final Rendering<T> rendering) {
-            this.jsonType = jsonType;
-            this.rendering = rendering;
-        }
-
-        static JsonType of(final Class<? extends Json.Value> sourceType) {
-            return VALUES.findAny(value -> value.jsonType.isAssignableFrom(sourceType))
-                         .orElseThrow(() -> new IllegalStateException(
-                                 // Difficult to test (should not happen at all) ...
-                                 "unexpected source type: %s".formatted(sourceType.getCanonicalName())));
-        }
-
-        final Renderer render(final Renderer renderer, final Json.Value source, final int indentation) {
-            return rendering.render(renderer, source, indentation);
-        }
-    }
-
-    @FunctionalInterface
-    private interface Rendering<T extends Json.Value> {
-
-        Renderer renderT(Renderer renderer, T source, int indentation);
-
-        @SuppressWarnings("unchecked")
-        default Renderer render(final Renderer renderer, final Json.Value source, final int indentation) {
-            return renderT(renderer, (T) source, indentation);
         }
     }
 
@@ -189,7 +116,10 @@ final class Renderer {
 
         @Override
         public final Renderer addSeparator(final int index, final int indentation) {
-            return addInlineSeparator(index);
+            if (0 < index) {
+                add(", ");
+            }
+            return Renderer.this;
         }
     }
 
@@ -207,7 +137,10 @@ final class Renderer {
 
         @Override
         public final Renderer addSeparator(final int index, final int indentation) {
-            return addFormattedSeparator(index, indentation);
+            if (0 < index) {
+                add(",");
+            }
+            return add(NEWLINE).addSpace(indentation);
         }
     }
 }

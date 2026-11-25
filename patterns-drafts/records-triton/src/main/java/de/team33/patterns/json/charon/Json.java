@@ -1,5 +1,6 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.collection.mneme.FinalSet;
 import de.team33.patterns.streamable.galatea.Buffer;
 
 import java.math.BigDecimal;
@@ -27,7 +28,7 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isBoolean() isBoolean()},
+     * Returns a {@link Value} that {@link Value#isBoolean() isBoolean()}
      * representing the given {@link Boolean} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
@@ -37,7 +38,7 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isNumber() isNumber()},
+     * Returns a {@link Value} that {@link Value#isNumber() isNumber()}
      * representing the given {@link BigDecimal} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
@@ -47,7 +48,7 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isString() isString()},
+     * Returns a {@link Value} that {@link Value#isString() isString()}
      * representing the given {@link String} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
@@ -57,30 +58,28 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isArray() isArray()},
+     * Returns a {@link Value} that {@link Value#isArray() isArray()}
      * representing the given {@link Collection} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
-    @SuppressWarnings("BoundedWildcard")
-    public static Value value(final Collection<Value> value) {
+    public static Value value(final Collection<? extends Value> value) {
         return new JsonArray(value);
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isObject() isObject()},
+     * Returns a {@link Value} that {@link Value#isObject() isObject()}
      * representing the given {@link Map} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
-    @SuppressWarnings("BoundedWildcard")
-    public static Value value(final Map<String, Value> value) {
+    public static Value value(final Map<String, ? extends Value> value) {
         return new JsonObject(value);
     }
 
     /**
      * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link Value}s
-     * into a new {@link Value} that {@link Value#isArray()}.
+     * into a new {@link Value} that {@link Value#isArray() isArray()}.
      */
     public static Collector<Value, ?, Value> arrayCollector() {
         return Buffer.collector(JsonArray::new);
@@ -88,7 +87,7 @@ public final class Json {
 
     /**
      * Returns a {@link Collector} to {@linkplain Stream#collect(Collector) collect} {@link Map.Entry}s
-     * into a new {@link Value} that {@link Value#isObject()}.
+     * into a new {@link Value} that {@link Value#isObject() isObject()}.
      */
     public static Collector<Map.Entry<String, ? extends Value>, ?, Value> objectCollector() {
         return Buffer.collector(JsonObject::new);
@@ -99,7 +98,7 @@ public final class Json {
      * returns the rendered JSON text.
      */
     public static String render(final Value value, final Option... options) {
-        return render(value, Set.of(options));
+        return render(value, FinalSet.of(options));
     }
 
     /**
@@ -107,7 +106,7 @@ public final class Json {
      * returns the rendered JSON text.
      */
     public static String render(final Value value, final Set<Option> options) {
-        return new Renderer(options).add(value, 0)
+        return new Renderer(options).render(value, 0)
                                     .toString();
     }
 
