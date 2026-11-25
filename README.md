@@ -17,6 +17,7 @@ Java 17 or later
 * patterns-bom (Team33 Patterns Library BOM)
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
+  * json-charon (Team33 JSON Library - Edition "charon")
 
 ### Drafts - not deployed, not featured
 
@@ -24,7 +25,6 @@ Java 17 or later
   * concept-alpha (Misc ideas, concepts and drafts)
   * arbitrary-tyche (Team33 Arbitrary Library - Edition "tyche")
   * beans-hermes (Team33 JavaBeans Library - Edition "hermes")
-  * json-charon (Team33 JSON Library - Edition "charon")
   * math-my (Team33 Math Library - Edition "my")
 
 ### Still Featured
@@ -86,9 +86,15 @@ Java 17 or later
 
 ### next
 
+* ☐ Module collection-mneme:
+  * ☐ Added some factory methods *.by(*)
+  * ☐ Marked some factory methods *.of(*) as deprecated
+* ☐ Unpinned module records-triton:
+  * ☐ Simplified applying module json-charon
+
 ### further
 
-* ☐ Pinned module collection-mneme to 2.12.1 (still featured)
+* ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module arbitrary-mimas:
@@ -98,6 +104,10 @@ Java 17 or later
   * ☐ Support for 'mappable' types
 
 ## Change Log
+
+### 2.13.0-SNAPSHOT
+
+* Added module json-charon
 
 ### 2.12.1
 

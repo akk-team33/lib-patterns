@@ -18,6 +18,7 @@
 
     <modules>
         <module>collection-mneme</module>
+        <module>json-charon</module>
     </modules>
 
     <dependencyManagement>
