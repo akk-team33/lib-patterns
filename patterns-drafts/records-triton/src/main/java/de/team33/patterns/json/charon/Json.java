@@ -10,8 +10,14 @@ import java.util.Set;
 import java.util.stream.Collector;
 import java.util.stream.Stream;
 
+/**
+ * Provides factory methods for JSON values as well as methods for parsing and rendering JSON.
+ */
 public final class Json {
 
+    /**
+     * Represents JSON {@code null} - a {@link Value} that {@link Value#isNull() isNull()}.
+     */
     public static final Value NULL = JsonNull.INSTANCE;
 
     private Json() {}
@@ -21,17 +27,18 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isBoolean()}
-     * and is represented by the given {@code boolean} <em>value</em>.
+     * Returns a {@link Value} that {@link Value#isBoolean() isBoolean()},
+     * representing the given {@link Boolean} <em>value</em>.
+     *
+     * @throws NullPointerException if <em>value</em> is {@code null}
      */
-    @SuppressWarnings("BooleanParameter")
-    public static Value value(final boolean value) {
+    public static Value value(final Boolean value) {
         return new JsonBoolean(value);
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isNumber()}
-     * and is represented by the given {@link BigDecimal} <em>value</em>.
+     * Returns a {@link Value} that {@link Value#isNumber() isNumber()},
+     * representing the given {@link BigDecimal} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
@@ -40,8 +47,8 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isString()}
-     * and is represented by the given {@link String} <em>value</em>.
+     * Returns a {@link Value} that {@link Value#isString() isString()},
+     * representing the given {@link String} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
@@ -50,8 +57,8 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isArray()}
-     * and is represented by the given {@link Collection} <em>value</em>.
+     * Returns a {@link Value} that {@link Value#isArray() isArray()},
+     * representing the given {@link Collection} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
@@ -61,8 +68,8 @@ public final class Json {
     }
 
     /**
-     * Returns a {@link Value} that {@link Value#isObject()}
-     * and is represented by the given {@link Map} <em>value</em>.
+     * Returns a {@link Value} that {@link Value#isObject() isObject()},
+     * representing the given {@link Map} <em>value</em>.
      *
      * @throws NullPointerException if <em>value</em> is {@code null}
      */
@@ -87,11 +94,26 @@ public final class Json {
         return Buffer.collector(JsonObject::new);
     }
 
+    /**
+     * Renders the given JSON <em>value</em> using the given <em>options</em> and
+     * returns the rendered JSON text.
+     */
+    public static String render(final Value value, final Option... options) {
+        return render(value, Set.of(options));
+    }
+
+    /**
+     * Renders the given JSON <em>value</em> using the given <em>options</em> and
+     * returns the rendered JSON text.
+     */
     public static String render(final Value value, final Set<Option> options) {
         return new Renderer(options).add(value, 0)
                                     .toString();
     }
 
+    /**
+     * Returns a {@linkplain Value JSON value} parsed from the given JSON <em>source</em>.
+     */
     public static Value parse(final String source) {
         return new Parser(source).parseRoot();
     }
@@ -133,11 +155,41 @@ public final class Json {
         OBJECT
     }
 
+    /**
+     * Defines options for JSON rendering.
+     */
+    public enum Option {
+
+        /**
+         * Causes JSON null values to be omitted when rendering JSON objects.
+         *
+         * <p>By default, JSON null values are rendered.
+         */
+        SKIP_NULL,
+
+        /**
+         * Causes JSON objects to be rendered in a single line.
+         * <p>
+         * By default, JSON objects are rendered in multi-line format.
+         */
+        INLINE_OBJECT,
+
+        /**
+         * Causes JSON arrays to be rendered in multi-line format.
+         * <p>
+         * By default, JSON arrays are rendered in a single line.
+         */
+        FORMAT_ARRAY
+    }
+
+    /**
+     * Represents a JSON value.
+     */
     @SuppressWarnings("unused")
     public sealed interface Value permits JsonItem, JsonNull {
 
         /**
-         * Returns the {@link Type} of <em>this</em> value.
+         * Returns the {@link Type} of <em>this</em> JSON value.
          */
         Type type();
 
@@ -196,13 +248,13 @@ public final class Json {
         }
 
         /**
-         * Returns the {@code boolean} that represents <em>this</em> JSON value
+         * Returns the {@link Boolean} that represents <em>this</em> JSON value
          * if it {@linkplain #isBoolean() is a JSON boolean}.
          *
          * @throws UnsupportedOperationException if <em>this</em> JSON value is <b>not</b>
          *                                       {@linkplain #isBoolean() a JSON boolean}.
          */
-        default boolean asBoolean() {
+        default Boolean asBoolean() {
             throw new UnsupportedOperationException(typeMismatch(Type.BOOLEAN, this));
         }
 
@@ -249,32 +301,5 @@ public final class Json {
         default Map<String, Value> asMap() {
             throw new UnsupportedOperationException(typeMismatch(Type.OBJECT, this));
         }
-    }
-
-    /**
-     * Defines options for JSON rendering.
-     */
-    public enum Option {
-
-        /**
-         * Causes {@code null} values to be skipped during rendering of JSON objects.
-         * <p>
-         * By default, {@code null} values will be rendered.
-         */
-        SKIP_NULL,
-
-        /**
-         * Causes JSON objects to be rendered in a single line.
-         * <p>
-         * By default, JSON objects are rendered in multi-line format.
-         */
-        INLINE_OBJECT,
-
-        /**
-         * Causes JSON arrays to be rendered in multi-line format.
-         * <p>
-         * By default, JSON arrays are rendered in a single line.
-         */
-        FORMAT_ARRAY
     }
 }

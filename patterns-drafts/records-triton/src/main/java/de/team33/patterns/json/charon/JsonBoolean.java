@@ -12,7 +12,7 @@ final class JsonBoolean extends JsonItem<Boolean> {
     }
 
     @Override
-    public boolean asBoolean() {
+    public Boolean asBoolean() {
         return value();
     }
 }
