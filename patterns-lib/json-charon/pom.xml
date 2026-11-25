@@ -18,15 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>exceptional-dione</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
             <artifactId>enums-pan</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>de.team33.patterns</groupId>
-            <artifactId>building-elara</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
@@ -34,7 +26,7 @@
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>
-            <artifactId>typing-proteus</artifactId>
+            <artifactId>streamable-galatea</artifactId>
         </dependency>
         <dependency>
             <groupId>de.team33.patterns</groupId>

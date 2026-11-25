@@ -44,6 +44,10 @@
             <groupId>de.team33.patterns</groupId>
             <artifactId>value-sinope</artifactId>
         </dependency>
+        <dependency>
+            <groupId>de.team33.patterns</groupId>
+            <artifactId>json-charon</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>de.team33.patterns</groupId>

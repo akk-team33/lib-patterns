@@ -108,6 +108,8 @@ Java 17 or later
 ### 2.13.0-SNAPSHOT
 
 * Added module json-charon
+* Drafts:
+  * Removed module json-charon
 
 ### 2.12.1
 
