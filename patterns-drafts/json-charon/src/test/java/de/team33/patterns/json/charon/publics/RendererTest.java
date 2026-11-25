@@ -2,90 +2,93 @@ package de.team33.patterns.json.charon.publics;
 
 import de.team33.patterns.collection.mneme.FinalEntry;
 import de.team33.patterns.collection.mneme.FinalMap;
-import de.team33.patterns.json.charon.*;
+import de.team33.patterns.json.charon.Json;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RendererTest {
 
-    private static Stream<JsonValue> jsonValues() {
+    private static Stream<Json.Value> jsonValues() {
         return Stream.of(Json.NULL,
-                         new JsonBoolean(true),
-                         new JsonBoolean(false),
-                         new JsonNumber(BigDecimal.ONE),
-                         new JsonNumber(BigDecimal.valueOf(278)),
-                         new JsonNumber(new BigDecimal("123456789.123456789")),
-                         new JsonNumber(new BigDecimal("0.123E1234")),
-                         new JsonNumber(BigDecimal.valueOf(-1)),
-                         new JsonNumber(BigDecimal.valueOf(0)),
-                         new JsonNumber(BigDecimal.valueOf(-123.45)),
-                         new JsonNumber(new BigDecimal("1E5")),
-                         new JsonNumber(new BigDecimal("-1.2e-5")),
-                         new JsonString(" abc "),
-                         new JsonString("\\\"\b\f\n\r\t"),
-                         new JsonObject(Map.of()),
-                         new JsonArray(List.of()),
-                         new JsonArray(List.of(
-                                 new JsonString("a"),
-                                 new JsonBoolean(true),
+                         Json.value(true),
+                         Json.value(false),
+                         Json.value(BigDecimal.ONE),
+                         Json.value(BigDecimal.valueOf(278)),
+                         Json.value(new BigDecimal("123456789.123456789")),
+                         Json.value(new BigDecimal("0.123E1234")),
+                         Json.value(BigDecimal.valueOf(-1)),
+                         Json.value(BigDecimal.valueOf(0)),
+                         Json.value(BigDecimal.valueOf(-123.45)),
+                         Json.value(new BigDecimal("1E5")),
+                         Json.value(new BigDecimal("-1.2e-5")),
+                         Json.value(" abc "),
+                         Json.value("\\\"\b\f\n\r\t"),
+                         Json.value(FinalMap.empty()),
+                         Json.value(List.of()),
+                         Json.value(List.of(
+                                 Json.value("a"),
+                                 Json.value(true),
                                  Json.NULL,
-                                 new JsonNumber(new BigDecimal("1.23")),
-                                 new JsonObject(Map.of("name", new JsonString("value"))),
-                                 new JsonObject(new LinkedHashMap<>() {{
-                                     put("name1", Json.NULL);
-                                     put("name2", Json.NULL);
-                                     put("name3", new JsonArray(List.of(
-                                             Json.NULL,
-                                             Json.NULL,
-                                             new JsonNumber(BigDecimal.valueOf(3)))));
-                                 }}),
-                                 new JsonObject(new LinkedHashMap<>() {{
-                                     put("name1", new JsonString("value1"));
-                                     put("name2", new JsonString("value2"));
-                                     put("name3", new JsonArray(List.of(
-                                             new JsonNumber(BigDecimal.valueOf(1)),
-                                             new JsonNumber(BigDecimal.valueOf(1)),
-                                             new JsonNumber(BigDecimal.valueOf(3)))));
-                                 }}))));
+                                 Json.value(new BigDecimal("1.23")),
+                                 Json.value(FinalMap.of("name", Json.value("value"))))),
+                         Json.value(new LinkedHashMap<>() {{
+                             put("name1", Json.NULL);
+                             put("name2", Json.NULL);
+                             put("name3", Json.value(List.of(
+                                     Json.NULL,
+                                     Json.NULL,
+                                     Json.value(BigDecimal.valueOf(3)))));
+                         }}),
+                         Json.value(new LinkedHashMap<>() {{
+                             put("name1", Json.value("value1"));
+                             put("name2", Json.value("value2"));
+                             put("name3", Json.value(List.of(
+                                     Json.value(BigDecimal.valueOf(1)),
+                                     Json.value(BigDecimal.valueOf(2)),
+                                     Json.value(BigDecimal.valueOf(3)))));
+                         }}));
     }
 
     static Stream<RenderCase> renderCases() {
-        return Stream.of(EnumSet.noneOf(RenderOption.class),
-                         EnumSet.of(RenderOption.SKIP_NULL),
-                         EnumSet.of(RenderOption.INLINE_OBJECT),
-                         EnumSet.of(RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY),
-                         EnumSet.of(RenderOption.SKIP_NULL, RenderOption.INLINE_OBJECT, RenderOption.FORMAT_ARRAY))
+        return Stream.of(EnumSet.noneOf(Json.Option.class),
+                         EnumSet.of(Json.Option.SKIP_NULL),
+                         EnumSet.of(Json.Option.INLINE_OBJECT),
+                         EnumSet.of(Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.INLINE_OBJECT),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.INLINE_OBJECT, Json.Option.FORMAT_ARRAY),
+                         EnumSet.of(Json.Option.SKIP_NULL, Json.Option.INLINE_OBJECT, Json.Option.FORMAT_ARRAY))
                      .flatMap(RendererTest::renderCases);
     }
 
-    private static Stream<RenderCase> renderCases(final EnumSet<RenderOption> options) {
+    private static Stream<RenderCase> renderCases(final EnumSet<Json.Option> options) {
         return jsonValues().map(value -> renderCase(options, value));
     }
 
-    private static RenderCase renderCase(final EnumSet<RenderOption> options, final JsonValue value) {
+    private static RenderCase renderCase(final EnumSet<Json.Option> options, final Json.Value value) {
         return new RenderCase(value, options, expected(value, options));
     }
 
-    @SuppressWarnings("ChainOfInstanceofChecks")
-    private static JsonValue expected(final JsonValue value, final Set<RenderOption> options) {
-        if (value instanceof final JsonObject jsonObject && options.contains(RenderOption.SKIP_NULL)) {
-            return new JsonObject(jsonObject.value().entrySet().stream()
-                                            .filter(entry -> Json.NULL != entry.getValue())
-                                            .map(entry -> FinalEntry.of(entry.getKey(), expected(entry.getValue(), options)))
-                                            .collect(FinalMap.collector()));
-        } else if (value instanceof final JsonArray jsonArray && options.contains(RenderOption.SKIP_NULL)) {
-            return new JsonArray(jsonArray.value().stream()
-                                          .map(elem -> expected(elem, options))
-                                          .toList());
+    private static Json.Value expected(final Json.Value value, final Set<Json.Option> options) {
+        if (Json.Type.OBJECT == value.type() && options.contains(Json.Option.SKIP_NULL)) {
+            return value.asMap().entrySet().stream()
+                        .filter(entry -> Json.NULL != entry.getValue())
+                        .map(entry -> FinalEntry.of(entry.getKey(),
+                                                    expected(entry.getValue(), options)))
+                        .collect(Json.objectCollector());
+        } else if (Json.Type.ARRAY == value.type() && options.contains(Json.Option.SKIP_NULL)) {
+            return Json.value(value.asList().stream()
+                                   .map(elem -> expected(elem, options))
+                                   .toList());
         }
         return value;
     }
@@ -99,5 +102,6 @@ class RendererTest {
     }
 
     @SuppressWarnings("AssignmentOrReturnOfFieldWithMutableType")
-    record RenderCase(JsonValue source, Set<RenderOption> options, JsonValue expected) {}
+    record RenderCase(Json.Value source, Set<Json.Option> options, Json.Value expected) {
+    }
 }

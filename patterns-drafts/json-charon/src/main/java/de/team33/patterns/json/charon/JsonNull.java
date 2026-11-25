@@ -1,16 +1,16 @@
 package de.team33.patterns.json.charon;
 
-enum JsonNull implements JsonValue {
+enum JsonNull implements Json.Value {
 
     INSTANCE;
 
     @Override
-    public final Void value() {
-        return null;
+    public String toString() {
+        return "null";
     }
 
     @Override
-    public String toString() {
-        return "null";
+    public Json.Type type() {
+        return Json.Type.NULL;
     }
 }

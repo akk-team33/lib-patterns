@@ -2,9 +2,19 @@ package de.team33.patterns.json.charon;
 
 import java.math.BigDecimal;
 
-public final class JsonNumber extends JsonBase<BigDecimal> {
+final class JsonNumber extends JsonItem<BigDecimal> {
 
-    public JsonNumber(final BigDecimal value) {
+    JsonNumber(final BigDecimal value) {
         super(value);
+    }
+
+    @Override
+    public Json.Type type() {
+        return Json.Type.NUMBER;
+    }
+
+    @Override
+    public BigDecimal asBigDecimal() {
+        return value();
     }
 }

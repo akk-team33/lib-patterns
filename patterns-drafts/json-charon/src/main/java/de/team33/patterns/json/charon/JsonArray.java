@@ -2,12 +2,28 @@ package de.team33.patterns.json.charon;
 
 import de.team33.patterns.collection.mneme.FinalList;
 import de.team33.patterns.collection.mneme.ImmutableList;
+import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.util.Collection;
+import java.util.List;
 
-public final class JsonArray extends JsonBase<ImmutableList<JsonValue>> {
+final class JsonArray extends JsonItem<ImmutableList<Json.Value>> {
 
-    public JsonArray(final Collection<? extends JsonValue> value) {
-        super(FinalList.of(value));
+    JsonArray(final Collection<? extends Json.Value> source) {
+        super(FinalList.of(source));
+    }
+
+    JsonArray(final Streamable<? extends Json.Value> source) {
+        super(FinalList.of(source));
+    }
+
+    @Override
+    public Json.Type type() {
+        return Json.Type.ARRAY;
+    }
+
+    @Override
+    public List<Json.Value> asList() {
+        return value();
     }
 }

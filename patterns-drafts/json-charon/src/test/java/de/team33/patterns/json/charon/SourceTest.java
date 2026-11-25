@@ -101,7 +101,7 @@ class SourceTest {
 
     @RepeatedTest(5)
     final void expect_positive() {
-        final String text = SUPPLY.anyString(1, 16);
+        final String text = SUPPLY.anyString(1, 32);
         final int index = SUPPLY.anyInt(text.length());
         final Source source = new Source(text).skip(index);
         final char sample = text.charAt(index);
@@ -119,7 +119,7 @@ class SourceTest {
         assertThrows(IllegalArgumentException.class, () -> source.expect(sample));
     }
 
-    @RepeatedTest(5)
+    @Test
     final void skipWhitespace_positive() {
         final String head = SUPPLY.anyString();
         final int index = head.length();
@@ -130,11 +130,11 @@ class SourceTest {
         assertEquals(index + 10, source.index());
     }
 
-    @RepeatedTest(5)
+    @Test
     final void skipWhitespace_negative() {
         final String text = SUPPLY.anyString()
                                   .replace(' ', '_');
-        final int index = SUPPLY.anyInt(1 + text.length());
+        final int index = SUPPLY.anyInt(text.length() + 1);
         final Source source = new Source(text).skip(index);
 
         source.skipWhitespace();

@@ -1,9 +1,10 @@
 package de.team33.patterns.json.charon;
 
+import de.team33.patterns.collection.mneme.FinalList;
+import de.team33.patterns.streamable.galatea.Buffer;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -27,16 +28,21 @@ final class Parser {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    JsonValue parse() {
+    Json.Value parse() {
         source.skipWhitespace();
-        final JsonValue result = parseValue();
+        final Json.Value result = parseValue();
         source.failIfMore();
         return result;
     }
 
-    private JsonValue parseValue() {
-        final char next = source.peek();
-        final JsonValue result = switch (next) {
+    private Json.Value parseValue() {
+        final Json.Value result = parseValue(source.peek());
+        source.skipWhitespace();
+        return result;
+    }
+
+    private Json.Value parseValue(final char next) {
+        return switch (next) {
             case '{' -> parseObject();
             case '[' -> parseArray();
             case '"' -> parseString();
@@ -44,27 +50,25 @@ final class Parser {
             case 't', 'f' -> parseBoolean();
             default -> parseNumber();
         };
-        source.skipWhitespace();
-        return result;
     }
 
-    private JsonValue parseObject() {
+    private Json.Value parseObject() {
         source.expect('{')
               .skipWhitespace();
-        final Map<String, JsonValue> builder = new LinkedHashMap<>();
+        final Map<String, Json.Value> stage = new LinkedHashMap<>();
         if (source.hasMore() && '}' == source.peek()) {
             source.skip();
         } else {
-            parseObjectBody(builder);
+            parseObjectBody(stage);
             source.expect('}');
         }
-        return new JsonObject(builder);
+        return Json.value(stage);
     }
 
-    private void parseObjectBody(final Map<? super String, ? super JsonValue> builder) {
+    private void parseObjectBody(final Map<? super String, ? super Json.Value> stage) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            parseMember(builder);
+            parseMember(stage);
             next = source.peek();
             if (COMMA == next) {
                 source.skip()
@@ -73,38 +77,36 @@ final class Parser {
         }
     }
 
-    private void parseMember(final Map<? super String, ? super JsonValue> builder) {
-        final JsonValue next = parseValue();
-        if (next instanceof final JsonString jsonString) {
-            final String name = jsonString.value();
+    private void parseMember(final Map<? super String, ? super Json.Value> stage) {
+        final Json.Value next = parseValue();
+        if (next.isString()) {
+            final String name = next.asString();
             source.expect(COLON)
                   .skipWhitespace();
-            final JsonValue value = parseValue();
-            builder.put(name, value);
+            final Json.Value value = parseValue();
+            stage.put(name, value);
         } else {
             throw new IllegalArgumentException(
-                    "expected a value of %s - but was %s".formatted(JsonString.class.getCanonicalName(),
-                                                                    next.getClass().getCanonicalName()));
+                    "expected a value of type %s - but was %s".formatted(Json.Type.STRING, next.type()));
         }
     }
 
-    private JsonValue parseArray() {
-        source.expect('[')
-              .skipWhitespace();
-        final List<JsonValue> builder = new ArrayList<>();
+    private Json.Value parseArray() {
+        source.expect('[').skipWhitespace();
+        final Buffer<Json.Value> buffer = Buffer.empty();
         if (source.hasMore() && ']' == source.peek()) {
             source.skip();
         } else {
-            parseArrayBody(builder);
+            parseArrayBody(buffer);
             source.expect(']');
         }
-        return new JsonArray(builder);
+        return Json.value(FinalList.of(buffer));
     }
 
-    private void parseArrayBody(final List<? super JsonValue> builder) {
+    private void parseArrayBody(final Buffer<? super Json.Value> buffer) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            builder.add(parseValue());
+            buffer.add(parseValue());
             next = source.peek();
             if (COMMA == next) {
                 source.skip()
@@ -113,12 +115,12 @@ final class Parser {
         }
     }
 
-    private JsonValue parseString() {
-        return new JsonString(StringLiteral.parse(source));
+    private Json.Value parseString() {
+        return Json.value(StringLiteral.parse(source));
     }
 
     @SuppressWarnings("SameReturnValue")
-    private JsonValue parseNull() {
+    private Json.Value parseNull() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NULL.matcher(candidate).matches()) {
             source.skip(candidate.length());
@@ -128,21 +130,21 @@ final class Parser {
                 "expected null - but was %s".formatted(candidate));
     }
 
-    private JsonValue parseBoolean() {
+    private Json.Value parseBoolean() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (BOOLEAN.matcher(candidate).matches()) {
             source.skip(candidate.length());
-            return new JsonBoolean("true".equals(candidate));
+            return Json.value("true".equals(candidate));
         }
         throw new IllegalArgumentException("expected one of {true, false} - but was %s".formatted(candidate));
     }
 
-    private JsonValue parseNumber() {
+    private Json.Value parseNumber() {
         final String candidate = source.peekUntil(Parser::isLimitChar);
         if (NUMBER.matcher(candidate).matches()) {
             final BigDecimal number = new BigDecimal(candidate);
             source.skip(candidate.length());
-            return new JsonNumber(number);
+            return Json.value(number);
         }
         throw new IllegalArgumentException("expected Json number - but was %s".formatted(candidate));
     }
