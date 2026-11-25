@@ -17,7 +17,7 @@ public final class Json {
     private Json() {}
 
     private static String typeMismatch(final Json.Type expected, final Json.Value actual) {
-        return "<this> JSON value ist not %s - but %s".formatted(expected, actual.type());
+        return "This JSON value is not %s - but %s".formatted(expected, actual.type());
     }
 
     /**
@@ -32,6 +32,8 @@ public final class Json {
     /**
      * Returns a {@link Value} that {@link Value#isNumber()}
      * and is represented by the given {@link BigDecimal} <em>value</em>.
+     *
+     * @throws NullPointerException if <em>value</em> is {@code null}
      */
     public static Value value(final BigDecimal value) {
         return new JsonNumber(value);
@@ -40,6 +42,8 @@ public final class Json {
     /**
      * Returns a {@link Value} that {@link Value#isString()}
      * and is represented by the given {@link String} <em>value</em>.
+     *
+     * @throws NullPointerException if <em>value</em> is {@code null}
      */
     public static Value value(final String value) {
         return new JsonString(value);
@@ -48,16 +52,22 @@ public final class Json {
     /**
      * Returns a {@link Value} that {@link Value#isArray()}
      * and is represented by the given {@link Collection} <em>value</em>.
+     *
+     * @throws NullPointerException if <em>value</em> is {@code null}
      */
-    public static Value value(final Collection<? extends Value> value) {
+    @SuppressWarnings("BoundedWildcard")
+    public static Value value(final Collection<Value> value) {
         return new JsonArray(value);
     }
 
     /**
      * Returns a {@link Value} that {@link Value#isObject()}
      * and is represented by the given {@link Map} <em>value</em>.
+     *
+     * @throws NullPointerException if <em>value</em> is {@code null}
      */
-    public static Value value(final Map<String, ? extends Value> value) {
+    @SuppressWarnings("BoundedWildcard")
+    public static Value value(final Map<String, Value> value) {
         return new JsonObject(value);
     }
 
@@ -123,8 +133,8 @@ public final class Json {
         OBJECT
     }
 
-    @SuppressWarnings({"InterfaceMayBeAnnotatedFunctional", "unused"})
-    public interface Value {
+    @SuppressWarnings("unused")
+    public sealed interface Value permits JsonItem, JsonNull {
 
         /**
          * Returns the {@link Type} of <em>this</em> value.

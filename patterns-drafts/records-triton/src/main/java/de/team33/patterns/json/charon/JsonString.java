@@ -1,18 +1,18 @@
 package de.team33.patterns.json.charon;
 
-class JsonString extends JsonEntity<String> {
+final class JsonString extends JsonItem<String> {
 
     JsonString(final String value) {
         super(value);
     }
 
     @Override
-    public final Json.Type type() {
+    public Json.Type type() {
         return Json.Type.STRING;
     }
 
     @Override
-    public final String asString() {
+    public String asString() {
         return value();
     }
 }

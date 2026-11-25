@@ -6,7 +6,7 @@ import de.team33.patterns.streamable.galatea.Streamable;
 
 import java.util.Map;
 
-class JsonObject extends JsonEntity<ImmutableMap<String, Json.Value>> {
+final class JsonObject extends JsonItem<ImmutableMap<String, Json.Value>> {
 
     JsonObject(final Map<String, ? extends Json.Value> source) {
         super(FinalMap.of(source));
@@ -17,12 +17,12 @@ class JsonObject extends JsonEntity<ImmutableMap<String, Json.Value>> {
     }
 
     @Override
-    public final Json.Type type() {
+    public Json.Type type() {
         return Json.Type.OBJECT;
     }
 
     @Override
-    public final Map<String, Json.Value> asMap() {
+    public Map<String, Json.Value> asMap() {
         return value();
     }
 }

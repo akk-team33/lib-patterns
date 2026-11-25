@@ -7,7 +7,7 @@ import de.team33.patterns.streamable.galatea.Streamable;
 import java.util.Collection;
 import java.util.List;
 
-class JsonArray extends JsonEntity<ImmutableList<Json.Value>> {
+final class JsonArray extends JsonItem<ImmutableList<Json.Value>> {
 
     JsonArray(final Collection<? extends Json.Value> source) {
         super(FinalList.of(source));
@@ -18,12 +18,12 @@ class JsonArray extends JsonEntity<ImmutableList<Json.Value>> {
     }
 
     @Override
-    public final Json.Type type() {
+    public Json.Type type() {
         return Json.Type.ARRAY;
     }
 
     @Override
-    public final List<Json.Value> asList() {
+    public List<Json.Value> asList() {
         return value();
     }
 }

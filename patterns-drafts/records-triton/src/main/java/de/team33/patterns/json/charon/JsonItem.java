@@ -4,18 +4,19 @@ import de.team33.patterns.value.sinope.Equation;
 
 import java.util.Objects;
 
-abstract class JsonEntity<V> implements Json.Value {
+abstract sealed class JsonItem<V> implements Json.Value
+        permits JsonArray, JsonBoolean, JsonNumber, JsonObject, JsonString {
 
     @SuppressWarnings("rawtypes")
-    private static final Equation<JsonEntity> EQUATION = Equation.of(JsonEntity.class, JsonEntity::value);
+    private static final Equation<JsonItem> EQUATION = Equation.of(JsonItem.class, JsonItem::value);
 
     private final V value;
 
-    JsonEntity(final V value) {
+    JsonItem(final V value) {
         this.value = Objects.requireNonNull(value, "<value> must not be null - but was");
     }
 
-    public final V value() {
+    final V value() {
         return value;
     }
 
