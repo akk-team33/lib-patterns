@@ -28,20 +28,20 @@ final class Parser {
         return Character.isWhitespace(c) || (0 <= LIMIT_CHARS.indexOf(c));
     }
 
-    Json.Value parseRoot() {
+    Json.Value parse() {
         source.skipWhitespace();
-        final Json.Value result = parseItem();
+        final Json.Value result = parseValue();
         source.failIfMore();
         return result;
     }
 
-    private Json.Value parseItem() {
-        final Json.Value result = parseItem(source.peek());
+    private Json.Value parseValue() {
+        final Json.Value result = parseValue(source.peek());
         source.skipWhitespace();
         return result;
     }
 
-    private Json.Value parseItem(final char next) {
+    private Json.Value parseValue(final char next) {
         return switch (next) {
             case '{' -> parseObject();
             case '[' -> parseArray();
@@ -78,17 +78,16 @@ final class Parser {
     }
 
     private void parseMember(final Map<? super String, ? super Json.Value> stage) {
-        final Json.Value next = parseItem();
-        if (next instanceof final JsonString jsonString) {
-            final String name = jsonString.value();
+        final Json.Value next = parseValue();
+        if (next.isString()) {
+            final String name = next.asString();
             source.expect(COLON)
                   .skipWhitespace();
-            final Json.Value value = parseItem();
+            final Json.Value value = parseValue();
             stage.put(name, value);
         } else {
             throw new IllegalArgumentException(
-                    "expected a value of type %s - but was %s".formatted(JsonString.class.getSimpleName(),
-                                                                         next.getClass().getSimpleName()));
+                    "expected a value of type %s - but was %s".formatted(Json.Type.STRING, next.type()));
         }
     }
 
@@ -107,7 +106,7 @@ final class Parser {
     private void parseArrayBody(final Buffer<? super Json.Value> buffer) {
         char next = source.hasMore() ? COMMA : 0;
         while (COMMA == next) {
-            buffer.add(parseItem());
+            buffer.add(parseValue());
             next = source.peek();
             if (COMMA == next) {
                 source.skip()

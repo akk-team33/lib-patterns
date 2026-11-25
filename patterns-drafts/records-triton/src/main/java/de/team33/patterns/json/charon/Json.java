@@ -114,7 +114,7 @@ public final class Json {
      * Returns a {@linkplain Value JSON value} parsed from the given JSON <em>source</em>.
      */
     public static Value parse(final String source) {
-        return new Parser(source).parseRoot();
+        return new Parser(source).parse();
     }
 
     /**
