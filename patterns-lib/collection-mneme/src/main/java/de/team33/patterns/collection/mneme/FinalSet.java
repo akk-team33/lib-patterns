@@ -24,8 +24,9 @@ import java.util.stream.Stream;
  * @see #empty()
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
- * @see #of(Collection)
- * @see #of(Streamable)
+ * @see #by(Object[])
+ * @see #by(Collection)
+ * @see #by(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalSet<E> extends ImmutableSet<E> {
@@ -75,8 +76,16 @@ public final class FinalSet<E> extends ImmutableSet<E> {
      *
      * @param <E> the type of elements in the resulting set.
      */
-    public static <E> FinalSet<E> of(final E[] source) {
+    public static <E> FinalSet<E> by(final E[] source) {
         return new FinalSet<>(Streamable.of(source));
+    }
+
+    /**
+     * @deprecated use {@link #by(Object[])} instead.
+     */
+    @Deprecated
+    public static <E> FinalSet<E> of(final E[] source) {
+        return by(source);
     }
 
     /**
@@ -87,7 +96,7 @@ public final class FinalSet<E> extends ImmutableSet<E> {
      * @param <E> the type of elements in the resulting set.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <E> FinalSet<E> of(final Collection<? extends E> source) {
+    public static <E> FinalSet<E> by(final Collection<? extends E> source) {
         if (source instanceof final FinalSet finalSet) {
             return finalSet;
         } else {
@@ -96,12 +105,28 @@ public final class FinalSet<E> extends ImmutableSet<E> {
     }
 
     /**
+     * @deprecated use {@link #by(Collection)} instead.
+     */
+    @Deprecated
+    public static <E> FinalSet<E> of(final Collection<? extends E> source) {
+        return by(source);
+    }
+
+    /**
      * Returns a {@link FinalSet} created from the given <em>source</em>.
      *
      * @param <E> the type of elements in the resulting set.
      */
-    public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
+    public static <E> FinalSet<E> by(final Streamable<? extends E> source) {
         return new FinalSet<>(Streamable.cast(source));
+    }
+
+    /**
+     * @deprecated use {@link #by(Streamable)} instead.
+     */
+    @Deprecated
+    public static <E> FinalSet<E> of(final Streamable<? extends E> source) {
+        return by(source);
     }
 
     /**

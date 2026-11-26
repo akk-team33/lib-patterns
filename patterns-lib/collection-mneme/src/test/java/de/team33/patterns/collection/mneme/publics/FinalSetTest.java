@@ -58,7 +58,7 @@ class FinalSetTest {
                                         .limit(GENERATOR.anyInt(10))
                                         .toArray(String[]::new);
         final List<String> expected = List.of(elements);
-        final FinalSet<String> result = FinalSet.of(elements);
+        final FinalSet<String> result = FinalSet.by(elements);
         assertEquals(expected, result.stream().toList());
     }
 
@@ -68,7 +68,7 @@ class FinalSetTest {
                                             .distinct()
                                             .limit(GENERATOR.anyInt(10))
                                             .toList();
-        final FinalSet<CharSequence> result = FinalSet.of(expected);
+        final FinalSet<CharSequence> result = FinalSet.by(expected);
         assertEquals(expected, result.stream().toList());
     }
 
@@ -79,7 +79,7 @@ class FinalSetTest {
                                             .limit(GENERATOR.anyInt(10))
                                             .toList();
         final Streamable<String> stage = expected::stream;
-        final FinalSet<CharSequence> result = FinalSet.of(stage);
+        final FinalSet<CharSequence> result = FinalSet.by(stage);
         assertEquals(expected, result.stream().toList());
     }
 
@@ -87,7 +87,7 @@ class FinalSetTest {
     final void of_nullable_distinct() {
         final List<Integer> origin = Arrays.asList(1, 2, 3, null, 2, 3, 4, null, 3, 4, 5);
         final Set<Integer> expected = new LinkedHashSet<>(origin);
-        final FinalSet<Number> result = FinalSet.of(origin);
+        final FinalSet<Number> result = FinalSet.by(origin);
         assertEquals(expected, result);
         assertTrue(result.contains(null));
     }

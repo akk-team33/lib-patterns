@@ -98,7 +98,7 @@ public final class Json {
      * returns the rendered JSON text.
      */
     public static String render(final Value value, final Option... options) {
-        return render(value, FinalSet.of(options));
+        return render(value, FinalSet.by(options));
     }
 
     /**
