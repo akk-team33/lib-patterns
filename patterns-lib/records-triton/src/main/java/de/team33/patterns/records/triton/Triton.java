@@ -42,7 +42,7 @@ public final class Triton {
     @SuppressWarnings("OverloadedVarargsMethod")
     public static String toJson(final Record source, final RenderOption... options) {
         final Json.Value value = Generalizer.map(source);
-        final var jsonOptions = Stream.of(options).map(option -> option.jsonOption()).collect(Collectors.toSet());
+        final var jsonOptions = Stream.of(options).map(RenderOption::jsonOption).collect(Collectors.toSet());
         return Json.render(value, jsonOptions);
     }
 
