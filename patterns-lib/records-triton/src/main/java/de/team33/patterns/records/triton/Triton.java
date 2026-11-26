@@ -120,7 +120,7 @@ public final class Triton {
         private DescriptorImpl(final Class<T> recordType, final Map<String, Class<?>> description) {
             this.recordType = recordType;
             this.description = description;
-            this.names = FinalList.of(description.keySet());
+            this.names = FinalList.by(description.keySet());
         }
 
         @Override

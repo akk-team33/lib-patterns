@@ -100,7 +100,7 @@ final class Parser {
             parseArrayBody(buffer);
             source.expect(']');
         }
-        return Json.value(FinalList.of(buffer));
+        return Json.value(FinalList.by(buffer));
     }
 
     private void parseArrayBody(final Buffer<? super Json.Value> buffer) {

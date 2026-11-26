@@ -22,8 +22,9 @@ import java.util.stream.Stream;
  * @see #empty()
  * @see #of(Object)
  * @see #of(Object, Object, Object[])
- * @see #of(Collection)
- * @see #of(Streamable)
+ * @see #by(Object[])
+ * @see #by(Collection)
+ * @see #by(Streamable)
  */
 @SuppressWarnings("MethodOverridesStaticMethodOfSuperclass")
 public final class FinalList<E> extends ImmutableList<E> implements RandomAccess {
@@ -73,8 +74,16 @@ public final class FinalList<E> extends ImmutableList<E> implements RandomAccess
      *
      * @param <E> the type of elements in the resulting list.
      */
-    public static <E> FinalList<E> of(final E[] source) {
+    public static <E> FinalList<E> by(final E[] source) {
         return new FinalList<>(Streamable.of(source));
+    }
+
+    /**
+     * @deprecated use {@link #by(Object[])} instead.
+     */
+    @Deprecated
+    public static <E> FinalList<E> of(final E[] source) {
+        return by(source);
     }
 
     /**
@@ -85,7 +94,7 @@ public final class FinalList<E> extends ImmutableList<E> implements RandomAccess
      * @param <E> the type of elements in the resulting list.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <E> FinalList<E> of(final Collection<? extends E> source) {
+    public static <E> FinalList<E> by(final Collection<? extends E> source) {
         if (source instanceof final FinalList finalList) {
             return finalList;
         } else {
@@ -94,12 +103,28 @@ public final class FinalList<E> extends ImmutableList<E> implements RandomAccess
     }
 
     /**
+     * @deprecated use {@link #by(Collection)} instead.
+     */
+    @Deprecated
+    public static <E> FinalList<E> of(final Collection<? extends E> source) {
+        return by(source);
+    }
+
+    /**
      * Returns a {@link FinalList} created from the given <em>source</em>.
      *
      * @param <E> the type of elements in the resulting list.
      */
-    public static <E> FinalList<E> of(final Streamable<? extends E> source) {
+    public static <E> FinalList<E> by(final Streamable<? extends E> source) {
         return new FinalList<>(Streamable.cast(source));
+    }
+
+    /**
+     * @deprecated use {@link #by(Streamable)} instead.
+     */
+    @Deprecated
+    public static <E> FinalList<E> of(final Streamable<? extends E> source) {
+        return by(source);
     }
 
     /**

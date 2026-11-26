@@ -86,20 +86,18 @@ Java 17 or later
 
 ### next
 
-* ☐ Module collection-mneme:
-  * ☐ Added some factory methods *.by(*)
-  * ☐ Marked some factory methods *.of(*) as deprecated
-
 ### further
 
 * ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
-* ☐ Module arbitrary-mimas:
-  * ☐ Removed deprecated items
 * ☐ Module records-triton:
   * ☐ Support for 'listable' types
   * ☐ Support for 'mappable' types
+* ☐ Module arbitrary-mimas:
+  * ☐ Removed deprecated items
+* ☐ Module collection-mneme:
+  * ☐ Removed deprecated items
 
 ## Change Log
 
@@ -108,6 +106,9 @@ Java 17 or later
 * Added module json-charon
 * Unpinned module records-triton:
   * Applied module json-charon
+* ☐ Module collection-mneme:
+  * ☐ Added some factory methods *.by(*)
+  * ☐ Marked some factory methods *.of(*) as deprecated
 * Drafts:
   * Removed module json-charon
 

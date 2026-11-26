@@ -10,11 +10,11 @@ import java.util.List;
 final class JsonArray extends JsonItem<ImmutableList<Json.Value>> {
 
     JsonArray(final Collection<? extends Json.Value> source) {
-        super(FinalList.of(source));
+        super(FinalList.by(source));
     }
 
     JsonArray(final Streamable<? extends Json.Value> source) {
-        super(FinalList.of(source));
+        super(FinalList.by(source));
     }
 
     @Override

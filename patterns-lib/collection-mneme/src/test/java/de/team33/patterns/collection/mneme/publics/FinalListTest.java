@@ -58,7 +58,7 @@ class FinalListTest {
     final void of_array() {
         final String[] elements = Stream.generate(GENERATOR::anyString).limit(4).toArray(String[]::new);
         final List<String> expected = List.of(elements);
-        final FinalList<String> result = FinalList.of(elements);
+        final FinalList<String> result = FinalList.by(elements);
         assertEquals(expected, result);
     }
 
@@ -67,7 +67,7 @@ class FinalListTest {
         final List<String> expected = Stream.generate(GENERATOR::anyString)
                                             .limit(GENERATOR.anyInt(10))
                                             .toList();
-        final FinalList<CharSequence> result = FinalList.of(expected);
+        final FinalList<CharSequence> result = FinalList.by(expected);
         assertEquals(expected, result);
     }
 
@@ -77,14 +77,14 @@ class FinalListTest {
                                             .limit(GENERATOR.anyInt(10))
                                             .toList();
         final Streamable<String> stage = expected::stream;
-        final FinalList<CharSequence> result = FinalList.of(stage);
+        final FinalList<CharSequence> result = FinalList.by(stage);
         assertEquals(expected, result);
     }
 
     @Test
     final void of_nullable() {
         final List<Integer> expected = Arrays.asList(1, 2, 3, null, 2, 3, 4, null, 3, 4, 5);
-        final FinalList<Number> result = FinalList.of(expected);
+        final FinalList<Number> result = FinalList.by(expected);
         assertEquals(expected, result);
     }
 
