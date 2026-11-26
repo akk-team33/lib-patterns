@@ -89,6 +89,8 @@ Java 17 or later
 ### further
 
 * ☐ Pinned module collection-mneme to 2.13.0-SNAPSHOT (still featured)
+* ☐ Pinned module json-charon to 2.13.0-SNAPSHOT (still featured)
+* ☐ Pinned module records-triton to 2.13.0-SNAPSHOT (still featured)
 * ☐ Module streamable-galatea:
   * ☐ Removed deprecated interface Streamer
 * ☐ Module records-triton:
@@ -106,9 +108,9 @@ Java 17 or later
 * Added module json-charon
 * Unpinned module records-triton:
   * Applied module json-charon
-* ☐ Module collection-mneme:
-  * ☐ Added some factory methods *.by(*)
-  * ☐ Marked some factory methods *.of(*) as deprecated
+* Module collection-mneme:
+  * Added some factory methods *.by(*)
+  * Marked some factory methods *.of(*) as deprecated
 * Drafts:
   * Removed module json-charon
 
