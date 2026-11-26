@@ -9,11 +9,11 @@ import java.util.Map;
 final class JsonObject extends JsonItem<ImmutableMap<String, Json.Value>> {
 
     JsonObject(final Map<String, ? extends Json.Value> source) {
-        super(FinalMap.of(source));
+        super(FinalMap.by(source));
     }
 
     JsonObject(final Streamable<? extends Map.Entry<String, ? extends Json.Value>> source) {
-        super(FinalMap.of(source));
+        super(FinalMap.by(source));
     }
 
     @Override

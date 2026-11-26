@@ -37,7 +37,7 @@ class FinalMapTest {
         final Map<Integer, String> origin = Map.of(GENERATOR.anyInt(), GENERATOR.anyString());
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
-                                                       .map(FinalMap::of);
+                                                       .map(FinalMap::by);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -52,7 +52,7 @@ class FinalMapTest {
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
                                                        .add(expected.get(1))
-                                                       .map(FinalMap::of);
+                                                       .map(FinalMap::by);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -68,7 +68,7 @@ class FinalMapTest {
         final FinalMap<Integer, String> result = Buffer.of(expected.get(0))
                                                        .add(expected.get(1))
                                                        .add(expected.get(2))
-                                                       .map(FinalMap::of);
+                                                       .map(FinalMap::by);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -86,7 +86,7 @@ class FinalMapTest {
                                                        .add(expected.get(2))
                                                        .add(expected.get(3))
                                                        .add(expected.get(4))
-                                                       .map(FinalMap::of);
+                                                       .map(FinalMap::by);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -98,7 +98,7 @@ class FinalMapTest {
                   .forEach(i -> put(i, GENERATOR.anyString()));
         }};
         final List<Map.Entry<Integer, String>> expected = origin.entrySet().stream().toList();
-        final FinalMap<Integer, String> result = FinalMap.of(origin);
+        final FinalMap<Integer, String> result = FinalMap.by(origin);
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -112,7 +112,7 @@ class FinalMapTest {
             origin.forEach(instant -> put(instant.toEpochMilli(), instant.toString()));
         }};
         final List<Map.Entry<Long, String>> expected = stage.entrySet().stream().toList();
-        final FinalMap<Number, CharSequence> result = FinalMap.of(origin::stream,
+        final FinalMap<Number, CharSequence> result = FinalMap.by(origin::stream,
                                                                   Instant::toEpochMilli,
                                                                   Instant::toString);
         assertEquals(expected, result.entrySet().stream().toList());
@@ -128,7 +128,7 @@ class FinalMapTest {
             origin.forEach(instant -> put(instant.toEpochMilli(), instant));
         }};
         final List<Map.Entry<Long, Instant>> expected = stage.entrySet().stream().toList();
-        final FinalMap<Number, Temporal> result = FinalMap.of(origin, FinalEntry.mapping(Instant::toEpochMilli));
+        final FinalMap<Number, Temporal> result = FinalMap.by(origin, FinalEntry.mapping(Instant::toEpochMilli));
         assertEquals(expected, result.entrySet().stream().toList());
     }
 
@@ -139,7 +139,7 @@ class FinalMapTest {
             origin.forEach(integer -> put(integer, (integer == null) ? null : integer.toString()));
         }};
         final var expected = stage.entrySet().stream().toList();
-        final FinalMap<Number, CharSequence> result = FinalMap.of(stage);
+        final FinalMap<Number, CharSequence> result = FinalMap.by(stage);
         assertEquals(6, result.size());
         assertEquals(expected, result.entrySet().stream().toList());
         assertTrue(result.containsKey(null));

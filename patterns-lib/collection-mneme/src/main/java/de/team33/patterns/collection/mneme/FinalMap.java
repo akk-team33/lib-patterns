@@ -28,8 +28,9 @@ import java.util.stream.Stream;
  * @param <V> the type of values in that map.
  * @see #empty()
  * @see #of(Object, Object)
- * @see #of(Map)
- * @see #of(Streamable)
+ * @see #of(Entry)
+ * @see #by(Map)
+ * @see #by(Streamable)
  */
 public final class FinalMap<K, V> extends ImmutableMap<K, V> {
 
@@ -81,25 +82,31 @@ public final class FinalMap<K, V> extends ImmutableMap<K, V> {
     }
 
     /**
+     * Returns a {@link FinalMap} containing a single <em>entry</em>.
+     *
+     * @param <K> the type of keys in the resulting map.
+     * @param <V> the type of values in the resulting map.
+     */
+    public static <K, V> FinalMap<K, V> of(final Map.Entry<? extends K, ? extends V> entry) {
+        return new FinalMap<>(Map.ofEntries(entry));
+    }
+
+    /**
      * Returns a {@link FinalMap} created from the given <em>source</em>.
      *
      * @param <K> the type of keys in the resulting map.
      * @param <V> the type of values in the resulting map.
      */
-    public static <K, V> FinalMap<K, V> of(final Streamable<? extends Map.Entry<? extends K, ? extends V>> source) {
+    public static <K, V> FinalMap<K, V> by(final Streamable<? extends Map.Entry<? extends K, ? extends V>> source) {
         return new FinalMap<>(Streamable.cast(source));
     }
 
     /**
-     * Returns a {@link FinalMap} created from the given <em>source</em>.
-     *
-     * @param <K> the type of keys in the resulting map.
-     * @param <V> the type of values in the resulting map.
+     * @deprecated use {@link #by(Streamable)} instead.
      */
-    public static <T, K, V> FinalMap<K, V> of(final Streamable<T> source,
-                                              final Function<? super T, ? extends K> toKey,
-                                              final Function<? super T, ? extends V> toValue) {
-        return of(source, FinalEntry.mapping(toKey, toValue));
+    @Deprecated
+    public static <K, V> FinalMap<K, V> of(final Streamable<? extends Map.Entry<? extends K, ? extends V>> source) {
+        return by(source);
     }
 
     /**
@@ -108,9 +115,42 @@ public final class FinalMap<K, V> extends ImmutableMap<K, V> {
      * @param <K> the type of keys in the resulting map.
      * @param <V> the type of values in the resulting map.
      */
-    public static <T, K, V> FinalMap<K, V>
-    of(final Streamable<T> source, final Function<? super T, ? extends Entry<? extends K, ? extends V>> toEntry) {
-        return of(() -> source.stream().map(toEntry));
+    public static <T, K, V> FinalMap<K, V> by(final Streamable<T> source,
+                                              final Function<? super T, ? extends K> toKey,
+                                              final Function<? super T, ? extends V> toValue) {
+        return by(source, FinalEntry.mapping(toKey, toValue));
+    }
+
+    /**
+     * @deprecated use {@link #by(Streamable, Function, Function)} instead.
+     */
+    @Deprecated
+    public static <T, K, V> FinalMap<K, V> of(final Streamable<T> source,
+                                              final Function<? super T, ? extends K> toKey,
+                                              final Function<? super T, ? extends V> toValue) {
+        return by(source, toKey, toValue);
+    }
+
+    /**
+     * Returns a {@link FinalMap} created from the given <em>source</em>.
+     *
+     * @param <K> the type of keys in the resulting map.
+     * @param <V> the type of values in the resulting map.
+     */
+    public static <T, K, V>
+    FinalMap<K, V> by(final Streamable<T> source,
+                      final Function<? super T, ? extends Entry<? extends K, ? extends V>> toEntry) {
+        return by(() -> source.stream().map(toEntry));
+    }
+
+    /**
+     * @deprecated use {@link #by(Streamable, Function)} instead.
+     */
+    @Deprecated
+    public static <T, K, V>
+    FinalMap<K, V> of(final Streamable<T> source,
+                      final Function<? super T, ? extends Entry<? extends K, ? extends V>> toEntry) {
+        return by(source, toEntry);
     }
 
     /**
@@ -122,12 +162,20 @@ public final class FinalMap<K, V> extends ImmutableMap<K, V> {
      * @param <V> the type of values in the resulting map.
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public static <K, V> FinalMap<K, V> of(final Map<? extends K, ? extends V> source) {
+    public static <K, V> FinalMap<K, V> by(final Map<? extends K, ? extends V> source) {
         if (source instanceof final FinalMap finalMap) {
             return finalMap;
         } else {
             return new FinalMap<>(source);
         }
+    }
+
+    /**
+     * @deprecated use {@link #by(Map)} instead.
+     */
+    @Deprecated
+    public static <K, V> FinalMap<K, V> of(final Map<? extends K, ? extends V> source) {
+        return by(source);
     }
 
     /**
