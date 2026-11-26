@@ -21,11 +21,11 @@ class StringableTest extends TritonTestBase {
 
     static Stream<Case<?>> cases() {
         return Stream.of(newCase(Instant.class, Instant.now()),
-                // newCase(SimpleDateFormat.class, new SimpleDateFormat("yyyy-MM-dd")),
+                         // newCase(SimpleDateFormat.class, new SimpleDateFormat("yyyy-MM-dd")),
                          newCase(Class.class, Thread.class, Class::getName),
                          newCase(Class.class, ByStringByFactory.class, Class::getName),
                          newCase(UUID.class, UUID.randomUUID()),
-                // newCase(StringBuilder.class, new StringBuilder(SUPPLY.anyString())),
+                         // newCase(StringBuilder.class, new StringBuilder(SUPPLY.anyString())),
                          newCase(Integer.class, SUPPLY.anyInt()),
                          newCase(BigInteger.class, SUPPLY.anyBigInteger()),
                          newCase(ByStringByConstructor.class, new ByStringByConstructor(SUPPLY.anyString())),

@@ -18,6 +18,7 @@ Java 17 or later
 * patterns-lib (Team33 Patterns Library)
   * collection-mneme (Team33 Collection Library - Edition "mneme")
   * json-charon (Team33 JSON Library - Edition "charon")
+  * records-triton (Team33 Records Library - Edition "triton")
 
 ### Drafts - not deployed, not featured
 
@@ -52,7 +53,6 @@ Java 17 or later
   * predicates-aletheia (Team33 Predicates Library - Edition "aletheia") - 2.11.0
   * proving-kerberos (Team33 Proving Library - Edition "kerberos") - 2.7.0
   * records-metis (Team33 Records Library - Edition "metis") - 2.10.2
-  * records-triton (Team33 Records Library - Edition "triton") - 2.10.2
   * reflect-luna (Team33 Reflection Library - Edition "luna") - 2.7.2
   * reflect-pandora (Team33 Reflection Library - Edition "pandora") - 2.7.2
   * streamable-galatea (Team33 Streamable Library - Edition "galatea") - 2.10.2
@@ -89,8 +89,6 @@ Java 17 or later
 * ☐ Module collection-mneme:
   * ☐ Added some factory methods *.by(*)
   * ☐ Marked some factory methods *.of(*) as deprecated
-* ☐ Unpinned module records-triton:
-  * ☐ Simplified applying module json-charon
 
 ### further
 
@@ -108,6 +106,8 @@ Java 17 or later
 ### 2.13.0-SNAPSHOT
 
 * Added module json-charon
+* Unpinned module records-triton:
+  * Applied module json-charon
 * Drafts:
   * Removed module json-charon
 

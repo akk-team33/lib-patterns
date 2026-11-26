@@ -19,6 +19,7 @@
     <modules>
         <module>collection-mneme</module>
         <module>json-charon</module>
+        <module>records-triton</module>
     </modules>
 
     <dependencyManagement>
